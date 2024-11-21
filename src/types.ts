@@ -13,6 +13,7 @@ export interface StatusType extends mastodon.v1.Status {
     topPost?: boolean;
     recommended?: boolean;
     scores?: weightsType;
+    weightedScores?: weightsType;
     value?: number;
     reblog?: StatusType;
     reblogBy?: string;
