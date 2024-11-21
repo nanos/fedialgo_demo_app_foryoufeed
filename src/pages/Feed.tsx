@@ -18,6 +18,7 @@ import WeightSetter from "../components/WeightSetter";
 
 const DEFAULT_NUM_POSTS = 20;
 const EARLIEST_TIMESTAMP = "1970-01-01T00:00:00.000Z";
+const NUM_STATUSES_TO_LOG = 50;
 const RELOAD_IF_OLDER_THAN_MINUTES = 30;
 const RELOAD_IF_OLDER_THAN_MS = RELOAD_IF_OLDER_THAN_MINUTES * 60 * 1000;
 
@@ -37,7 +38,7 @@ const Feed = () => {
     const [records, setRecords] = usePersistentState<number>(DEFAULT_NUM_POSTS, user.id + "records"); //how many records to show
     const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
     const [settings, setSettings] = usePersistentState<settingsType>({
-        "reposts": true,
+        "reposts": false,  // TODO: changing this by clicking the checkbox in the GUI doesn't seem to work
         "onlyLinks": false,
     }, "settings"); //settings for feed
 
@@ -151,6 +152,7 @@ const Feed = () => {
         setFeed([...feed]);
     };
 
+    // Log the feed to the console
     if (feed.length > 1) {
         console.log(`${feed.length} status elements in feed:`);
         console.log(feed);
@@ -158,7 +160,7 @@ const Feed = () => {
 
         console.log(`CONDENSED FEED:`);
         feed.forEach((status: StatusType, idx: number) => {
-            console.log(`[${idx}] ${condensedString(status)}`);
+            if (idx < NUM_STATUSES_TO_LOG) console.log(`[${idx}] ${condensedString(status)}`);
         });
     }
 
