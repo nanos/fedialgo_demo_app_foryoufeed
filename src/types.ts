@@ -17,6 +17,7 @@ export interface StatusType extends mastodon.v1.Status {
     reblog?: StatusType;
     reblogBy?: string;
     timeDiscount?: number;
+    rawScore?: number;
 }
 
 export interface App extends mastodon.v1.Client {
