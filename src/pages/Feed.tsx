@@ -11,7 +11,7 @@ import Container from "react-bootstrap/esm/Container";
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
 import React, { useState, useEffect, useRef } from "react";
-import StatusComponent from "../components/Status";
+import StatusComponent, { condensedString } from "../components/Status";
 import TheAlgorithm from "fedialgo"
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
@@ -149,6 +149,17 @@ const Feed = () => {
         setFeed([...feed]);
     };
 
+    if (feed.length > 1) {
+        console.log(`${feed.length} status elements in feed:`);
+        console.log(feed);
+        console.log(``);
+
+        console.log(`CONDENSED FEED:`);
+        feed.forEach((status: StatusType, idx: number) => {
+            console.log(`[${idx}] ${condensedString(status)}`);
+        });
+    }
+
     return (
         <Container style={{ maxWidth: "700px", height: "auto" }}>
             <Modal show={error !== ""} onHide={() => setError("")}>
@@ -164,8 +175,8 @@ const Feed = () => {
                 algoObj={algoObj}
                 settings={settings}
                 languages={feed.reduce((acc, item) => {
-                    if (!acc.includes(item.language)) acc.push(item.language)
-                    return acc
+                    if (!acc.includes(item.language)) acc.push(item.language);
+                    return acc;
                 }, [])}
                 setSelectedLanguages={setFilteredLanguages}
                 updateSettings={updateSettings}
@@ -174,17 +185,17 @@ const Feed = () => {
             <FindFollowers api={api} user={user} />
 
             {!loading && api && (feed.length > 1) && feed.filter((status: StatusType) => {
-                let pass = true
+                let pass = true;
                 if (settings.onlyLinks) {
-                    pass = !(status.card == null && status?.reblog?.card == null)
+                    pass = !(status.card == null && status?.reblog?.card == null);
                 }
                 if (!settings.reposts) {
-                    pass = pass && (status.reblog == null)
+                    pass = pass && (status.reblog == null);
                 }
                 if (filteredLanguages.length > 0) {
-                    pass = pass && (filteredLanguages.includes(status.language))
+                    pass = pass && (filteredLanguages.includes(status.language));
                 }
-                return pass
+                return pass;
             }).slice(0, Math.max(20, records)).map((status: StatusType) => {
                 return (
                     <StatusComponent

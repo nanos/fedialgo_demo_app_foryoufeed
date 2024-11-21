@@ -101,7 +101,6 @@ export default function StatusComponent(props: StatusComponentProps) {
         setScoreModal(true)
     }
 
-
     return (
         <div>
             {
@@ -261,3 +260,23 @@ export default function StatusComponent(props: StatusComponentProps) {
         </div >
     )
 }
+
+
+// Returns a log friendly string showing important details about this Status
+export const condensedString = (status: StatusType) => {
+    let objString = `${status.account.acct} (${status.createdAt})`;
+    let content = status.content;
+    objString += `\n    ${status.uri}`;
+
+    // Override the content with the rebloged content if it's a retoot
+    if (status.reblog) {
+        objString += `\n    REBLOG of ${status.reblog.account.acct} (${status.reblog.createdAt})`;
+        content = status.reblog.content;
+    }
+
+    objString += `\n    content: ${content.slice(0, 150)}...`;
+    objString += `\n    reblogsCount: ${status.reblogsCount}`;
+    objString += `\n    repliesCount: ${status.repliesCount}`;
+    objString += `\n    scores: ${JSON.stringify(status.scores)}`;
+    return objString;
+};
