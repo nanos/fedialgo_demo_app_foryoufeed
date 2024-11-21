@@ -59,12 +59,7 @@ const Feed = () => {
 
     // Load the posts in the feed either from mastodon server or from the cache
     useEffect(() => {
-        // Sometimes there are wonky statuses that are like years in the future so we filter them out.
-        const cleanFeed = feed.filter((status) => Date.now() >= (new Date(status.createdAt)).getTime());
-        const numStatusesRemoved = feed.length - cleanFeed.length;
-        if (numStatusesRemoved > 0) console.log(`Removed ${numStatusesRemoved} feed items bc they were in the future`);
-
-        const mostRecentStatus = cleanFeed.reduce((prev, current) =>
+        const mostRecentStatus = feed.reduce((prev, current) =>
             (prev.createdAt > current.createdAt) ? prev : current,
             { createdAt: EARLIEST_TIMESTAMP }
         );
@@ -126,8 +121,14 @@ const Feed = () => {
 
             const algo = new TheAlgorithm(api, currUser);
             const feed: StatusType[] = await algo.getFeed();
+
+            // Sometimes there are wonky statuses that are like years in the future so we filter them out.
+            const cleanFeed = feed.filter((status) => Date.now() >= (new Date(status.createdAt)).getTime());
+            const numStatusesRemoved = feed.length - cleanFeed.length;
+            if (numStatusesRemoved > 0) console.log(`Removed ${numStatusesRemoved} feed items bc they were in the future`);
+
             setWeights(await algo.getWeights());
-            setFeed(feed);
+            setFeed(cleanFeed);
             setAlgo(algo);
         }
     };
