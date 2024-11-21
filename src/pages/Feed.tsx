@@ -22,6 +22,11 @@ const NUM_STATUSES_TO_LOG = 50;
 const RELOAD_IF_OLDER_THAN_MINUTES = 30;
 const RELOAD_IF_OLDER_THAN_MS = RELOAD_IF_OLDER_THAN_MINUTES * 60 * 1000;
 
+const DEFAULT_SETTINGS = {
+    includeReposts: true,
+    onlyLinks: false,
+};
+
 
 const Feed = () => {
     //Contruct Feed on Page Load
@@ -30,17 +35,16 @@ const Feed = () => {
     // State variables
     const [algoObj, setAlgo] = useState<TheAlgorithm>(null); //algorithm to use
     const [error, setError] = useState<string>("");
-    const [filteredLanguages, setFilteredLanguages] = useState<string[]>(["en", "de"]); //languages to filter
+    const [filteredLanguages, setFilteredLanguages] = useState<string[]>([]); //languages to filter
     const [loading, setLoading] = useState<boolean>(true); //true if page is still loading
     const [weights, setWeights] = useState<weightsType>({}); //weights for each factor
     // Persistent state variables
     const [feed, setFeed] = usePersistentState<StatusType[]>([], user.id + "feed"); //feed to display
     const [records, setRecords] = usePersistentState<number>(DEFAULT_NUM_POSTS, user.id + "records"); //how many records to show
     const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
-    const [settings, setSettings] = usePersistentState<settingsType>({
-        "reposts": false,  // TODO: changing this by clicking the checkbox in the GUI doesn't seem to work
-        "onlyLinks": false,
-    }, "settings"); //settings for feed
+
+    // TODO: changing this by clicking the checkbox in the GUI doesn't seem to work
+    const [settings, setSettings] = usePersistentState<settingsType>(DEFAULT_SETTINGS, "settings"); //filter settings for feed
 
     window.addEventListener("scroll", () => {
         if (window.scrollY % 10 == 0) setScrollPos(window.scrollY);
@@ -190,15 +194,19 @@ const Feed = () => {
 
             {!loading && api && (feed.length > 1) && feed.filter((status: StatusType) => {
                 let pass = true;
+
                 if (settings.onlyLinks) {
                     pass = !(status.card == null && status?.reblog?.card == null);
                 }
-                if (!settings.reposts) {
-                    pass = pass && (status.reblog == null);
+                if (status.reblog && !settings.includeReposts) {
+                    console.log(`Removing reblogged status from feed...`);
+                    return false;
                 }
-                if (filteredLanguages.length > 0) {
-                    pass = pass && (filteredLanguages.includes(status.language));
+                if (filteredLanguages.length > 0 && !filteredLanguages.includes(status.language)) {
+                    console.log(`Removing status ${status.uri} with invalid language ${status.language} (valid langs: ${JSON.stringify(filteredLanguages)}).`);
+                    return false;
                 }
+
                 return pass;
             }).slice(0, Math.max(20, records)).map((status: StatusType) => {
                 return (
