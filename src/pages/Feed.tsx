@@ -123,7 +123,7 @@ const Feed = () => {
             console.log(`loading more toots (current records value=${records})...`);
             setRecords(records + 10);
         } else {
-            console.log(`records=${records} which is not less than feed.length (${feed.length}) so no more toots to load`);
+            console.log(`records=${records} is not less than feed.length (${feed.length}) so no more toots to load`);
         }
     };
 
@@ -136,7 +136,9 @@ const Feed = () => {
     };
 
     const updateWeights = async (newWeights: weightsType) => {
+        console.log(`updateWeights() called...`)
         setWeights(newWeights);
+
         if (algoObj) {
             const newFeed = await algoObj.setWeights(newWeights);
             setFeed(newFeed);

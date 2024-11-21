@@ -266,7 +266,8 @@ export default function StatusComponent(props: StatusComponentProps) {
 export const condensedString = (status: StatusType) => {
     let objString = `${status.account.acct} (${status.createdAt})`;
     let content = status.content;
-    objString += `\n    ${status.uri}`;
+    objString += `\n    URI: ${status.uri}`;
+    objString += `\n    value (AKA score/rank/whatever): ${status.value}`;
 
     // Override the content with the rebloged content if it's a retoot
     if (status.reblog) {
