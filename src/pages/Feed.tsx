@@ -18,21 +18,24 @@ import WeightSetter from "../components/WeightSetter";
 
 const DEFAULT_NUM_POSTS = 20;
 const EARLIEST_TIMESTAMP = "1970-01-01T00:00:00.000Z";
+const RELOAD_IF_OLDER_THAN_MINUTES = 30;
+const RELOAD_IF_OLDER_THAN_MS = RELOAD_IF_OLDER_THAN_MINUTES * 60 * 1000;
 
 
 const Feed = () => {
     //Contruct Feed on Page Load
     const { user, logout } = useAuth();
 
-    // State Variables
+    // State variables
     const [algoObj, setAlgo] = useState<TheAlgorithm>(null); //algorithm to use
-    const [feed, setFeed] = usePersistentState<StatusType[]>([], user.id + "feed"); //feed to display
     const [error, setError] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(true); //
+    const [filteredLanguages, setFilteredLanguages] = useState<string[]>(["en", "de"]); //languages to filter
+    const [loading, setLoading] = useState<boolean>(true); //true if page is still loading
+    const [weights, setWeights] = useState<weightsType>({}); //weights for each factor
+    // Persistent state variables
+    const [feed, setFeed] = usePersistentState<StatusType[]>([], user.id + "feed"); //feed to display
     const [records, setRecords] = usePersistentState<number>(DEFAULT_NUM_POSTS, user.id + "records"); //how many records to show
     const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
-    const [weights, setWeights] = useState<weightsType>({}); //weights for each factor
-    const [filteredLanguages, setFilteredLanguages] = useState<string[]>(["en", "de"]); //languages to filter
     const [settings, setSettings] = usePersistentState<settingsType>({
         "reposts": true,
         "onlyLinks": false,
@@ -49,8 +52,8 @@ const Feed = () => {
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 
+    // Load the posts in the feed either from mastodon server or from the cache
     useEffect(() => {
-        // only reload feed if the newest status is older than 10 minutes
         const lastStatus = feed.reduce((prev, current) =>
             (prev.createdAt > current.createdAt) ? prev : current,
             { createdAt: EARLIEST_TIMESTAMP }
@@ -58,7 +61,8 @@ const Feed = () => {
 
         console.log("last status", lastStatus);
 
-        if (lastStatus && (Date.now() - (new Date(lastStatus.createdAt)).getTime()) > 1800 * 1000) {
+        // only reload feed if the newest status is older than RELOAD_IF_OLDER_THAN_MS
+        if (lastStatus && (Date.now() - (new Date(lastStatus.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
             setRecords(DEFAULT_NUM_POSTS);
             constructFeed();
             setLoading(false);
@@ -69,12 +73,13 @@ const Feed = () => {
         }
     }, []);
 
+    // Load more records when the user scrolls to bottom of the page
     useEffect(() => {
         if (isBottom) {
             console.log("bottom");
             loadMore();
         }
-    }, [isBottom])
+    }, [isBottom]);
 
     const restoreFeedCache = async () => {
         if (user) {
@@ -92,7 +97,7 @@ const Feed = () => {
             setAlgo(algo);
             window.scrollTo(0, scrollPos);
         }
-    }
+    };
 
     const constructFeed = async () => {
         if (user) {
@@ -119,14 +124,14 @@ const Feed = () => {
             console.log(records);
             setRecords(records + 10);
         }
-    }
+    };
 
-    //Adjust Weights
+    //Adjust user Weights with slider values
     const weightAdjust = async (scores: weightsType) => {
         const newWeights = await algoObj.weightAdjust(scores);
         console.log(newWeights);
         setWeights(newWeights);
-    }
+    };
 
     const updateWeights = async (newWeights: weightsType) => {
         setWeights(newWeights);
@@ -134,13 +139,13 @@ const Feed = () => {
             const newFeed = await algoObj.setWeights(newWeights);
             setFeed(newFeed);
         }
-    }
+    };
 
     const updateSettings = async (newSettings: settingsType) => {
         console.log(newSettings);
         setSettings(newSettings);
         setFeed([...feed]);
-    }
+    };
 
     return (
         <Container style={{ maxWidth: "700px", height: "auto" }}>
@@ -150,6 +155,7 @@ const Feed = () => {
                 </Modal.Header>
                 <Modal.Body>{error}</Modal.Body>
             </Modal>
+
             <WeightSetter
                 weights={weights}
                 updateWeights={updateWeights}
@@ -162,6 +168,7 @@ const Feed = () => {
                 setSelectedLanguages={setFilteredLanguages}
                 updateSettings={updateSettings}
             />
+
             <FindFollowers api={api} user={user} />
 
             {!loading && api && (feed.length > 1) && feed.filter((status: StatusType) => {
