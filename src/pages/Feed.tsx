@@ -192,9 +192,9 @@ const Feed = () => {
                 updateWeights={updateWeights}
                 algoObj={algoObj}
                 settings={settings}
-                languages={feed.reduce((acc, item) => {
-                    if (!acc.includes(item.language)) acc.push(item.language);
-                    return acc;
+                languages={feed.reduce((languagesInFeed, item) => {
+                    if (!languagesInFeed.includes(item.language)) languagesInFeed.push(item.language);
+                    return languagesInFeed;
                 }, [])}
                 setSelectedLanguages={setFilteredLanguages}
                 updateSettings={updateSettings}
