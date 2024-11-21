@@ -16,6 +16,7 @@ import TheAlgorithm from "fedialgo"
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
 
+const DEFAULT_NUM_POSTS = 20;
 const EARLIEST_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 
 
@@ -28,7 +29,7 @@ const Feed = () => {
     const [feed, setFeed] = usePersistentState<StatusType[]>([], user.id + "feed"); //feed to display
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true); //
-    const [records, setRecords] = usePersistentState<number>(20, user.id + "records"); //how many records to show
+    const [records, setRecords] = usePersistentState<number>(DEFAULT_NUM_POSTS, user.id + "records"); //how many records to show
     const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
     const [weights, setWeights] = useState<weightsType>({}); //weights for each factor
     const [filteredLanguages, setFilteredLanguages] = useState<string[]>(["en", "de"]); //languages to filter
@@ -55,10 +56,10 @@ const Feed = () => {
             { createdAt: EARLIEST_TIMESTAMP }
         );
 
-        console.log("last status", lastStatus)
+        console.log("last status", lastStatus);
 
         if (lastStatus && (Date.now() - (new Date(lastStatus.createdAt)).getTime()) > 1800 * 1000) {
-            setRecords(20);
+            setRecords(DEFAULT_NUM_POSTS);
             constructFeed();
             setLoading(false);
         } else {
@@ -114,7 +115,7 @@ const Feed = () => {
 
     const loadMore = () => {
         if (records < feed.length) {
-            console.log("loading more toots");
+            console.log("loading more toots...");
             console.log(records);
             setRecords(records + 10);
         }
