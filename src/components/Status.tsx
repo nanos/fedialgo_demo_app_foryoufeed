@@ -275,9 +275,9 @@ export const condensedString = (status: StatusType) => {
         content = status.reblog.content;
     }
 
-    objString += `\n    content: ${content.slice(0, 150)}...`;
-    objString += `\n    reblogsCount: ${status.reblogsCount}`;
-    objString += `\n    repliesCount: ${status.repliesCount}`;
-    objString += `\n    scores: ${JSON.stringify(status.scores)}`;
+    objString += `\n        content: ${content.slice(0, 150)}...`;
+    objString += `\n        reblogsCount: ${status.reblogsCount}`;
+    objString += `\n        repliesCount: ${status.repliesCount}`;
+    objString += `\n        scores: ${JSON.stringify(status.scores)}`;
     return objString;
 };
