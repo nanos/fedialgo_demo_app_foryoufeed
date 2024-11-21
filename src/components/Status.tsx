@@ -270,12 +270,14 @@ export const condensedStatus = (status: StatusType) => {
 
     const statusObj = {
         FROM: `${status.account.displayName} (${status.account.acct}) [${status.createdAt}]`,
-        URL: status.uri,
+        URL: status.url,
         content: content,
         retootOf: status.reblog ? `${status.reblog.account.acct} (${status.reblog.createdAt})` : null,
         inReplyToId: status.inReplyToId,
+        mediaAttachments: status.mediaAttachments.map(attachment => attachment.type),
 
         properties: {
+            favouritesCount: status.favouritesCount,
             reblogsCount: status.reblogsCount,
             repliesCount: status.repliesCount,
             tags: (status.tags || status.reblog?.tags || []).map(t => `#${t.name}`).join(" "),
