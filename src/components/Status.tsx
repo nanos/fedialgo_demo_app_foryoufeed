@@ -265,10 +265,13 @@ export default function StatusComponent(props: StatusComponentProps) {
 
 // Returns a simplified version of the status for logging
 export const condensedStatus = (status: StatusType) => {
+    let content = status.reblog?.content || status.content || "";
+    if (content.length > CONTENT_CHARS_TO_LOG) content = content.slice(0, CONTENT_CHARS_TO_LOG) + '...';
+
     const statusObj = {
-        FROM: `${status.account.acct} (${status.createdAt})`,
+        FROM: `${status.account.displayName} (${status.account.acct}) [${status.createdAt}]`,
         URL: status.uri,
-        content: (status.reblog?.content || status.content || "").slice(0, CONTENT_CHARS_TO_LOG),
+        content: content,
         retootOf: status.reblog ? `${status.reblog.account.acct} (${status.reblog.createdAt})` : null,
         inReplyToId: status.inReplyToId,
 
@@ -297,7 +300,7 @@ export const condensedStatus = (status: StatusType) => {
 // Returns a log friendly string showing important details about this Status
 // **DEPRECATED: Use condensedStatus() instead**
 export const condensedString = (status: StatusType) => {
-    let objString = `${status.account.acct} (${status.createdAt})`;
+    let objString = `${status.account.displayName} (${status.account.acct}) [${status.createdAt}]`;
     let content = status.content;
     let tags = status.tags || status.reblog?.tags || [];
     objString += `\n    URI: ${status.uri}`;
