@@ -3,12 +3,12 @@ import "../default.css";
 import parse from 'html-react-parser';
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
-import { StatusType, weightsType } from '../types';
-import { mastodon } from 'masto';
-import { User } from '../types';
 import { AttachmentsModal } from './AttachmentsModal';
-import { ScoreModal } from './ScoreModal';
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { mastodon } from 'masto';
+import { ScoreModal } from './ScoreModal';
+import { StatusType, weightsType } from '../types';
+import { User } from '../types';
 
 
 interface StatusComponentProps {
