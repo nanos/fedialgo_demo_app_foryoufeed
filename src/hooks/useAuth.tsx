@@ -38,7 +38,7 @@ export const AuthProvider = (props: PropsWithChildren) => {
                 }
             );
         } catch (error) {
-            console.log(error);
+            console.warn(error);
         }
 
         setUser(null);

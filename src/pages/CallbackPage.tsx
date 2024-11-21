@@ -9,19 +9,21 @@ export default function CallbackPage() {
     const [error, setError] = React.useState("");
     const [searchParams] = useSearchParams();
     const [app] = useAppStorage({ keyName: "app", defaultValue: null })
+
     const { user, loginUser } = useAuth();
-    console.log(loginUser)
     const code = searchParams.get('code');
     console.log("CallbackPage")
     useEffect(() => {
         if (code !== null && !user) {
-            console.log(code)
-            oAuth(code)
+            console.log(`Setting code parameter in CallbackPage...`);
+            // console.log(code)
+            oAuth(code);
         }
     }, [code]);
 
     const oAuth = async (code: string) => {
-        console.log(app)
+        console.log(`oAuth() fxn 'app' variable:`);
+        console.log(app);
         const body = new FormData();
         const scope = "read:favourites read:follows read:search read:accounts read:statuses write:favourites write:statuses write:follows"
         body.append('grant_type', 'authorization_code');
@@ -39,6 +41,7 @@ export default function CallbackPage() {
             url: app.website,
             accessToken: json["access_token"],
         })
+
         api.v1.accounts.verifyCredentials().then((user) => {
             const userData: User = {
                 id: user.id,
@@ -48,14 +51,13 @@ export default function CallbackPage() {
                 server: app.website,
             }
             loginUser(userData).then(() => {
-                console.log("Logged in!")
+                console.log("Logged in!");
             })
         }).catch((error) => {
-            console.log(error)
-            console.log("Error")
+            console.warn(error)
             setError(error.toString())
         }).finally(() => {
-            console.log("finally")
+            console.log("finally verified credentials");
         })
     }
     return (

@@ -72,7 +72,8 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     const fav = async () => {
         //Favourite a post
-        console.log(status.scores)
+        console.log(`fav() status.scores:`);
+        console.log(status.scores);
 
         const status_ = await resolve(status);
         favourited ? console.log("skip") : weightAdjust(status.scores)
@@ -88,6 +89,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         e.preventDefault()
         const status_ = await resolve(status);
         weightAdjust(status.scores)
+        console.log(`followUri()`)
         console.log(status_)
         //new tab:
         //window.open(props.user.server + "/@" + status_.account.acct + "/" + status_.id, '_blank');

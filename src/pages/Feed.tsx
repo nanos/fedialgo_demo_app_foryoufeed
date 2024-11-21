@@ -76,7 +76,7 @@ const Feed = () => {
     // Load more records when the user scrolls to bottom of the page
     useEffect(() => {
         if (isBottom) {
-            console.log("bottom");
+            console.log("hit bottom of page; should load more toots...");
             loadMore();
         }
     }, [isBottom]);
@@ -88,7 +88,7 @@ const Feed = () => {
             try {
                 currUser = await api.v1.accounts.verifyCredentials();
             } catch (error) {
-                console.log(error);
+                console.warn(error);
                 logout();
             }
 
@@ -106,7 +106,7 @@ const Feed = () => {
             try {
                 currUser = await api.v1.accounts.verifyCredentials();
             } catch (error) {
-                console.log(error);
+                console.warn(error);
                 logout();
             }
 
@@ -120,15 +120,17 @@ const Feed = () => {
 
     const loadMore = () => {
         if (records < feed.length) {
-            console.log("loading more toots...");
-            console.log(records);
+            console.log(`loading more toots (current records value=${records})...`);
             setRecords(records + 10);
+        } else {
+            console.log(`records=${records} which is not less than feed.length (${feed.length}) so no more toots to load`);
         }
     };
 
     //Adjust user Weights with slider values
     const weightAdjust = async (scores: weightsType) => {
         const newWeights = await algoObj.weightAdjust(scores);
+        console.log("new weights:");
         console.log(newWeights);
         setWeights(newWeights);
     };
@@ -142,7 +144,7 @@ const Feed = () => {
     };
 
     const updateSettings = async (newSettings: settingsType) => {
-        console.log(newSettings);
+        console.log(`newSettings: ${JSON.stringify(newSettings)}`);
         setSettings(newSettings);
         setFeed([...feed]);
     };
@@ -195,9 +197,8 @@ const Feed = () => {
                     />
                 )
             })}
-            {(feed.length < 1 || loading) &&
-                <FullPageIsLoading />
-            }
+
+            {(feed.length < 1 || loading) && <FullPageIsLoading />}
             <div ref={bottomRef} onClick={loadMore}>Load More</div>
         </Container>
     )
