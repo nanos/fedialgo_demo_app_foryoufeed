@@ -8,6 +8,7 @@ export interface settingsType {
     [key: string]: boolean; // Replace 'any' with the desired value type (e.g., string, number, etc.)
 }
 
+// TODO: can't this be imported from the fedialgo package?
 export interface StatusType extends mastodon.v1.Status {
     topPost?: boolean;
     recommended?: boolean;
@@ -15,6 +16,7 @@ export interface StatusType extends mastodon.v1.Status {
     value?: number;
     reblog?: StatusType;
     reblogBy?: string;
+    timeDiscount?: number;
 }
 
 export interface App extends mastodon.v1.Client {
