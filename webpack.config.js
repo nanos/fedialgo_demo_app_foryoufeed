@@ -33,6 +33,7 @@ module.exports = {
         }),
         new WorkboxWebpackPlugin.GenerateSW({
             clientsClaim: true,
+            maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
             skipWaiting: true,
         }),
         new CopyPlugin({
