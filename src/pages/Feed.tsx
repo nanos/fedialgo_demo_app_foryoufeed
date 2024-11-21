@@ -18,6 +18,7 @@ import WeightSetter from "../components/WeightSetter";
 
 const DEFAULT_NUM_POSTS = 20;
 const EARLIEST_TIMESTAMP = "1970-01-01T00:00:00.000Z";
+const NUM_POSTS_TO_LOAD_ON_SCROLL = 10;
 const NUM_STATUSES_TO_LOG = 50;
 const RELOAD_IF_OLDER_THAN_MINUTES = 0.5;
 const RELOAD_IF_OLDER_THAN_MS = RELOAD_IF_OLDER_THAN_MINUTES * 60 * 1000;
@@ -134,12 +135,8 @@ const Feed = () => {
     };
 
     const loadMore = () => {
-        if (records < feed.length) {
-            console.log(`loading more toots (current records value=${records})...`);
-            setRecords(records + 10);
-        } else {
-            console.log(`records=${records} is not less than feed.length (${feed.length}) so no more toots to load`);
-        }
+        console.log(`records=${records}, feed.length=${feed.length}. loading ${NUM_POSTS_TO_LOAD_ON_SCROLL} more toots...`);
+        setRecords(records + NUM_POSTS_TO_LOAD_ON_SCROLL);
     };
 
     //Adjust user Weights with slider values
@@ -168,17 +165,9 @@ const Feed = () => {
 
     // Log the feed to the console
     if (feed.length > 1) {
-        console.log(`${feed.length} status elements in feed:`);
-        console.log(feed);
+        console.log(`${feed.length} status elements in feed:`, feed);
         console.log(``);
-
-        console.log(`CONDENSED FEED:`);
-        feed.forEach((status: StatusType, idx: number) => {
-            if (idx > NUM_STATUSES_TO_LOG) return;
-            console.log(`[${idx}]`, condensedStatus(status));
-            // console.log(`[${idx}] ${condensedString(status)}`);
-            // console.log(`[${idx}] raw: `, status);
-        });
+        console.log(`CONDENSED FEED: `, feed.map(condensedStatus));
     }
 
     return (
