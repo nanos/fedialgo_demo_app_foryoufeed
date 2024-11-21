@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import { mastodon, createRestAPIClient as loginMasto } from "masto";
+import { Modal } from "react-bootstrap";
 import { StatusType, settingsType, weightsType } from "../types";
 import { useAuth } from "../hooks/useAuth";
-import useOnScreen from "../hooks/useOnScreen";
-import { mastodon, createRestAPIClient as loginMasto } from "masto";
-import StatusComponent from "../components/Status";
-import FullPageIsLoading from "../components/FullPageIsLoading";
-import Container from "react-bootstrap/esm/Container";
-import TheAlgorithm from "fedialgo"
-import WeightSetter from "../components/WeightSetter";
 import { usePersistentState } from "react-persistent-state";
-import { Modal } from "react-bootstrap";
+
+import Container from "react-bootstrap/esm/Container";
 import FindFollowers from "../components/FindFollowers";
+import FullPageIsLoading from "../components/FullPageIsLoading";
+import React, { useState, useEffect, useRef } from "react";
+import StatusComponent from "../components/Status";
+import TheAlgorithm from "fedialgo"
+import useOnScreen from "../hooks/useOnScreen";
+import WeightSetter from "../components/WeightSetter";
 
 
 const Feed = () => {
@@ -33,7 +34,7 @@ const Feed = () => {
         if (window.scrollY % 10 == 0) setScrollPos(window.scrollY)
     })
 
-    const [algoObj, setAlgo] = useState<TheAlgorithm>(null); //algorithm to use 
+    const [algoObj, setAlgo] = useState<TheAlgorithm>(null); //algorithm to use
     const api: mastodon.rest.Client = loginMasto({
         url: user.server,
         accessToken: user.access_token,
