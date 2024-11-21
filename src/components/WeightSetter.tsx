@@ -44,9 +44,9 @@ const WeightSetter = ({ weights, updateWeights, settings, updateSettings, langua
                                     id={key}
                                     value={weights[key] ?? 1}
                                     onChange={(e) => {
-                                        const newWeights = weights
-                                        newWeights[key] = Number(e.target.value)
-                                        updateWeights(newWeights)
+                                        const newWeights = weights;
+                                        newWeights[key] = Number(e.target.value);
+                                        updateWeights(newWeights);
                                     }}
                                 />
                             </Form.Group>
@@ -63,9 +63,9 @@ const WeightSetter = ({ weights, updateWeights, settings, updateSettings, langua
                                     checked={settings[key]}
                                     disabled={false}
                                     onChange={(e) => {
-                                        const newSettings = { ...settings }
-                                        newSettings[key] = e.target.checked
-                                        updateSettings(newSettings)
+                                        const newSettings = { ...settings };
+                                        newSettings[key] = e.target.checked;
+                                        updateSettings(newSettings);
                                     }}
                                 />
                             </Form.Group>
@@ -84,14 +84,14 @@ const WeightSetter = ({ weights, updateWeights, settings, updateSettings, langua
                                     checked={selectedLang.includes(lang)}
                                     disabled={false}
                                     onChange={(e) => {
-                                        const newLang = [...selectedLang]
+                                        const newLang = [...selectedLang];
                                         if (e.target.checked) {
-                                            newLang.push(lang)
+                                            newLang.push(lang);
                                         } else {
-                                            newLang.splice(newLang.indexOf(lang), 1)
+                                            newLang.splice(newLang.indexOf(lang), 1);
                                         }
-                                        setLang(newLang)
-                                        setSelectedLanguages(newLang)
+                                        setLang(newLang);
+                                        setSelectedLanguages(newLang);
                                     }}
                                 />
                             )
