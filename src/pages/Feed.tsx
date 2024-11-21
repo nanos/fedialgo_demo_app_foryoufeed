@@ -1,3 +1,6 @@
+/*
+ * Class for retrieving and sorting the user's feed based on their chosen weighting values.
+ */
 import { mastodon, createRestAPIClient as loginMasto } from "masto";
 import { Modal } from "react-bootstrap";
 import { StatusType, settingsType, weightsType } from "../types";
@@ -13,11 +16,15 @@ import TheAlgorithm from "fedialgo"
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
 
+const EARLIEST_TIMESTAMP = "1970-01-01T00:00:00.000Z";
+
 
 const Feed = () => {
     //Contruct Feed on Page Load
     const { user, logout } = useAuth();
 
+    // State Variables
+    const [algoObj, setAlgo] = useState<TheAlgorithm>(null); //algorithm to use
     const [feed, setFeed] = usePersistentState<StatusType[]>([], user.id + "feed"); //feed to display
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(true); //
@@ -31,103 +38,108 @@ const Feed = () => {
     }, "settings"); //settings for feed
 
     window.addEventListener("scroll", () => {
-        if (window.scrollY % 10 == 0) setScrollPos(window.scrollY)
+        if (window.scrollY % 10 == 0) setScrollPos(window.scrollY);
     })
 
-    const [algoObj, setAlgo] = useState<TheAlgorithm>(null); //algorithm to use
     const api: mastodon.rest.Client = loginMasto({
         url: user.server,
         accessToken: user.access_token,
     });
     const bottomRef = useRef<HTMLDivElement>(null);
-    const isBottom = useOnScreen(bottomRef)
+    const isBottom = useOnScreen(bottomRef);
+
     useEffect(() => {
         // only reload feed if the newest status is older than 10 minutes
-        const lastStatus = feed.reduce((prev, current) => (prev.createdAt > current.createdAt) ? prev : current, { createdAt: "1970-01-01T00:00:00.000Z" })
+        const lastStatus = feed.reduce((prev, current) =>
+            (prev.createdAt > current.createdAt) ? prev : current,
+            { createdAt: EARLIEST_TIMESTAMP }
+        );
+
         console.log("last status", lastStatus)
+
         if (lastStatus && (Date.now() - (new Date(lastStatus.createdAt)).getTime()) > 1800 * 1000) {
-            setRecords(20)
-            constructFeed()
-            setLoading(false)
+            setRecords(20);
+            constructFeed();
+            setLoading(false);
         } else {
-            console.log("loaded from cache")
-            restoreFeedCache()
-            setLoading(false)
+            console.log("loaded from cache");
+            restoreFeedCache();
+            setLoading(false);
         }
     }, []);
 
     useEffect(() => {
         if (isBottom) {
-            console.log("bottom")
-            loadMore()
+            console.log("bottom");
+            loadMore();
         }
     }, [isBottom])
 
     const restoreFeedCache = async () => {
         if (user) {
-            let currUser: mastodon.v1.Account
+            let currUser: mastodon.v1.Account;
+
             try {
                 currUser = await api.v1.accounts.verifyCredentials();
             } catch (error) {
-                console.log(error)
-                logout()
+                console.log(error);
+                logout();
             }
-            const algo = new TheAlgorithm(api, currUser)
-            setWeights(await algo.getWeights())
-            setAlgo(algo)
-            window.scrollTo(0, scrollPos)
+
+            const algo = new TheAlgorithm(api, currUser);
+            setWeights(await algo.getWeights());
+            setAlgo(algo);
+            window.scrollTo(0, scrollPos);
         }
     }
 
     const constructFeed = async () => {
         if (user) {
-            let currUser: mastodon.v1.Account
+            let currUser: mastodon.v1.Account;
+
             try {
                 currUser = await api.v1.accounts.verifyCredentials();
             } catch (error) {
-                console.log(error)
-                logout()
+                console.log(error);
+                logout();
             }
-            const algo = new TheAlgorithm(api, currUser)
 
-            const feed: StatusType[] = await algo.getFeed()
-
-            setWeights(await algo.getWeights())
-            setFeed(feed)
-            setAlgo(algo)
+            const algo = new TheAlgorithm(api, currUser);
+            const feed: StatusType[] = await algo.getFeed();
+            setWeights(await algo.getWeights());
+            setFeed(feed);
+            setAlgo(algo);
         }
     };
 
     const loadMore = () => {
         if (records < feed.length) {
-            console.log("load more")
-            console.log(records)
-            setRecords(records + 10)
+            console.log("loading more toots");
+            console.log(records);
+            setRecords(records + 10);
         }
     }
 
     //Adjust Weights
     const weightAdjust = async (scores: weightsType) => {
-        const newWeights = await algoObj.weightAdjust(scores)
-        console.log(newWeights)
-        setWeights(newWeights)
+        const newWeights = await algoObj.weightAdjust(scores);
+        console.log(newWeights);
+        setWeights(newWeights);
     }
 
     const updateWeights = async (newWeights: weightsType) => {
-        setWeights(newWeights)
+        setWeights(newWeights);
         if (algoObj) {
-            const newFeed = await algoObj.setWeights(newWeights)
-            setFeed(newFeed)
+            const newFeed = await algoObj.setWeights(newWeights);
+            setFeed(newFeed);
         }
     }
 
     const updateSettings = async (newSettings: settingsType) => {
-        console.log(newSettings)
-        setSettings(newSettings)
-        setFeed([...feed])
+        console.log(newSettings);
+        setSettings(newSettings);
+        setFeed([...feed]);
     }
-
-
 
     return (
         <Container style={{ maxWidth: "700px", height: "auto" }}>
@@ -150,6 +162,7 @@ const Feed = () => {
                 updateSettings={updateSettings}
             />
             <FindFollowers api={api} user={user} />
+
             {!loading && api && (feed.length > 1) && feed.filter((status: StatusType) => {
                 let pass = true
                 if (settings.onlyLinks) {
