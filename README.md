@@ -23,3 +23,7 @@ Run these commands in your preferred terminal application / shell console / what
 4. Have fun
 5. Profit
 6. ???
+
+
+# Development
+You can install the local `fedialgo` package with `npm link` (fedialgo dir) / `npm link fedialgo` (this project dir) _or_ with `npm install path/to/fedialgo` but in order to pick up any code changes you will have to run `npm run build` in the `fedialgo` package dir. (TODO: why?)
