@@ -7,7 +7,7 @@ import { AttachmentsModal } from './AttachmentsModal';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 import { ScoreModal } from './ScoreModal';
-import { StatusType, weightsType } from '../types';
+import { StatusType, weightsType } from "fedialgo/dist/types";  // TODO: why is the dist/ needed?
 import { User } from '../types';
 
 const CONTENT_CHARS_TO_LOG = 150;

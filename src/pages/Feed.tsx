@@ -3,16 +3,16 @@
  */
 import { mastodon, createRestAPIClient as loginMasto } from "masto";
 import { Modal } from "react-bootstrap";
-import { StatusType, settingsType, weightsType } from "../types";
+import { settingsType } from "../types";
+import { StatusType, weightsType } from 'fedialgo/dist/types';
 import { useAuth } from "../hooks/useAuth";
 import { usePersistentState } from "react-persistent-state";
-
 import Container from "react-bootstrap/esm/Container";
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
 import React, { useState, useEffect, useRef } from "react";
 import StatusComponent, { condensedStatus, condensedString } from "../components/Status";
-import TheAlgorithm from "fedialgo"
+import TheAlgorithm from "fedialgo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
 

@@ -1,7 +1,7 @@
 import parse from 'html-react-parser';
 import React from 'react';
 import { Modal } from 'react-bootstrap';
-import { StatusType } from '../types';
+import { StatusType } from "fedialgo/dist/types";
 
 
 export const AttachmentsModal = ({ attModal, setAttModal, status }: { attModal: number, setAttModal: (attModal: number) => void, status: StatusType }) => {

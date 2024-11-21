@@ -7,9 +7,11 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import React from 'react';
 import TheAlgorithm from "fedialgo";
-import { settingsType, weightsType } from "../types";
+import { settingsType } from "../types";
 import { useAuth } from '../hooks/useAuth';
 import { usePersistentState } from "react-persistent-state";
+import { weightsType } from 'fedialgo/dist/types';  // TODO: why do we need the dist/ dir?
+
 
 interface WeightSetterProps {
     weights: weightsType,

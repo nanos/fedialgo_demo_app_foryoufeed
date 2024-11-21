@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
-import { StatusType } from '../types';
+import { StatusType } from 'fedialgo/dist/types';
 
 
 export const ScoreModal = ({ scoreModal, setScoreModal, status }: { scoreModal: boolean, setScoreModal: (scoreModal: boolean) => void, status: StatusType }) => {
