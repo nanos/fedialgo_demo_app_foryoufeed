@@ -27,6 +27,7 @@ export const useUserStorage = (key: UserStorage) => {
 
 export const useLocalStorage = <T extends StorageKey,>(key: T): [T["defaultValue"], (value: T["defaultValue"]) => void] => {
     const { keyName, defaultValue } = key;
+
     const [storedValue, setStoredValue] = useState<T["defaultValue"]>(() => {
         try {
             const value = window.localStorage.getItem(keyName);

@@ -1,7 +1,7 @@
 import React from 'react';
-
 import { Modal } from 'react-bootstrap';
 import { StatusType } from '../types';
+
 
 export const ScoreModal = ({ scoreModal, setScoreModal, status }: { scoreModal: boolean, setScoreModal: (scoreModal: boolean) => void, status: StatusType }) => {
     return (
@@ -19,4 +19,4 @@ export const ScoreModal = ({ scoreModal, setScoreModal, status }: { scoreModal: 
             </Modal.Body>
         </Modal>
     )
-}
+};

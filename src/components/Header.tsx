@@ -1,11 +1,12 @@
 import React from 'react';
-import { useAuth } from "../hooks/useAuth";
 import { Button, Col, Row } from 'react-bootstrap';
 import { Container } from 'react-bootstrap';
+import { useAuth } from "../hooks/useAuth";
 
 
 const Header = () => {
     const { user } = useAuth();
+
     return (
         <Container className='w-100 m-3'>
             <Row className='w-100 m-3'>
@@ -28,6 +29,6 @@ const Header = () => {
             </Row>
         </Container>
     )
-}
+};
 
 export default Header

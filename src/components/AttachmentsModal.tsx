@@ -1,7 +1,7 @@
+import parse from 'html-react-parser';
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 import { StatusType } from '../types';
-import parse from 'html-react-parser'
 
 
 export const AttachmentsModal = ({ attModal, setAttModal, status }: { attModal: number, setAttModal: (attModal: number) => void, status: StatusType }) => {
@@ -10,12 +10,17 @@ export const AttachmentsModal = ({ attModal, setAttModal, status }: { attModal: 
             <Modal.Header closeButton>
                 <Modal.Title>{parse(status.content)[100]}</Modal.Title>
             </Modal.Header>
+
             <Modal.Body>
                 {(attModal != -1) &&
                     <div>
                         {
                             status.mediaAttachments[attModal]?.type === "image" &&
-                            <img width={"100%"} src={status.mediaAttachments[attModal]?.url} alt={status.mediaAttachments[attModal]?.description ?? ""} />
+                                <img
+                                    alt={status.mediaAttachments[attModal]?.description ?? ""}
+                                    src={status.mediaAttachments[attModal]?.url}
+                                    width={"100%"}
+                                />
                         }
                         {status.mediaAttachments[attModal]?.type === "video" &&
                             <video width={"100%"} controls>
@@ -28,4 +33,4 @@ export const AttachmentsModal = ({ attModal, setAttModal, status }: { attModal: 
             </Modal.Body>
         </Modal>
     )
-}
+};

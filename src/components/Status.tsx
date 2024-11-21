@@ -1,14 +1,15 @@
-import React from 'react';
 import "../birdUI.css";
 import "../default.css";
+import parse from 'html-react-parser';
+import React from 'react';
+import Toast from 'react-bootstrap/Toast';
 import { StatusType, weightsType } from '../types';
-import parse from 'html-react-parser'
 import { mastodon } from 'masto';
 import { User } from '../types';
-import Toast from 'react-bootstrap/Toast';
 import { AttachmentsModal } from './AttachmentsModal';
 import { ScoreModal } from './ScoreModal';
 import { LazyLoadImage } from "react-lazy-load-image-component";
+
 
 interface StatusComponentProps {
     status: StatusType,
@@ -17,6 +18,7 @@ interface StatusComponentProps {
     weightAdjust: (statusWeight: weightsType) => void
     setError: (error: string) => void
 }
+
 
 export default function StatusComponent(props: StatusComponentProps) {
     const status = props.status.reblog ? props.status.reblog : props.status;
@@ -113,7 +115,6 @@ export default function StatusComponent(props: StatusComponentProps) {
                 </Toast.Header>
                 <Toast.Body>{error}</Toast.Body>
             </Toast>
-
 
             <div className="status__wrapper status__wrapper-public focusable" aria-label={`${status.account.displayName}, ${status.account.note} ${status.account.acct}`}>
                 {status.reblogBy &&

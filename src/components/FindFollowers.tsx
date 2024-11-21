@@ -1,7 +1,7 @@
-import { mastodon } from 'masto';
+import parse from 'html-react-parser';
 import React, { useEffect, useState } from 'react';
+import { mastodon } from 'masto';
 import { Row, Col, Accordion, Button, Card } from 'react-bootstrap';
-import parse from 'html-react-parser'
 import { User } from '../types';
 
 
@@ -10,23 +10,27 @@ export default function FindFollowers({ api, user }: { api: mastodon.rest.Client
     const [open, setOpen] = useState<boolean>(false)
 
     useEffect(() => {
-        if (!open || suggestions.length > 0) return
+        if (!open || suggestions.length > 0) return;
+
         api.v2.suggestions.list().then((res) => {
-            setSuggestions(res)
-        })
+            setSuggestions(res);
+        });
     }, [open])
 
     const follow = (id: string) => {
         api.v1.accounts.$select(id).follow().then(() => {
-            setSuggestions(suggestions.filter((suggestion: mastodon.v1.Suggestion) => suggestion.account.id !== id))
+            setSuggestions(
+                suggestions.filter((suggestion: mastodon.v1.Suggestion) => suggestion.account.id !== id)
+            );
         })
     }
 
     const hide = (id: string) => {
         api.v1.suggestions.$select(id).remove(id).then(() => {
-            setSuggestions(suggestions.filter((suggestion: mastodon.v1.Suggestion) => suggestion.account.id !== id))
-        }
-        )
+            setSuggestions(
+                suggestions.filter((suggestion: mastodon.v1.Suggestion) => suggestion.account.id !== id)
+            );
+        });
     }
 
     return (
@@ -92,5 +96,5 @@ export default function FindFollowers({ api, user }: { api: mastodon.rest.Client
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
-    )
-}
+    );
+};

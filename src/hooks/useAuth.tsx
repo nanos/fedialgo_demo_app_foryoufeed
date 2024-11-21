@@ -3,7 +3,13 @@ import { createContext, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppStorage, useUserStorage } from "./useLocalStorage";
 import { User } from "../types";
-const AuthContext = createContext({ user: null, loginUser: async (_user: User) => { }, logout: () => { } });
+
+
+const AuthContext = createContext({
+    user: null,
+    loginUser: async (_user: User) => { },
+    logout: () => { }
+});
 
 export const AuthProvider = (props: PropsWithChildren) => {
     const [user, setUser] = useUserStorage({ keyName: "user", defaultValue: null })
@@ -23,6 +29,7 @@ export const AuthProvider = (props: PropsWithChildren) => {
         body.append("token", user.access_token);
         body.append("client_id", app.clientId)
         body.append("client_secret", app.clientSecret);
+
         try {
             await fetch(user.server + '/oauth/revoke',
                 {
@@ -31,8 +38,9 @@ export const AuthProvider = (props: PropsWithChildren) => {
                 }
             );
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
+
         setUser(null);
         navigate("/login", { replace: true });
     };
@@ -45,6 +53,7 @@ export const AuthProvider = (props: PropsWithChildren) => {
         }),
         [user]
     );
+
     return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;
 };
 
