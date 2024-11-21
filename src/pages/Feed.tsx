@@ -19,7 +19,7 @@ import WeightSetter from "../components/WeightSetter";
 const DEFAULT_NUM_POSTS = 20;
 const EARLIEST_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 const NUM_STATUSES_TO_LOG = 50;
-const RELOAD_IF_OLDER_THAN_MINUTES = 30;
+const RELOAD_IF_OLDER_THAN_MINUTES = 0.5;
 const RELOAD_IF_OLDER_THAN_MS = RELOAD_IF_OLDER_THAN_MINUTES * 60 * 1000;
 
 const DEFAULT_SETTINGS = {
@@ -59,20 +59,25 @@ const Feed = () => {
 
     // Load the posts in the feed either from mastodon server or from the cache
     useEffect(() => {
-        const lastStatus = feed.reduce((prev, current) =>
+        // Sometimes there are wonky statuses that are like years in the future so we filter them out.
+        const cleanFeed = feed.filter((status) => Date.now() >= (new Date(status.createdAt)).getTime());
+        const numStatusesRemoved = feed.length - cleanFeed.length;
+        if (numStatusesRemoved > 0) console.log(`Removed ${numStatusesRemoved} feed items bc they were in the future`);
+
+        const mostRecentStatus = cleanFeed.reduce((prev, current) =>
             (prev.createdAt > current.createdAt) ? prev : current,
             { createdAt: EARLIEST_TIMESTAMP }
         );
 
-        console.log("last status", lastStatus);
+        console.log("most recent status", mostRecentStatus);
 
         // only reload feed if the newest status is older than RELOAD_IF_OLDER_THAN_MS
-        if (lastStatus && (Date.now() - (new Date(lastStatus.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
+        if (mostRecentStatus && (Date.now() - (new Date(mostRecentStatus.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
             setRecords(DEFAULT_NUM_POSTS);
             constructFeed();
             setLoading(false);
         } else {
-            console.log("loaded from cache");
+            console.log("loaded feed from cache");
             restoreFeedCache();
             setLoading(false);
         }
@@ -87,6 +92,8 @@ const Feed = () => {
     }, [isBottom]);
 
     const restoreFeedCache = async () => {
+        console.log(`restoreFeedCache() called...`);
+
         if (user) {
             let currUser: mastodon.v1.Account;
 
@@ -105,6 +112,8 @@ const Feed = () => {
     };
 
     const constructFeed = async () => {
+        console.log(`constructFeed() called...`);
+
         if (user) {
             let currUser: mastodon.v1.Account;
 
@@ -195,11 +204,12 @@ const Feed = () => {
             {!loading && api && (feed.length > 1) && feed.filter((status: StatusType) => {
                 let pass = true;
 
-                if (settings.onlyLinks) {
-                    pass = !(status.card == null && status?.reblog?.card == null);
+                if (settings.onlyLinks && !(status.card || status.reblog?.card)) {
+                    console.log(`Removing ${status.uri} from feed because it's not a link...`);
+                    return false;
                 }
                 if (status.reblog && !settings.includeReposts) {
-                    console.log(`Removing reblogged status from feed...`);
+                    console.log(`Removing reblogged status ${status.uri} from feed...`);
                     return false;
                 }
                 if (filteredLanguages.length > 0 && !filteredLanguages.includes(status.language)) {
