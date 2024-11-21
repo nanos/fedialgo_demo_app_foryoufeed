@@ -265,38 +265,37 @@ export default function StatusComponent(props: StatusComponentProps) {
 
 // Returns a simplified version of the status for logging
 export const condensedStatus = (status: StatusType) => {
-    let obj = {
-        from: status.account.acct,
-        createdAt: status.createdAt,
+    const statusObj = {
+        FROM: `${status.account.acct} (${status.createdAt})`,
         URL: status.uri,
+        content: (status.reblog?.content || status.content || "").slice(0, CONTENT_CHARS_TO_LOG),
         retootOf: status.reblog ? `${status.reblog.account.acct} (${status.reblog.createdAt})` : null,
-    };
+        inReplyToId: status.inReplyToId,
 
-    let objProps = {
-        content: (status.reblog?.content || status.content || "").slice(CONTENT_CHARS_TO_LOG),
+        properties: {
+            reblogsCount: status.reblogsCount,
+            repliesCount: status.repliesCount,
+            tags: (status.tags || status.reblog?.tags || []).map(t => `#${t.name}`).join(" "),
+        },
 
-        SCORE: {
+        score: {
             weightedScore: status.value,
             rawScore: status.rawScore,
             timeDiscount: status.timeDiscount,
             components: status.scores,
         },
 
-        PROPERTIES: {
-            reblogsCount: status.reblogsCount,
-            repliesCount: status.repliesCount,
-            tags: (status.tags || status.reblog?.tags || []).map(t => `#${t.name}`).join(" "),
-        },
+        raw: status,
     };
 
-    // Optionally add reply to info
-    // if (status.inReplyToId) obj.inReplyToId = status.inReplyToId;
-    return {...obj, ...objProps, ...{rawStatusObj: status}};
+    return Object.keys(statusObj)
+                 .filter((k) => statusObj[k] != null)
+                 .reduce((a, k) => ({ ...a, [k]: statusObj[k] }), {});
 };
 
 
 // Returns a log friendly string showing important details about this Status
-// DEPRECATED: Use condensedStatus() instead
+// **DEPRECATED: Use condensedStatus() instead**
 export const condensedString = (status: StatusType) => {
     let objString = `${status.account.acct} (${status.createdAt})`;
     let content = status.content;
