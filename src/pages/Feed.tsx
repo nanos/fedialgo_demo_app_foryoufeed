@@ -222,7 +222,7 @@ const Feed = () => {
                 }
 
                 return pass;
-            }).slice(0, Math.max(20, records)).map((status: StatusType) => {
+            }).slice(0, Math.max(DEFAULT_NUM_POSTS, records)).map((status: StatusType) => {
                 return (
                     <StatusComponent
                         status={status}
