@@ -268,13 +268,16 @@ export const condensedStatus = (status: StatusType) => {
     let content = status.reblog?.content || status.content || "";
     if (content.length > CONTENT_CHARS_TO_LOG) content = content.slice(0, CONTENT_CHARS_TO_LOG) + '...';
 
+    let mediaAttachments = status.mediaAttachments.map(attachment => attachment.type);
+    if (mediaAttachments.length == 0) mediaAttachments = null;
+
     const statusObj = {
         FROM: `${status.account.displayName} (${status.account.acct}) [${status.createdAt}]`,
         URL: status.url,
         content: content,
         retootOf: status.reblog ? `${status.reblog.account.acct} (${status.reblog.createdAt})` : null,
         inReplyToId: status.inReplyToId,
-        mediaAttachments: status.mediaAttachments.map(attachment => attachment.type),
+        mediaAttachments: mediaAttachments,
 
         properties: {
             favouritesCount: status.favouritesCount,
