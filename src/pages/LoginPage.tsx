@@ -24,6 +24,7 @@ export default function LoginPage() {
             scopes: scope,
             website: `https://${sanitized_server}`,
         });
+        console.log(`app variable:`)
         console.log(app)
 
         setApp({ ...app, redirectUri })
@@ -61,8 +62,8 @@ export default function LoginPage() {
                     </p>
                 </div>
                 <Form.Group className="mb-3 align-middle">
-                    <Form.Label className="text-center w-100">Enter Mastodon Server in the form: https://example.social</Form.Label >
-                    <Form.Control type="url" id="mastodon_server" placeholder="https://mastodon.social" onChange={(e) => {
+                    <Form.Label className="text-center w-100">Enter Mastodon Server in the form: mastodon.social</Form.Label >
+                    <Form.Control type="url" id="mastodon_server" placeholder="mastodon.social" onChange={(e) => {
                         setServer(e.target.value);
                     }} value={server} />
                 </Form.Group>
