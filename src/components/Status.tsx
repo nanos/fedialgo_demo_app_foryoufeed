@@ -266,8 +266,10 @@ export default function StatusComponent(props: StatusComponentProps) {
 export const condensedString = (status: StatusType) => {
     let objString = `${status.account.acct} (${status.createdAt})`;
     let content = status.content;
+    let tags = status.tags || status.reblog?.tags || [];
     objString += `\n    URI: ${status.uri}`;
     objString += `\n    VALUE: ${status.value}      (AKA score/rank/whatever)`;
+    objString += `\n        timeDiscount: ${status.timeDiscount}`;
 
     // Override the content with the rebloged content if it's a retoot
     if (status.reblog) {
@@ -275,9 +277,12 @@ export const condensedString = (status: StatusType) => {
         content = status.reblog.content;
     }
 
-    objString += `\n        content: ${content.slice(0, 150)}...`;
+    objString += `\n        content: ${content.slice(0, 150)}`;
+    if (content.length > 150) objString += "...";
     objString += `\n        reblogsCount: ${status.reblogsCount}`;
     objString += `\n        repliesCount: ${status.repliesCount}`;
+    if (tags.length > 0) objString += `\n        tags: ${tags.map(t => `#${t.name}`).join(" ")}`;
+    if (status.inReplyToId) objString += `\n        inReplyToId: ${status.inReplyToId}`;
     objString += `\n        scores: ${JSON.stringify(status.scores)}`;
     return objString;
 };
