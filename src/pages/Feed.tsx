@@ -11,7 +11,7 @@ import Container from "react-bootstrap/esm/Container";
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
 import React, { useState, useEffect, useRef } from "react";
-import StatusComponent, { condensedString } from "../components/Status";
+import StatusComponent, { condensedStatus, condensedString } from "../components/Status";
 import TheAlgorithm from "fedialgo"
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
@@ -64,7 +64,7 @@ const Feed = () => {
             { createdAt: EARLIEST_TIMESTAMP }
         );
 
-        console.log("most recent status", mostRecentStatus);
+        console.log("most recent item in feed", mostRecentStatus);
 
         // only reload feed if the newest status is older than RELOAD_IF_OLDER_THAN_MS
         if (mostRecentStatus && (Date.now() - (new Date(mostRecentStatus.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
@@ -124,8 +124,8 @@ const Feed = () => {
 
             // Sometimes there are wonky statuses that are like years in the future so we filter them out.
             const cleanFeed = feed.filter((status) => Date.now() >= (new Date(status.createdAt)).getTime());
-            const numStatusesRemoved = feed.length - cleanFeed.length;
-            if (numStatusesRemoved > 0) console.log(`Removed ${numStatusesRemoved} feed items bc they were in the future`);
+            const numRemoved = feed.length - cleanFeed.length;
+            if (numRemoved > 0) console.log(`Removed ${numRemoved} feed items bc they were in the future`);
 
             setWeights(await algo.getWeights());
             setFeed(cleanFeed);
@@ -174,7 +174,10 @@ const Feed = () => {
 
         console.log(`CONDENSED FEED:`);
         feed.forEach((status: StatusType, idx: number) => {
-            if (idx < NUM_STATUSES_TO_LOG) console.log(`[${idx}] ${condensedString(status)}`);
+            if (idx > NUM_STATUSES_TO_LOG) return;
+            console.log(`[${idx}]`, condensedStatus(status));
+            // console.log(`[${idx}] ${condensedString(status)}`);
+            // console.log(`[${idx}] raw: `, status);
         });
     }
 

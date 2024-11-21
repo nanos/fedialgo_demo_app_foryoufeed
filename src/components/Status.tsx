@@ -10,6 +10,7 @@ import { AttachmentsModal } from './AttachmentsModal';
 import { ScoreModal } from './ScoreModal';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
+const CONTENT_CHARS_TO_LOG = 150;
 
 interface StatusComponentProps {
     status: StatusType,
@@ -262,7 +263,40 @@ export default function StatusComponent(props: StatusComponentProps) {
 }
 
 
+// Returns a simplified version of the status for logging
+export const condensedStatus = (status: StatusType) => {
+    let obj = {
+        from: status.account.acct,
+        createdAt: status.createdAt,
+        URL: status.uri,
+        retootOf: status.reblog ? `${status.reblog.account.acct} (${status.reblog.createdAt})` : null,
+    };
+
+    let objProps = {
+        content: (status.reblog?.content || status.content || "").slice(CONTENT_CHARS_TO_LOG),
+
+        SCORE: {
+            weightedScore: status.value,
+            rawScore: status.rawScore,
+            timeDiscount: status.timeDiscount,
+            components: status.scores,
+        },
+
+        PROPERTIES: {
+            reblogsCount: status.reblogsCount,
+            repliesCount: status.repliesCount,
+            tags: (status.tags || status.reblog?.tags || []).map(t => `#${t.name}`).join(" "),
+        },
+    };
+
+    // Optionally add reply to info
+    // if (status.inReplyToId) obj.inReplyToId = status.inReplyToId;
+    return {...obj, ...objProps, ...{rawStatusObj: status}};
+};
+
+
 // Returns a log friendly string showing important details about this Status
+// DEPRECATED: Use condensedStatus() instead
 export const condensedString = (status: StatusType) => {
     let objString = `${status.account.acct} (${status.createdAt})`;
     let content = status.content;
@@ -275,18 +309,18 @@ export const condensedString = (status: StatusType) => {
         content = status.reblog.content;
     }
 
-    objString += `\n    VALUE (AKA score/rank/whatever):`;
+    objString += `\n    SCORE:`;
     objString += `\n        score: ${status.value}`;
     objString += `\n        rawScore: ${status.rawScore}`;
     objString += `\n        timeDiscount: ${status.timeDiscount}`;
+    objString += `\n        components: ${JSON.stringify(status.scores, null, 16)}`;
 
     objString += `\n    PROPERTIES:`;
-    objString += `\n        content: ${content.slice(0, 150)}`;
-    if (content.length > 150) objString += "...";
+    objString += `\n        content: ${content.slice(0, CONTENT_CHARS_TO_LOG)}`;
+    if (content.length > CONTENT_CHARS_TO_LOG) objString += "...";
     objString += `\n        reblogsCount: ${status.reblogsCount}`;
     objString += `\n        repliesCount: ${status.repliesCount}`;
     if (tags.length > 0) objString += `\n        tags: ${tags.map(t => `#${t.name}`).join(" ")}`;
     if (status.inReplyToId) objString += `\n        inReplyToId: ${status.inReplyToId}`;
-    objString += `\n        scores: ${JSON.stringify(status.scores, null, 12)}`;
     return objString;
 };
