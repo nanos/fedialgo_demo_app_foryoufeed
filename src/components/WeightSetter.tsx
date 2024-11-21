@@ -1,10 +1,15 @@
-import React from 'react'
-import Accordion from 'react-bootstrap/esm/Accordion'
-import Form from 'react-bootstrap/esm/Form'
+/*
+ * Component for setting the user's preferred weightings of various post properties.
+ * Things like how much to prefer people you favorite a lot or how much to posts that
+ * are trending in the Fedivers.
+ */
+import Accordion from 'react-bootstrap/esm/Accordion';
+import Form from 'react-bootstrap/esm/Form';
+import React from 'react';
+import TheAlgorithm from "fedialgo";
 import { settingsType, weightsType } from "../types";
-import TheAlgorithm from "fedialgo"
-import { usePersistentState } from "react-persistent-state";
 import { useAuth } from '../hooks/useAuth';
+import { usePersistentState } from "react-persistent-state";
 
 interface WeightSetterProps {
     weights: weightsType,
@@ -18,7 +23,7 @@ interface WeightSetterProps {
 
 const WeightSetter = ({ weights, updateWeights, settings, updateSettings, languages, setSelectedLanguages, algoObj }: WeightSetterProps) => {
     const { user } = useAuth();
-    const [selectedLang, setLang] = usePersistentState<string[]>([], user.id + "selectedLangs")
+    const [selectedLang, setLang] = usePersistentState<string[]>([], user.id + "selectedLangs");
 
     return (
         <Accordion>
@@ -28,7 +33,10 @@ const WeightSetter = ({ weights, updateWeights, settings, updateSettings, langua
                     {weights && Object.keys(weights).map((key, index) => {
                         return (
                             <Form.Group className="mb-3" key={index}>
-                                <Form.Label><b>{key + " - "}</b>{algoObj.getDescription(key) + ": " + (weights[key]?.toFixed(2) ?? "1")}</Form.Label>
+                                <Form.Label>
+                                    <b>{key + " - "}</b>{algoObj.getDescription(key) + ": " + (weights[key]?.toFixed(2) ?? "1")}
+                                </Form.Label>
+
                                 <Form.Range
                                     min={Math.min(...Object.values(weights).filter(x => !isNaN(x)) ?? [0]) - 1 * 1.2}
                                     max={Math.max(...Object.values(weights).filter(x => !isNaN(x)) ?? [0]) + 1 * 1.2}
@@ -44,6 +52,7 @@ const WeightSetter = ({ weights, updateWeights, settings, updateSettings, langua
                             </Form.Group>
                         )
                     })}
+
                     {settings && Object.keys(settings).map((key, index) => {
                         return (
                             <Form.Group className="mb-3" key={index}>
@@ -62,6 +71,7 @@ const WeightSetter = ({ weights, updateWeights, settings, updateSettings, langua
                             </Form.Group>
                         )
                     })}
+
                     <Form.Group className="mb-3">
                         <Form.Label><b>Show only these Languages</b></Form.Label>
                         {languages.map((lang, index) => {
