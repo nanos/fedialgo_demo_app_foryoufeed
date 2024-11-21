@@ -287,7 +287,7 @@ export const condensedStatus = (status: StatusType) => {
         },
 
         score: {
-            weightedScore: status.value,
+            timeWeightedScore: status.value,
             rawScore: status.rawScore,
             timeDiscount: status.timeDiscount,
             scoreComponents: status.scores,
