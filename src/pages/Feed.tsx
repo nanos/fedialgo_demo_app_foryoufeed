@@ -40,8 +40,8 @@ const Feed = () => {
     const [algoObj, setAlgo] = useState<TheAlgorithm>(null); //algorithm to use
     const [error, setError] = useState<string>("");
     const [filteredLanguages, setFilteredLanguages] = useState<string[]>([]); //languages to filter
-    const [loading, setLoading] = useState<boolean>(true); //true if page is still loading
-    const [weights, setWeights] = useState<ScoresType>({}); //weights for each factor
+    const [loading, setLoading] = useState<boolean>(true);  // true if page is still loading
+    const [weights, setWeights] = useState<ScoresType>({});  // weights for each factor
     // Persistent state variables
     const [feed, setFeed] = usePersistentState<StatusType[]>([], user.id + "feed"); //feed to display
     const [records, setRecords] = usePersistentState<number>(DEFAULT_NUM_POSTS, user.id + "records"); //how many records to show
@@ -149,7 +149,7 @@ const Feed = () => {
         setWeights(newWeights);
 
         if (algoObj) {
-            const newFeed = await algoObj.setWeights(newWeights);
+            const newFeed = await algoObj.weightTootsInFeed(newWeights);
             setFeed(newFeed);
         }
     };
