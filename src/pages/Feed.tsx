@@ -66,7 +66,7 @@ const Feed = () => {
             {createdAt: EARLIEST_TIMESTAMP}
         );
 
-        console.log("most recent toot in feed", mostRecentToot);
+        console.log("most recent toot in feed: ", mostRecentToot);
 
         // only reload feed if the newest status is older than RELOAD_IF_OLDER_THAN_MS
         if (mostRecentToot && (Date.now() - (new Date(mostRecentToot.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
