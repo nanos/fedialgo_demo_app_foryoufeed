@@ -124,6 +124,7 @@ const Feed = () => {
             const feed: StatusType[] = await algo.getFeed();
 
             // Sometimes there are wonky statuses that are like years in the future so we filter them out.
+            // TODO: move this to the fedialgo package.
             const cleanFeed = feed.filter((status) => Date.now() >= (new Date(status.createdAt)).getTime());
             const numRemoved = feed.length - cleanFeed.length;
             if (numRemoved > 0) console.log(`Removed ${numRemoved} feed items bc they were in the future`);
