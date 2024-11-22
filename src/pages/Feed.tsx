@@ -7,7 +7,7 @@ import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
 import { Modal } from "react-bootstrap";
 import { usePersistentState } from "react-persistent-state";
 
-import TheAlgorithm, { condensedStatus, StatusType, ScoresType } from "fedialgo";
+import { condensedStatus, StatusType, ScoresType, TheAlgorithm } from "fedialgo";
 
 import { settingsType } from "../types";
 import { useAuth } from "../hooks/useAuth";

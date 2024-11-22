@@ -6,7 +6,7 @@
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import React from 'react';
-import TheAlgorithm, { ScoresType } from "fedialgo";
+import { ScoresType, TheAlgorithm } from "fedialgo";
 import { settingsType } from "../types";
 import { useAuth } from '../hooks/useAuth';
 import { usePersistentState } from "react-persistent-state";
