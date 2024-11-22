@@ -6,6 +6,7 @@ import { useAppStorage } from '../hooks/useLocalStorage';
 import { useAuth } from '../hooks/useAuth';
 import { User } from '../types';
 
+
 export default function CallbackPage() {
     const [error, setError] = React.useState("");
     const [searchParams] = useSearchParams();
