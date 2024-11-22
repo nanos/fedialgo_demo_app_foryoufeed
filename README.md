@@ -8,7 +8,8 @@ Both this repo and the `fedialgo` repo linked above were forked from [pkreissel'
 * [`node.js`](https://nodejs.org/):
    * On Linux use `apt`, `yum`, or your favorite package manager. For example here's [guide on how to install `node.js` on Ubuntu linux](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04).
    * On macOS you can install `node.js` with [Homebrew](https://brew.sh/) by running `brew install node`.
-* `git` (hopefully you have this already but if you're on a recent version of macOS you may need to `brew install git`)
+* `git`
+   * Hopefully you have `git` installed already but if you're on a recent version of macOS you may need to use Homebrew: `brew install git`
 
 ### Quick Start
 1. `git clone https://github.com/michelcrypt4d4mus/fedialgo_demo_app_foryoufeed`
