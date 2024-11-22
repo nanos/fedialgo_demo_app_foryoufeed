@@ -9,7 +9,7 @@ import { usePersistentState } from "react-persistent-state";
 
 import TheAlgorithm from "fedialgo";
 import { condensedStatus } from 'fedialgo/dist/helpers'; // TODO: why do we need the dist/ dir?
-import { StatusType, weightsType } from 'fedialgo/dist/types';
+import { StatusType, ScoresType } from 'fedialgo/dist/types';
 
 import { settingsType } from "../types";
 import { useAuth } from "../hooks/useAuth";
@@ -41,7 +41,7 @@ const Feed = () => {
     const [error, setError] = useState<string>("");
     const [filteredLanguages, setFilteredLanguages] = useState<string[]>([]); //languages to filter
     const [loading, setLoading] = useState<boolean>(true); //true if page is still loading
-    const [weights, setWeights] = useState<weightsType>({}); //weights for each factor
+    const [weights, setWeights] = useState<ScoresType>({}); //weights for each factor
     // Persistent state variables
     const [feed, setFeed] = usePersistentState<StatusType[]>([], user.id + "feed"); //feed to display
     const [records, setRecords] = usePersistentState<number>(DEFAULT_NUM_POSTS, user.id + "records"); //how many records to show
@@ -137,14 +137,14 @@ const Feed = () => {
     };
 
     //Adjust user Weights with slider values
-    const weightAdjust = async (scores: weightsType) => {
+    const weightAdjust = async (scores: ScoresType) => {
         const newWeights = await algoObj.weightAdjust(scores);
         console.log("new weights:");
         console.log(newWeights);
         setWeights(newWeights);
     };
 
-    const updateWeights = async (newWeights: weightsType) => {
+    const updateWeights = async (newWeights: ScoresType) => {
         console.log(`updateWeights() called...`)
         setWeights(newWeights);
 

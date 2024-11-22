@@ -10,12 +10,12 @@ import TheAlgorithm from "fedialgo";
 import { settingsType } from "../types";
 import { useAuth } from '../hooks/useAuth';
 import { usePersistentState } from "react-persistent-state";
-import { weightsType } from 'fedialgo/dist/types';  // TODO: why do we need the dist/ dir?
+import { ScoresType } from 'fedialgo/dist/types';  // TODO: why do we need the dist/ dir?
 
 
 interface WeightSetterProps {
-    weights: weightsType,
-    updateWeights: (weights: weightsType) => void,
+    weights: ScoresType,
+    updateWeights: (weights: ScoresType) => void,
     settings: settingsType,
     updateSettings: (settings: settingsType) => void,
     languages: string[],

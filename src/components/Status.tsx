@@ -7,15 +7,15 @@ import { AttachmentsModal } from './AttachmentsModal';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 import { ScoreModal } from './ScoreModal';
-import { StatusType, weightsType } from "fedialgo/dist/types";  // TODO: why is the dist/ needed?
+import { StatusType, ScoresType } from "fedialgo/dist/types";  // TODO: why is the dist/ needed?
 import { User } from '../types';
 
 interface StatusComponentProps {
     status: StatusType,
     api: mastodon.rest.Client,
     user: User,
-    weightAdjust: (statusWeight: weightsType) => void
-    setError: (error: string) => void
+    weightAdjust: (statusWeight: ScoresType) => void,
+    setError: (error: string) => void,
 }
 
 
