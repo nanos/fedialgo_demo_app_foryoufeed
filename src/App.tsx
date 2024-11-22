@@ -26,14 +26,15 @@ const App: React.FC = () => {
     return (
         <BrowserRouter>
             <AuthProvider>
-                <div style={
-                    {
+                <div
+                    style={{
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         height: '100vh'
-                    }
-                } className='container-fluid'>
+                    }}
+                    className='container-fluid'
+                >
                     <Header />
                     <Routes>
                         <Route path="/" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
@@ -42,9 +43,9 @@ const App: React.FC = () => {
                         <Route path="/logout" element={<LogoutPage />} />
                     </Routes>
                     <Footer />
-                </div >
+                </div>
             </AuthProvider>
-        </BrowserRouter >
+        </BrowserRouter>
     )
 };
 
