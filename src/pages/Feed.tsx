@@ -38,7 +38,7 @@ const Feed = () => {
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null); //algorithm to use
     const [error, setError] = useState<string>("");
     const [filteredLanguages, setFilteredLanguages] = useState<string[]>([]); //languages to filter
-    const [loading, setLoading] = useState<boolean>(true);  // true if page is still loading
+    const [isLoading, setIsLoading] = useState<boolean>(true);  // true if page is still loading
     const [userWeights, setUserWeights] = useState<ScoresType>({});  // weights for each factor
 
     // Persistent state variables
@@ -70,11 +70,11 @@ const Feed = () => {
         if (mostRecentToot && (Date.now() - (new Date(mostRecentToot.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
             setRecords(DEFAULT_NUM_POSTS);
             constructFeed();
-            setLoading(false);
+            setIsLoading(false);
         } else {
             console.log("loaded feed from cache");
             restoreFeedCache();
-            setLoading(false);
+            setIsLoading(false);
         }
     }, []);
 
@@ -214,7 +214,7 @@ const Feed = () => {
 
             <FindFollowers api={api} user={user} />
 
-            {!loading && api && (feed.length > 1) &&
+            {!isLoading && api && (feed.length > 1) &&
                 filteredFeed.slice(0, Math.max(DEFAULT_NUM_POSTS, records)).map((toot: StatusType) => (
                     <StatusComponent
                         api={api}
@@ -227,7 +227,7 @@ const Feed = () => {
                 )
             )}
 
-            {(feed.length == 0 || loading) && <FullPageIsLoading />}
+            {(feed.length == 0 || isLoading) && <FullPageIsLoading />}
             <div ref={bottomRef} onClick={loadMore}>Load More</div>
         </Container>
     )
