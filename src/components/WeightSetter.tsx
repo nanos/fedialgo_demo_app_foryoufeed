@@ -23,6 +23,7 @@ interface WeightSetterProps {
     algoObj: TheAlgorithm
 }
 
+
 const WeightSetter = ({ weights, updateWeights, settings, updateSettings, languages, setSelectedLanguages, algoObj }: WeightSetterProps) => {
     const { user } = useAuth();
     const [selectedLang, setLang] = usePersistentState<string[]>([], user.id + "selectedLangs");
@@ -40,13 +41,13 @@ const WeightSetter = ({ weights, updateWeights, settings, updateSettings, langua
                                 </Form.Label>
 
                                 <Form.Range
+                                    id={key}
                                     min={Math.min(...Object.values(weights).filter(x => !isNaN(x)) ?? [0]) - 1 * 1.2}
                                     max={Math.max(...Object.values(weights).filter(x => !isNaN(x)) ?? [0]) + 1 * 1.2}
                                     step={0.01}
-                                    id={key}
                                     value={weights[key] ?? 1}
                                     onChange={(e) => {
-                                        const newWeights = weights;
+                                        const newWeights = Object.assign({}, weights);
                                         newWeights[key] = Number(e.target.value);
                                         updateWeights(newWeights);
                                     }}
