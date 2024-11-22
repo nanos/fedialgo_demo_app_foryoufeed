@@ -29,8 +29,11 @@ Once the initial load is complete you can adjust the way the algorithm weights v
 
 One thing that's kind oa gotcha is the way the `topPosts - Favor posts that are trending in the Fediverse` slider works. Because trending posts often have tons of engagement in the form of replies, favorites, and retoots they can easily drown out the toots from people you are actually following. As a result the impact of this slider gets increasingly drastic _but only if the value is below 1.0_. At 1.0 and above it behaves like all the other weighting sliders.
 
+### Troubleshooting
+* Sometimes the infinite scroll kind of fails if you're working with a cache of Mastodon data. Most browsers will you all to clear all the "site data" (cookies and cache) for a single site. [How to do that in Chrome](https://support.google.com/chrome/thread/16531954/clear-cache-for-specific-website-in-google-chrome?hl=en). Note that loading the `fedialgo` demo app will take some a while the first time you point your browser at it after clearing your browser's cache.
+
 # Contributing
-You can install the local `fedialgo` package with `npm link` (fedialgo dir) / `npm link fedialgo` (this project dir) _or_ with `npm install path/to/fedialgo` but in order to pick up any code changes you will have to run `npm run build` in the `fedialgo` package dir. (TODO: why?)
+You can install the local `fedialgo` package by running `npm link`  in the `fedialgo` project dir and then`npm link fedialgo` in this project's dir _or_ you can do that kind of thing manually by running `npm install path/to/local/fedialgo` in this repo's dir but either way in order to pick up any code changes from `fedialgo` you will have to run `npm run build` in the `fedialgo` package dir. (TODO: why?)
 
 #### Code Notes
 * The interesting stuff that actually handles the feed is in the [`Feed.tsx`](src/pages/Feed.tsx) file.
@@ -38,5 +41,5 @@ You can install the local `fedialgo` package with `npm link` (fedialgo dir) / `n
 * A live installation of this app is currently hosted here: https://foryoufeed.vercel.app
 
 
-### TODO
+# TODO
 * videos don't show up
