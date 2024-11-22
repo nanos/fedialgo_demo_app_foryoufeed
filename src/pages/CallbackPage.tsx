@@ -30,7 +30,6 @@ export default function CallbackPage() {
 
     useEffect(() => {
         if (code !== null && !user) {
-            console.log(`Setting code parameter in CallbackPage...`);
             oAuth(code);
         }
     }, [code]);
@@ -45,33 +44,24 @@ export default function CallbackPage() {
         body.append('code', code);
         body.append('scope', scope);
 
-        const result = await fetch(`${app.website}/oauth/token`, {
-            method: 'POST',
-            body,
-        });
-
-        const json = await result.json()
-        const api = await loginToMastodon({
-            url: app.website,
-            accessToken: json["access_token"],
-        });
+        const oAuthResult = await fetch(`${app.website}/oauth/token`, {method: 'POST', body});
+        const json = await oAuthResult.json()
+        const accessToken = json["access_token"];
+        const api = await loginToMastodon({accessToken: accessToken, url: app.website});
 
         api.v1.accounts.verifyCredentials().then((user) => {
             const userData: User = {
+                access_token: accessToken,
                 id: user.id,
-                username: user.username,
                 profilePicture: user.avatar,
-                access_token: json["access_token"],
                 server: app.website,
+                username: user.username,
             }
-            loginUser(userData).then(() => {
-                console.log("Logged in!");
-            })
+
+            loginUser(userData).then(() => console.log("Logged in successfully!"));
         }).catch((error) => {
             console.warn(error)
             setError(error.toString())
-        }).finally(() => {
-            console.log("finally verified credentials");
         });
     };
 
