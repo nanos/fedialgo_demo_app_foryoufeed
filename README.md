@@ -27,9 +27,13 @@ Once the initial load is complete you can adjust the way the algorithm weights v
 
 ![Algorithm Weighting Sliders](./doc/algorithm_sliders.png)
 
-One thing that's kind oa gotcha is the way the `topPosts - Favor posts that are trending in the Fediverse` slider works. Because trending posts often have tons of engagement in the form of replies, favorites, and retoots they can easily drown out the toots from people you are actually following. As a result the impact of this slider gets increasingly drastic _but only if the value is below 1.0_. At 1.0 and above it behaves like all the other weighting sliders.
+One thing that's kind of a gotcha is the way the `topPosts - Favor posts that are trending in the Fediverse` slider works. Because trending posts often have tons of engagement in the form of replies, favorites, and retoots they can easily drown out the toots from people you are actually following. As a result the impact of this slider gets increasingly drastic _but only if the value is below 1.0_. At 1.0 and above it behaves like all the other weighting sliders.
+
+### Shutdown
+`Ctrl-C` in the terminal window you launched the `node.js` server will kill the server.
 
 ### Troubleshooting
+* Sometimes (often?) when starting the server up again after the first time you will find your Mastodon login has expired in which case the browser will probably present you with some very large, very red error message along the lines of `Uncaught runtime errors!` or similar. If you just ignore / close the error popup you should be presented with the option to relogin.
 * Sometimes the infinite scroll kind of gets stuck if you're working with a cache of Mastodon data. Most browsers will you all to clear all the "site data" (cookies and cache) for a single site. [How to do that in Chrome](https://support.google.com/chrome/thread/16531954/clear-cache-for-specific-website-in-google-chrome?hl=en). Note that loading the `fedialgo` demo app will take some a while the first time you point your browser at it after clearing your browser's cache.
 * Infinite scrolls isn't _really_ infinite (yet). If you scroll far enough you will run out of toots to peruse.
 
