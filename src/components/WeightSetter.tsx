@@ -6,8 +6,7 @@
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import React from 'react';
-import TheAlgorithm from "fedialgo";
-import { ScoresType } from 'fedialgo/dist/types';  // TODO: why do we need the dist/ dir?
+import TheAlgorithm, { ScoresType } from "fedialgo";
 import { settingsType } from "../types";
 import { useAuth } from '../hooks/useAuth';
 import { usePersistentState } from "react-persistent-state";

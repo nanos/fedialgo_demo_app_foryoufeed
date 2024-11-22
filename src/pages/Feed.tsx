@@ -7,9 +7,7 @@ import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
 import { Modal } from "react-bootstrap";
 import { usePersistentState } from "react-persistent-state";
 
-import TheAlgorithm from "fedialgo";
-import { condensedStatus } from 'fedialgo/dist/helpers'; // TODO: why do we need the dist/ dir?
-import { StatusType, ScoresType } from 'fedialgo/dist/types';
+import TheAlgorithm, { condensedStatus, StatusType, ScoresType } from "fedialgo";
 
 import { settingsType } from "../types";
 import { useAuth } from "../hooks/useAuth";
