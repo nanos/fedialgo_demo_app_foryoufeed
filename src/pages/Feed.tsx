@@ -1,25 +1,28 @@
 /*
  * Class for retrieving and sorting the user's feed based on their chosen weighting values.
  */
+import Container from "react-bootstrap/esm/Container";
+import React, { useState, useEffect, useRef } from "react";
 import { mastodon, createRestAPIClient as loginMasto } from "masto";
 import { Modal } from "react-bootstrap";
-import { settingsType } from "../types";
-import { StatusType, weightsType } from 'fedialgo/dist/types';
-import { useAuth } from "../hooks/useAuth";
 import { usePersistentState } from "react-persistent-state";
-import Container from "react-bootstrap/esm/Container";
+
+import TheAlgorithm from "fedialgo";
+import { condensedStatus } from 'fedialgo/dist/helpers'; // TODO: why do we need the dist/ dir?
+import { StatusType, weightsType } from 'fedialgo/dist/types';
+
+import { settingsType } from "../types";
+import { useAuth } from "../hooks/useAuth";
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
-import React, { useState, useEffect, useRef } from "react";
-import StatusComponent, { condensedStatus, condensedString } from "../components/Status";
-import TheAlgorithm from "fedialgo";
+import StatusComponent from "../components/Status";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
 
 const DEFAULT_NUM_POSTS = 20;
-const EARLIEST_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 const NUM_POSTS_TO_LOAD_ON_SCROLL = 10;
-const NUM_STATUSES_TO_LOG = 50;
+
+const EARLIEST_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 const RELOAD_IF_OLDER_THAN_MINUTES = 0.5;
 const RELOAD_IF_OLDER_THAN_MS = RELOAD_IF_OLDER_THAN_MINUTES * 60 * 1000;
 
@@ -51,10 +54,7 @@ const Feed = () => {
         if (window.scrollY % 10 == 0) setScrollPos(window.scrollY);
     })
 
-    const api: mastodon.rest.Client = loginMasto({
-        url: user.server,
-        accessToken: user.access_token,
-    });
+    const api: mastodon.rest.Client = loginMasto({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 
@@ -88,51 +88,47 @@ const Feed = () => {
     }, [isBottom]);
 
     const restoreFeedCache = async () => {
+        if (!user) return;
         console.log(`restoreFeedCache() called...`);
+        let currUser: mastodon.v1.Account;
 
-        if (user) {
-            let currUser: mastodon.v1.Account;
-
-            try {
-                currUser = await api.v1.accounts.verifyCredentials();
-            } catch (error) {
-                console.warn(error);
-                logout();
-            }
-
-            const algo = new TheAlgorithm(api, currUser);
-            setWeights(await algo.getWeights());
-            setAlgo(algo);
-            window.scrollTo(0, scrollPos);
+        try {
+            currUser = await api.v1.accounts.verifyCredentials();
+        } catch (error) {
+            console.warn(error);
+            logout();
         }
+
+        const algo = new TheAlgorithm(api, currUser);
+        setWeights(await algo.getWeights());
+        setAlgo(algo);
+        window.scrollTo(0, scrollPos);
     };
 
     const constructFeed = async () => {
+        if (!user) return;
         console.log(`constructFeed() called...`);
+        let currUser: mastodon.v1.Account;
 
-        if (user) {
-            let currUser: mastodon.v1.Account;
-
-            try {
-                currUser = await api.v1.accounts.verifyCredentials();
-            } catch (error) {
-                console.warn(error);
-                logout();
-            }
-
-            const algo = new TheAlgorithm(api, currUser);
-            const feed: StatusType[] = await algo.getFeed();
-
-            // Sometimes there are wonky statuses that are like years in the future so we filter them out.
-            // TODO: move this to the fedialgo package.
-            const cleanFeed = feed.filter((status) => Date.now() >= (new Date(status.createdAt)).getTime());
-            const numRemoved = feed.length - cleanFeed.length;
-            if (numRemoved > 0) console.log(`Removed ${numRemoved} feed items bc they were in the future`);
-
-            setWeights(await algo.getWeights());
-            setFeed(cleanFeed);
-            setAlgo(algo);
+        try {
+            currUser = await api.v1.accounts.verifyCredentials();
+        } catch (error) {
+            console.warn(error);
+            logout();
         }
+
+        const algo = new TheAlgorithm(api, currUser);
+        const feed: StatusType[] = await algo.getFeed();
+
+        // Sometimes there are wonky statuses that are like years in the future so we filter them out.
+        // TODO: move this to the fedialgo package.
+        const cleanFeed = feed.filter((status) => Date.now() >= (new Date(status.createdAt)).getTime());
+        const numRemoved = feed.length - cleanFeed.length;
+        if (numRemoved > 0) console.log(`Removed ${numRemoved} feed items bc they were in the future`);
+
+        setWeights(await algo.getWeights());
+        setFeed(cleanFeed);
+        setAlgo(algo);
     };
 
     const loadMore = () => {
@@ -164,7 +160,7 @@ const Feed = () => {
         setFeed([...feed]);
     };
 
-    // Log the feed to the console
+    // Log the weighted feed to the console
     if (feed.length > 1) {
         console.log(`${feed.length} status elements in feed:`, feed);
         console.log(``);
