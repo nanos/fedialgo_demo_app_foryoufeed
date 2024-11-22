@@ -10,8 +10,6 @@ import { ScoreModal } from './ScoreModal';
 import { StatusType, weightsType } from "fedialgo/dist/types";  // TODO: why is the dist/ needed?
 import { User } from '../types';
 
-const CONTENT_CHARS_TO_LOG = 150;
-
 interface StatusComponentProps {
     status: StatusType,
     api: mastodon.rest.Client,
@@ -37,17 +35,17 @@ export default function StatusComponent(props: StatusComponentProps) {
     // Increase attModal on Right Arrow
     React.useEffect(() => {
         const handleKeyDown = (e) => {
-            if (attModal === -1) return
+            if (attModal === -1) return;
+
             if (e.key === "ArrowRight" && attModal < status.mediaAttachments.length - 1) {
-                setAttModal(attModal + 1)
+                setAttModal(attModal + 1);
             } else if (e.key === "ArrowLeft" && attModal > 0) {
-                setAttModal(attModal - 1)
+                setAttModal(attModal - 1);
             }
         }
-        window.addEventListener('keydown', handleKeyDown)
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown)
-        }
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
     }, [attModal])
 
 
@@ -55,10 +53,10 @@ export default function StatusComponent(props: StatusComponentProps) {
         if (status.uri.includes(props.user.server)) {
             return status;
         } else {
-            const res = await masto.v2.search.fetch({ q: status.uri, resolve: true })
-            return res.statuses[0]
+            const res = await masto.v2.search.fetch({ q: status.uri, resolve: true });
+            return res.statuses[0];
         }
-    }
+    };
 
     const reblog = async () => {
         //Reblog a post
@@ -69,7 +67,7 @@ export default function StatusComponent(props: StatusComponentProps) {
             reblogged ? await masto.v1.statuses.$select(id).unreblog() : await masto.v1.statuses.$select(id).reblog();
             setReblogged(!reblogged)
         })();
-    }
+    };
 
     const fav = async () => {
         //Favourite a post
@@ -83,7 +81,7 @@ export default function StatusComponent(props: StatusComponentProps) {
             favourited ? await masto.v1.statuses.$select(id).unfavourite() : await masto.v1.statuses.$select(id).favourite();
             setFavourited(!favourited)
         })();
-    }
+    };
 
     const followUri = async (e) => {
         //Follow a link to another instance on the homeserver
@@ -95,12 +93,12 @@ export default function StatusComponent(props: StatusComponentProps) {
         //new tab:
         //window.open(props.user.server + "/@" + status_.account.acct + "/" + status_.id, '_blank');
         window.location.href = props.user.server + "/@" + status_.account.acct + "/" + status_.id
-    }
+    };
 
     const showScore = async () => {
         //Show the score of a post
         setScoreModal(true)
-    }
+    };
 
     return (
         <div>
