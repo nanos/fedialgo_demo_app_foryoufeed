@@ -6,9 +6,11 @@ import Form from 'react-bootstrap/esm/Form';
 import { usePersistentState } from "react-persistent-state"
 import { useLocalStorage, AppStorage } from "../hooks/useLocalStorage";
 
-export default function LoginPage() {
-    const [server, setServer] = usePersistentState<string>("", "server");
+const DEFAULT_MASTODON_SERVER = "universeodon.com";  // Home of George Takei!
 
+
+export default function LoginPage() {
+    const [server, setServer] = usePersistentState<string>(DEFAULT_MASTODON_SERVER, "server");
     const [_app, setApp] = useLocalStorage({ keyName: "app", defaultValue: {} } as AppStorage)
 
     const loginRedirect = async (): Promise<void> => {
@@ -62,10 +64,17 @@ export default function LoginPage() {
                     </p>
                 </div>
                 <Form.Group className="mb-3 align-middle">
-                    <Form.Label className="text-center w-100">Enter Mastodon Server in the form: mastodon.social</Form.Label >
-                    <Form.Control type="url" id="mastodon_server" placeholder="mastodon.social" onChange={(e) => {
-                        setServer(e.target.value);
-                    }} value={server} />
+                    <Form.Label className="text-center w-100">
+                        Enter Mastodon Server in the form: {DEFAULT_MASTODON_SERVER}
+                    </Form.Label >
+
+                    <Form.Control
+                        id="mastodon_server"
+                        onChange={(e) => setServer(e.target.value)}
+                        placeholder={DEFAULT_MASTODON_SERVER}
+                        type="url"
+                        value={server}
+                    />
                 </Form.Group>
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                     <Button onClick={loginRedirect}>Login</Button>
