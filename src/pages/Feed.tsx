@@ -41,7 +41,7 @@ const Feed = () => {
     const [error, setError] = useState<string>("");
     const [filteredLanguages, setFilteredLanguages] = useState<string[]>([]); //languages to filter
     const [loading, setLoading] = useState<boolean>(true);  // true if page is still loading
-    const [weights, setWeights] = useState<ScoresType>({});  // weights for each factor
+    const [userWeights, setUserWeights] = useState<ScoresType>({});  // weights for each factor
     // Persistent state variables
     const [feed, setFeed] = usePersistentState<StatusType[]>([], user.id + "feed"); //feed to display
     const [records, setRecords] = usePersistentState<number>(DEFAULT_NUM_POSTS, user.id + "records"); //how many records to show
@@ -100,7 +100,7 @@ const Feed = () => {
         }
 
         const algo = new TheAlgorithm(api, currUser);
-        setWeights(await algo.getWeights());
+        setUserWeights(await algo.getWeights());
         setAlgo(algo);
         window.scrollTo(0, scrollPos);
     };
@@ -126,7 +126,7 @@ const Feed = () => {
         const numRemoved = feed.length - cleanFeed.length;
         if (numRemoved > 0) console.log(`Removed ${numRemoved} feed items bc they were in the future`);
 
-        setWeights(await algo.getWeights());
+        setUserWeights(await algo.getWeights());
         setFeed(cleanFeed);
         setAlgo(algo);
     };
@@ -139,14 +139,14 @@ const Feed = () => {
     //Adjust user Weights with slider values
     const weightAdjust = async (scores: ScoresType) => {
         const newWeights = await algoObj.weightAdjust(scores);
-        console.log("new weights:");
+        console.log("new userWeights:");
         console.log(newWeights);
-        setWeights(newWeights);
+        setUserWeights(newWeights);
     };
 
     const updateWeights = async (newWeights: ScoresType) => {
         console.log(`updateWeights() called...`)
-        setWeights(newWeights);
+        setUserWeights(newWeights);
 
         if (algoObj) {
             const newFeed = await algoObj.weightTootsInFeed(newWeights);
@@ -177,7 +177,7 @@ const Feed = () => {
             </Modal>
 
             <WeightSetter
-                weights={weights}
+                userWeights={userWeights}
                 updateWeights={updateWeights}
                 algoObj={algoObj}
                 settings={settings}

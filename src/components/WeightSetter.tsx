@@ -7,24 +7,32 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import React from 'react';
 import TheAlgorithm from "fedialgo";
+import { ScoresType } from 'fedialgo/dist/types';  // TODO: why do we need the dist/ dir?
 import { settingsType } from "../types";
 import { useAuth } from '../hooks/useAuth';
 import { usePersistentState } from "react-persistent-state";
-import { ScoresType } from 'fedialgo/dist/types';  // TODO: why do we need the dist/ dir?
 
 
 interface WeightSetterProps {
-    weights: ScoresType,
+    userWeights: ScoresType,
     updateWeights: (weights: ScoresType) => void,
     settings: settingsType,
     updateSettings: (settings: settingsType) => void,
     languages: string[],
     setSelectedLanguages: (languages: string[]) => void,
     algoObj: TheAlgorithm
-}
+};
 
 
-const WeightSetter = ({ weights, updateWeights, settings, updateSettings, languages, setSelectedLanguages, algoObj }: WeightSetterProps) => {
+const WeightSetter = ({
+    userWeights,
+    updateWeights,
+    settings,
+    updateSettings,
+    languages,
+    setSelectedLanguages,
+    algoObj
+}: WeightSetterProps) => {
     const { user } = useAuth();
     const [selectedLang, setLang] = usePersistentState<string[]>([], user.id + "selectedLangs");
 
@@ -33,21 +41,21 @@ const WeightSetter = ({ weights, updateWeights, settings, updateSettings, langua
             <Accordion.Item eventKey="0">
                 <Accordion.Header>Feed Algorithmus</Accordion.Header>
                 <Accordion.Body>
-                    {weights && Object.keys(weights).map((key, index) => {
+                    {userWeights && Object.keys(userWeights).map((key, index) => {
                         return (
                             <Form.Group className="mb-3" key={index}>
                                 <Form.Label>
-                                    <b>{key + " - "}</b>{algoObj.getDescription(key) + ": " + (weights[key]?.toFixed(2) ?? "1")}
+                                    <b>{key + " - "}</b>{algoObj.getDescription(key) + ": " + (userWeights[key]?.toFixed(2) ?? "1")}
                                 </Form.Label>
 
                                 <Form.Range
                                     id={key}
-                                    min={Math.min(...Object.values(weights).filter(x => !isNaN(x)) ?? [0]) - 1 * 1.2}
-                                    max={Math.max(...Object.values(weights).filter(x => !isNaN(x)) ?? [0]) + 1 * 1.2}
+                                    min={Math.min(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) - 1 * 1.2}
+                                    max={Math.max(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) + 1 * 1.2}
                                     step={0.01}
-                                    value={weights[key] ?? 1}
+                                    value={userWeights[key] ?? 1}
                                     onChange={(e) => {
-                                        const newWeights = Object.assign({}, weights);
+                                        const newWeights = Object.assign({}, userWeights);
                                         newWeights[key] = Number(e.target.value);
                                         updateWeights(newWeights);
                                     }}
