@@ -12,6 +12,8 @@ Both this repo and the `fedialgo` package linked above were forked from [pkreiss
    * Hopefully you have `git` installed already but if you're on a recent version of macOS you may need to use Homebrew: `brew install git`
 
 ### Quick Start
+There's [a script](./quick_install.sh) in this repo that will do all the steps for you if you're into that kind of thing, otherwise:
+
 1. `git clone https://github.com/michelcrypt4d4mus/fedialgo_demo_app_foryoufeed`
 1. `cd fedialgo_demo_app_foryoufeed`
 1. `npm install` (you can ignore the various warnings)
