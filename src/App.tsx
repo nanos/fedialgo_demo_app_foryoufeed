@@ -1,15 +1,18 @@
 import * as React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+
+import { inject } from '@vercel/analytics';
+
+import CallbackPage from './pages/CallbackPage';
+import Feed from './pages/Feed';
 import Footer from './components/Footer';
 import Header from './components/Header';
-import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { ProtectedRoute } from './components/ProtectedRoute';
-import CallbackPage from './pages/CallbackPage';
 import LoginPage from './pages/LoginPage';
 import LogoutPage from './pages/LogoutPage';
-import Feed from './pages/Feed';
 import { AuthProvider } from './hooks/useAuth';
-import { inject } from '@vercel/analytics';
+import { ProtectedRoute } from './components/ProtectedRoute';
+
 
 const App: React.FC = () => {
   if ('serviceWorker' in navigator) {
