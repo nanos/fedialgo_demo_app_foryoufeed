@@ -1,7 +1,7 @@
 # Description
 This repo is primarily a simple demo application for the [`fedialgo`](https://github.com/michelcrypt4d4mus/fedialgo) package, a customizable algorithm for the federated social media platform [Mastodon](https://joinmastodon.org/) that can free you from the tyranny of Mastodon's reverse chronological order timeline.
 
-Both this repo and the `fedialgo` repo linked above were forked from [pkreissel's original implementation](https://github.com/pkreissel/fedialgo).
+Both this repo and the `fedialgo` package linked above were forked from [pkreissel's original implementations](https://github.com/pkreissel/fedialgo).
 
 # Installation
 ### Prerequisites
@@ -22,7 +22,7 @@ Both this repo and the `fedialgo` repo linked above were forked from [pkreissel'
 1. Have fun.
 1. Profit.
 
-### Usage
+# Usage
 Once the initial load is complete you can adjust the way the algorithm weights various aspects of a toot when it decides what should be at or near the top of your feed. Hopefully these are self explanatory:
 
 ![Algorithm Weighting Sliders](./doc/algorithm_sliders.png)
@@ -30,7 +30,8 @@ Once the initial load is complete you can adjust the way the algorithm weights v
 One thing that's kind oa gotcha is the way the `topPosts - Favor posts that are trending in the Fediverse` slider works. Because trending posts often have tons of engagement in the form of replies, favorites, and retoots they can easily drown out the toots from people you are actually following. As a result the impact of this slider gets increasingly drastic _but only if the value is below 1.0_. At 1.0 and above it behaves like all the other weighting sliders.
 
 ### Troubleshooting
-* Sometimes the infinite scroll kind of fails if you're working with a cache of Mastodon data. Most browsers will you all to clear all the "site data" (cookies and cache) for a single site. [How to do that in Chrome](https://support.google.com/chrome/thread/16531954/clear-cache-for-specific-website-in-google-chrome?hl=en). Note that loading the `fedialgo` demo app will take some a while the first time you point your browser at it after clearing your browser's cache.
+* Sometimes the infinite scroll kind of gets stuck if you're working with a cache of Mastodon data. Most browsers will you all to clear all the "site data" (cookies and cache) for a single site. [How to do that in Chrome](https://support.google.com/chrome/thread/16531954/clear-cache-for-specific-website-in-google-chrome?hl=en). Note that loading the `fedialgo` demo app will take some a while the first time you point your browser at it after clearing your browser's cache.
+* Infinite scrolls isn't _really_ infinite (yet). If you scroll far enough you will run out of toots to peruse.
 
 # Contributing
 You can install the local `fedialgo` package by running `npm link`  in the `fedialgo` project dir and then`npm link fedialgo` in this project's dir _or_ you can do that kind of thing manually by running `npm install path/to/local/fedialgo` in this repo's dir but either way in order to pick up any code changes from `fedialgo` you will have to run `npm run build` in the `fedialgo` package dir. (TODO: why?)
