@@ -20,18 +20,18 @@ interface WeightSetterProps {
     updateSettings: (settings: settingsType) => void,
     languages: string[],
     setSelectedLanguages: (languages: string[]) => void,
-    algoObj: TheAlgorithm
+    algorithm: TheAlgorithm
 };
 
 
 const WeightSetter = ({
-    userWeights,
-    updateWeights,
-    settings,
-    updateSettings,
+    algorithm,
     languages,
     setSelectedLanguages,
-    algoObj
+    settings,
+    updateWeights,
+    userWeights,
+    updateSettings,
 }: WeightSetterProps) => {
     const { user } = useAuth();
     const [selectedLang, setLang] = usePersistentState<string[]>([], user.id + "selectedLangs");
@@ -45,7 +45,7 @@ const WeightSetter = ({
                         return (
                             <Form.Group className="mb-3" key={index}>
                                 <Form.Label>
-                                    <b>{key + " - "}</b>{algoObj.getDescription(key) + ": " + (userWeights[key]?.toFixed(2) ?? "1")}
+                                    <b>{key + " - "}</b>{algorithm.getDescription(key) + ": " + (userWeights[key]?.toFixed(2) ?? "1")}
                                 </Form.Label>
 
                                 <Form.Range

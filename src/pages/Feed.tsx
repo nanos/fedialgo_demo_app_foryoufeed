@@ -37,22 +37,23 @@ const Feed = () => {
     const { user, logout } = useAuth();
 
     // State variables
-    const [algoObj, setAlgo] = useState<TheAlgorithm>(null); //algorithm to use
+    const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null); //algorithm to use
     const [error, setError] = useState<string>("");
     const [filteredLanguages, setFilteredLanguages] = useState<string[]>([]); //languages to filter
     const [loading, setLoading] = useState<boolean>(true);  // true if page is still loading
     const [userWeights, setUserWeights] = useState<ScoresType>({});  // weights for each factor
+
     // Persistent state variables
     const [feed, setFeed] = usePersistentState<StatusType[]>([], user.id + "feed"); //feed to display
     const [records, setRecords] = usePersistentState<number>(DEFAULT_NUM_POSTS, user.id + "records"); //how many records to show
     const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
-
-    // TODO: changing this by clicking the checkbox in the GUI doesn't seem to work
+    // TODO: changing settings by clicking the checkbox in the GUI doesn't seem to work
     const [settings, setSettings] = usePersistentState<settingsType>(DEFAULT_SETTINGS, "settings"); //filter settings for feed
 
+    // TODO: what's the point of this?
     window.addEventListener("scroll", () => {
         if (window.scrollY % 10 == 0) setScrollPos(window.scrollY);
-    })
+    });
 
     const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
@@ -60,15 +61,15 @@ const Feed = () => {
 
     // Load the posts in the feed either from mastodon server or from the cache
     useEffect(() => {
-        const mostRecentStatus = feed.reduce((prev, current) =>
+        const mostRecentToot = feed.reduce((prev, current) =>
             (prev.createdAt > current.createdAt) ? prev : current,
-            { createdAt: EARLIEST_TIMESTAMP }
+            {createdAt: EARLIEST_TIMESTAMP}
         );
 
-        console.log("most recent item in feed", mostRecentStatus);
+        console.log("most recent toot in feed", mostRecentToot);
 
         // only reload feed if the newest status is older than RELOAD_IF_OLDER_THAN_MS
-        if (mostRecentStatus && (Date.now() - (new Date(mostRecentStatus.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
+        if (mostRecentToot && (Date.now() - (new Date(mostRecentToot.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
             setRecords(DEFAULT_NUM_POSTS);
             constructFeed();
             setLoading(false);
@@ -80,6 +81,12 @@ const Feed = () => {
     }, []);
 
     // Load more records when the user scrolls to bottom of the page
+    // TODO: This doesn't work when there's less elements in the feed array than are supposed to be
+    //       displayed as per the setRecords() value. For example this situation in logs breaks infinite scroll:
+    //
+    //  - hit bottom of page; should load more toots... Feed.tsx:78
+    //  - records=60, feed.length=56. loading 10 more toots... Feed.tsx:126
+    //  - 56 status elements in feed: Array(56) [ {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, … ]
     useEffect(() => {
         if (isBottom) {
             console.log("hit bottom of page; should load more toots...");
@@ -87,6 +94,8 @@ const Feed = () => {
         }
     }, [isBottom]);
 
+    // Load toots and all the rest of the data from long term storage
+    // TODO: does this still work?
     const restoreFeedCache = async () => {
         if (!user) return;
         console.log(`restoreFeedCache() called...`);
@@ -101,7 +110,7 @@ const Feed = () => {
 
         const algo = new TheAlgorithm(api, currUser);
         setUserWeights(await algo.getWeights());
-        setAlgo(algo);
+        setAlgorithm(algo);
         window.scrollTo(0, scrollPos);
     };
 
@@ -128,7 +137,7 @@ const Feed = () => {
 
         setUserWeights(await algo.getWeights());
         setFeed(cleanFeed);
-        setAlgo(algo);
+        setAlgorithm(algo);
     };
 
     const loadMore = () => {
@@ -138,7 +147,7 @@ const Feed = () => {
 
     //Adjust user Weights with slider values
     const weightAdjust = async (scores: ScoresType) => {
-        const newWeights = await algoObj.weightAdjust(scores);
+        const newWeights = await algorithm.weightAdjust(scores);
         console.log("new userWeights:");
         console.log(newWeights);
         setUserWeights(newWeights);
@@ -148,8 +157,8 @@ const Feed = () => {
         console.log(`updateWeights() called...`)
         setUserWeights(newWeights);
 
-        if (algoObj) {
-            const newFeed = await algoObj.weightTootsInFeed(newWeights);
+        if (algorithm) {
+            const newFeed = await algorithm.weightTootsInFeed(newWeights);
             setFeed(newFeed);
         }
     };
@@ -163,9 +172,24 @@ const Feed = () => {
     // Log the weighted feed to the console
     if (feed.length > 1) {
         console.log(`${feed.length} status elements in feed:`, feed);
-        console.log(``);
-        console.log(`CONDENSED FEED: `, feed.map(condensedStatus));
+        console.log(`ORDERED FEED (condensed): `, feed.map(condensedStatus));
     }
+
+    // Strip out toots we don't want to show to the user for various reasons
+    const filteredFeed = feed.filter((status: StatusType) => {
+        if (settings.onlyLinks && !(status.card || status.reblog?.card)) {
+            console.log(`Removing ${status.uri} from feed because it's not a link...`);
+            return false;
+        } else if (status.reblog && !settings.includeReposts) {
+            console.log(`Removing reblogged status ${status.uri} from feed...`);
+            return false;
+        } else if (filteredLanguages.length > 0 && !filteredLanguages.includes(status.language)) {
+            console.log(`Removing toot ${status.uri} w/invalid language ${status.language} (valid langs: ${JSON.stringify(filteredLanguages)}).`);
+            return false;
+        }
+
+        return true;
+    });
 
     return (
         <Container style={{ maxWidth: "700px", height: "auto" }}>
@@ -173,55 +197,39 @@ const Feed = () => {
                 <Modal.Header closeButton>
                     <Modal.Title>Error</Modal.Title>
                 </Modal.Header>
+
                 <Modal.Body>{error}</Modal.Body>
             </Modal>
 
             <WeightSetter
-                userWeights={userWeights}
-                updateWeights={updateWeights}
-                algoObj={algoObj}
-                settings={settings}
+                algorithm={algorithm}
                 languages={feed.reduce((languagesInFeed, item) => {
                     if (!languagesInFeed.includes(item.language)) languagesInFeed.push(item.language);
                     return languagesInFeed;
                 }, [])}
                 setSelectedLanguages={setFilteredLanguages}
+                settings={settings}
                 updateSettings={updateSettings}
+                updateWeights={updateWeights}
+                userWeights={userWeights}
             />
 
             <FindFollowers api={api} user={user} />
 
-            {!loading && api && (feed.length > 1) && feed.filter((status: StatusType) => {
-                let pass = true;
-
-                if (settings.onlyLinks && !(status.card || status.reblog?.card)) {
-                    console.log(`Removing ${status.uri} from feed because it's not a link...`);
-                    return false;
-                }
-                if (status.reblog && !settings.includeReposts) {
-                    console.log(`Removing reblogged status ${status.uri} from feed...`);
-                    return false;
-                }
-                if (filteredLanguages.length > 0 && !filteredLanguages.includes(status.language)) {
-                    console.log(`Removing status ${status.uri} with invalid language ${status.language} (valid langs: ${JSON.stringify(filteredLanguages)}).`);
-                    return false;
-                }
-
-                return pass;
-            }).slice(0, Math.max(DEFAULT_NUM_POSTS, records)).map((status: StatusType) => {
-                return (
+            {!loading && api && (feed.length > 1) &&
+                filteredFeed.slice(0, Math.max(DEFAULT_NUM_POSTS, records)).map((toot: StatusType) => (
                     <StatusComponent
-                        status={status}
                         api={api}
+                        key={toot.uri}
+                        setError={setError}
+                        status={toot}
                         user={user}
                         weightAdjust={weightAdjust}
-                        key={status.uri}
-                        setError={setError}
                     />
                 )
-            })}
+            )}
 
-            {(feed.length < 1 || loading) && <FullPageIsLoading />}
+            {(feed.length == 0 || loading) && <FullPageIsLoading />}
             <div ref={bottomRef} onClick={loadMore}>Load More</div>
         </Container>
     )
