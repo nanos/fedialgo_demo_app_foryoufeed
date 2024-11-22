@@ -15,37 +15,37 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 
 
 const App: React.FC = () => {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/service-worker.js');
-    });
-  }
-  if (process.env.NODE_ENV === "production") inject();
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js');
+        });
+    }
 
-  return (
+    if (process.env.NODE_ENV === "production") inject();
 
-    <BrowserRouter>
-      <AuthProvider>
-        <div style={
-          {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            height: '100vh'
-          }
-        } className='container-fluid'>
-          <Header />
-          <Routes>
-            <Route path="/" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
-            <Route path="/callback" element={<CallbackPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/logout" element={<LogoutPage />} />
-          </Routes>
-          <Footer />
-        </div >
-      </AuthProvider>
-    </BrowserRouter >
-  )
+    return (
+        <BrowserRouter>
+            <AuthProvider>
+                <div style={
+                    {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        height: '100vh'
+                    }
+                } className='container-fluid'>
+                    <Header />
+                    <Routes>
+                        <Route path="/" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
+                        <Route path="/callback" element={<CallbackPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/logout" element={<LogoutPage />} />
+                    </Routes>
+                    <Footer />
+                </div >
+            </AuthProvider>
+        </BrowserRouter >
+    )
 };
 
 export default App;
