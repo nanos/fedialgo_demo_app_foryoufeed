@@ -1,6 +1,7 @@
 # Description
-This repo is primarily a simple demo application for the [`fedialgo`](https://github.com/pkreissel/fedialgo) package, a customizable algorithm for the federated social media platform [Mastodon](https://joinmastodon.org/) that can free you from the tyranny of Mastodon's reverse chronological order timeline.
+This repo is primarily a simple demo application for the [`fedialgo`](https://github.com/michelcrypt4d4mus/fedialgo) package, a customizable algorithm for the federated social media platform [Mastodon](https://joinmastodon.org/) that can free you from the tyranny of Mastodon's reverse chronological order timeline.
 
+Both this repo and the `fedialgo` repo linked above were forked from [pkreissel's original implementation](https://github.com/pkreissel/fedialgo).
 
 # Installation
 ### Prerequisites
