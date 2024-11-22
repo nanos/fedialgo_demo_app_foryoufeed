@@ -3,7 +3,7 @@
  */
 import Container from "react-bootstrap/esm/Container";
 import React, { useState, useEffect, useRef } from "react";
-import { mastodon, createRestAPIClient as loginMasto } from "masto";
+import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
 import { Modal } from "react-bootstrap";
 import { usePersistentState } from "react-persistent-state";
 
@@ -54,9 +54,9 @@ const Feed = () => {
         if (window.scrollY % 10 == 0) setScrollPos(window.scrollY);
     })
 
-    const api: mastodon.rest.Client = loginMasto({url: user.server, accessToken: user.access_token});
+    const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
-    const isBottom = useOnScreen(bottomRef);
+    const isBottom = useOnScreen(bottomRef);  // TODO: this works after the initial load but after loading from cache it doesn't work
 
     // Load the posts in the feed either from mastodon server or from the cache
     useEffect(() => {

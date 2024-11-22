@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
+import { createRestAPIClient as loginToMastodon } from "masto"
 import { useSearchParams } from 'react-router-dom';
-import { createRestAPIClient as loginMasto } from "masto"
+
 import { useAppStorage } from '../hooks/useLocalStorage';
 import { useAuth } from '../hooks/useAuth';
 import { User } from '../types';
@@ -46,7 +47,7 @@ export default function CallbackPage() {
         });
 
         const json = await result.json()
-        const api = await loginMasto({
+        const api = await loginToMastodon({
             url: app.website,
             accessToken: json["access_token"],
         });

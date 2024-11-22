@@ -20,6 +20,7 @@ Run these commands in your preferred terminal application / shell console / what
 1. Launch the webserver: `npm run start`
 1. Point your web browser at [http://localhost:3000/](http://localhost:3000/)
 1. Login to your Mastodon account. If your browser is already logged into a Mastodon server you will be able to authenticate using the existing session.
+   * The first time you point your browser at the app you may have to wait 10-20 seconds for all the data to load. After that initial bulk load of your toot history, your follows, etc. etc. things should be smoother.
 4. Have fun
 5. Profit
 6. ???
