@@ -30,7 +30,7 @@ const DEFAULT_SETTINGS = {
 };
 
 
-const Feed = () => {
+export default function Feed() {
     //Contruct Feed on Page Load
     const { user, logout } = useAuth();
 
@@ -232,5 +232,3 @@ const Feed = () => {
         </Container>
     )
 };
-
-export default Feed;

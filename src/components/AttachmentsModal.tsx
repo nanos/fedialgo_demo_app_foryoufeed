@@ -1,5 +1,6 @@
 import parse from 'html-react-parser';
 import React from 'react';
+
 import { Modal } from 'react-bootstrap';
 import { StatusType } from "fedialgo";
 

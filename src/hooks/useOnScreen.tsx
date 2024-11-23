@@ -18,4 +18,4 @@ export default function useOnScreen(ref: RefObject<HTMLElement>) {
     }, []);
 
     return isIntersecting;
-}
+};

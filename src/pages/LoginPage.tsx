@@ -1,9 +1,11 @@
-import React from 'react';
-import { createRestAPIClient } from 'masto';
-import { stringifyQuery } from 'ufo'
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
+import React from 'react';
 import { usePersistentState } from "react-persistent-state"
+
+import { createRestAPIClient } from 'masto';
+import { stringifyQuery } from 'ufo'
+
 import { useLocalStorage, AppStorage } from "../hooks/useLocalStorage";
 
 const DEFAULT_MASTODON_SERVER = "universeodon.com";  // Home of George Takei!
@@ -82,4 +84,4 @@ export default function LoginPage() {
             </div>
         </>
     )
-}
+};

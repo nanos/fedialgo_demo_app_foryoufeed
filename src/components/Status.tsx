@@ -1,13 +1,18 @@
+/*
+ * Also known as a toot.
+ */
 import "../birdUI.css";
 import "../default.css";
 import parse from 'html-react-parser';
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
+import { mastodon } from 'masto';
+
 import { AttachmentsModal } from './AttachmentsModal';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { mastodon } from 'masto';
-import { ScoreModal } from './ScoreModal';
 import { StatusType, ScoresType } from "fedialgo";
+
+import { ScoreModal } from './ScoreModal';
 import { User } from '../types';
 
 interface StatusComponentProps {

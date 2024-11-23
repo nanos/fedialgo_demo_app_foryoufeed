@@ -23,7 +23,7 @@ interface WeightSetterProps {
 };
 
 
-const WeightSetter = ({
+export default function WeightSetter({
     algorithm,
     languages,
     setSelectedLanguages,
@@ -31,7 +31,7 @@ const WeightSetter = ({
     updateWeights,
     userWeights,
     updateSettings,
-}: WeightSetterProps) => {
+}: WeightSetterProps) {
     const { user } = useAuth();
     const [selectedLang, setLang] = usePersistentState<string[]>([], user.id + "selectedLangs");
 
@@ -110,7 +110,5 @@ const WeightSetter = ({
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
-    )
-}
-
-export default WeightSetter
+    );
+};

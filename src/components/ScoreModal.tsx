@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
+
 import { StatusType } from 'fedialgo';
 
 
@@ -9,6 +10,7 @@ export const ScoreModal = ({ scoreModal, setScoreModal, status }: { scoreModal: 
             <Modal.Header closeButton>
                 <Modal.Title>Score</Modal.Title>
             </Modal.Header>
+
             <Modal.Body>
                 <p>Score: {status.value}</p>
                 <p>Weights: {
