@@ -1,5 +1,5 @@
 /*
- * Also known as a toot.
+ * Render a Status, also known as a Toot.
  */
 import parse from 'html-react-parser';
 import React from 'react';

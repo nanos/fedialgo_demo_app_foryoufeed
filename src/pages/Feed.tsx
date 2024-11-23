@@ -14,11 +14,11 @@ import FullPageIsLoading from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
-import { settingsType } from "../types";
+import { settingsType, UserAlgo } from "../types";
 import { useAuth } from "../hooks/useAuth";
 
-const DEFAULT_NUM_POSTS = 20;
-const NUM_POSTS_TO_LOAD_ON_SCROLL = 10;
+const DEFAULT_NUM_TOOTS = 20;
+const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
 
 const EARLIEST_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 const RELOAD_IF_OLDER_THAN_MINUTES = 0.5;
@@ -43,7 +43,7 @@ export default function Feed() {
 
     // Persistent state variables
     const [feed, setFeed] = usePersistentState<Toot[]>([], user.id + "feed"); //feed to display
-    const [records, setRecords] = usePersistentState<number>(DEFAULT_NUM_POSTS, user.id + "records"); //how many records to show
+    const [numDisplayedToots, setNumDisplayedToots] = usePersistentState<number>(DEFAULT_NUM_TOOTS, user.id + "records"); //how many toots to show
     const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
     // TODO: changing settings by clicking the checkbox in the GUI doesn't seem to work
     const [settings, setSettings] = usePersistentState<settingsType>(DEFAULT_SETTINGS, "settings"); //filter settings for feed
@@ -55,7 +55,7 @@ export default function Feed() {
 
     const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
-    const isBottom = useOnScreen(bottomRef);  // TODO: this works after the initial load but after loading from cache it doesn't work
+    const isBottom = useOnScreen(bottomRef);  // TODO: this works after the initial load but after loading from cache it doesn't work sometimes?
 
     // Load the posts in the feed either from mastodon server or from the cache
     useEffect(() => {
@@ -68,7 +68,7 @@ export default function Feed() {
 
         // only reload feed if the newest status is older than RELOAD_IF_OLDER_THAN_MS
         if (mostRecentToot && (Date.now() - (new Date(mostRecentToot.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
-            setRecords(DEFAULT_NUM_POSTS);
+            setNumDisplayedToots(DEFAULT_NUM_TOOTS);
             constructFeed();
             setIsLoading(false);
         } else {
@@ -80,10 +80,10 @@ export default function Feed() {
 
     // Load more records when the user scrolls to bottom of the page
     // TODO: This doesn't work when there's less elements in the feed array than are supposed to be
-    //       displayed as per the setRecords() value. For example this situation in logs breaks infinite scroll:
+    //       displayed as per the setNumDisplayedToots() value. For example this situation in logs breaks infinite scroll:
     //
     //  - hit bottom of page; should load more toots... Feed.tsx:78
-    //  - records=60, feed.length=56. loading 10 more toots... Feed.tsx:126
+    //  - numDisplayedToots=60, feed.length=56. loading 10 more toots... Feed.tsx:126
     //  - 56 status elements in feed: Array(56) [ {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, … ]
     useEffect(() => {
         if (isBottom) {
@@ -92,57 +92,57 @@ export default function Feed() {
         }
     }, [isBottom]);
 
-    // Load toots and all the rest of the data from long term storage
-    // TODO: does this still work?
-    const restoreFeedCache = async () => {
-        if (!user) return;
-        console.log(`restoreFeedCache() called...`);
-        let currUser: mastodon.v1.Account;
+    // Check that we have valid user credentials, otherwise force a logout.
+    const getUserAlgo = async (): Promise<TheAlgorithm | null>  => {
+        let currentUser: mastodon.v1.Account;
 
-        try {
-            currUser = await api.v1.accounts.verifyCredentials();
-        } catch (error) {
-            console.warn(error);
-            logout();
+        if (!user) {
+            console.warn(`getUserAlgo() called without a valid user, can't get algorithm...`);
+            return null;
         }
 
-        const algo = new TheAlgorithm(api, currUser);
-        setUserWeights(await algo.getScoreWeights());
+        try {
+            currentUser = await api.v1.accounts.verifyCredentials();
+        } catch (error) {
+            console.warn(`Failed to getUserAlgo() with error:`, error);
+            logout();
+            return null;
+        }
+
+        const algo = new TheAlgorithm(api, currentUser);
         setAlgorithm(algo);
+        setUserWeights(await algo.getScoreWeights());
+        return algo;
+    };
+
+    // Load toots and all the rest of the data from long term storage
+    // TODO: does this actually work? It doesn't seem to call setFeed()...
+    //       original: https://github.com/pkreissel/foryoufeed/blob/9c37e7803c63bb3f4162b93aff3853894e734bc7/src/pages/Feed.tsx#L65
+    const restoreFeedCache = async () => {
+        console.log(`restoreFeedCache() called with user ID ${user?.id}...`);
+        const algo = await getUserAlgo();
+        if (!algo) return;
         window.scrollTo(0, scrollPos);
     };
 
     const constructFeed = async () => {
-        console.debug(`constructFeed() called...`);
-        if (!user) return;
-        let currUser: mastodon.v1.Account;
-
-        try {
-            currUser = await api.v1.accounts.verifyCredentials();
-        } catch (error) {
-            console.warn(error);
-            logout();
-        }
-
-        const algo = new TheAlgorithm(api, currUser);
-        const feed: Toot[] = await algo.getFeed();
-
-        // TODO: move this before the call to getFeed() so the sliders show up earlier
-        setUserWeights(await algo.getScoreWeights());
-        setFeed(feed);
-        setAlgorithm(algo);
+        console.log(`constructFeed() called with user ID ${user?.id}...`);
+        const algo = await getUserAlgo();
+        if (!algo) return;
+        setFeed(await algo.getFeed());
     };
 
+    // Pull more toots to display from our local cached and sorted toot feed
+    // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
     const loadMore = () => {
-        console.log(`records=${records}, feed.length=${feed.length}. loading ${NUM_POSTS_TO_LOAD_ON_SCROLL} more toots...`);
-        setRecords(records + NUM_POSTS_TO_LOAD_ON_SCROLL);
+        console.log(`numDisplayedToots=${numDisplayedToots}, feed.length=${feed.length}. loading ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more toots...`);
+        setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
     };
 
-    //Adjust user Weights with slider values
+    // Adjust user Weights with slider values
     const weightAdjust = async (scores: ScoresType) => {
         const newWeights = await algorithm.weightAdjust(scores);
-        console.log("new userWeights:");
-        console.log(newWeights);
+        console.log("new userWeights in weightAdjust():", newWeights);
         setUserWeights(newWeights);
     };
 
@@ -164,7 +164,6 @@ export default function Feed() {
 
     // Log the weighted feed to the console
     if (feed.length > 1) {
-        console.log(`${feed.length} status elements in feed:`, feed);
         console.log(`ORDERED FEED (condensed): `, feed.map(condensedStatus));
     }
 
@@ -210,7 +209,7 @@ export default function Feed() {
             <FindFollowers api={api} user={user} />
 
             {!isLoading && api && (feed.length > 1) &&
-                filteredFeed.slice(0, Math.max(DEFAULT_NUM_POSTS, records)).map((toot: Toot) => (
+                filteredFeed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot: Toot) => (
                     <StatusComponent
                         api={api}
                         key={toot.uri}

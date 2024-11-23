@@ -27,6 +27,7 @@ export default function AuthProvider(props: PropsWithChildren) {
 
     // call this function to sign out logged in user
     const logout = async () => {
+        console.log("logout() called...")
         const body = new FormData();
         body.append("token", user.access_token);
         body.append("client_id", app.clientId)
