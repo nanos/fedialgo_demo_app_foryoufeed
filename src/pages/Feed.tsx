@@ -107,7 +107,7 @@ export default function Feed() {
         }
 
         const algo = new TheAlgorithm(api, currUser);
-        setUserWeights(await algo.getWeights());
+        setUserWeights(await algo.getScoreWeights());
         setAlgorithm(algo);
         window.scrollTo(0, scrollPos);
     };
@@ -133,7 +133,7 @@ export default function Feed() {
         const numRemoved = feed.length - cleanFeed.length;
         if (numRemoved > 0) console.log(`Removed ${numRemoved} feed items bc they were in the future`);
 
-        setUserWeights(await algo.getWeights());
+        setUserWeights(await algo.getScoreWeights());
         setFeed(cleanFeed);
         setAlgorithm(algo);
     };
