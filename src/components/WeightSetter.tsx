@@ -54,13 +54,13 @@ export default function WeightSetter({
                                     id={key}
                                     min={Math.min(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) - 1 * 1.2}
                                     max={Math.max(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) + 1 * 1.2}
-                                    step={0.01}
-                                    value={userWeights[key] ?? 1}
                                     onChange={(e) => {
                                         const newWeights = Object.assign({}, userWeights);
                                         newWeights[key] = Number(e.target.value);
                                         updateWeights(newWeights);
                                     }}
+                                    step={0.01}
+                                    value={userWeights[key] ?? 1}
                                 />
                             </Form.Group>
                         );
