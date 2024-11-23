@@ -7,7 +7,7 @@ import { usePersistentState } from "react-persistent-state";
 
 import Container from "react-bootstrap/esm/Container";
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
-import { condensedStatus, StatusType, ScoresType, TheAlgorithm } from "fedialgo";
+import { condensedStatus, Toot, ScoresType, TheAlgorithm } from "fedialgo";
 
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
@@ -42,7 +42,7 @@ export default function Feed() {
     const [userWeights, setUserWeights] = useState<ScoresType>({});  // weights for each factor
 
     // Persistent state variables
-    const [feed, setFeed] = usePersistentState<StatusType[]>([], user.id + "feed"); //feed to display
+    const [feed, setFeed] = usePersistentState<Toot[]>([], user.id + "feed"); //feed to display
     const [records, setRecords] = usePersistentState<number>(DEFAULT_NUM_POSTS, user.id + "records"); //how many records to show
     const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
     // TODO: changing settings by clicking the checkbox in the GUI doesn't seem to work
@@ -125,7 +125,7 @@ export default function Feed() {
         }
 
         const algo = new TheAlgorithm(api, currUser);
-        const feed: StatusType[] = await algo.getFeed();
+        const feed: Toot[] = await algo.getFeed();
 
         // Sometimes there are wonky statuses that are like years in the future so we filter them out.
         // TODO: move this to the fedialgo package.
@@ -174,7 +174,7 @@ export default function Feed() {
     }
 
     // Strip out toots we don't want to show to the user for various reasons
-    const filteredFeed = feed.filter((status: StatusType) => {
+    const filteredFeed = feed.filter((status: Toot) => {
         if (settings.onlyLinks && !(status.card || status.reblog?.card)) {
             console.log(`Removing ${status.uri} from feed because it's not a link...`);
             return false;
@@ -215,7 +215,7 @@ export default function Feed() {
             <FindFollowers api={api} user={user} />
 
             {!isLoading && api && (feed.length > 1) &&
-                filteredFeed.slice(0, Math.max(DEFAULT_NUM_POSTS, records)).map((toot: StatusType) => (
+                filteredFeed.slice(0, Math.max(DEFAULT_NUM_POSTS, records)).map((toot: Toot) => (
                     <StatusComponent
                         api={api}
                         key={toot.uri}

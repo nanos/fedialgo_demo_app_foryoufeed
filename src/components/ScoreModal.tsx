@@ -1,10 +1,10 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 
-import { StatusType } from 'fedialgo';
+import { Toot } from 'fedialgo';
 
 
-export const ScoreModal = ({ scoreModal, setScoreModal, status }: { scoreModal: boolean, setScoreModal: (scoreModal: boolean) => void, status: StatusType }) => {
+export const ScoreModal = ({ scoreModal, setScoreModal, status }: { scoreModal: boolean, setScoreModal: (scoreModal: boolean) => void, status: Toot }) => {
     return (
         <Modal show={scoreModal} onHide={() => setScoreModal(false)} style={{ color: "black" }}>
             <Modal.Header closeButton>

@@ -2,7 +2,7 @@ import parse from 'html-react-parser';
 import React from 'react';
 
 import { Modal } from 'react-bootstrap';
-import { StatusType } from "fedialgo";
+import { Toot } from "fedialgo";
 
 
 export default function AttachmentsModal(
@@ -13,7 +13,7 @@ export default function AttachmentsModal(
     }: {
         attModal: number,
         setAttModal: (attModal: number) => void,
-        status: StatusType
+        status: Toot
     }
 ) {
     return (

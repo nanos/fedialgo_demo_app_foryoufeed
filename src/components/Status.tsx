@@ -10,13 +10,13 @@ import Toast from 'react-bootstrap/Toast';
 import AttachmentsModal from './AttachmentsModal';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
-import { StatusType, ScoresType } from "fedialgo";
+import { Toot, ScoresType } from "fedialgo";
 
 import { ScoreModal } from './ScoreModal';
 import { User } from '../types';
 
 interface StatusComponentProps {
-    status: StatusType,
+    status: Toot,
     api: mastodon.rest.Client,
     user: User,
     weightAdjust: (statusWeight: ScoresType) => void,
@@ -54,7 +54,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     }, [attModal])
 
 
-    const resolve = async (status: StatusType): Promise<StatusType> => {
+    const resolve = async (status: Toot): Promise<Toot> => {
         if (status.uri.includes(props.user.server)) {
             return status;
         } else {
