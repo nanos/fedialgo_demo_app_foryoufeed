@@ -1,19 +1,20 @@
 /*
  * Also known as a toot.
  */
-import "../birdUI.css";
-import "../default.css";
 import parse from 'html-react-parser';
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 
-import AttachmentsModal from './AttachmentsModal';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 import { Toot, ScoresType } from "fedialgo";
 
+import "../birdUI.css";
+import "../default.css";
+import AttachmentsModal from './AttachmentsModal';
 import ScoreModal from './ScoreModal';
 import { User } from '../types';
+
 
 interface StatusComponentProps {
     status: Toot,
@@ -21,7 +22,7 @@ interface StatusComponentProps {
     user: User,
     weightAdjust: (statusWeight: ScoresType) => void,
     setError: (error: string) => void,
-}
+};
 
 
 export default function StatusComponent(props: StatusComponentProps) {
@@ -65,30 +66,38 @@ export default function StatusComponent(props: StatusComponentProps) {
         }
     };
 
+    // Retoot a post
     const reblog = async () => {
-        //Reblog a post
         const status_ = await resolve(status);
-        reblogged ? console.log("skip") : weightAdjust(status.scores)
+        reblogged ? console.log("skipping reblog()") : weightAdjust(status.scores)
         const id = status_.id;
 
         (async () => {
-            reblogged ? await masto.v1.statuses.$select(id).unreblog() : await masto.v1.statuses.$select(id).reblog();
-            setReblogged(!reblogged)
+            if (reblogged) {
+                await masto.v1.statuses.$select(id).unreblog();
+            } else {
+                await masto.v1.statuses.$select(id).reblog();
+            }
+
+            setReblogged(!reblogged);
         })();
     };
 
+    // Favourite a post
     const fav = async () => {
-        //Favourite a post
-        console.log(`fav() status.scores:`);
-        console.log(status.scores);
-
+        console.log(`fav() status.scores: `, status.scores);
         const status_ = await resolve(status);
-        favourited ? console.log("skip") : weightAdjust(status.scores)
+        favourited ? console.log("skipping fav()") : weightAdjust(status.scores)
         const id = status_.id;
 
         (async () => {
-            favourited ? await masto.v1.statuses.$select(id).unfavourite() : await masto.v1.statuses.$select(id).favourite();
-            setFavourited(!favourited)
+            if (favourited) {
+                await masto.v1.statuses.$select(id).unfavourite();
+            } else {
+                await masto.v1.statuses.$select(id).favourite();
+            }
+
+            setFavourited(!favourited);
         })();
     };
 
@@ -142,8 +151,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 <bdi><strong>{status.reblogBy}</strong></bdi>
                             </a> shared
                         </span>
-                    </div>
-                }
+                    </div>}
+
                 <div className="status status-public" data-id="110208921130165916">
                     <div className="status__info">
                         <a href={status.uri} className="status__relative-time" target="_blank" rel="noopener noreferrer">
