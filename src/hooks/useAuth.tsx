@@ -13,7 +13,7 @@ const AuthContext = createContext({
 });
 
 
-export const AuthProvider = (props: PropsWithChildren) => {
+export default function AuthProvider(props: PropsWithChildren) {
     const [user, setUser] = useUserStorage({ keyName: "user", defaultValue: null })
     const [app, _setApp] = useAppStorage({ keyName: "app", defaultValue: null })
     const navigate = useNavigate();

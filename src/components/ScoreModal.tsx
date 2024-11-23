@@ -20,5 +20,5 @@ export const ScoreModal = ({ scoreModal, setScoreModal, status }: { scoreModal: 
                 }</p>
             </Modal.Body>
         </Modal>
-    )
+    );
 };

@@ -4,14 +4,14 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import { inject } from '@vercel/analytics';
 
+import AuthProvider from './hooks/useAuth';
 import CallbackPage from './pages/CallbackPage';
 import Feed from './pages/Feed';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
 import LogoutPage from './pages/LogoutPage';
-import { AuthProvider } from './hooks/useAuth';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import ProtectedRoute from './components/ProtectedRoute';
 
 
 const App: React.FC = () => {
