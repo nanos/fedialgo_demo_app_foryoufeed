@@ -23,6 +23,9 @@ There's [a script](./quick_install.sh) in this repo that will do all the steps f
 1. `npm run start`
    * It should automatically change focus to your default browser and prompt you to login to Mastodon but if that doesn't happen you can point your browser at [`http://localhost:3000/`](http://localhost:3000/).
 1. After you've logged in to your Mastodon server (or if you're logged in in that browser) your browser will request that you give `fedialgo` permission to access your Mastodon account. If you don't accept this app will not work.
+   <p align="center">
+     <img src="doc/permissions_request.png" alt="Description" width="300">
+   </p>
    ![Requested Permissions](./doc/permissions_request.png)
 1. Wait for the magic. The first time you load the page it can take a while because it has to collect a bunch of federated data: things like trending posts on other servers, toots from accounts you follow, your notifications, and your recent Mastodon history so it can tell which users you interact with the most (which is by default an important part of the algorithm).
 1. Have fun.
