@@ -43,6 +43,9 @@ Once the initial load is complete you can adjust the way the algorithm weights v
 
 One thing that's kind of a gotcha is the way the `topPosts - Favor posts that are trending in the Fediverse` slider works. Because trending posts often have tons of engagement in the form of replies, favorites, and retoots they can easily drown out the toots from people you are actually following. As a result the impact of this slider gets increasingly drastic _but only if the value is below 1.0_. At 1.0 and above it behaves like all the other weighting sliders.
 
+### Tooting And Replying
+Currently you can retoot and favorite other people's toots through the web interface.
+
 ### Shutdown
 `Ctrl-C` in the terminal window you launched the `node.js` server will kill the server.
 
