@@ -19,7 +19,9 @@ export default function AttachmentsModal(
     return (
         <Modal show={attModal != -1} onHide={() => setAttModal(-1)}>
             <Modal.Header closeButton>
-                <Modal.Title>{parse(status.content)[100]}</Modal.Title>
+                <Modal.Title>
+                    {parse(status.content)[100]}
+                </Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
