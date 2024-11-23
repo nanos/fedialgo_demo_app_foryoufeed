@@ -72,7 +72,7 @@ export default function Feed() {
             constructFeed();
             setIsLoading(false);
         } else {
-            console.log("loading feed from cache...");
+            console.log("Loading feed from cache...");
             restoreFeedCache();
             setIsLoading(false);
         }

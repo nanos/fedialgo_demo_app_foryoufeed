@@ -31,6 +31,7 @@ export const useLocalStorage = <T extends StorageKey,>(key: T): [T["defaultValue
     const [storedValue, setStoredValue] = useState<T["defaultValue"]>(() => {
         try {
             const value = window.localStorage.getItem(keyName);
+
             if (value) {
                 return JSON.parse(value);
             } else {
@@ -42,11 +43,16 @@ export const useLocalStorage = <T extends StorageKey,>(key: T): [T["defaultValue
             return defaultValue;
         }
     });
+
     const setValue = (newValue: T["defaultValue"]) => {
         try {
             window.localStorage.setItem(keyName, JSON.stringify(newValue));
-        } catch (err) { console.error(err); }
+        } catch (err) {
+            console.error(err);
+        }
+
         setStoredValue(newValue);
     };
+
     return [storedValue, setValue];
 };

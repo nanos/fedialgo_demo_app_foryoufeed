@@ -13,34 +13,32 @@ const DEFAULT_MASTODON_SERVER = "universeodon.com";  // Home of George Takei!
 
 export default function LoginPage() {
     const [server, setServer] = usePersistentState<string>(DEFAULT_MASTODON_SERVER, "server");
-    const [_app, setApp] = useLocalStorage({ keyName: "app", defaultValue: {} } as AppStorage)
+    const [_app, setApp] = useLocalStorage({ keyName: "app", defaultValue: {} } as AppStorage);
 
     const loginRedirect = async (): Promise<void> => {
         const sanitized_server = server.replace("https://", "").replace("http://", "");
-        const api = await createRestAPIClient({
-            url: `https://${sanitized_server}`,
-        });
-        const scope = "read write:favourites write:statuses write:follows"
-        const redirectUri = window.location.origin + "/callback"
+        const api = await createRestAPIClient({url: `https://${sanitized_server}`});
+        const scope = "read write:favourites write:statuses write:follows";
+        const redirectUri = window.location.origin + "/callback";
+
         const app = await api.v1.apps.create({
             clientName: "ForYouFeed",
             redirectUris: redirectUri,
             scopes: scope,
             website: `https://${sanitized_server}`,
         });
-        console.log(`app variable:`)
-        console.log(app)
 
+        console.log(`app variable:`, app);
         setApp({ ...app, redirectUri })
+
         const query = stringifyQuery({
             client_id: app.clientId,
             scope: scope,
             response_type: 'code',
             redirect_uri: redirectUri
-        })
+        });
 
-        window.location.href = `https://${sanitized_server}/oauth/authorize?${query}`
-        return
+        window.location.href = `https://${sanitized_server}/oauth/authorize?${query}`;
     };
 
     return (

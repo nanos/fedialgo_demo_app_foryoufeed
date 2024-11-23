@@ -12,7 +12,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 import { Toot, ScoresType } from "fedialgo";
 
-import { ScoreModal } from './ScoreModal';
+import ScoreModal from './ScoreModal';
 import { User } from '../types';
 
 interface StatusComponentProps {
@@ -33,6 +33,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const [scoreModal, setScoreModal] = React.useState<boolean>(false);
     const [error, _setError] = React.useState<string>("");
     status.reblogBy = props.status.reblog ? props.status.account.displayName : props.status?.reblogBy;
+
     const masto = props.api;
     if (!masto) throw new Error("No Mastodon API");
     const weightAdjust = props.weightAdjust;
@@ -114,6 +115,7 @@ export default function StatusComponent(props: StatusComponentProps) {
             }
 
             <ScoreModal scoreModal={scoreModal} setScoreModal={setScoreModal} status={status} />
+
             <Toast show={Boolean(error)} delay={3000} autohide>
                 <Toast.Header>
                     <strong className="me-auto">Error</strong>
