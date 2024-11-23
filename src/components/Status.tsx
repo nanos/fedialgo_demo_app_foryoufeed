@@ -25,18 +25,19 @@ interface StatusComponentProps {
 
 
 export default function StatusComponent(props: StatusComponentProps) {
+    const masto = props.api;
     const status = props.status.reblog ? props.status.reblog : props.status;
+    const weightAdjust = props.weightAdjust;
+    status.reblogBy = props.status.reblog ? props.status.account.displayName : props.status?.reblogBy;
     status.scores = props.status.scores;
+
     const [favourited, setFavourited] = React.useState<boolean>(status.favourited);
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
     const [attModal, setAttModal] = React.useState<number>(-1); //index of the attachment to show
     const [scoreModal, setScoreModal] = React.useState<boolean>(false);
     const [error, _setError] = React.useState<string>("");
-    status.reblogBy = props.status.reblog ? props.status.account.displayName : props.status?.reblogBy;
 
-    const masto = props.api;
     if (!masto) throw new Error("No Mastodon API");
-    const weightAdjust = props.weightAdjust;
 
     // Increase attModal on Right Arrow
     React.useEffect(() => {
@@ -69,6 +70,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         const status_ = await resolve(status);
         reblogged ? console.log("skip") : weightAdjust(status.scores)
         const id = status_.id;
+
         (async () => {
             reblogged ? await masto.v1.statuses.$select(id).unreblog() : await masto.v1.statuses.$select(id).reblog();
             setReblogged(!reblogged)
@@ -83,6 +85,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         const status_ = await resolve(status);
         favourited ? console.log("skip") : weightAdjust(status.scores)
         const id = status_.id;
+
         (async () => {
             favourited ? await masto.v1.statuses.$select(id).unfavourite() : await masto.v1.statuses.$select(id).favourite();
             setFavourited(!favourited)
@@ -120,6 +123,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 <Toast.Header>
                     <strong className="me-auto">Error</strong>
                 </Toast.Header>
+
                 <Toast.Body>{error}</Toast.Body>
             </Toast>
 
@@ -190,11 +194,13 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </span>
                         </div>
                     </div>
+
                     <div className="status__content status__content--with-action" >
                         <div className="status__content__text status__content__text--visible translate" lang="en">
                             {parse(status.content)}
                         </div>
                     </div>
+
                     {status.card && (
                         <a
                             className="status-card compact"
@@ -225,6 +231,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </div>
                         </a>
                     )}
+
                     {!status.card &&
                         status.mediaAttachments.filter(att => att.type === "image").length > 0 && (
                             <div className="media-gallery" style={{ height: "314.4375px", overflow: "hidden" }}>
@@ -248,6 +255,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </div>
                         )
                     }
+
                     {status.mediaAttachments.filter(att => att.type === "video").length > 0 && (
                         <div className="media-gallery" style={{ height: "314.4375px", overflow: "hidden" }}>
                             {status.mediaAttachments.filter(att => att.type === "video").map((att, i) => (
