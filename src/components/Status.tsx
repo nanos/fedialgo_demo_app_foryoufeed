@@ -107,8 +107,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         e.preventDefault()
         const status_ = await resolve(status);
         weightAdjust(status.scores)
-        console.log(`followUri()`)
-        console.log(status_)
+        console.log(`followUri() status_: `, status_);
         //new tab:
         //window.open(props.user.server + "/@" + status_.account.acct + "/" + status_.id, '_blank');
         window.location.href = props.user.server + "/@" + status_.account.acct + "/" + status_.id

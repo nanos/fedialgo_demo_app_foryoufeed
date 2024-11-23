@@ -111,7 +111,7 @@ export default function Feed() {
 
         const algo = new TheAlgorithm(api, currentUser);
         setAlgorithm(algo);
-        setUserWeights(await algo.getScoreWeights());
+        setUserWeights(await algo.getUserWeights());
         return algo;
     };
 
@@ -139,9 +139,9 @@ export default function Feed() {
         setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
     };
 
-    // Adjust user Weights with slider values
+    // Learn weights based on user action
     const weightAdjust = async (scores: ScoresType) => {
-        const newWeights = await algorithm.weightAdjust(scores);
+        const newWeights = await algorithm.learnWeights(scores);
         console.log("new userWeights in weightAdjust():", newWeights);
         setUserWeights(newWeights);
     };
