@@ -130,9 +130,9 @@ export default function StatusComponent(props: StatusComponentProps) {
                 {status.reblogBy &&
                     <div className="status__prepend">
                         <div className="status__prepend-icon-wrapper">
-                            <i className="fa fa-retweet status__prepend-icon fa-fw">
-                            </i>
+                            <i className="fa fa-retweet status__prepend-icon fa-fw" />
                         </div>
+
                         <span>
                             <a data-id="109357260772763021" href="/@mcnees@mastodon.social" className="status__display-name muted">
                                 <bdi><strong>{status.reblogBy}</strong></bdi>
@@ -144,20 +144,16 @@ export default function StatusComponent(props: StatusComponentProps) {
                     <div className="status__info">
                         <a href={status.uri} className="status__relative-time" target="_blank" rel="noopener noreferrer">
                             <span className="status__visibility-icon">
-                                <i className="fa fa-globe" title="Öffentlich">
-                                </i>
-                                {status?.topPost && (
-                                    <i className="fa fa-fire" title="Top Post">
-                                    </i>
-                                )}
-                                {status?.recommended && (
-                                    <i className="fa fa-bolt" title="Recommended By AI">
-                                    </i>
-                                )}
-
+                                <i className="fa fa-globe" title="Öffentlich" />
+                                {status?.topPost && <i className="fa fa-fire" title="Top Post"></i>}
+                                {status?.recommended && <i className="fa fa-bolt" title="Recommended By AI"></i>}
                             </span>
-                            <time dateTime={status.createdAt} title={status.createdAt}>{(new Date(status.createdAt)).toLocaleTimeString()}</time>
+
+                            <time dateTime={status.createdAt} title={status.createdAt}>
+                                {(new Date(status.createdAt)).toLocaleTimeString()}
+                            </time>
                         </a>
+
                         <div title={status.account.acct} className="status__display-name">
                             <div className="status__avatar">
                                 <div className="account__avatar" style={{ width: "46px", height: "46px" }}>
@@ -168,9 +164,15 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <span className="display-name">
                                 <bdi>
                                     <strong className="display-name__html">
-                                        <a href={props.user.server + "/@" + status.account.acct} target="_blank" rel="noopener noreferrer" style={{ color: "white", textDecoration: "none" }}>
+                                        <a
+                                            href={props.user.server + "/@" + status.account.acct}
+                                            rel="noopener noreferrer"
+                                            style={{ color: "white", textDecoration: "none" }}
+                                            target="_blank"
+                                        >
                                             {status.account.displayName}
                                         </a>
+
                                         {status.account.fields.filter(f => f.verifiedAt).map(f => (
                                             <span key={f.name} className="verified-badge" title={f.value.replace(/<[^>]*>?/gm, '')} style={{ color: "lightblue", padding: "0px 5px" }}>
                                                 <i className="fa fa-check-circle" aria-hidden="true">
@@ -179,8 +181,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                                         ))}
                                     </strong>
                                 </bdi>
-                                <span className="display-name__account">@{status.account.acct}</span>
 
+                                <span className="display-name__account">@{status.account.acct}</span>
                             </span>
                         </div>
                     </div>
@@ -190,11 +192,28 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </div>
                     </div>
                     {status.card && (
-                        <a href={status.card.url} onClick={() => weightAdjust(status.scores)} className="status-card compact" target="_blank" rel="noopener noreferrer">
+                        <a
+                            className="status-card compact"
+                            href={status.card.url}
+                            onClick={() => weightAdjust(status.scores)}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                        >
                             <div className="status-card__image">
-                                <canvas className="status-card__image-preview status-card__image-preview--hidden" width="32" height="32"></canvas>
-                                <LazyLoadImage style={{ maxHeight: "30vh" }} src={status.card.image} alt="" className="status-card__image-image" />
+                                <canvas
+                                    className="status-card__image-preview status-card__image-preview--hidden"
+                                    height="32"
+                                    width="32"
+                                />
+
+                                <LazyLoadImage
+                                    alt=""
+                                    className="status-card__image-image"
+                                    src={status.card.image}
+                                    style={{ maxHeight: "30vh" }}
+                                />
                             </div>
+
                             <div className='status-card__content'>
                                 <span className='status-card__host'>{status.card.providerName}</span>
                                 {status.card.title}
@@ -206,9 +225,20 @@ export default function StatusComponent(props: StatusComponentProps) {
                         status.mediaAttachments.filter(att => att.type === "image").length > 0 && (
                             <div className="media-gallery" style={{ height: "314.4375px", overflow: "hidden" }}>
                                 {status.mediaAttachments.filter(att => att.type === "image").map((att, i) => (
-                                    <div className="media-gallery__item" style={{ inset: "auto", width: 1 / status.mediaAttachments.length * 100 + "%", height: "100%" }} key={i}>
+                                    <div
+                                        className="media-gallery__item"
+                                        key={i}
+                                        style={{ inset: "auto", width: 1 / status.mediaAttachments.length * 100 + "%", height: "100%" }}
+                                    >
                                         <canvas className="media-gallery__preview media-gallery__preview--hidden" width="32" height="32" />
-                                        <LazyLoadImage src={att.previewUrl} onClick={() => setAttModal(i)} sizes="559px" alt={att.description} style={{ objectPosition: "50%", width: "100%" }} />
+
+                                        <LazyLoadImage
+                                            alt={att.description}
+                                            onClick={() => setAttModal(i)}
+                                            src={att.previewUrl}
+                                            sizes="559px"
+                                            style={{ objectPosition: "50%", width: "100%" }}
+                                        />
                                     </div>
                                 ))}
                             </div>
@@ -219,7 +249,14 @@ export default function StatusComponent(props: StatusComponentProps) {
                             {status.mediaAttachments.filter(att => att.type === "video").map((att, i) => (
                                 <div className="media-gallery__item" style={{ inset: "auto", width: "100%", height: "100%" }} key={i}>
                                     <canvas className="media-gallery__preview media-gallery__preview--hidden" width="32" height="32" />
-                                    <LazyLoadImage scr={att.previewUrl} onClick={() => setAttModal(i)} sizes="559px" alt={att.description} style={{ objectPosition: "50%", width: "100%" }} />
+
+                                    <LazyLoadImage
+                                        alt={att.description}
+                                        onClick={() => setAttModal(i)}
+                                        scr={att.previewUrl}
+                                        sizes="559px"
+                                        style={{ objectPosition: "50%", width: "100%" }}
+                                    />
                                 </div>
                             ))}
                         </div>
@@ -254,18 +291,34 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 </span>
                             </span>
                         </button>
-                        <button onClick={showScore} type="button" aria-label="Score" aria-hidden="false" title="Score" className="status__action-bar__button icon-button" style={{ fontSize: "18px", width: "20px", height: "23.142857px", lineHeight: "18px" }} >
+
+                        <button
+                            aria-hidden="false"
+                            aria-label="Score"
+                            className="status__action-bar__button icon-button"
+                            onClick={showScore}
+                            style={{ fontSize: "18px", width: "20px", height: "23.142857px", lineHeight: "18px" }}
+                            title="Score"
+                            type="button"
+                        >
                             <i className="fa fa-pie-chart fa-fw" title="Info">
                                 i
                             </i>
                         </button>
-                        <button onClick={followUri} type="button" aria-label="Auf eigenem Server öffnen" aria-hidden="false" title="Open on your instance" className="status__action-bar__button icon-button" style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }} >
-                            <i className="fa fa-link fa-fw" aria-hidden="true">
-                            </i>
+
+                        <button
+                            aria-hidden="false"
+                            aria-label="Auf eigenem Server öffnen"
+                            onClick={followUri}
+                            type="button" title="Open on your instance"
+                            className="status__action-bar__button icon-button"
+                            style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
+                        >
+                            <i className="fa fa-link fa-fw" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
-            </div >
-        </div >
-    )
-}
+            </div>
+        </div>
+    );
+};

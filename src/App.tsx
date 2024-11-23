@@ -46,7 +46,7 @@ const App: React.FC = () => {
                 </div>
             </AuthProvider>
         </BrowserRouter>
-    )
+    );
 };
 
 export default App;

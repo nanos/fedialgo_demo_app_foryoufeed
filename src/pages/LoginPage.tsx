@@ -29,7 +29,7 @@ export default function LoginPage() {
         });
 
         console.log(`app variable:`, app);
-        setApp({ ...app, redirectUri })
+        setApp({ ...app, redirectUri });
 
         const query = stringifyQuery({
             client_id: app.clientId,
@@ -51,6 +51,7 @@ export default function LoginPage() {
                 display: 'flex',
             }}>
                 <img src={"/assets/Showcase.png"} style={{ maxHeight: "40%" }} />
+
                 <div>
                     <p style={{ lineHeight: 2, textAlign: "center" }}>
                         Fedi-Feed features a customizable algorithm for sorting your feed.
@@ -64,6 +65,7 @@ export default function LoginPage() {
                         <br />
                     </p>
                 </div>
+
                 <Form.Group className="mb-3 align-middle">
                     <Form.Label className="text-center w-100">
                         Enter Mastodon Server in the form: {DEFAULT_MASTODON_SERVER}
@@ -77,6 +79,7 @@ export default function LoginPage() {
                         value={server}
                     />
                 </Form.Group>
+
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                     <Button onClick={loginRedirect}>Login</Button>
                 </div>
