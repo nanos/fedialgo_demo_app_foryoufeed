@@ -174,9 +174,13 @@ export default function StatusComponent(props: StatusComponentProps) {
                                         </a>
 
                                         {status.account.fields.filter(f => f.verifiedAt).map(f => (
-                                            <span key={f.name} className="verified-badge" title={f.value.replace(/<[^>]*>?/gm, '')} style={{ color: "lightblue", padding: "0px 5px" }}>
-                                                <i className="fa fa-check-circle" aria-hidden="true">
-                                                </i>
+                                            <span
+                                                className="verified-badge"
+                                                key={f.name}
+                                                style={{ color: "lightblue", padding: "0px 5px" }}
+                                                title={f.value.replace(/<[^>]*>?/gm, '')}
+                                            >
+                                                <i className="fa fa-check-circle" aria-hidden="true" />
                                             </span>
                                         ))}
                                     </strong>
@@ -261,18 +265,37 @@ export default function StatusComponent(props: StatusComponentProps) {
                             ))}
                         </div>
                     )}
+
                     <div className="status__action-bar">
-                        <button onClick={followUri} type="button" aria-label="Antworten" aria-hidden="false" title="Antworten" className="status__action-bar__button icon-button icon-button--with-counter" style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }} >
-                            <i className="fa fa-reply fa-fw" aria-hidden="true">
-                            </i> <span className="icon-button__counter">
+                        <button
+                            aria-hidden="false"
+                            aria-label="Antworten"
+                            className="status__action-bar__button icon-button icon-button--with-counter"
+                            onClick={followUri}
+                            style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
+                            type="button"
+                            title="Antworten"
+                        >
+                            <i className="fa fa-reply fa-fw" aria-hidden="true" />
+
+                            <span className="icon-button__counter">
                                 <span className="animated-number">
                                     <span style={{ position: "static" }}> {status.repliesCount}</span>
                                 </span>
                             </span>
                         </button>
-                        <button onClick={reblog} type="button" aria-label="Teilen" aria-hidden="false" title="Teilen" className={("status__action-bar__button icon-button icon-button--with-counter" + (reblogged ? " active activate" : " deactivate"))} style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }} >
-                            <i className="fa fa-retweet fa-fw" aria-hidden="true">
-                            </i> <span className="icon-button__counter">
+
+                        <button
+                            aria-hidden="false"
+                            aria-label="Teilen"
+                            className={("status__action-bar__button icon-button icon-button--with-counter" + (reblogged ? " active activate" : " deactivate"))}
+                            onClick={reblog}
+                            type="button" title="Teilen"
+                            style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
+                        >
+                            <i className="fa fa-retweet fa-fw" aria-hidden="true" />
+
+                            <span className="icon-button__counter">
                                 <span className="animated-number">
                                     <span style={{ position: "static" }}>
                                         <span>{status.reblogsCount}</span>
@@ -280,9 +303,18 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 </span>
                             </span>
                         </button>
-                        <button onClick={fav} type="button" aria-label="Favorisieren" aria-hidden="false" title="Favorisieren" className={("status__action-bar__button star-icon icon-button icon-button--with-counter" + (favourited ? " active activate" : " deactivate"))} style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }} >
-                            <i className="fa fa-star fa-fw" aria-hidden="true">
-                            </i>
+
+                        <button
+                            aria-hidden="false"
+                            aria-label="Favorisieren"
+                            className={("status__action-bar__button star-icon icon-button icon-button--with-counter" + (favourited ? " active activate" : " deactivate"))}
+                            onClick={fav}
+                            style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
+                            type="button"
+                            title="Favorisieren"
+                        >
+                            <i className="fa fa-star fa-fw" aria-hidden="true" />
+
                             <span className="icon-button__counter">
                                 <span className="animated-number">
                                     <span style={{ position: "static" }}>
