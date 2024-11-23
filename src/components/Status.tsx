@@ -39,7 +39,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const [error, _setError] = React.useState<string>("");
 
     if (!masto) throw new Error("No Mastodon API");
-    console.debug(`StatusComponent status toot: `, status);
+    // console.debug(`StatusComponent status toot: `, status);
 
     // Increase attModal on Right Arrow
     React.useEffect(() => {

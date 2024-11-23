@@ -13,7 +13,7 @@ export default function ScoreModal({
     setShowScoreModal: (showScoreModal: boolean) => void,
     toot: Toot
 }) {
-    console.debug(`ScoreModal for toot #${toot.id}: `, toot);
+    // console.debug(`ScoreModal for toot #${toot.id}: `, toot);
 
     return (
         <Modal show={showScoreModal} onHide={() => setShowScoreModal(false)} style={{ color: "black" }}>
