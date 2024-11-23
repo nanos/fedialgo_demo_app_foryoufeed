@@ -3,13 +3,15 @@
  * Things like how much to prefer people you favorite a lot or how much to posts that
  * are trending in the Fedivers.
  */
+import React from 'react';
+import { usePersistentState } from "react-persistent-state";
+
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
-import React from 'react';
 import { ScoresType, TheAlgorithm } from "fedialgo";
+
 import { settingsType } from "../types";
 import { useAuth } from '../hooks/useAuth';
-import { usePersistentState } from "react-persistent-state";
 
 
 interface WeightSetterProps {
@@ -28,9 +30,9 @@ export default function WeightSetter({
     languages,
     setSelectedLanguages,
     settings,
+    updateSettings,
     updateWeights,
     userWeights,
-    updateSettings,
 }: WeightSetterProps) {
     const { user } = useAuth();
     const [selectedLang, setLang] = usePersistentState<string[]>([], user.id + "selectedLangs");
@@ -44,7 +46,8 @@ export default function WeightSetter({
                         return (
                             <Form.Group className="mb-3" key={index}>
                                 <Form.Label>
-                                    <b>{key + " - "}</b>{algorithm.getDescription(key) + ": " + (userWeights[key]?.toFixed(2) ?? "1")}
+                                    <b>{key + " - "}</b>
+                                    {algorithm.getDescription(key) + ": " + (userWeights[key]?.toFixed(2) ?? "1")}
                                 </Form.Label>
 
                                 <Form.Range
@@ -79,30 +82,35 @@ export default function WeightSetter({
                                     }}
                                 />
                             </Form.Group>
-                        )
+                        );
                     })}
 
                     <Form.Group className="mb-3">
-                        <Form.Label><b>Show only these Languages</b></Form.Label>
+                        <Form.Label><b>
+                            Show only toots in these languages
+                        </b></Form.Label>
+
                         {languages.map((lang, index) => {
                             return (
                                 <Form.Check
-                                    type="checkbox"
-                                    label={lang}
-                                    id={lang}
-                                    key={index}
                                     checked={selectedLang.includes(lang)}
                                     disabled={false}
+                                    id={lang}
+                                    key={index}
+                                    label={lang}
                                     onChange={(e) => {
                                         const newLang = [...selectedLang];
+
                                         if (e.target.checked) {
                                             newLang.push(lang);
                                         } else {
                                             newLang.splice(newLang.indexOf(lang), 1);
                                         }
+
                                         setLang(newLang);
                                         setSelectedLanguages(newLang);
                                     }}
+                                    type="checkbox"
                                 />
                             )
                         })}

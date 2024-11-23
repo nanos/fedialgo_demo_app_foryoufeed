@@ -12,6 +12,7 @@ const AuthContext = createContext({
     logout: () => { }
 });
 
+
 export const AuthProvider = (props: PropsWithChildren) => {
     const [user, setUser] = useUserStorage({ keyName: "user", defaultValue: null })
     const [app, _setApp] = useAppStorage({ keyName: "app", defaultValue: null })
@@ -57,6 +58,7 @@ export const AuthProvider = (props: PropsWithChildren) => {
 
     return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;
 };
+
 
 export const useAuth = () => {
     return useContext(AuthContext);

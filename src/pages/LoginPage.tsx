@@ -1,8 +1,8 @@
-import Button from 'react-bootstrap/esm/Button';
-import Form from 'react-bootstrap/esm/Form';
 import React from 'react';
 import { usePersistentState } from "react-persistent-state"
 
+import Button from 'react-bootstrap/esm/Button';
+import Form from 'react-bootstrap/esm/Form';
 import { createRestAPIClient } from 'masto';
 import { stringifyQuery } from 'ufo'
 
@@ -41,7 +41,8 @@ export default function LoginPage() {
 
         window.location.href = `https://${sanitized_server}/oauth/authorize?${query}`
         return
-    }
+    };
+
     return (
         <>
             <div className='vh-100' style={{
@@ -83,5 +84,5 @@ export default function LoginPage() {
                 </div>
             </div>
         </>
-    )
+    );
 };

@@ -14,5 +14,5 @@ export default function LogoutPage() {
         <div>
             <h1>Logging Out</h1>
         </div>
-    )
+    );
 };

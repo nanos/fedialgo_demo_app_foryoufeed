@@ -5,7 +5,17 @@ import { Modal } from 'react-bootstrap';
 import { StatusType } from "fedialgo";
 
 
-export const AttachmentsModal = ({ attModal, setAttModal, status }: { attModal: number, setAttModal: (attModal: number) => void, status: StatusType }) => {
+export default function AttachmentsModal(
+    {
+        attModal,
+        setAttModal,
+        status
+    }: {
+        attModal: number,
+        setAttModal: (attModal: number) => void,
+        status: StatusType
+    }
+) {
     return (
         <Modal show={attModal != -1} onHide={() => setAttModal(-1)}>
             <Modal.Header closeButton>
@@ -23,6 +33,7 @@ export const AttachmentsModal = ({ attModal, setAttModal, status }: { attModal: 
                                     width={"100%"}
                                 />
                         }
+
                         {status.mediaAttachments[attModal]?.type === "video" &&
                             <video width={"100%"} controls>
                                 <source src={status.mediaAttachments[attModal]?.url} type="video/mp4" />
@@ -33,5 +44,5 @@ export const AttachmentsModal = ({ attModal, setAttModal, status }: { attModal: 
                 }
             </Modal.Body>
         </Modal>
-    )
+    );
 };

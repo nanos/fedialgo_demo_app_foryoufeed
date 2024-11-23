@@ -1,21 +1,21 @@
 /*
  * Class for retrieving and sorting the user's feed based on their chosen weighting values.
  */
-import Container from "react-bootstrap/esm/Container";
 import React, { useState, useEffect, useRef } from "react";
-import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
 import { Modal } from "react-bootstrap";
 import { usePersistentState } from "react-persistent-state";
 
+import Container from "react-bootstrap/esm/Container";
+import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
 import { condensedStatus, StatusType, ScoresType, TheAlgorithm } from "fedialgo";
 
-import { settingsType } from "../types";
-import { useAuth } from "../hooks/useAuth";
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
+import { settingsType } from "../types";
+import { useAuth } from "../hooks/useAuth";
 
 const DEFAULT_NUM_POSTS = 20;
 const NUM_POSTS_TO_LOAD_ON_SCROLL = 10;

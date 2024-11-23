@@ -10,6 +10,7 @@ export default function Footer() {
         <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
             <Container>
                 <Navbar.Brand style={{ color: "white" }}>FediFeed</Navbar.Brand>
+
                 <Nav className="me-auto">
                     <Nav.Link href="/" style={{ color: "white" }}>Home</Nav.Link>
 
