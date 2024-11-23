@@ -4,7 +4,10 @@ This repo contains a simple demo React application for the (almost) pure javascr
 
 Both this repo and the `fedialgo` package linked above were forked from [pkreissel's original implementations](https://github.com/pkreissel/fedialgo).
 
-![Debug logs of toot scoring](./doc/debug_scoring_logs.png)
+<p align="center">
+    <img src="doc/debug_scoring_logs.png" alt="Scoring Logs" width="600">
+</p>
+
 
 # Installation
 ### Prerequisites
@@ -24,9 +27,8 @@ There's [a script](./quick_install.sh) in this repo that will do all the steps f
    * It should automatically change focus to your default browser and prompt you to login to Mastodon but if that doesn't happen you can point your browser at [`http://localhost:3000/`](http://localhost:3000/).
 1. After you've logged in to your Mastodon server (or if you're logged in in that browser) your browser will request that you give `fedialgo` permission to access your Mastodon account. If you don't accept this app will not work.
    <p align="center">
-     <img src="doc/permissions_request.png" alt="Description" width="300">
+     <img src="doc/permissions_request.png" alt="OAuth Permissions Request" width="300">
    </p>
-   ![Requested Permissions](./doc/permissions_request.png)
 1. Wait for the magic. The first time you load the page it can take a while because it has to collect a bunch of federated data: things like trending posts on other servers, toots from accounts you follow, your notifications, and your recent Mastodon history so it can tell which users you interact with the most (which is by default an important part of the algorithm).
 1. Have fun.
 1. Profit.
@@ -35,7 +37,9 @@ There's [a script](./quick_install.sh) in this repo that will do all the steps f
 # Usage
 Once the initial load is complete you can adjust the way the algorithm weights various aspects of a toot when it decides what should be at or near the top of your feed. Hopefully these are self explanatory:
 
-![Algorithm Weighting Sliders](./doc/algorithm_sliders.png)
+<p align="center">
+    <img src="doc/algorithm_sliders.png" alt="Algorithm Weighting Sliders" width="300">
+</p>
 
 One thing that's kind of a gotcha is the way the `topPosts - Favor posts that are trending in the Fediverse` slider works. Because trending posts often have tons of engagement in the form of replies, favorites, and retoots they can easily drown out the toots from people you are actually following. As a result the impact of this slider gets increasingly drastic _but only if the value is below 1.0_. At 1.0 and above it behaves like all the other weighting sliders.
 
