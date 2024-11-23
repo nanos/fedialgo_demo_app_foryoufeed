@@ -26,7 +26,7 @@ export default function FindFollowers({ api, user }: { api: mastodon.rest.Client
             setSuggestions(
                 suggestions.filter((suggestion: mastodon.v1.Suggestion) => suggestion.account.id !== id)
             );
-        })
+        });
     };
 
     const hide = (id: string) => {
@@ -39,7 +39,7 @@ export default function FindFollowers({ api, user }: { api: mastodon.rest.Client
 
     return (
         <Accordion>
-            <Accordion.Item eventKey="0" >
+            <Accordion.Item eventKey="0">
                 <Accordion.Header>Find Followers</Accordion.Header>
                 <Accordion.Body onEnter={() => setOpen(true)}>
                     <Row className="g-4 m-3">
