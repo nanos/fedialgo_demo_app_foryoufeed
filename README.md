@@ -47,7 +47,6 @@ You can install the local `fedialgo` package by running `npm link`  in the `fedi
 * There's tons of info on how the scoring and weighting of toots is being done in your browser's javascript debug console logs.
 * The interesting stuff that actually handles the feed is in the [`Feed.tsx`](src/pages/Feed.tsx) file.
 * The bird UI of this app is based on the following repo: https://github.com/ronilaukkarinen/mastodon-bird-ui
-* A live installation of this app is currently hosted here: https://foryoufeed.vercel.app
 
 
 # TODO
