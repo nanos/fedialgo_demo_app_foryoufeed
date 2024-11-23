@@ -113,8 +113,8 @@ export default function Feed() {
     };
 
     const constructFeed = async () => {
+        console.debug(`constructFeed() called...`);
         if (!user) return;
-        console.log(`constructFeed() called...`);
         let currUser: mastodon.v1.Account;
 
         try {
@@ -127,14 +127,9 @@ export default function Feed() {
         const algo = new TheAlgorithm(api, currUser);
         const feed: Toot[] = await algo.getFeed();
 
-        // Sometimes there are wonky statuses that are like years in the future so we filter them out.
-        // TODO: move this to the fedialgo package.
-        const cleanFeed = feed.filter((status) => Date.now() >= (new Date(status.createdAt)).getTime());
-        const numRemoved = feed.length - cleanFeed.length;
-        if (numRemoved > 0) console.log(`Removed ${numRemoved} feed items bc they were in the future`);
-
+        // TODO: move this before the call to getFeed() so the sliders show up earlier
         setUserWeights(await algo.getScoreWeights());
-        setFeed(cleanFeed);
+        setFeed(feed);
         setAlgorithm(algo);
     };
 

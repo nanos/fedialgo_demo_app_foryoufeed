@@ -5,27 +5,30 @@ import { Toot } from 'fedialgo';
 
 
 export default function ScoreModal({
-    scoreModal,
-    setScoreModal,
-    status
+    showScoreModal,
+    setShowScoreModal,
+    toot
 }: {
-    scoreModal: boolean,
-    setScoreModal: (scoreModal: boolean) => void,
-    status: Toot
+    showScoreModal: boolean,
+    setShowScoreModal: (showScoreModal: boolean) => void,
+    toot: Toot
 }) {
+    console.debug(`ScoreModal for toot #${toot.id}: `, toot);
+
     return (
-        <Modal show={scoreModal} onHide={() => setScoreModal(false)} style={{ color: "black" }}>
+        <Modal show={showScoreModal} onHide={() => setShowScoreModal(false)} style={{ color: "black" }}>
             <Modal.Header closeButton>
                 <Modal.Title>Score</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
-                <p>Score: {status.value}</p>
-                <p>Weights: {
-                    Object.keys(status.scores).map(key => (
-                        <p key={key}>{key}: {status.scores[key]}</p>
+                <p>Score: {toot.value}</p>
+
+                <div>{
+                    Object.keys(toot.scores).map(key => (
+                        <p key={key}>{key}: {toot.scores[key]}</p>
                     ))
-                }</p>
+                }</div>
             </Modal.Body>
         </Modal>
     );

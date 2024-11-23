@@ -35,10 +35,11 @@ export default function StatusComponent(props: StatusComponentProps) {
     const [favourited, setFavourited] = React.useState<boolean>(status.favourited);
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
     const [attModal, setAttModal] = React.useState<number>(-1); //index of the attachment to show
-    const [scoreModal, setScoreModal] = React.useState<boolean>(false);
+    const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
     const [error, _setError] = React.useState<string>("");
 
     if (!masto) throw new Error("No Mastodon API");
+    console.debug(`StatusComponent status toot: `, status);
 
     // Increase attModal on Right Arrow
     React.useEffect(() => {
@@ -50,7 +51,7 @@ export default function StatusComponent(props: StatusComponentProps) {
             } else if (e.key === "ArrowLeft" && attModal > 0) {
                 setAttModal(attModal - 1);
             }
-        }
+        };
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
@@ -113,9 +114,9 @@ export default function StatusComponent(props: StatusComponentProps) {
         window.location.href = props.user.server + "/@" + status_.account.acct + "/" + status_.id
     };
 
+    // Show the score of a toot
     const showScore = async () => {
-        //Show the score of a post
-        setScoreModal(true)
+        setShowScoreModal(true)
     };
 
     return (
@@ -126,7 +127,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 )
             }
 
-            <ScoreModal scoreModal={scoreModal} setScoreModal={setScoreModal} status={status} />
+            <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={status} />
 
             <Toast show={Boolean(error)} delay={3000} autohide>
                 <Toast.Header>
@@ -234,9 +235,15 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </div>
 
                             <div className='status-card__content'>
-                                <span className='status-card__host'>{status.card.providerName}</span>
+                                <span className='status-card__host'>
+                                    {status.card.providerName}
+                                </span>
+
                                 {status.card.title}
-                                {<p className='status-card__description'>{status.card.description.slice(0, 200)}</p>}
+
+                                <p className='status-card__description'>
+                                    {status.card.description.slice(0, 200)}
+                                </p>
                             </div>
                         </a>
                     )}
