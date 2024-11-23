@@ -21,7 +21,7 @@ interface WeightSetterProps {
     updateSettings: (settings: settingsType) => void,
     languages: string[],
     setSelectedLanguages: (languages: string[]) => void,
-    algorithm: TheAlgorithm
+    algorithm: TheAlgorithm,
 };
 
 
@@ -63,32 +63,32 @@ export default function WeightSetter({
                                     }}
                                 />
                             </Form.Group>
-                        )
+                        );
                     })}
 
                     {settings && Object.keys(settings).map((key, index) => {
                         return (
                             <Form.Group className="mb-3" key={index}>
                                 <Form.Check
-                                    type="checkbox"
-                                    label={key}
-                                    id={key}
                                     checked={settings[key]}
                                     disabled={false}
+                                    id={key}
+                                    label={key}
                                     onChange={(e) => {
                                         const newSettings = { ...settings };
                                         newSettings[key] = e.target.checked;
                                         updateSettings(newSettings);
                                     }}
+                                    type="checkbox"
                                 />
                             </Form.Group>
                         );
                     })}
 
                     <Form.Group className="mb-3">
-                        <Form.Label><b>
-                            Show only toots in these languages
-                        </b></Form.Label>
+                        <Form.Label>
+                            <b>Show only toots in these languages</b>
+                        </Form.Label>
 
                         {languages.map((lang, index) => {
                             return (
@@ -112,7 +112,7 @@ export default function WeightSetter({
                                     }}
                                     type="checkbox"
                                 />
-                            )
+                            );
                         })}
                     </Form.Group>
                 </Accordion.Body>
