@@ -88,7 +88,7 @@ export default function Feed() {
     useEffect(() => {
         if (isBottom) {
             console.log("hit bottom of page; should load more toots...");
-            loadMore();
+            showMoreToots();
         }
     }, [isBottom]);
 
@@ -134,7 +134,7 @@ export default function Feed() {
 
     // Pull more toots to display from our local cached and sorted toot feed
     // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
-    const loadMore = () => {
+    const showMoreToots = () => {
         console.log(`numDisplayedToots=${numDisplayedToots}, feed.length=${feed.length}. loading ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more toots...`);
         setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
     };
@@ -222,7 +222,7 @@ export default function Feed() {
             )}
 
             {(feed.length == 0 || isLoading) && <FullPageIsLoading />}
-            <div ref={bottomRef} onClick={loadMore}>Load More</div>
+            <div ref={bottomRef} onClick={showMoreToots}>Load More</div>
         </Container>
     )
 };
