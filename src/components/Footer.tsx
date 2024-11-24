@@ -16,10 +16,10 @@ export default function Footer() {
 
                     <Nav.Link href="https://github.com/pkreissel/foryoufeed/tree/main/src" style={{ color: "white" }}>
                         <img
-                            src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
                             alt="Github Logo"
-                            style={{ height: 20, width: 20, borderRadius: 5 }}
                             className="d-inline-block align-top"
+                            src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                            style={{ height: 20, width: 20, borderRadius: 5 }}
                         />
 
                         <span className="p-2"> Code on Github</span>
@@ -27,10 +27,10 @@ export default function Footer() {
 
                     <Nav.Link href="https://chaos.social/@pkreissel" style={{ color: "white" }}>
                         <img
-                            src="https://assets.chaos.social/accounts/avatars/000/242/007/original/97b58ba7002b2c8b.jpg"
                             alt="Chaos.social Logo"
-                            style={{ height: 20, width: 20, borderRadius: 5 }}
                             className="d-inline-block align-top"
+                            src="https://assets.chaos.social/accounts/avatars/000/242/007/original/97b58ba7002b2c8b.jpg"
+                            style={{ height: 20, width: 20, borderRadius: 5 }}
                         />
 
                         <span className="p-2"> Follow me on Mastodon</span>

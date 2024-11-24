@@ -41,7 +41,7 @@ export default function AuthProvider(props: PropsWithChildren) {
                 }
             );
         } catch (error) {
-            console.warn(error);
+            console.warn("Error while trying to logout:", error);
         }
 
         setUser(null);

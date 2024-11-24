@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { User, App } from "../types";
+
+import { App, User } from "../types";
 
 
 type StorageKey = {
