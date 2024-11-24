@@ -215,7 +215,7 @@ export default function Feed() {
             </Modal>
 
             <Row>
-                <div className="col-sm-6 col-2 sticky-top one">
+                <div className="col-sm-6 col-2 sticky-top one" style={{paddingRight: '10px'}}>
                     <WeightSetter
                         algorithm={algorithm}
                         languages={languagesInFeed}
