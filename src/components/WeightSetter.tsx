@@ -38,7 +38,7 @@ export default function WeightSetter({
     userWeights,
 }: WeightSetterProps) {
     const { user } = useAuth();
-    const [selectedLang, setLang] = usePersistentState<string[]>([], user.id + "selectedLangs");
+    const [selectedLang, setSelectedLanguage] = usePersistentState<string[]>([], user.id + "selectedLangs");
     const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY).sort();
 
     return (
@@ -119,7 +119,7 @@ export default function WeightSetter({
                                             newLang.splice(newLang.indexOf(lang), 1);
                                         }
 
-                                        setLang(newLang);
+                                        setSelectedLanguage(newLang);
                                         setSelectedLanguages(newLang);
                                     }}
                                     type="checkbox"
