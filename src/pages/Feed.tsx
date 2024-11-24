@@ -60,15 +60,19 @@ export default function Feed() {
 
     // Load the posts in the feed either from mastodon server or from the cache
     useEffect(() => {
-        const mostRecentToot = feed.reduce((prev, current) =>
-            (prev.createdAt > current.createdAt) ? prev : current,
+        const mostRecentToot = feed.reduce(
+            (recentToot, toot) => recentToot.createdAt > toot.createdAt ? recentToot : toot,
             {createdAt: EARLIEST_TIMESTAMP}
         );
 
-        console.log("most recent toot in feed: ", mostRecentToot);
+        if (mostRecentToot.createdAt != EARLIEST_TIMESTAMP) {
+            console.log("Found recent toot in feed: ", mostRecentToot);
+        } else {
+            console.log("No recent toot found in feed...");
+        }
 
         // only reload feed if the newest status is older than RELOAD_IF_OLDER_THAN_MS
-        if (mostRecentToot && (Date.now() - (new Date(mostRecentToot.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
+        if ((Date.now() - (new Date(mostRecentToot.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
             setNumDisplayedToots(DEFAULT_NUM_TOOTS);
             constructFeed();
             setIsLoading(false);
