@@ -14,7 +14,7 @@ import FullPageIsLoading from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
-import { settingsType, UserAlgo } from "../types";
+import { settingsType } from "../types";
 import { useAuth } from "../hooks/useAuth";
 
 const DEFAULT_NUM_TOOTS = 20;

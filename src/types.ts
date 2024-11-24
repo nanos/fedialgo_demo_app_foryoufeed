@@ -1,5 +1,4 @@
 import type { mastodon } from 'masto'
-import { TheAlgorithm } from "fedialgo";
 
 
 export interface settingsType {
@@ -17,9 +16,4 @@ export type User = {
     profilePicture?: string;
     username: string;
     server: string;
-};
-
-export type UserAlgo = {
-    currentUser: mastodon.v1.Account;
-    algo: TheAlgorithm;
 };
