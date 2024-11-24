@@ -79,7 +79,7 @@ export default function WeightSetter({
                         <p style={headerFont}>Filters</p>
 
                         {settings && Object.keys(settings).map((key, index) => (
-                            <Form.Group className="mb-3" key={index}>
+                            <Form.Group className="mb-1" key={index}>
                                 <Form.Check
                                     checked={settings[key]}
                                     disabled={false}
@@ -98,7 +98,7 @@ export default function WeightSetter({
                     <div style={roundedBox}>
                         <p style={headerFont}>Languages</p>
 
-                        <Form.Group className="mb-3">
+                        <Form.Group className="mb-1">
                             <Form.Label>
                                 <b>Show only toots in these languages:</b>
                             </Form.Label>
