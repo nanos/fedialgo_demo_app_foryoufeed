@@ -92,6 +92,7 @@ export default function Feed() {
         }
     }, [isBottom]);
 
+
     // Check that we have valid user credentials, otherwise force a logout.
     const getUserAlgo = async (): Promise<TheAlgorithm | null>  => {
         let currentUser: mastodon.v1.Account;
@@ -139,34 +140,31 @@ export default function Feed() {
         setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
     };
 
-    // Learn weights based on user action
-    // TODO: does learning weights really work?
+    // Learn weights based on user action    // TODO: does learning weights really work?
     const weightAdjust = async (scores: ScoresType) => {
         const newWeights = await algorithm.learnWeights(scores);
         console.log("new userWeights in weightAdjust():", newWeights);
         setUserWeights(newWeights);
     };
 
+    // Update the user weightings stored in TheAlgorithm when a user moves a weight slider
     const updateWeights = async (newWeights: ScoresType) => {
         console.log(`updateWeights() called...`)
         setUserWeights(newWeights);
 
         if (algorithm) {
-            const newFeed = await algorithm.weightTootsInFeed(newWeights);
+            const newFeed = await algorithm.weightTootsInFeed(newWeights);  // Has side effect of updating WeightsStore
             setFeed(newFeed);
+        } else {
+            console.warn(`'algorithm' variable not set, can't updateWeights()!`);
         }
     };
 
     const updateSettings = async (newSettings: settingsType) => {
-        console.log(`newSettings: ${JSON.stringify(newSettings)}`);
+        console.log(`updateSettings() called with newSettings: `, newSettings);
         setSettings(newSettings);
-        setFeed([...feed]);
+        setFeed([...feed]);  // TODO: why do we need to do this?
     };
-
-    // Log the weighted feed to the console
-    if (feed.length > 1) {
-        console.log(`ORDERED FEED (condensed): `, feed.map(condensedStatus));
-    }
 
     // Strip out toots we don't want to show to the user for various reasons
     const filteredFeed = feed.filter((status: Toot) => {
@@ -183,6 +181,12 @@ export default function Feed() {
 
         return true;
     });
+
+    // Log the feed to the console
+    if (feed.length > 1) {
+        console.log(`timeline toots (condensed): `, feed.map(condensedStatus));
+        console.log(`filtered timeline toots (condensed): `, filteredFeed.map(condensedStatus));
+    }
 
     return (
         <Container style={{ maxWidth: "700px", height: "auto" }}>
