@@ -70,7 +70,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     // Retoot a post
     const reblog = async () => {
         const status_ = await resolve(status);
-        reblogged ? console.log("skipping reblog()") : weightAdjust(status.scores)
+        reblogged ? console.log("skipping reblog()") : weightAdjust(status.scores);  // TODO: does learning weights really work?
         const id = status_.id;
 
         (async () => {
@@ -88,7 +88,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const fav = async () => {
         console.log(`fav() status.scores: `, status.scores);
         const status_ = await resolve(status);
-        favourited ? console.log("skipping fav()") : weightAdjust(status.scores)
+        favourited ? console.log("skipping fav()") : weightAdjust(status.scores);  // TODO: does learning weights really work?
         const id = status_.id;
 
         (async () => {
@@ -106,7 +106,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         //Follow a link to another instance on the homeserver
         e.preventDefault()
         const status_ = await resolve(status);
-        weightAdjust(status.scores)
+        weightAdjust(status.scores);  // TODO: does learning weights really work?
         console.log(`followUri() status_: `, status_);
         //new tab:
         //window.open(props.user.server + "/@" + status_.account.acct + "/" + status_.id, '_blank');
