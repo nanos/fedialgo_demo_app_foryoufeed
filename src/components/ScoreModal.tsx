@@ -17,9 +17,6 @@ export default function ScoreModal({
     showScoreModal: boolean,
     toot: Toot
 }) {
-    console.debug(`ScoreModal for #${toot.id}: `, toot);
-    console.debug(`extractScoreInfo() for toot #${toot.id}: `, extractScoreInfo(toot));
-
     return (
         <Modal show={showScoreModal} onHide={() => setShowScoreModal(false)} style={{ color: "black" }}>
             <Modal.Header closeButton>

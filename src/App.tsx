@@ -36,12 +36,18 @@ const App: React.FC = () => {
                     className='container-fluid'
                 >
                     <Header />
+
                     <Routes>
-                        <Route path="/" element={<ProtectedRoute><Feed /></ProtectedRoute>} />
+                        <Route path="/" element={
+                            <ProtectedRoute>
+                                <Feed />
+                            </ProtectedRoute>
+                        } />
                         <Route path="/callback" element={<CallbackPage />} />
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/logout" element={<LogoutPage />} />
                     </Routes>
+
                     <Footer />
                 </div>
             </AuthProvider>

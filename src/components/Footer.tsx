@@ -14,7 +14,7 @@ export default function Footer() {
                 <Nav className="me-auto">
                     <Nav.Link href="/" style={{ color: "white" }}>Home</Nav.Link>
 
-                    <Nav.Link href="https://github.com/pkreissel/foryoufeed/tree/main/src" style={{ color: "white" }}>
+                    <Nav.Link href="https://github.com/michelcrypt4d4mus/fedialgo_demo_app_foryoufeed" style={{ color: "white" }}>
                         <img
                             alt="Github Logo"
                             className="d-inline-block align-top"
