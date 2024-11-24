@@ -94,7 +94,7 @@ export default function WeightSetter({
                                 id={lang}
                                 key={index}
                                 label={lang || NO_LANGUAGE}
-                                onChange={(e) => {
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     const newLang = [...selectedLang];
 
                                     if (e.target.checked) {
