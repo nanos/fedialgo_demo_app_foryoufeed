@@ -39,6 +39,7 @@ There's [a script](./quick_install.sh) in this repo that will do all the steps f
 
 
 # Usage
+### Setting Weights
 Once the initial load is complete you can adjust the way the algorithm weights various aspects of a toot when it decides what should be at or near the top of your feed. Hopefully these are self explanatory:
 
 <p align="center">
@@ -46,6 +47,13 @@ Once the initial load is complete you can adjust the way the algorithm weights v
 </p>
 
 One thing that's kind of a gotcha is the way the `topPosts - Favor posts that are trending in the Fediverse` slider works. Because trending posts often have tons of engagement in the form of replies, favorites, and retoots they can easily drown out the toots from people you are actually following. As a result the impact of this slider gets increasingly drastic _but only if the value is below 1.0_. At 1.0 and above it behaves like all the other weighting sliders.
+
+### Investigating A Toot's Score
+Clicking the "i" in the GUI will bring up a popup that will show you the gorey details of how a toot measured up.
+
+<p align="center">
+    <img src="doc/click_the_i_for_score_info.png" alt="click_the_i_for_score_info" width="300">
+</p>
 
 ### Tooting And Replying
 Currently you can retoot and favorite other people's toots through the web interface.
