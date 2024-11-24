@@ -44,7 +44,11 @@ export default function WeightSetter({
     return (
         <Accordion>
             <Accordion.Item eventKey="0">
-                <Accordion.Header><p style={{fontWeight: "bold", fontSize: 25}}>Feed Algorithmus</p></Accordion.Header>
+                <Accordion.Header>
+                    <p style={{fontWeight: "bold", fontSize: 25}}>
+                        Feed Algorithmus
+                    </p>
+                </Accordion.Header>
 
                 <Accordion.Body>
                     {/* Time Decay slider */}
