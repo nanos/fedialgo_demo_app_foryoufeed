@@ -3,6 +3,10 @@ This repo contains a simple demo React application (a website, basically - one t
 
 Each incoming toot in your recent timeline will be scored based on a variety of factors and resorted top to bottom based on what toots have the highest scores instead of just reverse chronological order. You can adjust in a very fine grained way how much weight you want to give to each of those factors in determining each toot's scores.
 
+<p align="center">
+    <img src="doc/algorithm_sliders.png" alt="Algorithm Weighting Sliders" width="600">
+</p>
+
 Here's an example of the elements that go into scoring a toot:
 
 <p align="center">
