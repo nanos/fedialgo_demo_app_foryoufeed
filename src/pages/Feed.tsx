@@ -172,7 +172,7 @@ export default function Feed() {
             console.log(`Removing ${status.uri} from feed because it's not a link...`);
             return false;
         } else if (status.reblog && !settings.includeReposts) {
-            console.log(`Removing reblogged status ${status.uri} from feed...`);
+            console.debug(`Removing reblogged status ${status.uri} from feed...`);
             return false;
         } else if (filteredLanguages.length > 0 && !filteredLanguages.includes(status.language)) {
             console.log(`Removing toot ${status.uri} w/invalid language ${status.language} (valid langs: ${JSON.stringify(filteredLanguages)}).`);
