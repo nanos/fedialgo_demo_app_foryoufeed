@@ -173,7 +173,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         >
                             <span className="status__visibility-icon">
                                 <i className="fa fa-globe" title="Öffentlich" />
-                                {status?.topPost && <i className="fa fa-fire" title="Top Post"></i>}
+                                {status?.trendingRank && <i className="fa fa-fire" title="Trending Toot"></i>}
                                 {status?.recommended && <i className="fa fa-bolt" title="Recommended By AI"></i>}
                             </span>
 

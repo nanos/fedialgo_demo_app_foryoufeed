@@ -39,7 +39,7 @@ export default function WeightSetter({
 }: WeightSetterProps) {
     const { user } = useAuth();
     const [selectedLang, setLang] = usePersistentState<string[]>([], user.id + "selectedLangs");
-    const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY);
+    const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY).sort();
 
     return (
         <Accordion>
@@ -47,15 +47,6 @@ export default function WeightSetter({
                 <Accordion.Header>Feed Algorithmus</Accordion.Header>
 
                 <Accordion.Body>
-                    {userWeights && scoringWeightNames.map((scoreName) => (
-                        <WeightSlider
-                            description={algorithm.getDescription(scoreName)}
-                            key={scoreName}
-                            scoreName={scoreName}
-                            updateWeights={updateWeights}
-                            userWeights={userWeights}
-                        />))}
-
                     {/* Time Decay slider */}
                     <WeightSlider
                         defaultValue={DEFAULT_TIME_DECAY}
@@ -65,6 +56,20 @@ export default function WeightSetter({
                         updateWeights={updateWeights}
                         userWeights={userWeights}
                     />
+
+                    <p style={headerFont}>Weightings</p>
+
+                    {/* Other feature weighting sliders */}
+                    {userWeights && scoringWeightNames.map((scoreName) => (
+                        <WeightSlider
+                            description={algorithm.getDescription(scoreName)}
+                            key={scoreName}
+                            scoreName={scoreName}
+                            updateWeights={updateWeights}
+                            userWeights={userWeights}
+                        />))}
+
+                    <p style={headerFont}>Filters</p>
 
                     {settings && Object.keys(settings).map((key, index) => (
                         <Form.Group className="mb-3" key={index}>
@@ -81,6 +86,8 @@ export default function WeightSetter({
                                 type="checkbox"
                             />
                         </Form.Group>))}
+
+                    <p style={headerFont}>Languages</p>
 
                     <Form.Group className="mb-3">
                         <Form.Label>
@@ -114,4 +121,13 @@ export default function WeightSetter({
             </Accordion.Item>
         </Accordion>
     );
+};
+
+
+const headerFont = {
+    fontFamily: "Tahoma, Geneva, sans-serif",
+    fontSize: "18px",
+    fontWeight: 700,
+    marginBottom: "15px",
+    textDecoration: "underline",
 };
