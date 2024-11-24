@@ -6,7 +6,6 @@ import React from 'react';
 import Form from 'react-bootstrap/esm/Form';
 import { ScoresType } from "fedialgo";
 
-
 const DEFAULT_VALUE = 1;
 const STEP_SIZE = 0.01;
 
@@ -27,11 +26,12 @@ export default function WeightSlider({
     userWeights,
 }: WeightSliderProps) {
     defaultValue = defaultValue ?? DEFAULT_VALUE;
+    const descriptionWithValue = `${description}: ${userWeights[scoreName]?.toFixed(2) ?? defaultValue}`;
 
     return (
         <Form.Group className="mb-3">
             <Form.Label key={`${scoreName}_label`}>
-                <b>{scoreName + " - "}</b>{description + ": " + (userWeights[scoreName]?.toFixed(2) ?? `${defaultValue}`)}
+                <b>{scoreName + " - "}</b>{descriptionWithValue}
             </Form.Label>
 
             <Form.Range
