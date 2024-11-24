@@ -30,7 +30,7 @@ export default function WeightSlider({
 
     return (
         <Form.Group className="mb-1">
-            <Form.Label key={`${scoreName}_label`}>
+            <Form.Label>
                 <span style={{fontWeight: 'bold'}}>{`${scoreName}: `}</span>{descriptionWithValue}
             </Form.Label>
 

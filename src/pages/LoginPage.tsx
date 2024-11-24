@@ -44,13 +44,14 @@ export default function LoginPage() {
     return (
         <>
             <div className='vh-100' style={{
+                display: 'flex',
                 flex: 1,
                 flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: "center",
-                display: 'flex',
+                // alignItems: 'center',
+                // justifyContent: "center",
+                paddingTop: "1%",
             }}>
-                <img src={"/assets/Showcase.png"} style={{ maxHeight: "40%" }} />
+                <img src={"/assets/Showcase.png"} style={{ marginBottom: "10px", maxHeight: "75%" }} />
 
                 <div>
                     <p style={{ lineHeight: 2, textAlign: "center" }}>
