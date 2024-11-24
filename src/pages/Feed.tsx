@@ -7,7 +7,7 @@ import { usePersistentState } from "react-persistent-state";
 
 import Container from "react-bootstrap/esm/Container";
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
-import { condensedStatus, Toot, ScoresType, TheAlgorithm } from "fedialgo";
+import { condensedStatus, ScoresType, TheAlgorithm, Toot } from "fedialgo";
 
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
