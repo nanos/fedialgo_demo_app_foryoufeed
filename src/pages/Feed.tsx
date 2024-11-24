@@ -135,6 +135,7 @@ export default function Feed() {
         console.log(`constructFeed() called with user ID ${user?.id}...`);
         const algo = await getUserAlgo();
         if (!algo) return;
+        console.log(`About to call algo.getFeed(). 'feed' state currently contains ${feed.length} toots...`);
         const timelineFeed = await algo.getFeed();
         setFeed(timelineFeed);
 
