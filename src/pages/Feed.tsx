@@ -5,7 +5,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { Modal } from "react-bootstrap";
 import { usePersistentState } from "react-persistent-state";
 
+import Col from 'react-bootstrap/Col';
 import Container from "react-bootstrap/esm/Container";
+import Row from 'react-bootstrap/Row';
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
 import { condensedStatus, ScoresType, TheAlgorithm, Toot } from "fedialgo";
 
@@ -203,7 +205,7 @@ export default function Feed() {
     }
 
     return (
-        <Container style={{ maxWidth: "700px", height: "auto" }}>
+        <Container style={{ height: "auto" }}>
             <Modal show={error !== ""} onHide={() => setError("")}>
                 <Modal.Header closeButton>
                     <Modal.Title>Error</Modal.Title>
@@ -212,30 +214,36 @@ export default function Feed() {
                 <Modal.Body>{error}</Modal.Body>
             </Modal>
 
-            <WeightSetter
-                algorithm={algorithm}
-                languages={languagesInFeed}
-                setSelectedLanguages={setFilteredLanguages}
-                settings={settings}
-                updateSettings={updateSettings}
-                updateWeights={updateWeights}
-                userWeights={userWeights}
-            />
-
-            <FindFollowers api={api} user={user} />
-
-            {!isLoading && api && (feed.length > 1) &&
-                filteredFeed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot: Toot) => (
-                    <StatusComponent
-                        api={api}
-                        key={toot.uri}
-                        setError={setError}
-                        status={toot}
-                        user={user}
-                        weightAdjust={weightAdjust}
+            <Row>
+                <div className="col-sm-6 col-2 sticky-top one">
+                    <WeightSetter
+                        algorithm={algorithm}
+                        languages={languagesInFeed}
+                        setSelectedLanguages={setFilteredLanguages}
+                        settings={settings}
+                        updateSettings={updateSettings}
+                        updateWeights={updateWeights}
+                        userWeights={userWeights}
                     />
-                )
-            )}
+
+                    <FindFollowers api={api} user={user} />
+                </div>
+
+                <div className="col-sm-6 offset-sm-6 two">
+                    {!isLoading && api && (feed.length > 1) &&
+                        filteredFeed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot: Toot) => (
+                            <StatusComponent
+                                api={api}
+                                key={toot.uri}
+                                setError={setError}
+                                status={toot}
+                                user={user}
+                                weightAdjust={weightAdjust}
+                            />
+                        )
+                    )}
+                </div>
+            </Row>
 
             {(feed.length == 0 || isLoading) && <FullPageIsLoading />}
             <div ref={bottomRef} onClick={showMoreToots}>Load More</div>
