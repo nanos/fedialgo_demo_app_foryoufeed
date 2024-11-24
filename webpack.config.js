@@ -1,4 +1,5 @@
 const path = require("path");
+
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
@@ -29,6 +30,12 @@ module.exports = {
         ],
     },
     plugins: [
+        new CopyPlugin({
+            patterns: [
+                { from: 'assets', to: '' }, // copies all files from assets to dist/
+                { from: 'public', to: '' }, // copies all files from public to dist/
+            ],
+        }),
         new HtmlWebpackPlugin({
             template: "./src/index.html",
         }),
@@ -36,12 +43,6 @@ module.exports = {
             clientsClaim: true,
             maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
             skipWaiting: true,
-        }),
-        new CopyPlugin({
-            patterns: [
-                { from: 'assets', to: '' }, // copies all files from assets to dist/
-                { from: 'public', to: '' }, // copies all files from public to dist/
-            ],
         }),
     ],
     devServer: {
