@@ -4,9 +4,8 @@
 import React from 'react';
 
 import Form from 'react-bootstrap/esm/Form';
-import { DEFAULT_TIME_DECAY, TIME_DECAY, ScoresType, TheAlgorithm } from "fedialgo";
+import { ScoresType } from "fedialgo";
 
-import { settingsType } from "../types";
 
 const DEFAULT_VALUE = 1;
 const STEP_SIZE = 0.01;
@@ -17,7 +16,7 @@ interface WeightSliderProps {
     scoreName: string;
     updateWeights: (newWeights: ScoresType) => void;
     userWeights: ScoresType;
-}
+};
 
 
 export default function WeightSlider({
