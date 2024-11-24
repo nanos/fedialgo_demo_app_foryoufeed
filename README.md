@@ -5,7 +5,7 @@ Each incoming toot in your recent timeline will be scored based on a variety of 
 Here's an example of the elements that go into scoring a toot:
 
 <p align="center">
-    <img src="doc/toot_score_modal.png" alt="An example of the way a toot is weighted." width="600">
+    <img src="doc/toot_score_modal.png" alt="An example of the way a toot is weighted." width="750">
 </p>
 
 **None of your data ever leaves your browser.** All computations and reorderings are done in client side javascript.
