@@ -9,12 +9,12 @@ import { describeAccount } from 'fedialgo/dist/helpers';
 
 
 export default function ScoreModal({
-    showScoreModal,
     setShowScoreModal,
+    showScoreModal,
     toot
 }: {
-    showScoreModal: boolean,
     setShowScoreModal: (showScoreModal: boolean) => void,
+    showScoreModal: boolean,
     toot: Toot
 }) {
     console.debug(`ScoreModal for toot #${toot.id}: `, toot);
