@@ -52,7 +52,7 @@ One thing that's kind of a gotcha is the way the `topPosts - Favor posts that ar
 Clicking the "i" in the GUI will bring up a popup that will show you the gorey details of how a toot measured up.
 
 <p align="center">
-    <img src="doc/click_the_i_for_score_info.png" alt="click_the_i_for_score_info" width="300">
+    <img src="doc/click_the_i_for_score_info.png" alt="click_the_i_for_score_info" width="600">
 </p>
 
 ### Tooting And Replying
