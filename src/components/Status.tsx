@@ -7,7 +7,7 @@ import Toast from 'react-bootstrap/Toast';
 
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
-import { Toot, ScoresType } from "fedialgo";
+import { ScoresType, Toot } from "fedialgo";
 
 import "../birdUI.css";
 import "../default.css";
@@ -34,28 +34,27 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     const [favourited, setFavourited] = React.useState<boolean>(status.favourited);
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
-    const [attModal, setAttModal] = React.useState<number>(-1); //index of the attachment to show
+    const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); //index of the media attachment to show
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
     const [error, _setError] = React.useState<string>("");
 
     if (!masto) throw new Error("No Mastodon API");
-    // console.debug(`StatusComponent status toot: `, status);
 
-    // Increase attModal on Right Arrow
+    // Increase mediaInspectionModalIdx on Right Arrow
     React.useEffect(() => {
         const handleKeyDown = (e) => {
-            if (attModal === -1) return;
+            if (mediaInspectionModalIdx === -1) return;
 
-            if (e.key === "ArrowRight" && attModal < status.mediaAttachments.length - 1) {
-                setAttModal(attModal + 1);
-            } else if (e.key === "ArrowLeft" && attModal > 0) {
-                setAttModal(attModal - 1);
+            if (e.key === "ArrowRight" && mediaInspectionModalIdx < status.mediaAttachments.length - 1) {
+                setMediaInspectionModalIdx(mediaInspectionModalIdx + 1);
+            } else if (e.key === "ArrowLeft" && mediaInspectionModalIdx > 0) {
+                setMediaInspectionModalIdx(mediaInspectionModalIdx - 1);
             }
         };
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [attModal])
+    }, [mediaInspectionModalIdx])
 
 
     const resolve = async (status: Toot): Promise<Toot> => {
@@ -122,7 +121,11 @@ export default function StatusComponent(props: StatusComponentProps) {
         <div>
             {
                 status.mediaAttachments.length > 0 && (
-                    <AttachmentsModal attModal={attModal} setAttModal={setAttModal} status={status} />
+                    <AttachmentsModal
+                        mediaInspectionModalIdx={mediaInspectionModalIdx}
+                        setMediaInspectionModalIdx={setMediaInspectionModalIdx}
+                        toot={status}
+                    />
                 )
             }
 
@@ -260,7 +263,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                                         <LazyLoadImage
                                             alt={att.description}
-                                            onClick={() => setAttModal(i)}
+                                            onClick={() => setMediaInspectionModalIdx(i)}
                                             src={att.previewUrl}
                                             sizes="559px"
                                             style={{ objectPosition: "50%", width: "100%" }}
@@ -279,7 +282,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                                     <LazyLoadImage
                                         alt={att.description}
-                                        onClick={() => setAttModal(i)}
+                                        onClick={() => setMediaInspectionModalIdx(i)}
                                         scr={att.previewUrl}
                                         sizes="559px"
                                         style={{ objectPosition: "50%", width: "100%" }}

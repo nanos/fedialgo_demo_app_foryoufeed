@@ -1,3 +1,6 @@
+/*
+ * Modal that shows all the elements of a toot's final score.
+ */
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 

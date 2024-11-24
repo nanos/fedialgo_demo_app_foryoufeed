@@ -1,3 +1,6 @@
+/*
+ * Modal that allows for inspection of tooted images etc upon clicking.
+ */
 import parse from 'html-react-parser';
 import React from 'react';
 
@@ -7,38 +10,38 @@ import { Toot } from "fedialgo";
 
 export default function AttachmentsModal(
     {
-        attModal,
-        setAttModal,
-        status
+        mediaInspectionModalIdx,
+        setMediaInspectionModalIdx,
+        toot
     }: {
-        attModal: number,
-        setAttModal: (attModal: number) => void,
-        status: Toot
+        mediaInspectionModalIdx: number,
+        setMediaInspectionModalIdx: (mediaInspectionModalIdx: number) => void,
+        toot: Toot
     }
 ) {
     return (
-        <Modal show={attModal != -1} onHide={() => setAttModal(-1)}>
+        <Modal show={mediaInspectionModalIdx != -1} onHide={() => setMediaInspectionModalIdx(-1)}>
             <Modal.Header closeButton>
                 <Modal.Title>
-                    {parse(status.content)[100]}
+                    {parse(toot.content)[100]}
                 </Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
-                {(attModal != -1) &&
+                {(mediaInspectionModalIdx != -1) &&
                     <div>
                         {
-                            status.mediaAttachments[attModal]?.type === "image" &&
+                            toot.mediaAttachments[mediaInspectionModalIdx]?.type === "image" &&
                                 <img
-                                    alt={status.mediaAttachments[attModal]?.description ?? ""}
-                                    src={status.mediaAttachments[attModal]?.url}
+                                    alt={toot.mediaAttachments[mediaInspectionModalIdx]?.description ?? ""}
+                                    src={toot.mediaAttachments[mediaInspectionModalIdx]?.url}
                                     width={"100%"}
                                 />
                         }
 
-                        {status.mediaAttachments[attModal]?.type === "video" &&
+                        {toot.mediaAttachments[mediaInspectionModalIdx]?.type === "video" &&
                             <video width={"100%"} controls>
-                                <source src={status.mediaAttachments[attModal]?.url} type="video/mp4" />
+                                <source src={toot.mediaAttachments[mediaInspectionModalIdx]?.url} type="video/mp4" />
                                 Your browser does not support the video tag.
                             </video>
                         }
