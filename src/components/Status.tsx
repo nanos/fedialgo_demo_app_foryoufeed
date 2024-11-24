@@ -15,6 +15,8 @@ import AttachmentsModal from './AttachmentsModal';
 import ScoreModal from './ScoreModal';
 import { User } from '../types';
 
+const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
+const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
 
 interface StatusComponentProps {
     status: Toot,
@@ -296,7 +298,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <button
                             aria-hidden="false"
                             aria-label="Antworten"
-                            className="status__action-bar__button icon-button icon-button--with-counter"
+                            className={ACTION_ICON_BASE_CLASS}
                             onClick={followUri}
                             style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
                             type="button"
@@ -314,7 +316,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <button
                             aria-hidden="false"
                             aria-label="Teilen"
-                            className={("status__action-bar__button icon-button icon-button--with-counter" + (reblogged ? " active activate" : " deactivate"))}
+                            className={(ACTION_ICON_BASE_CLASS + (reblogged ? " active activate" : " deactivate"))}
                             onClick={reblog}
                             type="button" title="Teilen"
                             style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
@@ -333,7 +335,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <button
                             aria-hidden="false"
                             aria-label="Favorisieren"
-                            className={("status__action-bar__button star-icon icon-button icon-button--with-counter" + (favourited ? " active activate" : " deactivate"))}
+                            className={(ACTION_ICON_BASE_CLASS + (favourited ? " active activate" : " deactivate"))}
                             onClick={fav}
                             style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
                             type="button"
@@ -353,7 +355,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <button
                             aria-hidden="false"
                             aria-label="Score"
-                            className="status__action-bar__button icon-button"
+                            className={ICON_BUTTON_CLASS}
                             onClick={showScore}
                             style={{ fontSize: "18px", width: "20px", height: "23.142857px", lineHeight: "18px" }}
                             title="Score"
@@ -369,7 +371,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             aria-label="Auf eigenem Server öffnen"
                             onClick={followUri}
                             type="button" title="Open on your instance"
-                            className="status__action-bar__button icon-button"
+                            className={ICON_BUTTON_CLASS}
                             style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
                         >
                             <i className="fa fa-link fa-fw" aria-hidden="true"></i>
