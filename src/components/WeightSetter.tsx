@@ -13,6 +13,7 @@ import { DEFAULT_TIME_DECAY, TIME_DECAY, ScoresType, TheAlgorithm } from "fedial
 import { settingsType } from "../types";
 import { useAuth } from '../hooks/useAuth';
 
+const NO_LANGUAGE = '[not specified]';
 
 interface WeightSetterProps {
     userWeights: ScoresType,
@@ -119,7 +120,7 @@ export default function WeightSetter({
                                     disabled={false}
                                     id={lang}
                                     key={index}
-                                    label={lang}
+                                    label={lang || NO_LANGUAGE}
                                     onChange={(e) => {
                                         const newLang = [...selectedLang];
 

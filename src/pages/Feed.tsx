@@ -39,6 +39,7 @@ export default function Feed() {
     const [error, setError] = useState<string>("");
     const [filteredLanguages, setFilteredLanguages] = useState<string[]>([]); //languages to filter
     const [isLoading, setIsLoading] = useState<boolean>(true);  // true if page is still loading
+    const [languagesInFeed, setLanguagesInFeed] = useState<string[]>([]); //languages that show up at least once in the feed toots
     const [userWeights, setUserWeights] = useState<ScoresType>({});  // weights for each factor
 
     // Persistent state variables
@@ -130,7 +131,15 @@ export default function Feed() {
         console.log(`constructFeed() called with user ID ${user?.id}...`);
         const algo = await getUserAlgo();
         if (!algo) return;
-        setFeed(await algo.getFeed());
+        const timelineFeed = await algo.getFeed();
+        setFeed(timelineFeed);
+
+        const feedLanguages = timelineFeed.reduce((languages, toot) => {
+            if (!languages.includes(toot.language)) languages.push(toot.language);
+            return languages;
+        }, [])
+
+        setLanguagesInFeed(feedLanguages);
     };
 
     // Pull more toots to display from our local cached and sorted toot feed
@@ -200,10 +209,7 @@ export default function Feed() {
 
             <WeightSetter
                 algorithm={algorithm}
-                languages={feed.reduce((languagesInFeed, item) => {
-                    if (!languagesInFeed.includes(item.language)) languagesInFeed.push(item.language);
-                    return languagesInFeed;
-                }, [])}
+                languages={languagesInFeed}
                 setSelectedLanguages={setFilteredLanguages}
                 settings={settings}
                 updateSettings={updateSettings}
