@@ -15,7 +15,8 @@ export default function FullPageIsLoading () {
             justifyContent: "center",
             verticalAlign: "center",
         }}>
-            <Spinner animation="grow" />
+            <Spinner animation="border" />
+            <p>Loading...</p>
         </div>
     );
 };
