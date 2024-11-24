@@ -28,7 +28,6 @@ export default function WeightSlider({
     userWeights,
 }: WeightSliderProps) {
     defaultValue = defaultValue ?? DEFAULT_VALUE;
-    console.log(`rendering weightSlider with scoreName: ${scoreName}`);
 
     return (
         <Form.Group className="mb-3">
