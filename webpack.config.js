@@ -1,16 +1,17 @@
 const path = require("path");
 
+const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 
+// npm install react-hot-loader --save-dev
 
 module.exports = {
     entry: "./src/index.tsx",
     output: {
+        clean: true,  // Clean the cache each time we build
         filename: "bundle.js",
         path: path.resolve(__dirname, "dist"),
-        clean: true,  // Clean the cache each time we build
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
@@ -40,6 +41,7 @@ module.exports = {
             template: "./src/index.html",
         }),
         new WorkboxWebpackPlugin.GenerateSW({
+            // WorkboxWebpackPlugin docs: https://developer.chrome.com/docs/workbox/modules/workbox-webpack-plugin/
             clientsClaim: true,
             maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
             skipWaiting: true,
