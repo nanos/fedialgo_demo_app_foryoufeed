@@ -1,12 +1,16 @@
 This repo contains a simple demo React application for the (almost) pure javascript [`fedialgo`](https://github.com/michelcrypt4d4mus/fedialgo) package, a customizable algorithm for the federated social media platform [Mastodon](https://joinmastodon.org/) that can free you from the tyranny of Mastodon's reverse chronological order timeline.
 
+Each incoming toot in your recent timeline will be scored based on a variety of factors and resorted top to bottom based on what toots have the highest scores instead of just reverse chronological order. You can adjust in a very fine grained way how much weight you want to give to each of those factors in determining each toot's scores.
+
+Here's an example of the elements that go into scoring a toot:
+
+<p align="center">
+    <img src="doc/toot_score_modal.png" alt="An example of the way a toot is weighted." width="600">
+</p>
+
 **None of your data ever leaves your browser.** All computations and reorderings are done in client side javascript.
 
 Both this repo and the `fedialgo` package linked above were forked from [pkreissel's original implementations](https://github.com/pkreissel/fedialgo).
-
-<p align="center">
-    <img src="doc/debug_scoring_logs.png" alt="Scoring Logs" width="600">
-</p>
 
 
 # Installation
