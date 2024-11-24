@@ -8,7 +8,7 @@ import { usePersistentState } from "react-persistent-state";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
-import { ScoresType, TheAlgorithm } from "fedialgo";
+import { DEFAULT_TIME_DECAY, TIME_DECAY, ScoresType, TheAlgorithm } from "fedialgo";
 
 import { settingsType } from "../types";
 import { useAuth } from '../hooks/useAuth';
@@ -36,13 +36,14 @@ export default function WeightSetter({
 }: WeightSetterProps) {
     const { user } = useAuth();
     const [selectedLang, setLang] = usePersistentState<string[]>([], user.id + "selectedLangs");
+    const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY);
 
     return (
         <Accordion>
             <Accordion.Item eventKey="0">
                 <Accordion.Header>Feed Algorithmus</Accordion.Header>
                 <Accordion.Body>
-                    {userWeights && Object.keys(userWeights).map((key, index) => {
+                    {userWeights && scoringWeightNames.map((key, index) => {
                         return (
                             <Form.Group className="mb-3" key={index}>
                                 <Form.Label>
@@ -65,6 +66,27 @@ export default function WeightSetter({
                             </Form.Group>
                         );
                     })}
+
+                    {/* Time Decay slider */}
+                    <Form.Group className="mb-3" key={'timeDecay'}>
+                        <Form.Label>
+                            <b>Time Decay Factor - </b>
+                            {"Higher values means toots are demoted sooner: " + (userWeights[TIME_DECAY]?.toFixed(2) ?? `${DEFAULT_TIME_DECAY}`)}
+                        </Form.Label>
+
+                        <Form.Range
+                            id={'timedecay'}
+                            min={Math.min(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) - 1 * 1.2}
+                            max={Math.max(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) + 1 * 1.2}
+                            onChange={(e) => {
+                                const newWeights = Object.assign({}, userWeights);
+                                newWeights[TIME_DECAY] = Number(e.target.value);
+                                updateWeights(newWeights);
+                            }}
+                            step={0.01}
+                            value={userWeights[TIME_DECAY] ?? DEFAULT_TIME_DECAY}
+                        />
+                    </Form.Group>
 
                     {settings && Object.keys(settings).map((key, index) => {
                         return (
