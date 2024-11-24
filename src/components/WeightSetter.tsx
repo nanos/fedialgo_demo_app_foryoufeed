@@ -47,17 +47,14 @@ export default function WeightSetter({
                 <Accordion.Header>Feed Algorithmus</Accordion.Header>
 
                 <Accordion.Body>
-                    {userWeights && scoringWeightNames.map((scoreName, index) => {
-                        return (
-                            <WeightSlider
-                                description={algorithm.getDescription(scoreName)}
-                                key={scoreName}
-                                scoreName={scoreName}
-                                updateWeights={updateWeights}
-                                userWeights={userWeights}
-                            />
-                        );
-                    })}
+                    {userWeights && scoringWeightNames.map((scoreName) => (
+                        <WeightSlider
+                            description={algorithm.getDescription(scoreName)}
+                            key={scoreName}
+                            scoreName={scoreName}
+                            updateWeights={updateWeights}
+                            userWeights={userWeights}
+                        />))}
 
                     {/* Time Decay slider */}
                     <WeightSlider
@@ -69,54 +66,49 @@ export default function WeightSetter({
                         userWeights={userWeights}
                     />
 
-                    {settings && Object.keys(settings).map((key, index) => {
-                        return (
-                            <Form.Group className="mb-3" key={index}>
-                                <Form.Check
-                                    checked={settings[key]}
-                                    disabled={false}
-                                    id={key}
-                                    label={key}
-                                    onChange={(e) => {
-                                        const newSettings = { ...settings };
-                                        newSettings[key] = e.target.checked;
-                                        updateSettings(newSettings);
-                                    }}
-                                    type="checkbox"
-                                />
-                            </Form.Group>
-                        );
-                    })}
+                    {settings && Object.keys(settings).map((key, index) => (
+                        <Form.Group className="mb-3" key={index}>
+                            <Form.Check
+                                checked={settings[key]}
+                                disabled={false}
+                                id={key}
+                                label={key}
+                                onChange={(e) => {
+                                    const newSettings = { ...settings };
+                                    newSettings[key] = e.target.checked;
+                                    updateSettings(newSettings);
+                                }}
+                                type="checkbox"
+                            />
+                        </Form.Group>))}
 
                     <Form.Group className="mb-3">
                         <Form.Label>
                             <b>Show only toots in these languages</b>
                         </Form.Label>
 
-                        {languages.map((lang, index) => {
-                            return (
-                                <Form.Check
-                                    checked={selectedLang.includes(lang)}
-                                    disabled={false}
-                                    id={lang}
-                                    key={index}
-                                    label={lang || NO_LANGUAGE}
-                                    onChange={(e) => {
-                                        const newLang = [...selectedLang];
+                        {languages.map((lang, index) => (
+                            <Form.Check
+                                checked={selectedLang.includes(lang)}
+                                disabled={false}
+                                id={lang}
+                                key={index}
+                                label={lang || NO_LANGUAGE}
+                                onChange={(e) => {
+                                    const newLang = [...selectedLang];
 
-                                        if (e.target.checked) {
-                                            newLang.push(lang);
-                                        } else {
-                                            newLang.splice(newLang.indexOf(lang), 1);
-                                        }
+                                    if (e.target.checked) {
+                                        newLang.push(lang);
+                                    } else {
+                                        newLang.splice(newLang.indexOf(lang), 1);
+                                    }
 
-                                        setLang(newLang);
-                                        setSelectedLanguages(newLang);
-                                    }}
-                                    type="checkbox"
-                                />
-                            );
-                        })}
+                                    setLang(newLang);
+                                    setSelectedLanguages(newLang);
+                                }}
+                                type="checkbox"
+                            />
+                        ))}
                     </Form.Group>
                 </Accordion.Body>
             </Accordion.Item>
