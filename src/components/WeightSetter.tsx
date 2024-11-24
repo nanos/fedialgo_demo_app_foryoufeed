@@ -44,7 +44,7 @@ export default function WeightSetter({
     return (
         <Accordion>
             <Accordion.Item eventKey="0">
-                <Accordion.Header>Feed Algorithmus</Accordion.Header>
+                <Accordion.Header><p style={{fontWeight: "bold", fontSize: 25}}>Feed Algorithmus</p></Accordion.Header>
 
                 <Accordion.Body>
                     {/* Time Decay slider */}
@@ -57,66 +57,72 @@ export default function WeightSetter({
                         userWeights={userWeights}
                     />
 
-                    <p style={headerFont}>Weightings</p>
-
                     {/* Other feature weighting sliders */}
-                    {userWeights && scoringWeightNames.map((scoreName) => (
-                        <WeightSlider
-                            description={algorithm.getDescription(scoreName)}
-                            key={scoreName}
-                            scoreName={scoreName}
-                            updateWeights={updateWeights}
-                            userWeights={userWeights}
-                        />))}
+                    <div style={roundedBox}>
+                        <p style={headerFont}>Weightings</p>
 
-                    <p style={headerFont}>Filters</p>
+                        {userWeights && scoringWeightNames.map((scoreName) => (
+                            <WeightSlider
+                                description={algorithm.getDescription(scoreName)}
+                                key={scoreName}
+                                scoreName={scoreName}
+                                updateWeights={updateWeights}
+                                userWeights={userWeights}
+                            />))}
+                    </div>
 
-                    {settings && Object.keys(settings).map((key, index) => (
-                        <Form.Group className="mb-3" key={index}>
-                            <Form.Check
-                                checked={settings[key]}
-                                disabled={false}
-                                id={key}
-                                label={key}
-                                onChange={(e) => {
-                                    const newSettings = { ...settings };
-                                    newSettings[key] = e.target.checked;
-                                    updateSettings(newSettings);
-                                }}
-                                type="checkbox"
-                            />
-                        </Form.Group>))}
+                    <div style={roundedBox}>
+                        <p style={headerFont}>Filters</p>
 
-                    <p style={headerFont}>Languages</p>
+                        {settings && Object.keys(settings).map((key, index) => (
+                            <Form.Group className="mb-3" key={index}>
+                                <Form.Check
+                                    checked={settings[key]}
+                                    disabled={false}
+                                    id={key}
+                                    label={key}
+                                    onChange={(e) => {
+                                        const newSettings = { ...settings };
+                                        newSettings[key] = e.target.checked;
+                                        updateSettings(newSettings);
+                                    }}
+                                    type="checkbox"
+                                />
+                            </Form.Group>))}
+                    </div>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>
-                            <b>Show only toots in these languages</b>
-                        </Form.Label>
+                    <div style={roundedBox}>
+                        <p style={headerFont}>Languages</p>
 
-                        {languages.map((lang, index) => (
-                            <Form.Check
-                                checked={selectedLang.includes(lang)}
-                                disabled={false}
-                                id={lang}
-                                key={index}
-                                label={lang || NO_LANGUAGE}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    const newLang = [...selectedLang];
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <b>Show only toots in these languages:</b>
+                            </Form.Label>
 
-                                    if (e.target.checked) {
-                                        newLang.push(lang);
-                                    } else {
-                                        newLang.splice(newLang.indexOf(lang), 1);
-                                    }
+                            {languages.map((lang, index) => (
+                                <Form.Check
+                                    checked={selectedLang.includes(lang)}
+                                    disabled={false}
+                                    id={lang}
+                                    key={index}
+                                    label={lang || NO_LANGUAGE}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                        const newLang = [...selectedLang];
 
-                                    setLang(newLang);
-                                    setSelectedLanguages(newLang);
-                                }}
-                                type="checkbox"
-                            />
-                        ))}
-                    </Form.Group>
+                                        if (e.target.checked) {
+                                            newLang.push(lang);
+                                        } else {
+                                            newLang.splice(newLang.indexOf(lang), 1);
+                                        }
+
+                                        setLang(newLang);
+                                        setSelectedLanguages(newLang);
+                                    }}
+                                    type="checkbox"
+                                />
+                            ))}
+                        </Form.Group>
+                    </div>
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
@@ -130,4 +136,13 @@ const headerFont = {
     fontWeight: 700,
     marginBottom: "15px",
     textDecoration: "underline",
+};
+
+
+const roundedBox = {
+    borderRadius: "25px",
+    broderWidth: "1px",
+    background: "lightgrey",
+    marginBottom: "20px",
+    padding: "20px",
 };
