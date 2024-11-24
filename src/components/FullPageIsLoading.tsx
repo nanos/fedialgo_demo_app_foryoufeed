@@ -16,7 +16,7 @@ export default function FullPageIsLoading () {
             verticalAlign: "center",
         }}>
             <Spinner animation="border" />
-            <p>Loading...</p>
+            <p> Loading...</p>
         </div>
     );
 };
