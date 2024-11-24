@@ -59,6 +59,7 @@ export default function WeightSetter({
                         );
                     })}
 
+                    {/* Time Decay slider */}
                     <WeightSlider
                         defaultValue={DEFAULT_TIME_DECAY}
                         description={TIME_DECAY_DESCRIPTION}
@@ -67,27 +68,6 @@ export default function WeightSetter({
                         updateWeights={updateWeights}
                         userWeights={userWeights}
                     />
-
-                    {/* Time Decay slider */}
-                    {/* <Form.Group className="mb-3" key={'timeDecay'}>
-                        <Form.Label>
-                            <b>Time Decay Factor - </b>
-                            {"Higher values means toots are demoted sooner: " + (userWeights[TIME_DECAY]?.toFixed(2) ?? `${DEFAULT_TIME_DECAY}`)}
-                        </Form.Label>
-
-                        <Form.Range
-                            id={'timedecay'}
-                            min={Math.min(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) - 1 * 1.2}
-                            max={Math.max(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) + 1 * 1.2}
-                            onChange={(e) => {
-                                const newWeights = Object.assign({}, userWeights);
-                                newWeights[TIME_DECAY] = Number(e.target.value);
-                                updateWeights(newWeights);
-                            }}
-                            step={0.01}
-                            value={userWeights[TIME_DECAY] ?? DEFAULT_TIME_DECAY}
-                        />
-                    </Form.Group> */}
 
                     {settings && Object.keys(settings).map((key, index) => {
                         return (
