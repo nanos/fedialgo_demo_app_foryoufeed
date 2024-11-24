@@ -152,7 +152,12 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </div>
 
                         <span>
-                            <a data-id="109357260772763021" href="/@mcnees@mastodon.social" className="status__display-name muted">
+                            {/* TODO: this hardcoded href="/@mcnees@mastodon.social" seems wrong? */}
+                            <a
+                                className="status__display-name muted"
+                                data-id="109357260772763021"
+                                href="/@mcnees@mastodon.social"
+                            >
                                 <bdi><strong>{status.reblogBy}</strong></bdi>
                             </a> shared
                         </span>
@@ -160,7 +165,12 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                 <div className="status status-public" data-id="110208921130165916">
                     <div className="status__info">
-                        <a href={status.uri} className="status__relative-time" target="_blank" rel="noopener noreferrer">
+                        <a
+                            className="status__relative-time"
+                            href={status.uri}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                        >
                             <span className="status__visibility-icon">
                                 <i className="fa fa-globe" title="Öffentlich" />
                                 {status?.topPost && <i className="fa fa-fire" title="Top Post"></i>}
@@ -249,8 +259,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     {status.card.description.slice(0, 200)}
                                 </p>
                             </div>
-                        </a>
-                    )}
+                        </a>)}
 
                     {!status.card &&
                         status.mediaAttachments.filter(att => att.type === "image").length > 0 && (
@@ -259,9 +268,17 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     <div
                                         className="media-gallery__item"
                                         key={i}
-                                        style={{ inset: "auto", width: 1 / status.mediaAttachments.length * 100 + "%", height: "100%" }}
+                                        style={{
+                                            height: "100%",
+                                            inset: "auto",
+                                            width: 1 / status.mediaAttachments.length * 100 + "%"
+                                        }}
                                     >
-                                        <canvas className="media-gallery__preview media-gallery__preview--hidden" width="32" height="32" />
+                                        <canvas
+                                            className="media-gallery__preview media-gallery__preview--hidden"
+                                            height="32"
+                                            width="32"
+                                        />
 
                                         <LazyLoadImage
                                             alt={att.description}
@@ -273,14 +290,21 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     </div>
                                 ))}
                             </div>
-                        )
-                    }
+                        )}
 
                     {status.mediaAttachments.filter(att => att.type === "video").length > 0 && (
                         <div className="media-gallery" style={{ height: "314.4375px", overflow: "hidden" }}>
                             {status.mediaAttachments.filter(att => att.type === "video").map((att, i) => (
-                                <div className="media-gallery__item" style={{ inset: "auto", width: "100%", height: "100%" }} key={i}>
-                                    <canvas className="media-gallery__preview media-gallery__preview--hidden" width="32" height="32" />
+                                <div
+                                    className="media-gallery__item"
+                                    key={i}
+                                    style={{ inset: "auto", width: "100%", height: "100%" }}
+                                >
+                                    <canvas
+                                        className="media-gallery__preview media-gallery__preview--hidden"
+                                        height="32"
+                                        width="32"
+                                    />
 
                                     <LazyLoadImage
                                         alt={att.description}
@@ -291,8 +315,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     />
                                 </div>
                             ))}
-                        </div>
-                    )}
+                        </div>)}
 
                     <div className="status__action-bar">
                         <button
@@ -301,8 +324,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                             className={ACTION_ICON_BASE_CLASS}
                             onClick={followUri}
                             style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
-                            type="button"
                             title="Antworten"
+                            type="button"
                         >
                             <i className="fa fa-reply fa-fw" aria-hidden="true" />
 
@@ -318,7 +341,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                             aria-label="Teilen"
                             className={(ACTION_ICON_BASE_CLASS + (reblogged ? " active activate" : " deactivate"))}
                             onClick={reblog}
-                            type="button" title="Teilen"
+                            title="Teilen"
+                            type="button"
                             style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
                         >
                             <i className="fa fa-retweet fa-fw" aria-hidden="true" />
@@ -338,8 +362,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                             className={(ACTION_ICON_BASE_CLASS + (favourited ? " active activate" : " deactivate"))}
                             onClick={fav}
                             style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
-                            type="button"
                             title="Favorisieren"
+                            type="button"
                         >
                             <i className="fa fa-star fa-fw" aria-hidden="true" />
 
@@ -369,12 +393,13 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <button
                             aria-hidden="false"
                             aria-label="Auf eigenem Server öffnen"
-                            onClick={followUri}
-                            type="button" title="Open on your instance"
                             className={ICON_BUTTON_CLASS}
+                            onClick={followUri}
                             style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
+                            title="Open on your instance"
+                            type="button"
                         >
-                            <i className="fa fa-link fa-fw" aria-hidden="true"></i>
+                            <i className="fa fa-link fa-fw" aria-hidden="true" />
                         </button>
                     </div>
                 </div>
