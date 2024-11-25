@@ -71,11 +71,11 @@ Currently you can retoot and favorite other people's toots through the app's web
 `Ctrl-C` in the terminal window you launched the `node.js` server in (with `npm run start`) will kill the app.
 
 ### Known Issues
+* Videos that live on Mastodon don't show up at all (just empty space).
 * You may need to reload the webpage after updating the user weightings.
 * Sometimes (often?) when starting the server up again after the first time you will find your Mastodon login has expired in which case the browser will probably present you with some very large, very red error message along the lines of `Uncaught runtime errors!` or similar. If you just ignore / close the error popup you should be presented with the option to relogin.
 * Sometimes the infinite scroll kind of gets stuck if you're working with a cache of Mastodon data. Most browsers will you all to clear all the "site data" (cookies and cache) for a single site. [How to do that in Chrome](https://support.google.com/chrome/thread/16531954/clear-cache-for-specific-website-in-google-chrome?hl=en). Note that loading the `fedialgo` demo app will take some a while the first time you point your browser at it after clearing your browser's cache.
 * Infinite scroll isn't _really_ infinite (yet). If you scroll far enough you will run out of toots to peruse.
-* Videos that live on Mastodon don't show up at all (just empty space).
 
 
 # Contributing
