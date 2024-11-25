@@ -48,7 +48,7 @@ export default function WeightSetter({
 
         return (
             <Form.Check
-                checked={selectedLang.includes(lang)}
+                checked={selectedLang.includes(languageCode)}
                 disabled={false}
                 id={lang}
                 key={lang}
@@ -57,9 +57,9 @@ export default function WeightSetter({
                     const newLang = [...selectedLang];
 
                     if (e.target.checked) {
-                        newLang.push(lang);
+                        newLang.push(languageCode);
                     } else {
-                        newLang.splice(newLang.indexOf(lang), 1);
+                        newLang.splice(newLang.indexOf(languageCode), 1);
                     }
 
                     setSelectedLanguage(newLang);
@@ -135,17 +135,8 @@ export default function WeightSetter({
                             </Form.Label>
 
                             <Row>
-                                <Col>
-                                    {languages.map((lang, index) => {
-                                        if (index % 2 == 0) return languageCheckbox(lang);
-                                    })}
-                                </Col>
-
-                                <Col>
-                                    {languages.map((lang, index) => {
-                                        if (index % 2 != 0) return languageCheckbox(lang);
-                                    })}
-                                </Col>
+                                <Col>{oddNumbered(languages).map((lang) => languageCheckbox(lang))}</Col>
+                                <Col>{evenNumbered(languages).map((lang) => languageCheckbox(lang))}</Col>
                             </Row>
                         </Form.Group>
                     </div>
@@ -155,6 +146,8 @@ export default function WeightSetter({
     );
 };
 
+const evenNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 != 0);
+const oddNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 == 0);
 
 const headerFont = {
     fontFamily: "Tahoma, Geneva, sans-serif",
