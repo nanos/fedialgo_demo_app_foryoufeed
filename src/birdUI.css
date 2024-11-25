@@ -4026,21 +4026,21 @@ body.embed .entry .detailed-status {
      display: block;
      border-radius: 10px;
  }
- 
+
  .fa-file-text::before {
      content: "";
  }
- 
+
  a.status-card .status-card__image-image,
  a.status-card .status-card__image-image.compact {
      border-radius: 0px;
  }
- 
+
  a.status-card .status-card__content,
  a.status-card.compact .status-card__content {
      padding: 15px;
  }
- 
+
  a.status-card .status-card__title,
  a.status-card.compact .status-card__title {
      font-size: 18px;
@@ -4049,7 +4049,7 @@ body.embed .entry .detailed-status {
      color: white;
      white-space: inherit;
  }
- 
+
  a.status-card .status-card__host,
  a.status-card.compact .status-card__host {
      font-size: 14px;
@@ -4057,7 +4057,7 @@ body.embed .entry .detailed-status {
      margin-top: 0px;
      margin-bottom: 5px;
  }
- 
+
  a.status-card .status-card__description,
  a.status-card.compact .status-card__description {
      color: #71767b;

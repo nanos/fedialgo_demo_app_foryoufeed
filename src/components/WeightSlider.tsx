@@ -26,13 +26,23 @@ export default function WeightSlider({
     userWeights,
 }: WeightSliderProps) {
     defaultValue = defaultValue ?? DEFAULT_VALUE;
-    const descriptionWithValue = `${description}: ${userWeights[scoreName]?.toFixed(2) ?? defaultValue}`;
+    const valueString = <span style={monoFont}>{userWeights[scoreName]?.toFixed(2) ?? defaultValue}</span>;
 
     return (
         <Form.Group className="mb-1">
-            <Form.Label>
-                <span style={{fontWeight: 'bold'}}>{`${scoreName}: `}</span>{descriptionWithValue}
-            </Form.Label>
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                <div>
+                    <span style={{fontWeight: 'bold'}}>
+                        {`${scoreName}: `}
+                    </span>
+
+                    <span>{description}</span>
+                </div>
+
+                <div style={sliderValue}>
+                    {valueString}
+                </div>
+            </div>
 
             <Form.Range
                 id={scoreName}
@@ -48,4 +58,26 @@ export default function WeightSlider({
             />
         </Form.Group>
     );
+};
+
+
+const monoFont = {
+    fontFamily: "AnonymousPro, Courier New, monospace",
+    fontSize: "15px",
+    fontWeight: 'bold',
+};
+
+const sliderValue = {
+    alignSelf: 'end',
+    backgroundColor: 'white',
+    // color: 'white',
+    border: "1px solid #000",
+    borderColor: 'black',
+    borderRadius: '3px',
+    borderWidth: '1px',
+    fontColor: 'white',
+    paddingBottom: '2px',
+    paddingLeft: '10px',
+    paddingRight: '10px',
+    paddingTop: '2px',
 };
