@@ -7,12 +7,6 @@ Each incoming toot in your recent timeline will be scored based on a variety of 
     <img src="public/assets/Showcase.png" alt="Algorithm Weighting Sliders" width="600">
 </p>
 
-Here's an example of the elements that go into scoring a toot:
-
-<p align="center">
-    <img src="doc/toot_score_modal.png" alt="An example of the way a toot is weighted." width="750">
-</p>
-
 **None of your data ever leaves your browser.** All computations and reorderings are done in client side javascript.
 
 Both this repo and the `fedialgo` package linked above were forked from [pkreissel's original implementations](https://github.com/pkreissel/fedialgo).
@@ -58,6 +52,12 @@ Clicking the "i" in the GUI will bring up a popup that will show you the gorey d
 
 <p align="center">
     <img src="doc/click_the_i_for_score_info.png" alt="click_the_i_for_score_info" width="600">
+</p>
+
+Here's an example of the elements that go into scoring a toot:
+
+<p align="center">
+    <img src="doc/toot_score_modal.png" alt="An example of the way a toot is weighted." width="600">
 </p>
 
 ### Tooting And Replying
