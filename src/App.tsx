@@ -27,13 +27,14 @@ const App: React.FC = () => {
         <BrowserRouter>
             <AuthProvider>
                 <div
+                    className='container-fluid'
                     style={{
                         alignItems: 'center',
+                        backgroundColor: 'black',
                         display: 'flex',
                         flexDirection: 'column',
-                        height: '100vh'
+                        height: 'auto',
                     }}
-                    className='container-fluid'
                 >
                     <Header />
 

@@ -28,7 +28,6 @@ export default function LoginPage() {
             website: `https://${sanitized_server}`,
         });
 
-        console.log(`app variable:`, app);
         setApp({ ...app, redirectUri });
 
         const query = stringifyQuery({

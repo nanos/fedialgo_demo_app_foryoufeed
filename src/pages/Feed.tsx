@@ -204,7 +204,7 @@ export default function Feed() {
     }
 
     return (
-        <Container style={{ maxWidth: "800px", height: "auto" }}>
+        <Container style={{backgroundColor: '#15202b', height: 'auto', maxWidth: "800px"}}>
             <Modal show={error !== ""} onHide={() => setError("")}>
                 <Modal.Header closeButton>
                     <Modal.Title>Error</Modal.Title>
