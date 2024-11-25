@@ -20,7 +20,7 @@ export default function AttachmentsModal(
     }
 ) {
     const media = toot.mediaAttachments[mediaInspectionModalIdx];
-    // dialogClassName="modal-50w"
+
     return (
         <Modal onHide={() => setMediaInspectionModalIdx(-1)} show={mediaInspectionModalIdx != -1} size='lg'>
             <Modal.Header closeButton>

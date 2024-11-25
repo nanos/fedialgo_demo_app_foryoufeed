@@ -293,7 +293,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </div>
                     </div>
 
-                    {status.card && (
+                    {status.card && status.mediaAttachments.length == 0 && (
                         <a
                             className="status-card compact"
                             href={status.card.url}
@@ -329,7 +329,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </div>
                         </a>)}
 
-                    {!status.card && imageElement}
+                    {imageElement}
 
                     {videoAttachments.length > 0 && (
                         <div className="media-gallery" style={{ height: "415.4375px", overflow: "hidden" }}>

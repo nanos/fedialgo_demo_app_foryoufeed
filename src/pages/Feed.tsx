@@ -75,12 +75,12 @@ export default function Feed() {
         if ((Date.now() - (new Date(mostRecentToot.createdAt)).getTime()) > RELOAD_IF_OLDER_THAN_MS) {
             setNumDisplayedToots(DEFAULT_NUM_TOOTS);
             constructFeed();
-            setIsLoading(false);
         } else {
             console.log("Loading feed from cache...");
             restoreFeedCache();
-            setIsLoading(false);
         }
+
+        setIsLoading(false);
     }, []);
 
     // Load more records when the user scrolls to bottom of the page
