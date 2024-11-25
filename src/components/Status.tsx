@@ -42,6 +42,70 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     const imageAttachments = status.mediaAttachments.filter(att => att.type === "image");
     const videoAttachments = status.mediaAttachments.filter(att => att.type === "video");
+    let imageElement = <></>;
+
+    if (imageAttachments.length == 1) {
+        const image = imageAttachments[0];
+        let imgHeight = image.meta?.small?.height;
+        let imgWidth = image.meta?.small?.width;
+
+        imageElement = (
+            <div className="media-gallery" style={{ height: `${imgHeight}px`, overflow: "hidden" }}>
+                <div
+                    className="media-gallery__item"
+                    style={{
+                        height: "100%",
+                        inset: "auto",
+                        width: 1 / status.mediaAttachments.length * 100 + "%"
+                    }}
+                >
+                    <canvas
+                        className="media-gallery__preview media-gallery__preview--hidden"
+                        height="32"
+                        width="32"
+                    />
+
+                    <LazyLoadImage
+                        alt={image.description}
+                        onClick={() => setMediaInspectionModalIdx(0)}
+                        src={image.previewUrl}
+                        sizes="559px"
+                        style={{ objectPosition: "50%", width: "100%" }}
+                    />
+                </div>
+            </div>
+        );
+    } else if (imageAttachments.length > 1) {
+        imageElement = (
+            <div className="media-gallery" style={{ height: "314.4375px", overflow: "hidden" }}>
+                {status.mediaAttachments.filter(att => att.type === "image").map((att, i) => (
+                    <div
+                        className="media-gallery__item"
+                        key={i}
+                        style={{
+                            height: "100%",
+                            inset: "auto",
+                            width: 1 / status.mediaAttachments.length * 100 + "%"
+                        }}
+                    >
+                        <canvas
+                            className="media-gallery__preview media-gallery__preview--hidden"
+                            height="32"
+                            width="32"
+                        />
+
+                        <LazyLoadImage
+                            alt={att.description}
+                            onClick={() => setMediaInspectionModalIdx(i)}
+                            src={att.previewUrl}
+                            sizes="559px"
+                            style={{ objectPosition: "50%", width: "100%" }}
+                        />
+                    </div>
+                ))}
+            </div>
+        );
+    }
 
     if (!masto) throw new Error("No Mastodon API");
 
@@ -248,7 +312,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     alt=""
                                     className="status-card__image-image"
                                     src={status.card.image}
-                                    style={{ maxHeight: "30vh" }}
+                                    style={{ maxHeight: "35vh" }}
                                 />
                             </div>
 
@@ -265,36 +329,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </div>
                         </a>)}
 
-                    {!status.card &&
-                        status.mediaAttachments.filter(att => att.type === "image").length > 0 && (
-                            <div className="media-gallery" style={{ height: "314.4375px", overflow: "hidden" }}>
-                                {status.mediaAttachments.filter(att => att.type === "image").map((att, i) => (
-                                    <div
-                                        className="media-gallery__item"
-                                        key={i}
-                                        style={{
-                                            height: "100%",
-                                            inset: "auto",
-                                            width: 1 / status.mediaAttachments.length * 100 + "%"
-                                        }}
-                                    >
-                                        <canvas
-                                            className="media-gallery__preview media-gallery__preview--hidden"
-                                            height="32"
-                                            width="32"
-                                        />
-
-                                        <LazyLoadImage
-                                            alt={att.description}
-                                            onClick={() => setMediaInspectionModalIdx(i)}
-                                            src={att.previewUrl}
-                                            sizes="559px"
-                                            style={{ objectPosition: "50%", width: "100%" }}
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                    {!status.card && imageElement}
 
                     {videoAttachments.length > 0 && (
                         <div className="media-gallery" style={{ height: "415.4375px", overflow: "hidden" }}>
