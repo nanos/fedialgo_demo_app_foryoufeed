@@ -7,7 +7,7 @@ import Container from "react-bootstrap/Container";
 
 export default function Footer() {
     return (
-        <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
+        <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark" style={{marginTop: '50px'}}>
             <Container>
                 <Navbar.Brand style={{ color: "white" }}>FediFeed</Navbar.Brand>
 

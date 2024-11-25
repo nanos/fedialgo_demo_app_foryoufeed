@@ -33,9 +33,9 @@ export default function LoginPage() {
 
         const query = stringifyQuery({
             client_id: app.clientId,
-            scope: scope,
+            redirect_uri: redirectUri,
             response_type: 'code',
-            redirect_uri: redirectUri
+            scope: scope,
         });
 
         window.location.href = `https://${sanitized_server}/oauth/authorize?${query}`;
@@ -44,45 +44,45 @@ export default function LoginPage() {
     return (
         <>
             <div className='vh-100' style={{
+                alignItems: 'center',
                 display: 'flex',
                 flex: 1,
                 flexDirection: 'column',
-                // alignItems: 'center',
-                // justifyContent: "center",
-                paddingTop: "1%",
+                justifyContent: "center",
             }}>
-                <img src={"/assets/Showcase.png"} style={{ marginBottom: "10px", maxHeight: "75%" }} />
+                <img
+                    src={"/assets/Showcase.png"}
+                    style={{
+                        border: "5px solid #DDD",
+                        borderRadius: "12px",
+                        boxShadow: "3px 3px 5px black",
+                        maxHeight: "550px",
+                    }}
+                />
 
                 <div>
-                    <p style={{ lineHeight: 2, textAlign: "center" }}>
-                        Fedi-Feed features a customizable algorithm for sorting your feed.
-                        <br />
-                        You can choose which factors influence the sorting of your feed.
-                        <br />
-                        None of your data is stored on our servers.
-                        All calculations are done in your browser.
-                        <br />
-                        To get started:
-                        <br />
+                    <p style={{ lineHeight: 1.3, marginBottom: "10px", marginTop: "10px", textAlign: "center" }}>
+                        Fedi-Feed features a customizable algorithm for sorting your feed.<br />
+                        You can choose which factors influence the sorting of your feed.<br />
+                        None of your data is stored on our servers. All calculations are done in your browser.<br /><br />
+                        To get started enter your Mastodon server in the form: <code>{DEFAULT_MASTODON_SERVER}</code>
                     </p>
                 </div>
 
-                <Form.Group className="mb-3 align-middle">
-                    <Form.Label className="text-center w-100">
-                        Enter Mastodon Server in the form: {DEFAULT_MASTODON_SERVER}
-                    </Form.Label >
+                <div style={{ display: 'flex', flexDirection: 'row', marginBottom: '5px', marginTop: '5px' }}>
+                    <Form.Group className="mb-0">
+                        <Form.Control
+                            id="mastodon_server"
+                            onChange={(e) => setServer(e.target.value)}
+                            placeholder={DEFAULT_MASTODON_SERVER}
+                            type="url"
+                            value={server}
+                        />
+                    </Form.Group>
 
-                    <Form.Control
-                        id="mastodon_server"
-                        onChange={(e) => setServer(e.target.value)}
-                        placeholder={DEFAULT_MASTODON_SERVER}
-                        type="url"
-                        value={server}
-                    />
-                </Form.Group>
-
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                    <Button onClick={loginRedirect}>Login</Button>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginLeft: '10px' }}>
+                        <Button onClick={loginRedirect}>Login</Button>
+                    </div>
                 </div>
             </div>
         </>

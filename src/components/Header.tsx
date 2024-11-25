@@ -9,11 +9,11 @@ export default function Header() {
     const { user } = useAuth();
 
     return (
-        <Container className='w-100 m-3'>
-            <Row className='w-100 m-3'>
+        <Container className='w-100 m-2'>
+            <Row className='w-100 m-2'>
                 <Col xs={4} className="p-0">
-                    {
-                        user && <div className='text-center d-inline align-middle'>
+                    {user &&
+                        <div className='text-center d-inline align-middle'>
                             {user?.profilePicture &&
                                 <img
                                     alt="Avatar"
@@ -23,15 +23,14 @@ export default function Header() {
                                 />}
 
                             <span style={{ fontSize: 15, padding: 10 }}>{user.username}</span>
-                        </div>
-                    }
+                        </div>}
                 </Col>
 
                 <Col xs={4} className='text-center p-0'>
                     <img
                         className="d-inline-block align-top"
                         src={"/assets/logo.png"}
-                        style={{ height: 20, width: 20, borderRadius: 5 }}
+                        style={{ borderRadius: 5, height: 20, width: 20 }}
                     />
 
                     <span

@@ -28,9 +28,9 @@ const App: React.FC = () => {
             <AuthProvider>
                 <div
                     style={{
+                        alignItems: 'center',
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center',
                         height: '100vh'
                     }}
                     className='container-fluid'
