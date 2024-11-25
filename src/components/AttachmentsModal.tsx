@@ -22,7 +22,7 @@ export default function AttachmentsModal(
     const media = toot.mediaAttachments[mediaInspectionModalIdx];
 
     return (
-        <Modal onHide={() => setMediaInspectionModalIdx(-1)} show={mediaInspectionModalIdx != -1} size='lg'>
+        <Modal fullscreen={'xxl-down'} onHide={() => setMediaInspectionModalIdx(-1)} show={mediaInspectionModalIdx != -1} size='lg'>
             <Modal.Header closeButton>
                 <Modal.Title>
                     {parse(toot.content)[100]}
