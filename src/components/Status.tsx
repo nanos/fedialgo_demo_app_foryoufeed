@@ -20,6 +20,8 @@ const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
 const IMAGES_HEIGHT = 314.4375;
 const VIDEO_HEIGHT = IMAGES_HEIGHT + 100;
+const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 
 interface StatusComponentProps {
     api: mastodon.rest.Client,
@@ -259,7 +261,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </span>
 
                             <time dateTime={status.createdAt} title={status.createdAt}>
-                                {(new Date(status.createdAt)).toLocaleTimeString()}
+                                {timeString(status.createdAt)}
                             </time>
                         </a>
 
@@ -465,4 +467,16 @@ const buttonStyle = {
     height: "23.142857px",
     lineHeight: "18px",
     width: "auto",
+};
+
+
+const timeString = (tootedAt: Date | string): string => {
+    tootedAt = typeof tootedAt == 'string' ? new Date(tootedAt) : tootedAt;
+    const currentDateNumber = new Date().getDate();
+
+    if (tootedAt.getDate() === currentDateNumber) {
+        return tootedAt.toLocaleTimeString();
+    } else {
+        return `${DAY_NAMES[tootedAt.getDay()]} ${tootedAt.toLocaleDateString()}`;
+    }
 };
