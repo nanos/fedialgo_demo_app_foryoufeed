@@ -18,13 +18,15 @@ import { User } from '../types';
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
+const IMAGES_HEIGHT = 314.4375;
+const VIDEO_HEIGHT = IMAGES_HEIGHT + 100;
 
 interface StatusComponentProps {
-    status: Toot,
     api: mastodon.rest.Client,
+    setError: (error: string) => void,
+    status: Toot,
     user: User,
     weightAdjust: (statusWeight: ScoresType) => void,
-    setError: (error: string) => void,
 };
 
 
@@ -80,7 +82,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         );
     } else if (images.length > 1) {
         imageElement = (
-            <div className="media-gallery" style={{ height: "314.4375px", overflow: "hidden" }}>
+            <div className="media-gallery" style={{ height: `${IMAGES_HEIGHT}px`, overflow: "hidden" }}>
                 {status.mediaAttachments.filter(att => att.type === "image").map((att, i) => (
                     <div
                         className="media-gallery__item"
@@ -243,8 +245,15 @@ export default function StatusComponent(props: StatusComponentProps) {
                             target="_blank"
                         >
                             <span className="status__visibility-icon">
-                                <i className="fa fa-globe" title="Öffentlich" />
-                                {status?.trendingRank && <i className="fa fa-fire" title="Trending Toot"></i>}
+                                <i className="fa fa-globe" title="Public" style={{marginRight: '4px'}}/>
+
+                                {status?.trendingRank &&
+                                    <i
+                                        className="fa fa-fire"
+                                        style={{color: 'red', marginRight: '4px'}}
+                                        title="Trending Toot"
+                                    />}
+
                                 {status?.recommended && <i className="fa fa-bolt" title="Recommended By AI"></i>}
                             </span>
 
@@ -335,7 +344,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                     {imageElement}
 
                     {videos.length > 0 && (
-                        <div className="media-gallery" style={{ height: "415.4375px", overflow: "hidden" }}>
+                        <div className="media-gallery" style={{ height: `${VIDEO_HEIGHT}px`, overflow: "hidden" }}>
                             <p>VIDEO</p>
 
                             {videos.map((att, i) => (
