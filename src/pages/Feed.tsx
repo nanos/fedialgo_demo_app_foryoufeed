@@ -139,6 +139,7 @@ export default function Feed() {
         const timelineFeed = await algo.getFeed();
         setFeed(timelineFeed);
 
+        // Get all the unique languages that show up in the feed
         const feedLanguages = timelineFeed.reduce((languages, toot) => {
             if (!languages.includes(toot.language)) languages.push(toot.language);
             return languages;
@@ -240,5 +241,5 @@ export default function Feed() {
             {(feed.length == 0 || isLoading) && <FullPageIsLoading />}
             <div ref={bottomRef} onClick={showMoreToots}>Load More</div>
         </Container>
-    )
+    );
 };
