@@ -19,8 +19,10 @@ export default function AttachmentsModal(
         toot: Toot
     }
 ) {
+    const media = toot.mediaAttachments[mediaInspectionModalIdx];
+    // dialogClassName="modal-50w"
     return (
-        <Modal show={mediaInspectionModalIdx != -1} onHide={() => setMediaInspectionModalIdx(-1)}>
+        <Modal onHide={() => setMediaInspectionModalIdx(-1)} show={mediaInspectionModalIdx != -1} size='lg'>
             <Modal.Header closeButton>
                 <Modal.Title>
                     {parse(toot.content)[100]}
@@ -30,23 +32,19 @@ export default function AttachmentsModal(
             <Modal.Body>
                 {(mediaInspectionModalIdx != -1) &&
                     <div>
-                        {
-                            toot.mediaAttachments[mediaInspectionModalIdx]?.type === "image" &&
-                                <img
-                                    alt={toot.mediaAttachments[mediaInspectionModalIdx]?.description ?? ""}
-                                    src={toot.mediaAttachments[mediaInspectionModalIdx]?.url}
-                                    width={"100%"}
-                                />
-                        }
+                        {media?.type === "image" &&
+                            <img
+                                alt={media?.description ?? ""}
+                                src={media?.url}
+                                width={"100%"}
+                            />}
 
-                        {toot.mediaAttachments[mediaInspectionModalIdx]?.type === "video" &&
+                        {media?.type === "video" &&
                             <video width={"100%"} controls>
-                                <source src={toot.mediaAttachments[mediaInspectionModalIdx]?.url} type="video/mp4" />
+                                <source src={media?.url} type="video/mp4" />
                                 Your browser does not support the video tag.
-                            </video>
-                        }
-                    </div>
-                }
+                            </video>}
+                    </div>}
             </Modal.Body>
         </Modal>
     );
