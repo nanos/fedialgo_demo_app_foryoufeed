@@ -201,6 +201,14 @@ export default function Feed() {
     if (feed.length > 1) {
         console.log(`timeline toots (condensed): `, feed.map(condensedStatus));
         console.log(`filtered timeline toots (condensed): `, filteredFeed.map(condensedStatus));
+
+        const appCounts = feed.reduce((counts, toot) => {
+            const app = toot.application?.name || "unknown";
+            counts[app] = (counts[app] || 0) + 1;
+            return counts;
+        }, {});
+
+        console.debug(`feed toots posted by application counts: `, appCounts);
     }
 
     return (
