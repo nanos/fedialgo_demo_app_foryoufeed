@@ -25,7 +25,7 @@ export default function ScoreModal({
 
             <Modal.Body>
                 <div style={{marginBottom: "10px"}}>
-                    <p style={headerFont}>Computed Weight: {toot.value}</p>
+                    <p style={headerFont}>Computed Score: {toot.value}</p>
                     <p>Posted by {describeAccount(toot)}</p>
                 </div>
 
