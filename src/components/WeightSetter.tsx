@@ -61,6 +61,8 @@ export default function WeightSetter({
                         userWeights={userWeights}
                     />
 
+                    <div style={{height: '5px'}} />
+
                     {/* Other feature weighting sliders */}
                     <div style={roundedBox}>
                         <p style={headerFont}>Weightings</p>
