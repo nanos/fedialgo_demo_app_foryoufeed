@@ -144,7 +144,7 @@ export default function Feed() {
             return languages;
         }, [])
 
-        setLanguagesInFeed(feedLanguages);
+        setLanguagesInFeed(feedLanguages.sort());
     };
 
     // Pull more toots to display from our local cached and sorted toot feed
