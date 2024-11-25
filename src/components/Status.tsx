@@ -5,10 +5,11 @@ import parse from 'html-react-parser';
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 
+import { describeAccount } from 'fedialgo/dist/helpers';
+import { FeatureStore, ScoresType, Toot } from "fedialgo";
+import { imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
-import { ScoresType, Toot } from "fedialgo";
-import { imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
 
 import "../birdUI.css";
 import "../default.css";
@@ -21,6 +22,14 @@ const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
 const IMAGES_HEIGHT = 314;
 const VIDEO_HEIGHT = IMAGES_HEIGHT + 100;
+
+const BUTTON_STYLE = {
+    fontSize: "18px",
+    height: "23.142857px",
+    lineHeight: "18px",
+    width: "auto",
+};
+
 
 interface StatusComponentProps {
     api: mastodon.rest.Client,
@@ -43,11 +52,12 @@ export default function StatusComponent(props: StatusComponentProps) {
         status.scores = props.status.scores;
     }
 
+    const [error, _setError] = React.useState<string>("");
     const [favourited, setFavourited] = React.useState<boolean>(status.favourited);
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
     const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); //index of the media attachment to show
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
-    const [error, _setError] = React.useState<string>("");
+    const [wasRetooted, setWasRetooted] = React.useState<boolean>(false);
 
     const images = imageAttachments(status);
     const videos = videoAttachments(status);
@@ -58,18 +68,18 @@ export default function StatusComponent(props: StatusComponentProps) {
         buttonText: number | string | null,
         className: string,
         label: string,
-        onClick,
+        onClick: () => void,
         italicType: string,
         italicText?: string,
     ) => {
         const italicClassName = `fa fa-${italicType} fa-fw`;
+        let style = BUTTON_STYLE;
         let italicElement = <></>;
         let innerSpan = <></>;
-        let style = buttonStyle;
 
         // TODO: This is a hack to expand the "i" icon by 2px
         if (italicText == 'i') {
-            style = Object.assign({}, buttonStyle);
+            style = Object.assign({}, BUTTON_STYLE);
             style.width = '20px';
         }
 
@@ -190,6 +200,22 @@ export default function StatusComponent(props: StatusComponentProps) {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [mediaInspectionModalIdx])
 
+    // Determine if it was retooted by the user
+    const checkIfRetooted = async () => {
+        console.log(`Checking if retooted for toot by ${describeAccount(status)}: `, status);
+
+        try {
+            const _wasRetooted = await FeatureStore.didUserRetoot(status);
+            if (_wasRetooted) console.log(`User retooted toot! `, status);
+            setWasRetooted(_wasRetooted);
+        } catch (error) {
+            console.error('Error in checkIfRetooted():', error);
+        }
+    };
+
+    React.useEffect(() => {
+        checkIfRetooted();
+    }, []);
 
     const resolve = async (status: Toot): Promise<Toot> => {
         if (status.uri.includes(props.user.server)) {
@@ -449,19 +475,4 @@ export default function StatusComponent(props: StatusComponentProps) {
             </div>
         </div>
     );
-};
-{/*const makeButton = (
-        buttonText: number | string | null,
-        className: string,
-        label: string,
-        onClick,
-        italicType: string,
-        italicText?: string, */}
-
-
-const buttonStyle = {
-    fontSize: "18px",
-    height: "23.142857px",
-    lineHeight: "18px",
-    width: "auto",
 };
