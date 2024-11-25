@@ -8,6 +8,7 @@ import Toast from 'react-bootstrap/Toast';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 import { ScoresType, Toot } from "fedialgo";
+import { imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
 
 import "../birdUI.css";
 import "../default.css";
@@ -40,12 +41,14 @@ export default function StatusComponent(props: StatusComponentProps) {
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
     const [error, _setError] = React.useState<string>("");
 
-    const imageAttachments = status.mediaAttachments.filter(att => att.type === "image");
-    const videoAttachments = status.mediaAttachments.filter(att => att.type === "video");
+    const images = imageAttachments(status);
+    const videos = videoAttachments(status);
     let imageElement = <></>;
 
-    if (imageAttachments.length == 1) {
-        const image = imageAttachments[0];
+    // If there's just one image try to show it full size.
+    // If there's more than one image use the original image handler (for now).
+    if (images.length == 1) {
+        const image = images[0];
         let imgHeight = image.meta?.small?.height;
         let imgWidth = image.meta?.small?.width;
 
@@ -75,7 +78,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 </div>
             </div>
         );
-    } else if (imageAttachments.length > 1) {
+    } else if (images.length > 1) {
         imageElement = (
             <div className="media-gallery" style={{ height: "314.4375px", overflow: "hidden" }}>
                 {status.mediaAttachments.filter(att => att.type === "image").map((att, i) => (
@@ -312,7 +315,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     alt=""
                                     className="status-card__image-image"
                                     src={status.card.image}
-                                    style={{ maxHeight: "35vh" }}
+                                    style={{ maxHeight: "35vh", objectPosition: "top" }}
                                 />
                             </div>
 
@@ -331,11 +334,11 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                     {imageElement}
 
-                    {videoAttachments.length > 0 && (
+                    {videos.length > 0 && (
                         <div className="media-gallery" style={{ height: "415.4375px", overflow: "hidden" }}>
                             <p>VIDEO</p>
 
-                            {videoAttachments.map((att, i) => (
+                            {videos.map((att, i) => (
                                 <div
                                     className="media-gallery__item"
                                     key={i}
@@ -349,7 +352,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                                     {/* Currently at least shows the thumbnail */}
                                     <video width={"100%"} controls playsInline>
-                                        <source src={videoAttachments[i]?.url} type="video/mp4" />
+                                        <source src={videos[i]?.url} type="video/mp4" />
                                     </video>
                                 </div>
                             ))}
@@ -361,7 +364,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             aria-label="Antworten"
                             className={ACTION_ICON_BASE_CLASS}
                             onClick={followUri}
-                            style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
+                            style={buttonStyle}
                             title="Antworten"
                             type="button"
                         >
@@ -381,7 +384,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             onClick={reblog}
                             title="Teilen"
                             type="button"
-                            style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
+                            style={buttonStyle}
                         >
                             <i className="fa fa-retweet fa-fw" aria-hidden="true" />
 
@@ -399,7 +402,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             aria-label="Favorisieren"
                             className={(ACTION_ICON_BASE_CLASS + (favourited ? " active activate" : " deactivate"))}
                             onClick={fav}
-                            style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
+                            style={buttonStyle}
                             title="Favorisieren"
                             type="button"
                         >
@@ -423,7 +426,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             title="Score"
                             type="button"
                         >
-                            <i className="fa fa-pie-chart fa-fw" title="Info">
+                            <i className="fa fa-pie-chart fa-fw" title="Ranking Score Details">
                                 i
                             </i>
                         </button>
@@ -433,7 +436,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             aria-label="Auf eigenem Server öffnen"
                             className={ICON_BUTTON_CLASS}
                             onClick={followUri}
-                            style={{ fontSize: "18px", width: "auto", height: "23.142857px", lineHeight: "18px" }}
+                            style={buttonStyle}
                             title="Open on your instance"
                             type="button"
                         >
@@ -444,4 +447,12 @@ export default function StatusComponent(props: StatusComponentProps) {
             </div>
         </div>
     );
+};
+
+
+const buttonStyle = {
+    fontSize: "18px",
+    height: "23.142857px",
+    lineHeight: "18px",
+    width: "auto",
 };
