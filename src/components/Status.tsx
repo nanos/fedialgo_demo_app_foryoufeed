@@ -41,9 +41,10 @@ interface StatusComponentProps {
 
 
 export default function StatusComponent(props: StatusComponentProps) {
-    const masto = props.api;
     const weightAdjust = props.weightAdjust;
     let status: Toot = props.status;
+    const masto = props.api;
+    if (!masto) throw new Error("No Mastodon API");  // TODO: I don't think we need a mastodon instance to display data? it's for retooting & favoriting
 
     // If it's a retoot then set 'status' to be the thing that was retooted
     if (props.status.reblog) {
@@ -57,11 +58,27 @@ export default function StatusComponent(props: StatusComponentProps) {
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
     const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); //index of the media attachment to show
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
-    const [wasRetooted, setWasRetooted] = React.useState<boolean>(false);
 
     const images = imageAttachments(status);
     const videos = videoAttachments(status);
     let imageElement = <></>;
+
+    // Increase mediaInspectionModalIdx on Right Arrow
+    React.useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (mediaInspectionModalIdx === -1) return;
+
+            if (e.key === "ArrowRight" && mediaInspectionModalIdx < status.mediaAttachments.length - 1) {
+                setMediaInspectionModalIdx(mediaInspectionModalIdx + 1);
+            } else if (e.key === "ArrowLeft" && mediaInspectionModalIdx > 0) {
+                setMediaInspectionModalIdx(mediaInspectionModalIdx - 1);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [mediaInspectionModalIdx])
+
 
     // Make a status button (reply, reblog, fav, etc)
     const makeButton = (
@@ -181,41 +198,6 @@ export default function StatusComponent(props: StatusComponentProps) {
             </div>
         );
     }
-
-    if (!masto) throw new Error("No Mastodon API");
-
-    // Increase mediaInspectionModalIdx on Right Arrow
-    React.useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (mediaInspectionModalIdx === -1) return;
-
-            if (e.key === "ArrowRight" && mediaInspectionModalIdx < status.mediaAttachments.length - 1) {
-                setMediaInspectionModalIdx(mediaInspectionModalIdx + 1);
-            } else if (e.key === "ArrowLeft" && mediaInspectionModalIdx > 0) {
-                setMediaInspectionModalIdx(mediaInspectionModalIdx - 1);
-            }
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [mediaInspectionModalIdx])
-
-    // Determine if it was retooted by the user
-    const checkIfRetooted = async () => {
-        console.log(`Checking if retooted for toot by ${describeAccount(status)}: `, status);
-
-        try {
-            const _wasRetooted = await FeatureStore.didUserRetoot(status);
-            if (_wasRetooted) console.log(`User retooted toot! `, status);
-            setWasRetooted(_wasRetooted);
-        } catch (error) {
-            console.error('Error in checkIfRetooted():', error);
-        }
-    };
-
-    React.useEffect(() => {
-        checkIfRetooted();
-    }, []);
 
     const resolve = async (status: Toot): Promise<Toot> => {
         if (status.uri.includes(props.user.server)) {
