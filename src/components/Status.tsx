@@ -40,7 +40,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
     const [error, _setError] = React.useState<string>("");
 
-    const imageAttachments = status.mediaAttachments.filter(att => att.type === "image")
+    const imageAttachments = status.mediaAttachments.filter(att => att.type === "image");
     const videoAttachments = status.mediaAttachments.filter(att => att.type === "video");
 
     if (!masto) throw new Error("No Mastodon API");
@@ -119,7 +119,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Show the score of a toot
     const showScore = async () => {
-        console.log(`showScore() status: `, status);
+        console.log(`showScore() called for toot: `, status);
         setShowScoreModal(true);
     };
 
