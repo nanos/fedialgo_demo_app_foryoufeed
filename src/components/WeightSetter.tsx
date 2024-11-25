@@ -7,7 +7,9 @@ import React from 'react';
 import { usePersistentState } from "react-persistent-state";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
+import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
+import Row from 'react-bootstrap/Row';
 import WeightSlider from './WeightSlider';
 import { DEFAULT_TIME_DECAY, TIME_DECAY, ScoresType, TheAlgorithm } from "fedialgo";
 
@@ -40,6 +42,33 @@ export default function WeightSetter({
     const { user } = useAuth();
     const [selectedLang, setSelectedLanguage] = usePersistentState<string[]>([], user.id + "selectedLangs");
     const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY).sort();
+
+    const languageCheckbox = (languageCode: string) => {
+        const lang = languageCode || NO_LANGUAGE;
+
+        return (
+            <Form.Check
+                checked={selectedLang.includes(lang)}
+                disabled={false}
+                id={lang}
+                key={lang}
+                label={lang}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const newLang = [...selectedLang];
+
+                    if (e.target.checked) {
+                        newLang.push(lang);
+                    } else {
+                        newLang.splice(newLang.indexOf(lang), 1);
+                    }
+
+                    setSelectedLanguage(newLang);
+                    setSelectedLanguages(newLang);
+                }}
+                type="checkbox"
+            />
+        );
+    }
 
     return (
         <Accordion>
@@ -105,28 +134,19 @@ export default function WeightSetter({
                                 <b>Show only toots in these languages:</b>
                             </Form.Label>
 
-                            {languages.map((lang, index) => (
-                                <Form.Check
-                                    checked={selectedLang.includes(lang)}
-                                    disabled={false}
-                                    id={lang}
-                                    key={index}
-                                    label={lang || NO_LANGUAGE}
-                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                        const newLang = [...selectedLang];
+                            <Row>
+                                <Col>
+                                    {languages.map((lang, index) => {
+                                        if (index % 2 == 0) return languageCheckbox(lang);
+                                    })}
+                                </Col>
 
-                                        if (e.target.checked) {
-                                            newLang.push(lang);
-                                        } else {
-                                            newLang.splice(newLang.indexOf(lang), 1);
-                                        }
-
-                                        setSelectedLanguage(newLang);
-                                        setSelectedLanguages(newLang);
-                                    }}
-                                    type="checkbox"
-                                />
-                            ))}
+                                <Col>
+                                    {languages.map((lang, index) => {
+                                        if (index % 2 != 0) return languageCheckbox(lang);
+                                    })}
+                                </Col>
+                            </Row>
                         </Form.Group>
                     </div>
                 </Accordion.Body>
