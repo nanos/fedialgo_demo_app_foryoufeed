@@ -14,14 +14,13 @@ import "../birdUI.css";
 import "../default.css";
 import AttachmentsModal from './AttachmentsModal';
 import ScoreModal from './ScoreModal';
+import { timeString } from '../helpers/string_helpers';
 import { User } from '../types';
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
-const IMAGES_HEIGHT = 314.4375;
+const IMAGES_HEIGHT = 314;
 const VIDEO_HEIGHT = IMAGES_HEIGHT + 100;
-const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
 
 interface StatusComponentProps {
     api: mastodon.rest.Client,
@@ -53,6 +52,60 @@ export default function StatusComponent(props: StatusComponentProps) {
     const images = imageAttachments(status);
     const videos = videoAttachments(status);
     let imageElement = <></>;
+
+    // Make a status button (reply, reblog, fav, etc)
+    const makeButton = (
+        buttonText: number | string | null,
+        className: string,
+        label: string,
+        onClick,
+        italicType: string,
+        italicText?: string,
+    ) => {
+        const italicClassName = `fa fa-${italicType} fa-fw`;
+        let italicElement = <></>;
+        let innerSpan = <></>;
+        let style = buttonStyle;
+
+        // TODO: This is a hack to expand the "i" icon by 2px
+        if (italicText == 'i') {
+            style = Object.assign({}, buttonStyle);
+            style.width = '20px';
+        }
+
+        if (italicText) {
+            italicElement = <i aria-hidden="true" className={italicClassName}>{italicText}</i>;
+        } else {
+            italicElement = <i aria-hidden="true" className={italicClassName}></i>;
+        }
+
+        if (buttonText || buttonText === 0) {
+            innerSpan = (
+                <span className="icon-button__counter">
+                    <span className="animated-number">
+                        <span style={{ position: "static" }}>
+                            <span>{buttonText}</span>
+                        </span>
+                    </span>
+                </span>
+            )
+        }
+
+        return (
+            <button
+                aria-hidden="false"
+                aria-label={label}
+                className={className}
+                onClick={onClick}
+                style={style}
+                title={label}
+                type="button"
+            >
+                {italicElement}
+                {innerSpan}
+            </button>
+        );
+    };
 
     // If there's just one image try to show it full size.
     // If there's more than one image use the original image handler (for now).
@@ -371,95 +424,39 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </div>)}
 
                     <div className="status__action-bar">
-                        <button
-                            aria-hidden="false"
-                            aria-label="Antworten"
-                            className={ACTION_ICON_BASE_CLASS}
-                            onClick={followUri}
-                            style={buttonStyle}
-                            title="Antworten"
-                            type="button"
-                        >
-                            <i className="fa fa-reply fa-fw" aria-hidden="true" />
+                        {makeButton(status.repliesCount, ACTION_ICON_BASE_CLASS, "Reply", followUri, 'reply')}
 
-                            <span className="icon-button__counter">
-                                <span className="animated-number">
-                                    <span style={{ position: "static" }}> {status.repliesCount}</span>
-                                </span>
-                            </span>
-                        </button>
+                        {makeButton(
+                            status.reblogsCount,
+                            ACTION_ICON_BASE_CLASS + (reblogged ? " active activate" : " deactivate"),
+                            "Retoot",
+                            reblog,
+                            'retweet'
+                        )}
 
-                        <button
-                            aria-hidden="false"
-                            aria-label="Teilen"
-                            className={(ACTION_ICON_BASE_CLASS + (reblogged ? " active activate" : " deactivate"))}
-                            onClick={reblog}
-                            title="Teilen"
-                            type="button"
-                            style={buttonStyle}
-                        >
-                            <i className="fa fa-retweet fa-fw" aria-hidden="true" />
+                        {makeButton(
+                            status.favouritesCount,
+                            ACTION_ICON_BASE_CLASS + (favourited ? " active activate" : " deactivate"),
+                            "Favorite",
+                            fav,
+                            'star'
+                        )}
 
-                            <span className="icon-button__counter">
-                                <span className="animated-number">
-                                    <span style={{ position: "static" }}>
-                                        <span>{status.reblogsCount}</span>
-                                    </span>
-                                </span>
-                            </span>
-                        </button>
-
-                        <button
-                            aria-hidden="false"
-                            aria-label="Favorisieren"
-                            className={(ACTION_ICON_BASE_CLASS + (favourited ? " active activate" : " deactivate"))}
-                            onClick={fav}
-                            style={buttonStyle}
-                            title="Favorisieren"
-                            type="button"
-                        >
-                            <i className="fa fa-star fa-fw" aria-hidden="true" />
-
-                            <span className="icon-button__counter">
-                                <span className="animated-number">
-                                    <span style={{ position: "static" }}>
-                                        <span>{status.favouritesCount}</span>
-                                    </span>
-                                </span>
-                            </span>
-                        </button>
-
-                        <button
-                            aria-hidden="false"
-                            aria-label="Score"
-                            className={ICON_BUTTON_CLASS}
-                            onClick={showScore}
-                            style={{ fontSize: "18px", width: "20px", height: "23.142857px", lineHeight: "18px" }}
-                            title="Score"
-                            type="button"
-                        >
-                            <i className="fa fa-pie-chart fa-fw" title="Ranking Score Details">
-                                i
-                            </i>
-                        </button>
-
-                        <button
-                            aria-hidden="false"
-                            aria-label="Auf eigenem Server öffnen"
-                            className={ICON_BUTTON_CLASS}
-                            onClick={followUri}
-                            style={buttonStyle}
-                            title="Open on your instance"
-                            type="button"
-                        >
-                            <i className="fa fa-link fa-fw" aria-hidden="true" />
-                        </button>
+                        {makeButton(null, ICON_BUTTON_CLASS, "Score", showScore, 'pie-chart', 'i')}
+                        {makeButton(null, ICON_BUTTON_CLASS, "Open", followUri, 'link')}
                     </div>
                 </div>
             </div>
         </div>
     );
 };
+{/*const makeButton = (
+        buttonText: number | string | null,
+        className: string,
+        label: string,
+        onClick,
+        italicType: string,
+        italicText?: string, */}
 
 
 const buttonStyle = {
@@ -467,16 +464,4 @@ const buttonStyle = {
     height: "23.142857px",
     lineHeight: "18px",
     width: "auto",
-};
-
-
-const timeString = (tootedAt: Date | string): string => {
-    tootedAt = typeof tootedAt == 'string' ? new Date(tootedAt) : tootedAt;
-    const currentDateNumber = new Date().getDate();
-
-    if (tootedAt.getDate() === currentDateNumber) {
-        return tootedAt.toLocaleTimeString();
-    } else {
-        return `${DAY_NAMES[tootedAt.getDay()]} ${tootedAt.toLocaleDateString()}`;
-    }
 };
