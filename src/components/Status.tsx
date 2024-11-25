@@ -32,10 +32,15 @@ interface StatusComponentProps {
 
 export default function StatusComponent(props: StatusComponentProps) {
     const masto = props.api;
-    const status = props.status.reblog ? props.status.reblog : props.status;
     const weightAdjust = props.weightAdjust;
-    status.reblogBy = props.status.reblog ? props.status.account.displayName : props.status?.reblogBy;
-    status.scores = props.status.scores;
+    let status: Toot = props.status;
+
+    // If it's a retoot then set 'status' to be the thing that was retooted
+    if (props.status.reblog) {
+        status = props.status.reblog;
+        status.reblogBy = props.status.account;
+        status.scores = props.status.scores;
+    }
 
     const [favourited, setFavourited] = React.useState<boolean>(status.favourited);
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
@@ -222,13 +227,12 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </div>
 
                         <span>
-                            {/* TODO: this hardcoded href="/@mcnees@mastodon.social" seems wrong? */}
                             <a
                                 className="status__display-name muted"
                                 data-id="109357260772763021"
-                                href={`${props.user.server}/@${status.account.acct}`}
+                                href={`${props.user.server}/@${status.reblogBy.acct}`}
                             >
-                                <bdi><strong>{status.reblogBy}</strong></bdi>
+                                <bdi><strong>{status.reblogBy.displayName}</strong></bdi>
                             </a> shared
                         </span>
                     </div>}
