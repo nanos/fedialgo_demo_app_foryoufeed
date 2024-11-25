@@ -28,6 +28,10 @@ There's [a script](./quick_install.sh) in this repo that will do all the steps f
 1. `npm install` (you can ignore the various warnings)
 1. `npm run start`
    * It should automatically change focus to your default browser and prompt you to login to Mastodon but if that doesn't happen you can point your browser at [`http://localhost:3000/`](http://localhost:3000/).
+1. Specify the Mastodon server your account lives on and click "Login". If you're already logged in with that browser you won't have to enter a password.
+   <p align="center">
+     <img src="doc/login_screen.png" alt="OAuth Permissions Request" width="600">
+   </p>
 1. After you've logged in to your Mastodon server (or if you're logged in in that browser) your browser will request that you give `fedialgo` permission to access your Mastodon account. If you don't accept this app will not work.
    <p align="center">
      <img src="doc/permissions_request.png" alt="OAuth Permissions Request" width="300">
