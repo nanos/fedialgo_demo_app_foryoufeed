@@ -243,8 +243,7 @@ export default function Feed() {
                         user={user}
                         weightAdjust={weightAdjust}
                     />
-                )
-            )}
+                ))}
 
             {(feed.length == 0 || isLoading) && <FullPageIsLoading />}
             <div ref={bottomRef} onClick={showMoreToots}>Load More</div>

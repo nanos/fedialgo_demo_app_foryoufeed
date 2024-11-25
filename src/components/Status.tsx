@@ -194,15 +194,12 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     return (
         <div>
-            {
-                status.mediaAttachments.length > 0 && (
-                    <AttachmentsModal
-                        mediaInspectionModalIdx={mediaInspectionModalIdx}
-                        setMediaInspectionModalIdx={setMediaInspectionModalIdx}
-                        toot={status}
-                    />
-                )
-            }
+            {status.mediaAttachments.length > 0 && (
+                <AttachmentsModal
+                    mediaInspectionModalIdx={mediaInspectionModalIdx}
+                    setMediaInspectionModalIdx={setMediaInspectionModalIdx}
+                    toot={status}
+                />)}
 
             <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={status} />
 
@@ -229,7 +226,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <a
                                 className="status__display-name muted"
                                 data-id="109357260772763021"
-                                href="/@mcnees@mastodon.social"
+                                href={`${props.user.server}/@${status.account.acct}`}
                             >
                                 <bdi><strong>{status.reblogBy}</strong></bdi>
                             </a> shared
