@@ -40,6 +40,9 @@ export default function StatusComponent(props: StatusComponentProps) {
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
     const [error, _setError] = React.useState<string>("");
 
+    const imageAttachments = status.mediaAttachments.filter(att => att.type === "image")
+    const videoAttachments = status.mediaAttachments.filter(att => att.type === "video");
+
     if (!masto) throw new Error("No Mastodon API");
 
     // Increase mediaInspectionModalIdx on Right Arrow
@@ -116,7 +119,8 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Show the score of a toot
     const showScore = async () => {
-        setShowScoreModal(true)
+        console.log(`showScore() status: `, status);
+        setShowScoreModal(true);
     };
 
     return (
@@ -292,9 +296,11 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </div>
                         )}
 
-                    {status.mediaAttachments.filter(att => att.type === "video").length > 0 && (
-                        <div className="media-gallery" style={{ height: "314.4375px", overflow: "hidden" }}>
-                            {status.mediaAttachments.filter(att => att.type === "video").map((att, i) => (
+                    {videoAttachments.length > 0 && (
+                        <div className="media-gallery" style={{ height: "415.4375px", overflow: "hidden" }}>
+                            <p>VIDEO</p>
+
+                            {videoAttachments.map((att, i) => (
                                 <div
                                     className="media-gallery__item"
                                     key={i}
@@ -306,13 +312,10 @@ export default function StatusComponent(props: StatusComponentProps) {
                                         width="32"
                                     />
 
-                                    <LazyLoadImage
-                                        alt={att.description}
-                                        onClick={() => setMediaInspectionModalIdx(i)}
-                                        scr={att.previewUrl}
-                                        sizes="559px"
-                                        style={{ objectPosition: "50%", width: "100%" }}
-                                    />
+                                    {/* Currently at least shows the thumbnail */}
+                                    <video width={"100%"} controls playsInline>
+                                        <source src={videoAttachments[i]?.url} type="video/mp4" />
+                                    </video>
                                 </div>
                             ))}
                         </div>)}

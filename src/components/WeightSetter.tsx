@@ -74,7 +74,7 @@ export default function WeightSetter({
         <Accordion>
             <Accordion.Item eventKey="0">
                 <Accordion.Header>
-                    <p style={{fontWeight: "bold", fontSize: 25}}>
+                    <p style={{fontSize: 25, fontWeight: "bold"}}>
                         Feed Algorithmus
                     </p>
                 </Accordion.Header>

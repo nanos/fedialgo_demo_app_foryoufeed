@@ -71,7 +71,7 @@ Currently you can retoot and favorite other people's toots through the app's web
 `Ctrl-C` in the terminal window you launched the `node.js` server in (with `npm run start`) will kill the app.
 
 ### Known Issues
-* Videos that live on Mastodon don't show up at all (just empty space).
+* Videos that live on Mastodon aren't obviously videos (but you can still click on them to play them).
 * You may need to reload the webpage after updating the user weightings.
 * Sometimes (always?) when starting the app after the first time you will find your Mastodon login has expired in which case you will be kicked back to the login screen for reauthorization.
 * Infinite scroll isn't _really_ infinite (yet). If you scroll far enough you will run out of toots to peruse.
