@@ -68,7 +68,7 @@ Here's an example of the elements that go into scoring a toot:
 Currently you can retoot and favorite other people's toots through the web interface.
 
 ### Shutdown
-`Ctrl-C` in the terminal window you launched the `node.js` server will kill the server.
+`Ctrl-C` in the terminal window you launched the `node.js` server in (with `npm run start`) will kill the app.
 
 ### Known Issues
 * You may need to reload the webpage after updating the user weightings.
