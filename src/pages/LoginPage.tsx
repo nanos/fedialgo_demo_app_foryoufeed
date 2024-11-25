@@ -63,8 +63,11 @@ export default function LoginPage() {
                 <div>
                     <p style={{ lineHeight: 1.3, marginBottom: "10px", marginTop: "10px", textAlign: "center" }}>
                         Fedi-Feed features a customizable algorithm for sorting your feed.<br />
-                        You can choose which factors influence the sorting of your feed.<br />
-                        None of your data is stored on our servers. All calculations are done in your browser.<br /><br />
+                        You can choose which factors influence the sorting of your timeline.<br />
+                        <span style={{color: "magenta"}}>
+                            All calculations are done in your browser. None of your data leaves your machine.
+                        </span>
+                        <br /><br />
                         To get started enter your Mastodon server in the form: <code>{DEFAULT_MASTODON_SERVER}</code>
                     </p>
                 </div>
