@@ -20,12 +20,13 @@ export default function AttachmentsModal(
     }
 ) {
     const media = toot.mediaAttachments[mediaInspectionModalIdx];
+    const shouldShowModal = mediaInspectionModalIdx >= 0;
 
     return (
         <Modal
             fullscreen={'xxl-down'}
             onHide={() => setMediaInspectionModalIdx(-1)}
-            show={mediaInspectionModalIdx != -1}
+            show={shouldShowModal}
             size='lg'
         >
             <Modal.Header closeButton>
@@ -35,7 +36,7 @@ export default function AttachmentsModal(
             </Modal.Header>
 
             <Modal.Body>
-                {(mediaInspectionModalIdx != -1) &&
+                {shouldShowModal &&
                     <div>
                         {media?.type === "image" &&
                             <img

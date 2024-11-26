@@ -279,8 +279,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                     </div>}
 
                 <div className="status status-public" data-id="110208921130165916">
+                    {/* Top right icons + timestamp that link to the toot */}
                     <div className="status__info">
-                        {/* Top right icons + timestamp that link to the toot */}
                         <a
                             className="status__relative-time"
                             href={status.uri}
@@ -343,6 +343,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </div>
                     </div>
 
+                    {/* Text of the toot */}
                     <div className="status__content status__content--with-action" >
                         <div className="status__content__text status__content__text--visible translate" lang="en">
                             {parse(status.content)}
