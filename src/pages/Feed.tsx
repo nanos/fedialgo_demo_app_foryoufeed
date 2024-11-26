@@ -206,7 +206,10 @@ export default function Feed() {
     // Log the feed to the console
     if (feed.length > 1) {
         console.log(`timeline toots (condensed): `, feed.map(condensedStatus));
-        console.log(`filtered timeline toots (condensed): `, filteredFeed.map(condensedStatus));
+
+        if (feed.length != filteredFeed.length) {
+            console.log(`filtered timeline toots: `, filteredFeed.map(condensedStatus));
+        }
 
         const appCounts = feed.reduce((counts, toot) => {
             const app = toot.application?.name || "unknown";
