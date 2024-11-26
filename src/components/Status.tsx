@@ -63,7 +63,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const [error, _setError] = React.useState<string>("");
     const [favourited, setFavourited] = React.useState<boolean>(status.favourited);
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
-    const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); //index of the media attachment to show
+    const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); //index of the mediaAttachment to show
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
 
     const images = imageAttachments(status);
@@ -83,7 +83,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Increase mediaInspectionModalIdx on Right Arrow
     React.useEffect(() => {
-        const handleKeyDown = (e) => {
+        const handleKeyDown = (e: KeyboardEvent): void => {
             if (mediaInspectionModalIdx === -1) return;
 
             if (e.key === "ArrowRight" && mediaInspectionModalIdx < status.mediaAttachments.length - 1) {
