@@ -5,7 +5,7 @@ import parse from 'html-react-parser';
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 
-import { FeatureStore, ScoresType, Toot } from "fedialgo";
+import { ScoresType, Toot } from "fedialgo";
 import { MEDIA_TYPES, imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
