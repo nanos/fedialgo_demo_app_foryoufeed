@@ -287,12 +287,12 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <span className="status__visibility-icon">
                                 <i className="fa fa-globe" title="Public" style={{marginRight: '4px'}}/>
 
-                                {status?.scores?.["FollowedTags"] && status.scores.FollowedTags > 0 &&
+                                {(status?.followedTags?.length || 0) > 0 &&
                                     <i
                                         className="fa fa-hashtag"
                                         style={{color: 'yellow', marginRight: '4px'}}
                                         title="Contains Followed Tag"
-                                    /> || null}
+                                    />}
 
                                 {status?.trendingRank &&
                                     <i
