@@ -7,7 +7,7 @@ import { usePersistentState } from "react-persistent-state";
 
 import Container from "react-bootstrap/esm/Container";
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
-import { condensedStatus, ScoresType, TheAlgorithm, Toot } from "fedialgo";
+import { TRENDING_TOOTS, condensedStatus, ScoresType, TheAlgorithm, Toot } from "fedialgo";
 
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
@@ -25,7 +25,9 @@ const RELOAD_IF_OLDER_THAN_MINUTES = 0.5;
 const RELOAD_IF_OLDER_THAN_MS = RELOAD_IF_OLDER_THAN_MINUTES * 60 * 1000;
 
 const DEFAULT_SETTINGS = {
+    includeFollowedAccounts: true,
     includeReposts: true,
+    includeTrendingToots: true,
     onlyLinks: false,
 };
 
@@ -184,13 +186,17 @@ export default function Feed() {
     // Strip out toots we don't want to show to the user for various reasons
     const filteredFeed = feed.filter((status: Toot) => {
         if (settings.onlyLinks && !(status.card || status.reblog?.card)) {
-            console.log(`Removing ${status.uri} from feed because it's not a link...`);
+            console.debug(`Removing ${status.uri} from feed because it's not a link and onlyLinks is enabled...`);
             return false;
         } else if (status.reblog && !settings.includeReposts) {
             console.debug(`Removing reblogged status ${status.uri} from feed...`);
             return false;
         } else if (filteredLanguages.length > 0 && !filteredLanguages.includes(status.language)) {
-            console.log(`Removing toot ${status.uri} w/invalid language ${status.language} (valid langs: ${JSON.stringify(filteredLanguages)}).`);
+            console.debug(`Removing toot ${status.uri} w/invalid language ${status.language} (valid langs: ${JSON.stringify(filteredLanguages)}).`);
+            return false;
+        } else if (!settings.includeTrendingToots && status.scores[TRENDING_TOOTS]) {
+            return false;
+        } else if (!settings.includeFollowedAccounts && !status.scores[TRENDING_TOOTS]) {
             return false;
         }
 

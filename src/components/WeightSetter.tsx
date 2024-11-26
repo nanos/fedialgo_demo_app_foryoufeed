@@ -109,6 +109,10 @@ export default function WeightSetter({
                     <div style={roundedBox}>
                         <p style={headerFont}>Filters</p>
 
+                        <Form.Label>
+                            <b>If you turn off both toots from accounts you follow as well as trending toots you will see no toots.</b>
+                        </Form.Label>
+
                         {settings && Object.keys(settings).map((key, index) => (
                             <Form.Group className="mb-1" key={index}>
                                 <Form.Check
