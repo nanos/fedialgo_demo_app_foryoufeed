@@ -91,29 +91,15 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Make a status button (reply, reblog, fav, etc)
     const makeButton = (
-        buttonText: number | string | null,
         className: string,
         label: string,
         onClick: (e?: React.MouseEvent) => void,
         italicType: string,
-        italicText?: string,
+        buttonText: number | string | null = null,
     ): React.ReactElement => {
         const italicClassName = `fa fa-${italicType} fa-fw`;
         let style = BUTTON_STYLE;
-        let italicElement = <></>;
         let innerSpan = <></>;
-
-        // TODO: This is a hack to expand the "i" icon by 2px
-        if (italicText == 'i') {
-            style = Object.assign({}, BUTTON_STYLE);
-            style.width = '20px';
-        }
-
-        if (italicText) {
-            italicElement = <i aria-hidden="true" className={italicClassName}>{italicText}</i>;
-        } else {
-            italicElement = <i aria-hidden="true" className={italicClassName}></i>;
-        }
 
         if (buttonText || buttonText === 0) {
             innerSpan = (
@@ -137,7 +123,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 title={label}
                 type="button"
             >
-                {italicElement}
+                <i aria-hidden="true" className={italicClassName} />
                 {innerSpan}
             </button>
         );
@@ -436,26 +422,26 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                     {/* retoot, favorite, etc. icons at bottom */}
                     <div className="status__action-bar">
-                        {makeButton(status.repliesCount, ACTION_ICON_BASE_CLASS, "Reply", followUri, 'reply')}
+                        {makeButton(ACTION_ICON_BASE_CLASS, "Reply", followUri, 'reply', status.repliesCount)}
 
                         {makeButton(
-                            status.reblogsCount,
                             ACTION_ICON_BASE_CLASS + (reblogged ? " active activate" : " deactivate"),
                             "Retoot",
                             reblog,
-                            'retweet'
+                            'retweet',
+                            status.reblogsCount,
                         )}
 
                         {makeButton(
-                            status.favouritesCount,
                             ACTION_ICON_BASE_CLASS + (favourited ? " active activate" : " deactivate"),
                             "Favorite",
                             fav,
-                            'star'
+                            'star',
+                            status.favouritesCount,
                         )}
 
-                        {makeButton(null, ICON_BUTTON_CLASS, "Score", showScore, 'pie-chart', 'i')}
-                        {makeButton(null, ICON_BUTTON_CLASS, "Open", followUri, 'link')}
+                        {makeButton(ICON_BUTTON_CLASS, "Score", showScore, 'balance-scale')}
+                        {makeButton(ICON_BUTTON_CLASS, "Open", followUri, 'link')}
                     </div>
                 </div>
             </div>

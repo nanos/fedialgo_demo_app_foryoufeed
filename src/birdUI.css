@@ -2014,7 +2014,7 @@ body.embed .button.logo-button:hover,
 
 .layout-single-column .detailed-status__action-bar .icon-button::after,
 .layout-single-column .status__action-bar .icon-button::after {
-  background-color: rgba(96, 105, 132, .15);
+  background-color: rgb(0, 64, 255);
   border-radius: 50%;
   content: '';
   height: 36px;
