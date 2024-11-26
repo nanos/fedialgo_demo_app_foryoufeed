@@ -275,7 +275,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </span>
                     </div>}
 
-                <div className="status status-public" data-id="110208921130165916">
+                <div className="status">
                     {/* Top right icons + timestamp that link to the toot */}
                     <div className="status__info">
                         <a
