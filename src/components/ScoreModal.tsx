@@ -25,7 +25,10 @@ export default function ScoreModal({
 
             <Modal.Body>
                 <div style={{marginBottom: "10px"}}>
-                    <p style={headerFont}>Computed Score: <code>{toot.value.toFixed(10)}</code></p>
+                    <p style={headerFont}>
+                        Computed Score: <code>{toot.value > 0.000001 ? toot.value.toFixed(10) : toot.value}</code>
+                    </p>
+
                     <p>Posted by {describeAccount(toot)}</p>
                 </div>
 
