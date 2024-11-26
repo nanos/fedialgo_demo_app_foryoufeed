@@ -17,7 +17,9 @@ export default function FullPageIsLoading () {
         }}>
             <Spinner animation="border" />
             {/* <p style={{marginLeft: '10px'}}> Loading (this can take a while the first time)...</p> */}
-            <p> Loading (this can take a while the first time)...</p>
+            <div style={{marginLeft: "15px"}}>
+                <p>Loading (this can take a while the first time)...</p>
+            </div>
         </div>
     );
 };
