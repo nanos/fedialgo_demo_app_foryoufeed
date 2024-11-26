@@ -64,7 +64,7 @@ export default function FindFollowers({ api, user }: { api: mastodon.rest.Client
                                                         alt="Avatar"
                                                         className="rounded-circle me-3"
                                                         src={suggestion.account.avatar}
-                                                        style={{ width: '60px', height: '60px' }}
+                                                        style={{ height: '60px', width: '60px' }}
                                                     />
 
                                                     <div>
