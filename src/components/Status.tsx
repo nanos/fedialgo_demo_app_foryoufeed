@@ -157,10 +157,12 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                 <LazyLoadImage
                     alt={image.description}
+                    // height={imageHeight}
                     onClick={() => setMediaInspectionModalIdx(0)}
                     src={image.previewUrl}
                     // style={{ objectPosition: "50%", width: "100%" }}
                     style={{ objectPosition: "top", width: "100%" }}
+                    // width="100%"
                 />
             </div>
         );
@@ -251,6 +253,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 className="status__wrapper status__wrapper-public focusable"
                 aria-label={`${status.account.displayName}, ${status.account.note} ${status.account.acct}`}
             >
+                {/* Name of account that reblogged the toot (if it exists) */}
                 {status.reblogBy &&
                     <div className="status__prepend">
                         <div className="status__prepend-icon-wrapper">
@@ -270,6 +273,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                 <div className="status status-public" data-id="110208921130165916">
                     <div className="status__info">
+                        {/* Top right icons + timestamp that link to the toot */}
                         <a
                             className="status__relative-time"
                             href={status.uri}
@@ -294,6 +298,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </time>
                         </a>
 
+                        {/* Account name + avatar */}
                         <div title={status.account.acct} className="status__display-name">
                             <div className="status__avatar">
                                 <div className="account__avatar" style={{ width: "46px", height: "46px" }}>
@@ -337,6 +342,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </div>
                     </div>
 
+                    {/* Preview card image and text handling */}
                     {status.card && status.mediaAttachments.length == 0 && (
                         <a
                             className="status-card compact"
@@ -402,6 +408,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             ))}
                         </div>)}
 
+                    {/* retoot, favorite, etc. icons at bottom */}
                     <div className="status__action-bar">
                         {makeButton(status.repliesCount, ACTION_ICON_BASE_CLASS, "Reply", followUri, 'reply')}
 
