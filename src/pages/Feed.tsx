@@ -245,7 +245,7 @@ export default function Feed() {
 
             <FindFollowers api={api} user={user} />
 
-            {!isLoading && api && (feed.length > 1) &&
+            {!isLoading && api && (feed.length >= 1) &&
                 filteredFeed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot: Toot) => (
                     <StatusComponent
                         api={api}
