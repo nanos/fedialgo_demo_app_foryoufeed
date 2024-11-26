@@ -43,6 +43,24 @@ export default function WeightSetter({
     const [selectedLang, setSelectedLanguage] = usePersistentState<string[]>([], user.id + "selectedLangs");
     const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY).sort();
 
+    const settingCheckbox = (settingName: string) => {
+        return (
+            <Form.Check
+                checked={settings[settingName]}
+                disabled={false}
+                id={settingName}
+                key={settingName}
+                label={settingName}
+                onChange={(e) => {
+                    const newSettings = { ...settings };
+                    newSettings[settingName] = e.target.checked;
+                    updateSettings(newSettings);
+                }}
+                type="checkbox"
+            />
+        );
+    };
+
     const languageCheckbox = (languageCode: string) => {
         const lang = languageCode || NO_LANGUAGE;
 
@@ -113,21 +131,9 @@ export default function WeightSetter({
                             <b>If you turn off both toots from accounts you follow as well as trending toots you will see no toots.</b>
                         </Form.Label>
 
-                        {settings && Object.keys(settings).map((key, index) => (
-                            <Form.Group className="mb-1" key={index}>
-                                <Form.Check
-                                    checked={settings[key]}
-                                    disabled={false}
-                                    id={key}
-                                    label={key}
-                                    onChange={(e) => {
-                                        const newSettings = { ...settings };
-                                        newSettings[key] = e.target.checked;
-                                        updateSettings(newSettings);
-                                    }}
-                                    type="checkbox"
-                                />
-                            </Form.Group>))}
+                        <Form.Group className="mb-1">
+                            {settings && Object.keys(settings).map((settingName) => settingCheckbox(settingName))}
+                        </Form.Group>
                     </div>
 
                     <div style={roundedBox}>

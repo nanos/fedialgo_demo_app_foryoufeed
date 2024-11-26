@@ -27,6 +27,7 @@ const RELOAD_IF_OLDER_THAN_MS = RELOAD_IF_OLDER_THAN_MINUTES * 60 * 1000;
 const DEFAULT_SETTINGS = {
     includeFollowedAccounts: true,
     includeReposts: true,
+    includeReplies: true,
     includeTrendingToots: true,
     onlyLinks: false,
 };
@@ -197,6 +198,8 @@ export default function Feed() {
         } else if (!settings.includeTrendingToots && status.scores[TRENDING_TOOTS]) {
             return false;
         } else if (!settings.includeFollowedAccounts && !status.scores[TRENDING_TOOTS]) {
+            return false;
+        } else if (!settings.includeReplies && status.inReplyToId) {
             return false;
         }
 
