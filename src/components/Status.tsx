@@ -5,7 +5,6 @@ import parse from 'html-react-parser';
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 
-import { describeAccount } from 'fedialgo/dist/helpers';
 import { FeatureStore, ScoresType, Toot } from "fedialgo";
 import { imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -160,7 +159,6 @@ export default function StatusComponent(props: StatusComponentProps) {
                     alt={image.description}
                     onClick={() => setMediaInspectionModalIdx(0)}
                     src={image.previewUrl}
-                    sizes="559px"
                     // style={{ objectPosition: "50%", width: "100%" }}
                     style={{ objectPosition: "top", width: "100%" }}
                 />
