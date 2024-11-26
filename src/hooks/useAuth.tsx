@@ -18,9 +18,16 @@ export default function AuthProvider(props: PropsWithChildren) {
     const [app, _setApp] = useAppStorage({ keyName: "app", defaultValue: null })
     const navigate = useNavigate();
 
-    // call this function when you want to authenticate the user
+    // call this function when you want to authenticate the user. User object looks like this:
+    // {
+    //     access_token: "xyssdsfdnffdwf"
+    //     id: "10936317990452342342"
+    //     profilePicture: "https://media.universeodon.com/accounts/avatars/109/363/179/904/598/380/original/dfnwodfnow.jpg"
+    //     server: "https://universeodon.com"
+    //     username: "cryptadamus"
+    // }
     const loginUser = async (user: User) => {
-        console.log("logged in")
+        console.log("Logged in!");
         setUser(user);
         navigate("/");
     };
