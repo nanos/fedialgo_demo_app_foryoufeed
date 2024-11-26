@@ -88,7 +88,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         buttonText: number | string | null,
         className: string,
         label: string,
-        onClick: () => void,
+        onClick: (e?: React.MouseEvent) => void,
         italicType: string,
         italicText?: string,
     ): React.ReactElement => {
@@ -149,6 +149,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                     width: 1 / status.mediaAttachments.length * 100 + "%"
                 }}
             >
+                {/* TODO: what is this for? */}
                 <canvas
                     className="media-gallery__preview media-gallery__preview--hidden"
                     height="32"
@@ -196,7 +197,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Favourite a post
     const fav = async () => {
-        console.log(`fav() status.scores: `, status.scores);
+        console.log(`fav() toot: `, status);
         const status_ = await resolve(status);
         favourited ? console.log("skipping fav()") : weightAdjust(status.scores);  // TODO: does learning weights really work?
         const id = status_.id;
@@ -212,7 +213,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         })();
     };
 
-    const followUri = async (e) => {
+    const followUri = async (e: React.MouseEvent) => {
         //Follow a link to another instance on the homeserver
         e.preventDefault()
         const status_ = await resolve(status);
@@ -241,7 +242,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
             <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={status} />
 
-            <Toast show={Boolean(error)} delay={3000} autohide>
+            <Toast autohide delay={3000} show={Boolean(error)}>
                 <Toast.Header>
                     <strong className="me-auto">Error</strong>
                 </Toast.Header>
@@ -250,8 +251,8 @@ export default function StatusComponent(props: StatusComponentProps) {
             </Toast>
 
             <div
-                className="status__wrapper status__wrapper-public focusable"
                 aria-label={`${status.account.displayName}, ${status.account.note} ${status.account.acct}`}
+                className="status__wrapper status__wrapper-public focusable"
             >
                 {/* Name of account that reblogged the toot (if it exists) */}
                 {status.reblogBy &&
@@ -388,7 +389,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <div className="media-gallery" style={{ height: `${VIDEO_HEIGHT}px`, overflow: "hidden" }}>
                             <p>VIDEO</p>
 
-                            {videos.map((att, i) => (
+                            {videos.map((video, i) => (
                                 <div
                                     className="media-gallery__item"
                                     key={i}
@@ -400,9 +401,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                                         width="32"
                                     />
 
-                                    {/* Currently at least shows the thumbnail */}
-                                    <video width={"100%"} controls playsInline>
-                                        <source src={videos[i]?.url} type="video/mp4" />
+                                    <video controls playsInline width={"100%"}>
+                                        <source src={video?.url} type="video/mp4" />
                                     </video>
                                 </div>
                             ))}
