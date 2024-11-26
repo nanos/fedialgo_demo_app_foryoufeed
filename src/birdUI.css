@@ -4041,14 +4041,14 @@ body.embed .entry .detailed-status {
      padding: 15px;
  }
 
- a.status-card .status-card__title,
- a.status-card.compact .status-card__title {
-     font-size: 18px;
-     margin-bottom: 10px;
-     font-weight: normal;
-     color: white;
-     white-space: inherit;
- }
+a.status-card .status-card__title,
+a.status-card.compact .status-card__title {
+    color: white;
+    font-size: 18px;
+    font-weight: normal;
+    margin-bottom: 10px;
+    white-space: inherit;
+}
 
  a.status-card .status-card__host,
  a.status-card.compact .status-card__host {
