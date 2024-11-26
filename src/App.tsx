@@ -27,7 +27,7 @@ const App: React.FC = () => {
         <BrowserRouter>
             <AuthProvider>
                 <div
-                    className='container-fluid vh-100'
+                    className='container-fluid min-vh-100'
                     style={{
                         alignItems: 'center',
                         backgroundColor: 'black',
