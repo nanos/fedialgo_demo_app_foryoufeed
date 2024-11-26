@@ -137,7 +137,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     };
 
     // Make an image element for display within a Toot.
-    const makeImage = (image: mastodon.v1.MediaAttachment): React.ReactElement => {
+    const makeImage = (image: mastodon.v1.MediaAttachment, idx: number): React.ReactElement => {
         return (
             <div
                 className="media-gallery__item"
@@ -157,9 +157,9 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                 <LazyLoadImage
                     alt={image.description}
-                    onClick={() => setMediaInspectionModalIdx(0)}
+                    onClick={() => setMediaInspectionModalIdx(idx)}
                     src={image.previewUrl}
-                    style={{ objectPosition: "top", width: "100%" }}
+                    style={{ objectPosition: "top", height: "100%", objectFit: "cover", width: "100%" }}
                 />
             </div>
         );
@@ -386,7 +386,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                     {images.length > 0 &&
                         <div className="media-gallery" style={{ height: `${imageHeight}px`, overflow: "hidden" }}>
-                            {images.map((image) => makeImage(image))}
+                            {images.map((image, i) => makeImage(image, i))}
                         </div>}
 
                     {videos.length > 0 && (
