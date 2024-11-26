@@ -8080,13 +8080,13 @@ a.status-card.compact:hover {
 }
 
 .media-gallery__preview {
-    width: 100%;
+    background:#000;
     height: 100%;
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
+    width: 100%;
     z-index: 0;
-    background:#000
 }
 
 .media-gallery__preview--hidden {
