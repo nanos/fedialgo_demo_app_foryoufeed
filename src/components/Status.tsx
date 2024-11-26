@@ -61,7 +61,11 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     const images = imageAttachments(status);
     const videos = videoAttachments(status);
-    let imageElement = <></>;
+
+    // If there's just one image try to show it full size.
+    // If there's more than one image use the original image handler (for now).
+    const imageHeight = images.length == 1 ? images[0].meta?.small?.height : IMAGES_HEIGHT;
+
 
     // Increase mediaInspectionModalIdx on Right Arrow
     React.useEffect(() => {
@@ -88,7 +92,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         onClick: () => void,
         italicType: string,
         italicText?: string,
-    ) => {
+    ): React.ReactElement => {
         const italicClassName = `fa fa-${italicType} fa-fw`;
         let style = BUTTON_STYLE;
         let italicElement = <></>;
@@ -134,70 +138,35 @@ export default function StatusComponent(props: StatusComponentProps) {
         );
     };
 
-    // If there's just one image try to show it full size.
-    // If there's more than one image use the original image handler (for now).
-    if (images.length == 1) {
-        const image = images[0];
-        let imgHeight = image.meta?.small?.height;
-        let imgWidth = image.meta?.small?.width;
+    // Make an image element for display within a Toot.
+    const makeImage = (image: mastodon.v1.MediaAttachment): React.ReactElement => {
+        return (
+            <div
+                className="media-gallery__item"
+                key={image.previewUrl}
+                style={{
+                    height: "100%",
+                    inset: "auto",
+                    width: 1 / status.mediaAttachments.length * 100 + "%"
+                }}
+            >
+                <canvas
+                    className="media-gallery__preview media-gallery__preview--hidden"
+                    height="32"
+                    width="32"
+                />
 
-        imageElement = (
-            <div className="media-gallery" style={{ height: `${imgHeight}px`, overflow: "hidden" }}>
-                <div
-                    className="media-gallery__item"
-                    style={{
-                        height: "100%",
-                        inset: "auto",
-                        width: 1 / status.mediaAttachments.length * 100 + "%"
-                    }}
-                >
-                    <canvas
-                        className="media-gallery__preview media-gallery__preview--hidden"
-                        height="32"
-                        width="32"
-                    />
-
-                    <LazyLoadImage
-                        alt={image.description}
-                        onClick={() => setMediaInspectionModalIdx(0)}
-                        src={image.previewUrl}
-                        sizes="559px"
-                        style={{ objectPosition: "50%", width: "100%" }}
-                    />
-                </div>
+                <LazyLoadImage
+                    alt={image.description}
+                    onClick={() => setMediaInspectionModalIdx(0)}
+                    src={image.previewUrl}
+                    sizes="559px"
+                    // style={{ objectPosition: "50%", width: "100%" }}
+                    style={{ objectPosition: "top", width: "100%" }}
+                />
             </div>
         );
-    } else if (images.length > 1) {
-        imageElement = (
-            <div className="media-gallery" style={{ height: `${IMAGES_HEIGHT}px`, overflow: "hidden" }}>
-                {status.mediaAttachments.filter(att => att.type === "image").map((att, i) => (
-                    <div
-                        className="media-gallery__item"
-                        key={i}
-                        style={{
-                            height: "100%",
-                            inset: "auto",
-                            width: 1 / status.mediaAttachments.length * 100 + "%"
-                        }}
-                    >
-                        <canvas
-                            className="media-gallery__preview media-gallery__preview--hidden"
-                            height="32"
-                            width="32"
-                        />
-
-                        <LazyLoadImage
-                            alt={att.description}
-                            onClick={() => setMediaInspectionModalIdx(i)}
-                            src={att.previewUrl}
-                            sizes="559px"
-                            style={{ objectPosition: "50%", width: "100%" }}
-                        />
-                    </div>
-                ))}
-            </div>
-        );
-    }
+    };
 
     const resolve = async (status: Toot): Promise<Toot> => {
         if (status.uri.includes(props.user.server)) {
@@ -259,6 +228,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         console.log(`showScore() called for toot: `, status);
         setShowScoreModal(true);
     };
+
 
     return (
         <div>
@@ -405,7 +375,10 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </div>
                         </a>)}
 
-                    {imageElement}
+                    {images.length > 0 &&
+                        <div className="media-gallery" style={{ height: `${imageHeight}px`, overflow: "hidden" }}>
+                            {images.map((image) => makeImage(image))}
+                        </div>}
 
                     {videos.length > 0 && (
                         <div className="media-gallery" style={{ height: `${VIDEO_HEIGHT}px`, overflow: "hidden" }}>
