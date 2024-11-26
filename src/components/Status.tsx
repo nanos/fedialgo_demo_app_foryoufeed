@@ -5,10 +5,10 @@ import parse from 'html-react-parser';
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 
-import { ScoresType, Toot } from "fedialgo";
 import { MEDIA_TYPES, imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
+import { ScoresType, Toot } from "fedialgo";
 
 import "../birdUI.css";
 import "../default.css";
@@ -41,9 +41,8 @@ interface StatusComponentProps {
 
 export default function StatusComponent(props: StatusComponentProps) {
     const weightAdjust = props.weightAdjust;
-    let status: Toot = props.status;
     const masto = props.api;
-    if (!masto) throw new Error("No Mastodon API");  // TODO: I don't think we need a mastodon instance to display data? it's for retooting & favoriting
+    let status: Toot = props.status;
 
     // If it's a retoot then set 'status' to be the thing that was retooted
     if (props.status.reblog) {
@@ -60,6 +59,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     const images = imageAttachments(status);
     const videos = videoAttachments(status);
+    if (!masto) throw new Error("No Mastodon API");  // TODO: I don't think we need a mastodon instance to display data? it's for retooting & favoriting
 
     // If there's just one image try to show it full size.
     // If there's more than one image use the original image handler (for now).
@@ -164,12 +164,9 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                 <LazyLoadImage
                     alt={image.description}
-                    // height={imageHeight}
                     onClick={() => setMediaInspectionModalIdx(0)}
                     src={image.previewUrl}
-                    // style={{ objectPosition: "50%", width: "100%" }}
                     style={{ objectPosition: "top", width: "100%" }}
-                    // width="100%"
                 />
             </div>
         );
