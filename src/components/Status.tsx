@@ -6,7 +6,7 @@ import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 
 import { FeatureStore, ScoresType, Toot } from "fedialgo";
-import { imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
+import { MEDIA_TYPES, imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 
@@ -64,6 +64,12 @@ export default function StatusComponent(props: StatusComponentProps) {
     // If there's just one image try to show it full size.
     // If there's more than one image use the original image handler (for now).
     const imageHeight = images.length == 1 ? images[0].meta?.small?.height : IMAGES_HEIGHT;
+
+    status.mediaAttachments.forEach((media, i) => {
+        if (!MEDIA_TYPES.includes(media.type)) {
+            console.warn(`Unknown media type: '${media.type}' for toot:`, status);
+        }
+    });
 
 
     // Increase mediaInspectionModalIdx on Right Arrow
