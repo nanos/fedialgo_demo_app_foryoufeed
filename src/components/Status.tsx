@@ -387,25 +387,40 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                     {videos.length > 0 && (
                         <div className="media-gallery" style={{ height: `${VIDEO_HEIGHT}px`, overflow: "hidden" }}>
-                            <p>VIDEO</p>
+                            {videos.map((video, i) => {
+                                const sourceTag = <source src={video?.url} type="video/mp4" />;
+                                let videoTag = <></>;
 
-                            {videos.map((video, i) => (
-                                <div
-                                    className="media-gallery__item"
-                                    key={i}
-                                    style={{ inset: "auto", width: "100%", height: "100%" }}
-                                >
-                                    <canvas
-                                        className="media-gallery__preview media-gallery__preview--hidden"
-                                        height="32"
-                                        width="32"
-                                    />
+                                if (video.type == 'gifv') {
+                                    videoTag = (
+                                        <video autoPlay height={"100%"} loop playsInline>
+                                            {sourceTag}
+                                        </video>
+                                    );
+                                } else {
+                                    videoTag = (
+                                        <video controls height={"100%"} loop playsInline>
+                                            {sourceTag}
+                                        </video>
+                                    );
+                                }
 
-                                    <video controls playsInline width={"100%"}>
-                                        <source src={video?.url} type="video/mp4" />
-                                    </video>
-                                </div>
-                            ))}
+                                return (
+                                    <div
+                                        className="media-gallery__item"
+                                        key={i}
+                                        style={{ inset: "auto", width: "100%", height: "100%" }}
+                                    >
+                                        <canvas
+                                            className="media-gallery__preview media-gallery__preview--hidden"
+                                            height="32"
+                                            width="32"
+                                        />
+
+                                        {videoTag}
+                                    </div>
+                                );
+                            })}
                         </div>)}
 
                     {/* retoot, favorite, etc. icons at bottom */}
