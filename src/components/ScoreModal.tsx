@@ -4,8 +4,8 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 
-import { Toot, extractScoreInfo } from 'fedialgo';
 import { describeAccount } from 'fedialgo/dist/helpers';
+import { extractScoreInfo, Toot } from 'fedialgo';
 
 
 export default function ScoreModal({
@@ -28,6 +28,8 @@ export default function ScoreModal({
                     <p style={headerFont}>Computed Score: {toot.value}</p>
                     <p>Posted by {describeAccount(toot)}</p>
                 </div>
+
+                <div style={{height: "15px"}} />
 
                 <p>
                     <code style={{whiteSpace: 'pre'}}>
