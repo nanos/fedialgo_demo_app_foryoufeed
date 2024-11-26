@@ -18,7 +18,7 @@ export default function ScoreModal({
     toot: Toot
 }) {
     return (
-        <Modal show={showScoreModal} onHide={() => setShowScoreModal(false)} style={{ color: "black" }}>
+        <Modal onHide={() => setShowScoreModal(false)} show={showScoreModal} style={{ color: "black" }}>
             <Modal.Header closeButton>
                 <Modal.Title>This Toot's Score</Modal.Title>
             </Modal.Header>
