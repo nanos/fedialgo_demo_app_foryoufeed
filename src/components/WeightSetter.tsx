@@ -86,7 +86,21 @@ export default function WeightSetter({
                 type="checkbox"
             />
         );
-    }
+    };
+
+    const gridify = (list: Array<any>) => {
+        if (!list || list.length === 0) return <></>;
+
+        return (
+            <Row>
+                <Col>{oddNumbered(list)}</Col>
+                {list.length > 1 && <Col>{evenNumbered(list)}</Col>}
+            </Row>
+        );
+    };
+
+    const settingCheckboxes = Object.keys(settings).sort().map((settingName) => settingCheckbox(settingName));
+    const languageCheckboxes = languages.sort().map((lang) => languageCheckbox(lang));
 
     return (
         <Accordion>
@@ -132,7 +146,7 @@ export default function WeightSetter({
                         </Form.Label>
 
                         <Form.Group className="mb-1">
-                            {settings && Object.keys(settings).map((settingName) => settingCheckbox(settingName))}
+                            {settings && gridify(settingCheckboxes)}
                         </Form.Group>
                     </div>
 
@@ -144,10 +158,7 @@ export default function WeightSetter({
                                 <b>Show only toots in these languages:</b>
                             </Form.Label>
 
-                            <Row>
-                                <Col>{oddNumbered(languages).map((lang) => languageCheckbox(lang))}</Col>
-                                <Col>{evenNumbered(languages).map((lang) => languageCheckbox(lang))}</Col>
-                            </Row>
+                            {gridify(languageCheckboxes)}
                         </Form.Group>
                     </div>
                 </Accordion.Body>
