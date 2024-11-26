@@ -29,6 +29,15 @@ const BUTTON_STYLE = {
     width: "auto",
 };
 
+// FontAwesome icons for the action buttons
+const ACTION_ICONS = {
+    Favorite: 'star',
+    Open: 'link',
+    Reply: 'reply',
+    Retoot: 'retweet',
+    Score: 'balance-scale',
+};
+
 
 interface StatusComponentProps {
     api: mastodon.rest.Client,
@@ -94,11 +103,9 @@ export default function StatusComponent(props: StatusComponentProps) {
         className: string,
         label: string,
         onClick: (e?: React.MouseEvent) => void,
-        italicType: string,
         buttonText: number | string | null = null,
     ): React.ReactElement => {
-        const italicClassName = `fa fa-${italicType} fa-fw`;
-        let style = BUTTON_STYLE;
+        const fontAwesomeClassName = `fa fa-${ACTION_ICONS[label]} fa-fw`;
         let innerSpan = <></>;
 
         if (buttonText || buttonText === 0) {
@@ -110,7 +117,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </span>
                     </span>
                 </span>
-            )
+            );
         }
 
         return (
@@ -119,11 +126,11 @@ export default function StatusComponent(props: StatusComponentProps) {
                 aria-label={label}
                 className={className}
                 onClick={onClick}
-                style={style}
+                style={BUTTON_STYLE}
                 title={label}
                 type="button"
             >
-                <i aria-hidden="true" className={italicClassName} />
+                <i aria-hidden="true" className={fontAwesomeClassName} />
                 {innerSpan}
             </button>
         );
@@ -422,13 +429,12 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                     {/* retoot, favorite, etc. icons at bottom */}
                     <div className="status__action-bar">
-                        {makeButton(ACTION_ICON_BASE_CLASS, "Reply", followUri, 'reply', status.repliesCount)}
+                        {makeButton(ACTION_ICON_BASE_CLASS, "Reply", followUri, status.repliesCount)}
 
                         {makeButton(
                             ACTION_ICON_BASE_CLASS + (reblogged ? " active activate" : " deactivate"),
                             "Retoot",
                             reblog,
-                            'retweet',
                             status.reblogsCount,
                         )}
 
@@ -436,12 +442,11 @@ export default function StatusComponent(props: StatusComponentProps) {
                             ACTION_ICON_BASE_CLASS + (favourited ? " active activate" : " deactivate"),
                             "Favorite",
                             fav,
-                            'star',
                             status.favouritesCount,
                         )}
 
-                        {makeButton(ICON_BUTTON_CLASS, "Score", showScore, 'balance-scale')}
-                        {makeButton(ICON_BUTTON_CLASS, "Open", followUri, 'link')}
+                        {makeButton(ICON_BUTTON_CLASS, "Score", showScore)}
+                        {makeButton(ICON_BUTTON_CLASS, "Open", followUri)}
                     </div>
                 </div>
             </div>
