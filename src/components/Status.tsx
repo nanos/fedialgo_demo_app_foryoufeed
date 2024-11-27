@@ -5,7 +5,7 @@ import parse from 'html-react-parser';
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 
-import { MEDIA_TYPES, imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
+import { imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 import { ScoresType, Toot } from "fedialgo";
@@ -88,13 +88,6 @@ export default function StatusComponent(props: StatusComponentProps) {
     // If there's just one image try to show it full size.
     // If there's more than one image use the original image handler (for now).
     const imageHeight = images.length == 1 ? images[0].meta?.small?.height : IMAGES_HEIGHT;
-
-    status.mediaAttachments.forEach((media, i) => {
-        if (!MEDIA_TYPES.includes(media.type)) {
-            console.warn(`Unknown media type: '${media.type}' for toot:`, status);
-        }
-    });
-
 
     // Increase mediaInspectionModalIdx on Right Arrow
     React.useEffect(() => {
@@ -297,7 +290,6 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <span>
                             <a
                                 className="status__display-name muted"
-                                data-id="109357260772763021"
                                 href={`${props.user.server}/@${status.reblogBy.acct}`}
                             >
                                 <bdi><strong>{status.reblogBy.displayName}</strong></bdi>

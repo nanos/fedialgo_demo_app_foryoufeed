@@ -4,6 +4,7 @@
 import parse from 'html-react-parser';
 import React from 'react';
 
+import { MEDIA_TYPES } from 'fedialgo/dist/helpers';
 import { Modal } from 'react-bootstrap';
 import { Toot } from "fedialgo";
 
@@ -21,6 +22,13 @@ export default function AttachmentsModal(
 ) {
     const media = toot.mediaAttachments[mediaInspectionModalIdx];
     const shouldShowModal = mediaInspectionModalIdx >= 0;
+
+    toot.mediaAttachments.forEach((media, i) => {
+        if (!MEDIA_TYPES.includes(media.type)) {
+            console.warn(`Unknown media type: '${media.type}' for toot:`, status);
+        }
+    });
+
 
     return (
         <Modal
