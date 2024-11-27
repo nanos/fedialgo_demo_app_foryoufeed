@@ -175,6 +175,7 @@ export default function Feed() {
         if (algorithm) {
             const newFeed = await algorithm.weightTootsInFeed(newWeights);  // Has side effect of updating WeightsStore
             setFeed(newFeed);
+            algorithm.logFeedInfo()
         } else {
             console.warn(`'algorithm' variable not set, can't updateWeights()!`);
         }
@@ -211,8 +212,6 @@ export default function Feed() {
 
         return true;
     });
-
-    console.log(`timeline toots: `, feed.map(condensedStatus));
 
     if (feed.length != filteredFeed.length) {
         console.log(`filtered timeline toots: `, filteredFeed.map(condensedStatus));
