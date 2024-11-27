@@ -29,7 +29,6 @@ export default function AttachmentsModal(
         }
     });
 
-
     return (
         <Modal
             fullscreen={'xxl-down'}

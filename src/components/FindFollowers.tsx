@@ -54,7 +54,7 @@ export default function FindFollowers({ api, user }: { api: mastodon.rest.Client
                                     <Card className="h-100 shadow-sm">
                                         <Card.Body className="d-flex flex-column">
                                             <a
-                                                href={`https://${user.server}/@${suggestion.account.acct}`}
+                                                href={`${user.server}/@${suggestion.account.acct}`}
                                                 rel="noreferrer"
                                                 style={{ textDecoration: 'none' }}
                                                 target="_blank"

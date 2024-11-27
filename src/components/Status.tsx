@@ -442,7 +442,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     <div
                                         className="media-gallery__item"
                                         key={i}
-                                        style={{ inset: "auto", width: "100%", height: "100%" }}
+                                        style={{ height: "100%", inset: "auto", width: "100%" }}
                                     >
                                         <canvas
                                             className="media-gallery__preview media-gallery__preview--hidden"
