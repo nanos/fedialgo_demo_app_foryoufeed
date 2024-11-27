@@ -213,6 +213,8 @@ export default function Feed() {
         return true;
     });
 
+    console.log(`timeline toots: `, feed.map(condensedStatus));
+
     if (feed.length != filteredFeed.length) {
         console.log(`filtered timeline toots: `, filteredFeed.map(condensedStatus));
     }
