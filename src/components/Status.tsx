@@ -14,7 +14,7 @@ import "../birdUI.css";
 import "../default.css";
 import AttachmentsModal from './AttachmentsModal';
 import ScoreModal from './ScoreModal';
-import { timeString } from '../helpers/string_helpers';
+import { scoreString, timeString } from '../helpers/string_helpers';
 import { User } from '../types';
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
@@ -481,7 +481,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             status.favouritesCount,
                         )}
 
-                        {makeButton(ICON_BUTTON_CLASS, "Score", showScore)}
+                        {makeButton(ICON_BUTTON_CLASS, "Score", showScore, scoreString(status?.value))}
                         {makeButton(ICON_BUTTON_CLASS, "Open", followUri)}
                     </div>
                 </div>
