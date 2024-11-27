@@ -108,7 +108,7 @@ export default function WeightSetter({
         );
     };
 
-    const settingCheckboxes = Object.keys(settings).sort().map((settingName) => settingCheckbox(settingName));
+    const settingCheckboxes = Object.keys(settings).sort().map((setting) => settingCheckbox(setting));
     const languageCheckboxes = Object.keys(languages).sort().map((lang) => languageCheckbox(lang));
 
     return (
