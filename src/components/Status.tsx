@@ -201,6 +201,10 @@ export default function StatusComponent(props: StatusComponentProps) {
             const updateStateFxn = actionName == FAVORITE ? setFavourited : setReblogged;
             console.log(`${actionName}() toot (startingState: ${startingState}, count: ${startingCount}): `, status);
 
+            // Optimistically update the GUI (we will reset to original state if the server call fails later)
+            updateStateFxn(newState);
+            status[actionWords.booleanName] = newState;
+
             if (newState) {
                 status[actionWords.countName] = startingCount + 1;
             } else {
@@ -209,11 +213,8 @@ export default function StatusComponent(props: StatusComponentProps) {
 
             (async () => {
                 try {
-                    // Optimistically update the GUI but reset to original state if the server call fails
                     const status_ = await resolve(status);
                     const id = status_.id;
-                    status[actionWords.booleanName] = newState;
-                    updateStateFxn(newState);
                     // favourited ? console.log("skipping fav()") : weightAdjust(status.scores);  // TODO: does learning weights really work?
 
                     if (actionName == FAVORITE) {
