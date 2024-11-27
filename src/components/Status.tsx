@@ -358,7 +358,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                                 style={{ color: "lightblue", padding: "0px 5px" }}
                                                 title={f.value.replace(/<[^>]*>?/gm, '')}
                                             >
-                                                <i className="fa fa-check-circle" aria-hidden="true" />
+                                                <i aria-hidden="true" className="fa fa-check-circle" />
                                             </span>
                                         ))}
                                     </strong>
