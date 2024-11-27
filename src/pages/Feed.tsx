@@ -29,6 +29,7 @@ const DEFAULT_SETTINGS = {
     includeReposts: true,
     includeReplies: true,
     includeTrendingToots: true,
+    onlyFollowedHashtags: false,
     onlyLinks: false,
 };
 
@@ -124,9 +125,7 @@ export default function Feed() {
         return algo;
     };
 
-    // Load toots and all the rest of the data from long term storage
-    // TODO: does this actually work? It doesn't seem to call setFeed()...
-    //       original: https://github.com/pkreissel/foryoufeed/blob/9c37e7803c63bb3f4162b93aff3853894e734bc7/src/pages/Feed.tsx#L65
+    // Called if timeline feed was loaded from persistent storage
     const restoreFeedCache = async () => {
         console.log(`restoreFeedCache() called with user ID ${user?.id}...`);
         const algo = await getUserAlgo();
@@ -141,6 +140,7 @@ export default function Feed() {
         console.log(`About to call algo.getFeed(). 'feed' state currently contains ${feed.length} toots...`);
         const timelineFeed = await algo.getFeed();
         setFeed(timelineFeed);
+        algo.logFeedInfo()
 
         // Get all the unique languages that show up in the feed
         const feedLanguages = timelineFeed.reduce((languages, toot) => {
@@ -201,26 +201,15 @@ export default function Feed() {
             return false;
         } else if (!settings.includeReplies && status.inReplyToId) {
             return false;
+        } else if (settings.onlyFollowedHashtags && !status.followedTags?.length) {
+            return false;
         }
 
         return true;
     });
 
-    // Log the feed to the console
-    if (feed.length > 1) {
-        console.log(`timeline toots (condensed): `, feed.map(condensedStatus));
-
-        if (feed.length != filteredFeed.length) {
-            console.log(`filtered timeline toots: `, filteredFeed.map(condensedStatus));
-        }
-
-        const appCounts = feed.reduce((counts, toot) => {
-            const app = toot.application?.name || "unknown";
-            counts[app] = (counts[app] || 0) + 1;
-            return counts;
-        }, {});
-
-        console.debug(`feed toots posted by application counts: `, appCounts);
+    if (feed.length != filteredFeed.length) {
+        console.log(`filtered timeline toots: `, filteredFeed.map(condensedStatus));
     }
 
     return (
