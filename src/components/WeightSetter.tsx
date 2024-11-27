@@ -50,14 +50,12 @@ export default function WeightSetter({
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
         labelExtra?: string
     ) => {
-        labelExtra = labelExtra ? ` (${labelExtra})` : '';
-
         return (
             <Form.Check
                 checked={isChecked}
                 id={label}
                 key={label}
-                label={label + labelExtra}
+                label={label + (labelExtra ? ` (${labelExtra})` : '')}
                 onChange={onChange}
                 type="checkbox"
             />

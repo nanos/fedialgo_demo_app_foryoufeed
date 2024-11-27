@@ -22,12 +22,31 @@ export default function AttachmentsModal(
 ) {
     const media = toot.mediaAttachments[mediaInspectionModalIdx];
     const shouldShowModal = mediaInspectionModalIdx >= 0;
+    let element;
 
+    // Check for weird media types
     toot.mediaAttachments.forEach((media, i) => {
         if (!MEDIA_TYPES.includes(media.type)) {
             console.warn(`Unknown media type: '${media.type}' for toot:`, status);
         }
     });
+
+    if (media?.type === "image") {
+        element = (
+            <img
+                alt={media?.description ?? ""}
+                src={media?.url}
+                width={"100%"}
+            />
+        );
+    } else if (media?.type === "video") {
+        element = (
+            <video width={"100%"} controls>
+                <source src={media?.url} type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+        );
+    }
 
     return (
         <Modal
@@ -45,18 +64,7 @@ export default function AttachmentsModal(
             <Modal.Body>
                 {shouldShowModal &&
                     <div>
-                        {media?.type === "image" &&
-                            <img
-                                alt={media?.description ?? ""}
-                                src={media?.url}
-                                width={"100%"}
-                            />}
-
-                        {media?.type === "video" &&
-                            <video width={"100%"} controls>
-                                <source src={media?.url} type="video/mp4" />
-                                Your browser does not support the video tag.
-                            </video>}
+                        {element}
                     </div>}
             </Modal.Body>
         </Modal>
