@@ -16,7 +16,7 @@ import { DEFAULT_TIME_DECAY, TIME_DECAY, ScoresType, TheAlgorithm } from "fedial
 import { CountsType, settingsType } from "../types";
 import { useAuth } from '../hooks/useAuth';
 
-const NO_LANGUAGE = '[not specified]';
+export const NO_LANGUAGE = '[not specified]';
 const TIME_DECAY_DESCRIPTION = "Higher values means toots are demoted sooner";
 
 interface WeightSetterProps {
@@ -43,15 +43,21 @@ export default function WeightSetter({
     const [selectedLang, setSelectedLanguage] = usePersistentState<string[]>([], user.id + "selectedLangs");
     // Remove TIME_DECAY so we can move it to the top of the panel manually
     const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY).sort();
-    console.log(`Languages:`, languages)
 
-    const makeCheckbox = (isChecked: boolean, label: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void) => {
+    const makeCheckbox = (
+        isChecked: boolean,
+        label: string,
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+        labelExtra?: string
+    ) => {
+        labelExtra = labelExtra ? ` (${labelExtra})` : '';
+
         return (
             <Form.Check
                 checked={isChecked}
                 id={label}
                 key={label}
-                label={label}
+                label={label + labelExtra}
                 onChange={onChange}
                 type="checkbox"
             />
@@ -71,25 +77,25 @@ export default function WeightSetter({
     };
 
     const languageCheckbox = (languageCode: string) => {
-        // const label = languageCode.toString() + ' (' + languages[languageCode] + ' toots)';
-        const label = `${languageCode} (${languages[languageCode]} toots)`;
-        console.log(`label language:`, label);
+        const lang = languageCode || NO_LANGUAGE;
 
         return makeCheckbox(
-            selectedLang.includes(languageCode),
-            label,
+            selectedLang.includes(lang),
+            lang,
             (e) => {
                 const newLang = [...selectedLang];
 
                 if (e.target.checked) {
-                    newLang.push(languageCode);
+                    newLang.push(lang);
                 } else {
-                    newLang.splice(newLang.indexOf(languageCode), 1);
+                    newLang.splice(newLang.indexOf(lang), 1);
                 }
 
+                console.log(`newLang:`, newLang);
                 setSelectedLanguage(newLang);
                 setSelectedLanguages(newLang);
-            }
+            },
+            `${languages[languageCode]} toots`
         );
     };
 

@@ -6,7 +6,7 @@ export interface settingsType {
 };
 
 export interface CountsType {
-    [key: string | null]: number;
+    [key: string]: number;
 };
 
 export interface App extends mastodon.v1.Client {

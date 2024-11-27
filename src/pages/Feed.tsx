@@ -13,7 +13,7 @@ import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
 import useOnScreen from "../hooks/useOnScreen";
-import WeightSetter from "../components/WeightSetter";
+import WeightSetter, { NO_LANGUAGE} from "../components/WeightSetter";
 import { CountsType, settingsType } from "../types";
 import { useAuth } from "../hooks/useAuth";
 
@@ -141,15 +141,17 @@ export default function Feed() {
         const timelineFeed = await algo.getFeed();
         setFeed(timelineFeed);
         algo.logFeedInfo()
-        const languageCounts = {};
 
         // Get all the unique languages that show up in the feed
-        const feedLanguages: CountsType = timelineFeed.reduce((languages, toot) => {
-            languageCounts[toot.language] = (languageCounts[toot.language] || 0) + 1;
-            return languageCounts;
-        }, [])
+        const feedLanguages = timelineFeed.reduce((langCounts, toot) => {
+            const tootLanguage = toot.language || NO_LANGUAGE;
+            langCounts[tootLanguage] = (langCounts[tootLanguage] || 0) + 1;
+            return langCounts;
+        }, {} as CountsType)
 
-        setLanguagesInFeed(languageCounts);
+        console.log(`feedLanguages: `, feedLanguages);
+        console.log(`null in feedLanguages: `, feedLanguages[null]);
+        setLanguagesInFeed(feedLanguages);
     };
 
     // Pull more toots to display from our local cached and sorted toot feed
@@ -187,14 +189,16 @@ export default function Feed() {
 
     // Strip out toots we don't want to show to the user for various reasons
     const filteredFeed = feed.filter((status: Toot) => {
+        const tootLanguage = status.language || NO_LANGUAGE;
+
         if (settings.onlyLinks && !(status.card || status.reblog?.card)) {
             console.debug(`Removing ${status.uri} from feed because it's not a link and onlyLinks is enabled...`);
             return false;
         } else if (status.reblog && !settings.includeReposts) {
             console.debug(`Removing reblogged status ${status.uri} from feed...`);
             return false;
-        } else if (filteredLanguages.length > 0 && !(status.language in filteredLanguages)) {
-            console.debug(`Removing toot ${status.uri} w/invalid language ${status.language} (valid langs: ${JSON.stringify(filteredLanguages)}).`);
+        } else if (filteredLanguages.length > 0 && !filteredLanguages.includes(tootLanguage)) {
+            console.debug(`Removing toot ${status.uri} w/invalid language ${tootLanguage}. valid langs:`, filteredLanguages);
             return false;
         } else if (!settings.includeTrendingToots && status.scores[TRENDING_TOOTS]) {
             return false;
