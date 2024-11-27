@@ -41,50 +41,52 @@ export default function WeightSetter({
 }: WeightSetterProps) {
     const { user } = useAuth();
     const [selectedLang, setSelectedLanguage] = usePersistentState<string[]>([], user.id + "selectedLangs");
+    // Remove TIME_DECAY so we can move it to the top of the panel manually
     const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY).sort();
 
-    const settingCheckbox = (settingName: string) => {
+    const makeCheckbox = (isChecked: boolean, label: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void) => {
         return (
             <Form.Check
-                checked={settings[settingName]}
-                disabled={false}
-                id={settingName}
-                key={settingName}
-                label={settingName}
-                onChange={(e) => {
-                    const newSettings = { ...settings };
-                    newSettings[settingName] = e.target.checked;
-                    updateSettings(newSettings);
-                }}
+                checked={isChecked}
+                id={label}
+                key={label}
+                label={label}
+                onChange={onChange}
                 type="checkbox"
             />
+        );
+    };
+
+    const settingCheckbox = (settingName: string) => {
+        return makeCheckbox(
+            settings[settingName],
+            settingName,
+            (e) => {
+                const newSettings = { ...settings };
+                newSettings[settingName] = e.target.checked;
+                updateSettings(newSettings);
+            }
         );
     };
 
     const languageCheckbox = (languageCode: string) => {
         const lang = languageCode || NO_LANGUAGE;
 
-        return (
-            <Form.Check
-                checked={selectedLang.includes(languageCode)}
-                disabled={false}
-                id={lang}
-                key={lang}
-                label={lang}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    const newLang = [...selectedLang];
+        return makeCheckbox(
+            selectedLang.includes(languageCode),
+            lang,
+            (e) => {
+                const newLang = [...selectedLang];
 
-                    if (e.target.checked) {
-                        newLang.push(languageCode);
-                    } else {
-                        newLang.splice(newLang.indexOf(languageCode), 1);
-                    }
+                if (e.target.checked) {
+                    newLang.push(languageCode);
+                } else {
+                    newLang.splice(newLang.indexOf(languageCode), 1);
+                }
 
-                    setSelectedLanguage(newLang);
-                    setSelectedLanguages(newLang);
-                }}
-                type="checkbox"
-            />
+                setSelectedLanguage(newLang);
+                setSelectedLanguages(newLang);
+            }
         );
     };
 
