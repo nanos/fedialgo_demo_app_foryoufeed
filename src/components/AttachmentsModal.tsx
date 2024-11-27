@@ -31,7 +31,7 @@ export default function AttachmentsModal(
         >
             <Modal.Header closeButton>
                 <Modal.Title>
-                    {parse(toot.content)[100]}
+                    {parse(toot.content)[100]}         {/* TODO: WTF? */}
                 </Modal.Title>
             </Modal.Header>
 
