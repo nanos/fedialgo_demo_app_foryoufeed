@@ -35,6 +35,17 @@ export default function Footer() {
 
                         <span className="p-2"> Follow me on Mastodon</span>
                     </Nav.Link>
+
+                    <Nav.Link href="https://universeodon.com/@cryptadamist" style={{ color: "white" }}>
+                        <img
+                            alt="Chaos.social Logo"
+                            className="d-inline-block align-top"
+                            src="https://media.universeodon.com/accounts/avatars/109/363/179/904/598/380/original/eecdc2393e75e8bf.jpg"
+                            style={{ height: 20, width: 20, borderRadius: 5 }}
+                        />
+
+                        <span className="p-2"> Follow me on Mastodon</span>
+                    </Nav.Link>
                 </Nav>
             </Container>
         </Navbar>
