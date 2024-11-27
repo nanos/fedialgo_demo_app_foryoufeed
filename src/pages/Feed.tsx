@@ -150,7 +150,6 @@ export default function Feed() {
         }, {} as CountsType)
 
         console.log(`feedLanguages: `, feedLanguages);
-        console.log(`null in feedLanguages: `, feedLanguages[null]);
         setLanguagesInFeed(feedLanguages);
     };
 
