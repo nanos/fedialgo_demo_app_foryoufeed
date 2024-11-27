@@ -14,7 +14,7 @@ import FullPageIsLoading from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
-import { settingsType } from "../types";
+import { CountsType, settingsType } from "../types";
 import { useAuth } from "../hooks/useAuth";
 
 const DEFAULT_NUM_TOOTS = 20;
@@ -43,7 +43,7 @@ export default function Feed() {
     const [error, setError] = useState<string>("");
     const [filteredLanguages, setFilteredLanguages] = useState<string[]>([]); //languages to filter
     const [isLoading, setIsLoading] = useState<boolean>(true);  // true if page is still loading
-    const [languagesInFeed, setLanguagesInFeed] = useState<string[]>([]); //languages that show up at least once in the feed toots
+    const [languagesInFeed, setLanguagesInFeed] = useState<CountsType>({}); //languages that show up at least once in the feed toots
     const [userWeights, setUserWeights] = useState<ScoresType>({});  // weights for each factor
 
     // Persistent state variables
@@ -141,14 +141,15 @@ export default function Feed() {
         const timelineFeed = await algo.getFeed();
         setFeed(timelineFeed);
         algo.logFeedInfo()
+        const languageCounts = {};
 
         // Get all the unique languages that show up in the feed
-        const feedLanguages = timelineFeed.reduce((languages, toot) => {
-            if (!languages.includes(toot.language)) languages.push(toot.language);
-            return languages;
+        const feedLanguages: CountsType = timelineFeed.reduce((languages, toot) => {
+            languageCounts[toot.language] = (languageCounts[toot.language] || 0) + 1;
+            return languageCounts;
         }, [])
 
-        setLanguagesInFeed(feedLanguages.sort());
+        setLanguagesInFeed(languageCounts);
     };
 
     // Pull more toots to display from our local cached and sorted toot feed
@@ -192,7 +193,7 @@ export default function Feed() {
         } else if (status.reblog && !settings.includeReposts) {
             console.debug(`Removing reblogged status ${status.uri} from feed...`);
             return false;
-        } else if (filteredLanguages.length > 0 && !filteredLanguages.includes(status.language)) {
+        } else if (filteredLanguages.length > 0 && !(status.language in filteredLanguages)) {
             console.debug(`Removing toot ${status.uri} w/invalid language ${status.language} (valid langs: ${JSON.stringify(filteredLanguages)}).`);
             return false;
         } else if (!settings.includeTrendingToots && status.scores[TRENDING_TOOTS]) {

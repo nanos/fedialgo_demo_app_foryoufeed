@@ -13,7 +13,7 @@ import Row from 'react-bootstrap/Row';
 import WeightSlider from './WeightSlider';
 import { DEFAULT_TIME_DECAY, TIME_DECAY, ScoresType, TheAlgorithm } from "fedialgo";
 
-import { settingsType } from "../types";
+import { CountsType, settingsType } from "../types";
 import { useAuth } from '../hooks/useAuth';
 
 const NO_LANGUAGE = '[not specified]';
@@ -21,7 +21,7 @@ const TIME_DECAY_DESCRIPTION = "Higher values means toots are demoted sooner";
 
 interface WeightSetterProps {
     algorithm: TheAlgorithm,
-    languages: string[],
+    languages: CountsType,
     setSelectedLanguages: (languages: string[]) => void,
     settings: settingsType,
     updateSettings: (settings: settingsType) => void,
@@ -43,6 +43,7 @@ export default function WeightSetter({
     const [selectedLang, setSelectedLanguage] = usePersistentState<string[]>([], user.id + "selectedLangs");
     // Remove TIME_DECAY so we can move it to the top of the panel manually
     const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY).sort();
+    console.log(`Languages:`, languages)
 
     const makeCheckbox = (isChecked: boolean, label: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void) => {
         return (
@@ -70,11 +71,13 @@ export default function WeightSetter({
     };
 
     const languageCheckbox = (languageCode: string) => {
-        const lang = languageCode || NO_LANGUAGE;
+        // const label = languageCode.toString() + ' (' + languages[languageCode] + ' toots)';
+        const label = `${languageCode} (${languages[languageCode]} toots)`;
+        console.log(`label language:`, label);
 
         return makeCheckbox(
             selectedLang.includes(languageCode),
-            lang,
+            label,
             (e) => {
                 const newLang = [...selectedLang];
 
@@ -102,7 +105,7 @@ export default function WeightSetter({
     };
 
     const settingCheckboxes = Object.keys(settings).sort().map((settingName) => settingCheckbox(settingName));
-    const languageCheckboxes = languages.sort().map((lang) => languageCheckbox(lang));
+    const languageCheckboxes = Object.keys(languages).sort().map((lang) => languageCheckbox(lang));
 
     return (
         <Accordion>
@@ -169,6 +172,7 @@ export default function WeightSetter({
     );
 };
 
+
 const evenNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 != 0);
 const oddNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 == 0);
 
@@ -179,7 +183,6 @@ const headerFont = {
     marginBottom: "15px",
     textDecoration: "underline",
 };
-
 
 const roundedBox = {
     borderRadius: "25px",

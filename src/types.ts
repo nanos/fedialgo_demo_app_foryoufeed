@@ -5,6 +5,10 @@ export interface settingsType {
     [key: string]: boolean;
 };
 
+export interface CountsType {
+    [key: string | null]: number;
+};
+
 export interface App extends mastodon.v1.Client {
     redirectUri: string;
     [key: string]: unknown;
