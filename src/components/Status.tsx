@@ -165,10 +165,12 @@ export default function StatusComponent(props: StatusComponentProps) {
         );
     };
 
+    // TODO: I guess this is supposed to resolve foreign server URIs to local (or vice versa)?
     const resolve = async (status: Toot): Promise<Toot> => {
         if (status.uri.includes(props.user.server)) {
             return status;
         } else {
+            // v2 search docs: https://docs.joinmastodon.org/methods/search/
             const res = await masto.v2.search.fetch({ q: status.uri, resolve: true });
             return res.statuses[0];
         }
@@ -192,20 +194,40 @@ export default function StatusComponent(props: StatusComponentProps) {
     };
 
     // Favourite a post
-    const fav = async () => {
-        console.log(`fav() toot: `, status);
-        const status_ = await resolve(status);
-        favourited ? console.log("skipping fav()") : weightAdjust(status.scores);  // TODO: does learning weights really work?
-        const id = status_.id;
+    const favourite = async () => {
+        const startingState = favourited;
+        const newState = !favourited;
+        console.log(`fav() toot (startingState: ${startingState}): `, status);
+
+        // Optimistically update the GUI but reset to original state if the server call fails
+        status.favourited = newState;
+        setFavourited(newState);
+
+        if (newState) {
+            status.favouritesCount = (status.favouritesCount || 0) + 1;
+        } else {
+            // Avoid favouritesCount going below 0
+            status.favouritesCount = status.favouritesCount ? (status.favouritesCount - 1) : 0;
+        }
 
         (async () => {
-            if (favourited) {
-                await masto.v1.statuses.$select(id).unfavourite();
-            } else {
-                await masto.v1.statuses.$select(id).favourite();
-            }
+            try {
+                const status_ = await resolve(status);
+                favourited ? console.log("skipping fav()") : weightAdjust(status.scores);  // TODO: does learning weights really work?
+                const id = status_.id;
 
-            setFavourited(!favourited);
+                if (newState) {
+                    await masto.v1.statuses.$select(id).favourite();
+                } else {
+                    await masto.v1.statuses.$select(id).unfavourite();
+                }
+
+                console.log(`Changed favorite bool to ${newState}`);
+            } catch {
+                console.error(`Failed to favourite or unfavourite toot!`);
+                setFavourited(startingState);
+                _setError("Failed to favourite or unfavourite toot!");
+            }
         })();
     };
 
@@ -441,7 +463,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         {makeButton(
                             ACTION_ICON_BASE_CLASS + (favourited ? " active activate" : " deactivate"),
                             "Favorite",
-                            fav,
+                            favourite,
                             status.favouritesCount,
                         )}
 
