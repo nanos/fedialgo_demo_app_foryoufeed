@@ -102,8 +102,8 @@ export default function WeightSetter({
 
         return (
             <Row>
-                <Col>{oddNumbered(list)}</Col>
-                {list.length > 1 && <Col>{evenNumbered(list)}</Col>}
+                <Col>{evenNumbered(list)}</Col>
+                {list.length > 1 && <Col>{oddNumbered(list)}</Col>}
             </Row>
         );
     };
@@ -177,8 +177,8 @@ export default function WeightSetter({
 };
 
 
-const evenNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 != 0);
-const oddNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 == 0);
+const evenNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 == 0);
+const oddNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 != 0);
 
 const headerFont = {
     fontFamily: "Tahoma, Geneva, sans-serif",
