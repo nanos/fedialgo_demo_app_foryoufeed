@@ -335,7 +335,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <div title={status.account.acct} className="status__display-name">
                             <div className="status__avatar">
                                 <div className="account__avatar" style={{ width: "46px", height: "46px" }}>
-                                    <LazyLoadImage src={status.account.avatar} alt="{status.account.acct}" />
+                                    <LazyLoadImage src={status.account.avatar} alt={`${status.account.acct}`} />
                                 </div>
                             </div>
 
@@ -432,7 +432,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     );
                                 } else {
                                     videoTag = (
-                                        <video controls height={"100%"} loop playsInline>
+                                        <video controls height={"100%"} playsInline>
                                             {sourceTag}
                                         </video>
                                     );
