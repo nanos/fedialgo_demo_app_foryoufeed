@@ -22,6 +22,21 @@ const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
 const IMAGES_HEIGHT = 314;
 const VIDEO_HEIGHT = IMAGES_HEIGHT + 100;
 
+const FAVORITE = 'favourite';
+const RETOOT = 'reblog';
+
+const ACTION_NAMES = {
+    [FAVORITE]: {
+        booleanName: 'favourited',
+        countName: 'favouritesCount',
+    },
+    [RETOOT]: {
+        booleanName: 'reblogged',
+        countName: 'reblogsCount',
+    }
+};
+
+
 const BUTTON_STYLE = {
     fontSize: "18px",
     height: "23.142857px",
@@ -176,59 +191,60 @@ export default function StatusComponent(props: StatusComponentProps) {
         }
     };
 
-    // Retoot a post
-    const reblog = async () => {
-        const status_ = await resolve(status);
-        reblogged ? console.log("skipping reblog()") : weightAdjust(status.scores);  // TODO: does learning weights really work?
-        const id = status_.id;
+    // Returns a function that's called when state changes for faves and retoots
+    const performAction = (actionName: string) => {
+        return () => {
+            const actionWords = ACTION_NAMES[actionName];
+            const startingCount = status[actionWords.countName] || 0;
+            const startingState = !!status[actionWords.booleanName];
+            const newState = !startingState;
+            const updateStateFxn = actionName == FAVORITE ? setFavourited : setReblogged;
+            console.log(`${actionName}() toot (startingState: ${startingState}, count: ${startingCount}): `, status);
 
-        (async () => {
-            if (reblogged) {
-                await masto.v1.statuses.$select(id).unreblog();
+            if (newState) {
+                console.log(`Incrementing ${actionWords.countName} (current value: ${status[actionWords.countName]})`);
+                status[actionWords.countName] = startingCount + 1;
             } else {
-                await masto.v1.statuses.$select(id).reblog();
+                // Avoid count going below 0
+                status[actionWords.countName] = startingCount ? (startingCount - 1) : 0;
             }
 
-            setReblogged(!reblogged);
-        })();
-    };
+            (async () => {
+                try {
+                    const status_ = await resolve(status);
+                    const id = status_.id;
+                    // Optimistically update the GUI but reset to original state if the server call fails
+                    status[actionWords.booleanName] = newState;
+                    updateStateFxn(newState);
+                    // favourited ? console.log("skipping fav()") : weightAdjust(status.scores);  // TODO: does learning weights really work?
 
-    // Favourite a post
-    const favourite = async () => {
-        const startingState = favourited;
-        const newState = !favourited;
-        console.log(`fav() toot (startingState: ${startingState}): `, status);
+                    if (actionName == FAVORITE) {
+                        if (newState) {
+                            await masto.v1.statuses.$select(id).favourite();
+                        } else {
+                            await masto.v1.statuses.$select(id).unfavourite();
+                        }
+                    } else if (actionName == RETOOT) {
+                        if (newState) {
+                            await masto.v1.statuses.$select(id).reblog();
+                        } else {
+                            await masto.v1.statuses.$select(id).unreblog();
+                        }
+                    } else {
+                        throw new Error(`Unknown actionName: ${actionName}`);
+                    }
 
-        // Optimistically update the GUI but reset to original state if the server call fails
-        status.favourited = newState;
-        setFavourited(newState);
-
-        if (newState) {
-            status.favouritesCount = (status.favouritesCount || 0) + 1;
-        } else {
-            // Avoid favouritesCount going below 0
-            status.favouritesCount = status.favouritesCount ? (status.favouritesCount - 1) : 0;
-        }
-
-        (async () => {
-            try {
-                const status_ = await resolve(status);
-                favourited ? console.log("skipping fav()") : weightAdjust(status.scores);  // TODO: does learning weights really work?
-                const id = status_.id;
-
-                if (newState) {
-                    await masto.v1.statuses.$select(id).favourite();
-                } else {
-                    await masto.v1.statuses.$select(id).unfavourite();
+                    console.log(`Successfully changed ${actionName} bool to ${newState}`);
+                } catch (error) {
+                    const msg = `Failed to ${actionName} toot!`;
+                    console.error(`${msg} Resetting count to ${status[actionWords.countName]}`, error);
+                    updateStateFxn(startingState);
+                    status[actionWords.booleanName] = startingState;
+                    status[actionWords.countName] = startingCount;
+                    _setError(msg);
                 }
-
-                console.log(`Changed favorite bool to ${newState}`);
-            } catch {
-                console.error(`Failed to favourite or unfavourite toot!`);
-                setFavourited(startingState);
-                _setError("Failed to favourite or unfavourite toot!");
-            }
-        })();
+            })();
+        };
     };
 
     const followUri = async (e: React.MouseEvent) => {
@@ -456,14 +472,14 @@ export default function StatusComponent(props: StatusComponentProps) {
                         {makeButton(
                             ACTION_ICON_BASE_CLASS + (reblogged ? " active activate" : " deactivate"),
                             "Retoot",
-                            reblog,
+                            performAction(RETOOT),
                             status.reblogsCount,
                         )}
 
                         {makeButton(
                             ACTION_ICON_BASE_CLASS + (favourited ? " active activate" : " deactivate"),
                             "Favorite",
-                            favourite,
+                            performAction(FAVORITE),
                             status.favouritesCount,
                         )}
 
