@@ -22,7 +22,7 @@ export default function AttachmentsModal(
 ) {
     const media = toot.mediaAttachments[mediaInspectionModalIdx];
     const shouldShowModal = mediaInspectionModalIdx >= 0;
-    let element;
+    let element: JSX.Element;
 
     // Check for weird media types
     toot.mediaAttachments.forEach((media, i) => {
