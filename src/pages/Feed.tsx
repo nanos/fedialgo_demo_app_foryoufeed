@@ -44,11 +44,11 @@ export default function Feed() {
     const [error, setError] = useState<string>("");
     const [filteredLanguages, setFilteredLanguages] = useState<string[]>([]); //languages to filter
     const [isLoading, setIsLoading] = useState<boolean>(true);  // true if page is still loading
-    const [languagesInFeed, setLanguagesInFeed] = useState<CountsType>({}); //languages that show up at least once in the feed toots
+    const [languagesInFeed, setLanguagesInFeed] = useState<CountsType>({}); // languages that show up at least once in the feed toots
     const [userWeights, setUserWeights] = useState<ScoresType>({});  // weights for each factor
+    const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
 
-    // Persistent state variables  // TODO: may need to get rid of this because it's using up local storage space?
-    const [feed, setFeed] = usePersistentState<Toot[]>([], user.id + "feed"); //feed to display
+    // Persistent state variables
     const [numDisplayedToots, setNumDisplayedToots] = usePersistentState<number>(DEFAULT_NUM_TOOTS, user.id + "records"); //how many toots to show
     const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
     // TODO: changing settings by clicking the checkbox in the GUI doesn't seem to work

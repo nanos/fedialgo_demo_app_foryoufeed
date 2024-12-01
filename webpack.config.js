@@ -58,7 +58,7 @@ module.exports = {
         new WorkboxWebpackPlugin.GenerateSW({
             // WorkboxWebpackPlugin docs: https://developer.chrome.com/docs/workbox/modules/workbox-webpack-plugin/
             clientsClaim: true,
-            maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+            maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
             skipWaiting: true,
         }),
     ].filter(Boolean),
