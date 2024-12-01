@@ -85,6 +85,8 @@ Most (all?) browsers will allow you to clear all the "site data" (cookies and ca
 # Contributing
 You can install the local `fedialgo` package by running `npm link`  in the `fedialgo` project dir and then`npm link fedialgo` in this project's dir _or_ you can do that kind of thing manually by running `npm install path/to/local/fedialgo` in this repo's dir but either way in order to pick up any code changes from `fedialgo` you will have to run `npm run build` in the `fedialgo` package dir. (TODO: why?)
 
+Assuming you check both `fedialgo` and this repo out to the same directory there's a helper script to link the local repo in [`link_local_fedialgo.sh`](./link_local_fedialgo.sh).
+
 #### Code Notes
 * There's tons of info on how the scoring and weighting of toots is being done in your browser's javascript debug console logs.
 * The interesting stuff that actually handles the feed is in the [`Feed.tsx`](src/pages/Feed.tsx) file.
