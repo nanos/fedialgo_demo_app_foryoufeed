@@ -120,7 +120,7 @@ export default function Feed() {
             return null;
         }
 
-        const algo = new TheAlgorithm(api, currentUser);
+        const algo = await TheAlgorithm.create(api, currentUser);
         setAlgorithm(algo);
         setUserWeights(await algo.getUserWeights());
         return algo;
@@ -150,7 +150,6 @@ export default function Feed() {
             return langCounts;
         }, {} as CountsType)
 
-        console.log(`feedLanguages: `, feedLanguages);
         setLanguagesInFeed(feedLanguages);
     };
 
@@ -215,7 +214,7 @@ export default function Feed() {
     });
 
     if (feed.length != filteredFeed.length) {
-        console.log(`filtered timeline toots: `, filteredFeed.map(toot => toot.condensedStatus()));
+        console.log(`filtered timeline toots: `, filteredFeed);
     }
 
     return (
