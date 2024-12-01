@@ -200,9 +200,9 @@ export default function Feed() {
         } else if (filteredLanguages.length > 0 && !filteredLanguages.includes(tootLanguage)) {
             console.debug(`Removing toot ${status.uri} w/invalid language ${tootLanguage}. valid langs:`, filteredLanguages);
             return false;
-        } else if (!settings.includeTrendingToots && status.scores[TRENDING_TOOTS]) {
+        } else if (!settings.includeTrendingToots && status.rawScores[TRENDING_TOOTS]) {
             return false;
-        } else if (!settings.includeFollowedAccounts && !status.scores[TRENDING_TOOTS]) {
+        } else if (!settings.includeFollowedAccounts && !status.rawScores[TRENDING_TOOTS]) {
             return false;
         } else if (!settings.includeReplies && status.inReplyToId) {
             return false;

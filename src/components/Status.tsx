@@ -72,7 +72,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     if (props.status.reblog) {
         status = props.status.reblog;
         status.reblogBy = props.status.account;
-        status.scores = props.status.scores;
+        status.rawScores = props.status.rawScores;
     }
 
     const [error, _setError] = React.useState<string>("");
@@ -208,7 +208,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 try {
                     const status_ = await resolve(status);
                     const id = status_.id;
-                    // favourited ? console.log("skipping fav()") : weightAdjust(status.scores);  // TODO: does learning weights really work?
+                    // favourited ? console.log("skipping fav()") : weightAdjust(status.rawScores);  // TODO: does learning weights really work?
 
                     if (actionName == FAVORITE) {
                         if (newState) {
@@ -243,7 +243,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         //Follow a link to another instance on the homeserver
         e.preventDefault()
         const status_ = await resolve(status);
-        weightAdjust(status.scores);  // TODO: does learning weights really work?
+        weightAdjust(status.rawScores);  // TODO: does learning weights really work?
         console.log(`followUri() status_: `, status_);
         //new tab:
         //window.open(props.user.server + "/@" + status_.account.acct + "/" + status_.id, '_blank');
@@ -381,7 +381,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <a
                             className="status-card compact"
                             href={status.card.url}
-                            onClick={() => weightAdjust(status.scores)}
+                            onClick={() => weightAdjust(status.rawScores)}
                             rel="noopener noreferrer"
                             target="_blank"
                         >
@@ -474,7 +474,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             status.favouritesCount,
                         )}
 
-                        {makeButton(ICON_BUTTON_CLASS, "Score", showScore, scoreString(status?.value))}
+                        {makeButton(ICON_BUTTON_CLASS, "Score", showScore, scoreString(status?.score))}
                         {makeButton(ICON_BUTTON_CLASS, "Open", followUri)}
                     </div>
                 </div>
