@@ -7,7 +7,6 @@
         "@fortawesome/fontawesome-svg-core": "^6.4.0",
         "@fortawesome/free-solid-svg-icons": "^6.4.0",
         "@fortawesome/react-fontawesome": "^0.2.0",
-        "@vercel/analytics": "^1.0.2",
         "bootstrap": "^5.2.3",
         "fedialgo": "github:michelcrypt4d4mus/fedialgo#002d505647de57d0aa44a6f9df0e9fd6402161e2",
         "html-react-parser": "^3.0.15",
@@ -19,8 +18,7 @@
         "react-lazy-load-image-component": "^1.6.2",
         "react-persistent-state": "^1.1.8",
         "react-router-dom": "^6.10.0",
-        "ufo": "^1.1.1",
-        "web-vitals": "^2.1.4"
+        "ufo": "^1.1.1"
     },
     "scripts": {
         "build": "webpack --mode production",
