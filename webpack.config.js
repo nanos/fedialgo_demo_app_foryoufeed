@@ -17,7 +17,7 @@ module.exports = {
         path: path.resolve(__dirname, "dist"),
     },
     resolve: {
-        extensions: [".tsx", ".ts", ".js"],
+        extensions: [".tsx", ".ts", ".js", ".json"],
     },
     devtool: "inline-source-map",
     mode: isDevelopment ? 'development' : 'production',

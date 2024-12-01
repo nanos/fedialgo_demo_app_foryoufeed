@@ -5,6 +5,8 @@ import parse from 'html-react-parser';
 import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 
+import * as emoji from 'node-emoji';
+// const emoji = require('node-emoji');
 import { imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
@@ -296,7 +298,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 className="status__display-name muted"
                                 href={`${localServer}/@${status.reblogBy.acct}`}
                             >
-                                <bdi><strong>{status.reblogBy.displayName}</strong></bdi>
+                                <bdi><strong>{emoji.emojify(status.reblogBy.displayName)}</strong></bdi>
                             </a> shared
                         </span>
                     </div>}
