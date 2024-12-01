@@ -73,7 +73,6 @@ export default function StatusComponent(props: StatusComponentProps) {
     if (props.status.reblog) {
         status = props.status.reblog;
         status.reblogBy = props.status.account;
-        status.rawScores = props.status.rawScores;
     }
 
     const [error, _setError] = React.useState<string>("");
@@ -246,7 +245,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const followUri = async (e: React.MouseEvent) => {
         e.preventDefault()
         const _resolvedStatus = await resolve(status);
-        weightAdjust(status.rawScores);  // TODO: does learning weights really work?
+        weightAdjust(status.scoreInfo?.rawScores);  // TODO: does learning weights really work?
         console.log(`followUri() _resolvedStatus: `, _resolvedStatus);
         const statusURL = `${localServer}/@${_resolvedStatus.account.acct}/${_resolvedStatus.id}`;
         // new tab:
@@ -386,7 +385,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <a
                             className="status-card compact"
                             href={status.card.url}
-                            onClick={() => weightAdjust(status.rawScores)}
+                            onClick={() => weightAdjust(status.scoreInfo?.rawScores)}
                             rel="noopener noreferrer"
                             target="_blank"
                         >
@@ -479,7 +478,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             status.favouritesCount,
                         )}
 
-                        {makeButton(ICON_BUTTON_CLASS, "Score", showScore, scoreString(status?.score))}
+                        {makeButton(ICON_BUTTON_CLASS, "Score", showScore, scoreString(status?.scoreInfo?.score))}
                         {makeButton(ICON_BUTTON_CLASS, "Open", followUri)}
                     </div>
                 </div>

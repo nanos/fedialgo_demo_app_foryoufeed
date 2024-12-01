@@ -5,7 +5,7 @@ import React from 'react';
 import { Modal } from 'react-bootstrap';
 
 import { describeAccount } from 'fedialgo/dist/helpers';
-import { extractScoreInfo, Toot } from 'fedialgo';
+import { Toot } from 'fedialgo';
 
 
 export default function ScoreModal({
@@ -36,7 +36,7 @@ export default function ScoreModal({
 
                 <p>
                     <code style={{whiteSpace: 'pre'}}>
-                        {JSON.stringify(extractScoreInfo(toot), null, 4)}
+                        {JSON.stringify(toot.scoreInfo, null, 4)}
                     </code>
                 </p>
             </Modal.Body>

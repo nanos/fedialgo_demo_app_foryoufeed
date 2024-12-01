@@ -7,7 +7,7 @@ import { usePersistentState } from "react-persistent-state";
 
 import Container from "react-bootstrap/esm/Container";
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
-import { TRENDING_TOOTS, condensedStatus, ScoresType, TheAlgorithm, Toot } from "fedialgo";
+import { TRENDING_TOOTS, ScoresType, TheAlgorithm, Toot } from "fedialgo";
 
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
@@ -200,9 +200,9 @@ export default function Feed() {
         } else if (filteredLanguages.length > 0 && !filteredLanguages.includes(tootLanguage)) {
             console.debug(`Removing toot ${status.uri} w/invalid language ${tootLanguage}. valid langs:`, filteredLanguages);
             return false;
-        } else if (!settings.includeTrendingToots && status.rawScores[TRENDING_TOOTS]) {
+        } else if (!settings.includeTrendingToots && status.scoreInfo?.rawScores[TRENDING_TOOTS]) {
             return false;
-        } else if (!settings.includeFollowedAccounts && !status.rawScores[TRENDING_TOOTS]) {
+        } else if (!settings.includeFollowedAccounts && !status.scoreInfo?.rawScores[TRENDING_TOOTS]) {
             return false;
         } else if (!settings.includeReplies && status.inReplyToId) {
             return false;
@@ -214,7 +214,7 @@ export default function Feed() {
     });
 
     if (feed.length != filteredFeed.length) {
-        console.log(`filtered timeline toots: `, filteredFeed.map(condensedStatus));
+        console.log(`filtered timeline toots: `, filteredFeed.map(toot => toot.condensedStatus()));
     }
 
     return (
