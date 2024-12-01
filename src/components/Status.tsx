@@ -64,6 +64,7 @@ interface StatusComponentProps {
 
 
 export default function StatusComponent(props: StatusComponentProps) {
+    const localServer = props.user.server;
     const weightAdjust = props.weightAdjust;
     const masto = props.api;
     let status: Toot = props.status;
@@ -80,13 +81,14 @@ export default function StatusComponent(props: StatusComponentProps) {
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
     const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); //index of the mediaAttachment to show
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
+    const [resolvedStatus, setResolvedStatus] = React.useState<Toot | null>(null);
 
+    // TODO: I don't think we need a mastodon instance to display data? it's for retooting & favoriting
+    if (!masto) throw new Error("No Mastodon API");
     const images = imageAttachments(status);
     const videos = videoAttachments(status);
-    if (!masto) throw new Error("No Mastodon API");  // TODO: I don't think we need a mastodon instance to display data? it's for retooting & favoriting
 
-    // If there's just one image try to show it full size.
-    // If there's more than one image use the original image handler (for now).
+    // If there's one image try to show it full size; If there's more than one use old image handler.
     const imageHeight = images.length == 1 ? images[0].meta?.small?.height : IMAGES_HEIGHT;
 
     // Increase mediaInspectionModalIdx on Right Arrow
@@ -173,15 +175,16 @@ export default function StatusComponent(props: StatusComponentProps) {
         );
     };
 
-    // TODO: I guess this is supposed to resolve foreign server URIs to local (or vice versa)?
+    // Resolve foreign server toot ID URL to one on the user's local server
     const resolve = async (status: Toot): Promise<Toot> => {
-        if (status.uri.includes(props.user.server)) {
-            return status;
-        } else {
-            // v2 search docs: https://docs.joinmastodon.org/methods/search/
-            const res = await masto.v2.search.fetch({ q: status.uri, resolve: true });
-            return res.statuses[0];
-        }
+        if (resolvedStatus) return resolvedStatus;
+        if (status.uri.includes(localServer)) return status;
+
+        // v2 search docs: https://docs.joinmastodon.org/methods/search/
+        const lookupResult = await masto.v2.search.fetch({ q: status.uri, resolve: true });
+        const _resolvedStatus = lookupResult.statuses[0];
+        setResolvedStatus(_resolvedStatus);
+        return _resolvedStatus;
     };
 
     // Returns a function that's called when state changes for faves and retoots
@@ -239,15 +242,17 @@ export default function StatusComponent(props: StatusComponentProps) {
         };
     };
 
+    // Open the Toot in a new tab, resolved to its URL on the user's home server
     const followUri = async (e: React.MouseEvent) => {
-        //Follow a link to another instance on the homeserver
         e.preventDefault()
-        const status_ = await resolve(status);
+        const _resolvedStatus = await resolve(status);
         weightAdjust(status.rawScores);  // TODO: does learning weights really work?
-        console.log(`followUri() status_: `, status_);
-        //new tab:
-        //window.open(props.user.server + "/@" + status_.account.acct + "/" + status_.id, '_blank');
-        window.location.href = props.user.server + "/@" + status_.account.acct + "/" + status_.id
+        console.log(`followUri() _resolvedStatus: `, _resolvedStatus);
+        const statusURL = `${localServer}/@${_resolvedStatus.account.acct}/${_resolvedStatus.id}`;
+        // new tab:
+        window.open(statusURL, '_blank');
+        // same tab:
+        // window.location.href = statusURL;
     };
 
     // Show the score of a toot
@@ -290,7 +295,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <span>
                             <a
                                 className="status__display-name muted"
-                                href={`${props.user.server}/@${status.reblogBy.acct}`}
+                                href={`${localServer}/@${status.reblogBy.acct}`}
                             >
                                 <bdi><strong>{status.reblogBy.displayName}</strong></bdi>
                             </a> shared
@@ -343,7 +348,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 <bdi>
                                     <strong className="display-name__html">
                                         <a
-                                            href={props.user.server + "/@" + status.account.acct}
+                                            href={localServer + "/@" + status.account.acct}
                                             rel="noopener noreferrer"
                                             style={{ color: "white", textDecoration: "none" }}
                                             target="_blank"

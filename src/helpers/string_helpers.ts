@@ -31,4 +31,4 @@ export const scoreString = (score: number | null): string => {
     }
 
     return `${score.toFixed(decimalPlaces)}`;
-}
+};
