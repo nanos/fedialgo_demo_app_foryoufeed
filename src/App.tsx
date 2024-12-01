@@ -2,7 +2,7 @@ import * as React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
-import { inject } from '@vercel/analytics';
+// import { inject } from '@vercel/analytics';
 
 import AuthProvider from './hooks/useAuth';
 import CallbackPage from './pages/CallbackPage';
@@ -21,7 +21,7 @@ const App: React.FC = () => {
         });
     }
 
-    if (process.env.NODE_ENV === "production") inject();
+    // if (process.env.NODE_ENV === "production") inject();
 
     return (
         <BrowserRouter>
