@@ -76,6 +76,7 @@ Currently you can retoot and favorite other people's toots through the app's web
 * You may need to reload the webpage after updating the user weightings.
 * Sometimes (always?) when starting the app after the first time you will find your Mastodon login has expired in which case you will be kicked back to the login screen for reauthorization.
 * Infinite scroll isn't _really_ infinite (yet). If you scroll far enough you will run out of toots to peruse.
+* Whether or not a toot that matches one of your "hide these toots" filters actually ends up getting hidden depends on the server version of the user posting the toot that should be hidden. Put another way sometimes toots escape your configured filters.
 
 ### Troubleshooting
 Most (all?) browsers will allow you to clear all the "site data" (cookies and cache) for a single site. If you run into an issue try doing that and then reloading the app at `https://localhost:3000`.
