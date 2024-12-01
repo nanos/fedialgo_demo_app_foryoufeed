@@ -19,6 +19,7 @@ import { useAuth } from "../hooks/useAuth";
 
 const DEFAULT_NUM_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
+const FEED_WIDTH = '800px';
 
 const EARLIEST_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 const RELOAD_IF_OLDER_THAN_MINUTES = 0.5;
@@ -218,7 +219,7 @@ export default function Feed() {
     }
 
     return (
-        <Container style={{backgroundColor: '#15202b', height: 'auto', maxWidth: "800px"}}>
+        <Container style={{backgroundColor: '#15202b', height: 'auto', maxWidth: FEED_WIDTH}}>
             <Modal show={error !== ""} onHide={() => setError("")}>
                 <Modal.Header closeButton>
                     <Modal.Title>Error</Modal.Title>
