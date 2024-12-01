@@ -6,7 +6,6 @@ import React from 'react';
 import Toast from 'react-bootstrap/Toast';
 
 import * as emoji from 'node-emoji';
-// const emoji = require('node-emoji');
 import { imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
@@ -354,7 +353,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                             style={{ color: "white", textDecoration: "none" }}
                                             target="_blank"
                                         >
-                                            {status.account.displayName}
+                                            {emoji.emojify(status.account.displayName)}
                                         </a>
 
                                         {status.account.fields.filter(f => f.verifiedAt).map(f => (
