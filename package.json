@@ -8,7 +8,7 @@
         "@fortawesome/free-solid-svg-icons": "^6.4.0",
         "@fortawesome/react-fontawesome": "^0.2.0",
         "bootstrap": "^5.2.3",
-        "fedialgo": "github:michelcrypt4d4mus/fedialgo#72e24362bccc55b9510735a99a2b24e9005b5372",
+        "fedialgo": "github:michelcrypt4d4mus/fedialgo#2a34a076174c240dcc501461f8d599dfc357c9cf",
         "html-react-parser": "^3.0.15",
         "masto": "^6.0.0",
         "node-emoji": "^2.1.3",
