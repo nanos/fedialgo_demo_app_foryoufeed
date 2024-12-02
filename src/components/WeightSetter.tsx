@@ -93,10 +93,10 @@ export default function WeightSetter({
         );
     };
 
-    const settingCheckboxes = Object.keys(algorithm.filters)
-                                    .sort()
-                                    .filter((filter) => typeof algorithm.filters[filter] === 'boolean')
-                                    .map((filter) => settingCheckbox(filter));
+    const filterCheckboxes = Object.keys(algorithm.filters)
+                                   .sort()
+                                   .filter((filter) => typeof algorithm.filters[filter] === 'boolean')
+                                   .map((filter) => settingCheckbox(filter));
 
     const languageCheckboxes = Object.keys(languagesInFeed)
                                      .sort()
@@ -146,7 +146,7 @@ export default function WeightSetter({
                         </Form.Label>
 
                         <Form.Group className="mb-1">
-                            {algorithm.filters && gridify(settingCheckboxes)}
+                            {algorithm.filters && gridify(filterCheckboxes)}
                         </Form.Group>
                     </div>
 
