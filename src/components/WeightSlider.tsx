@@ -13,7 +13,7 @@ interface WeightSliderProps {
     defaultValue?: number | undefined;
     description: string;
     scoreName: string;
-    updateWeights: (newWeights: ScoresType) => void;
+    updateWeights: (newWeights: ScoresType) => Promise<ScoresType>;
     userWeights: ScoresType;
 };
 
