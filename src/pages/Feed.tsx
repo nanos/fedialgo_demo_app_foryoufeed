@@ -34,7 +34,7 @@ export default function Feed() {
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(true);  // true if page is still loading
     const [userWeights, setUserWeights] = useState<ScoresType>({});  // weights for each factor
-    // TODO: this should be in persistent state but it's too big?
+    // TODO: this should be in persistent state but it's too big and fills up Local Storage in the browser
     const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
 
     // Persistent state variables
