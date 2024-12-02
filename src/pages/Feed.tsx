@@ -33,9 +33,7 @@ export default function Feed() {
     // State variables
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null); //algorithm to use
     const [error, setError] = useState<string>("");
-    const [filteredLanguages, setFilteredLanguages] = useState<string[]>([]); //languages to filter
     const [isLoading, setIsLoading] = useState<boolean>(true);  // true if page is still loading
-    const [languagesInFeed, setLanguagesInFeed] = useState<CountsType>({}); // languages that show up at least once in the feed toots
     const [userWeights, setUserWeights] = useState<ScoresType>({});  // weights for each factor
     // TODO: this should be in persistent state but it's too big?
     const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
@@ -124,22 +122,11 @@ export default function Feed() {
     };
 
     const constructFeed = async () => {
-        console.log(`constructFeed() called with user ID ${user?.id}...`);
+        console.log(`constructFeed() called with user ID ${user?.id} ('feed' currently contains ${feed.length} toots)`);
         const algo = await getUserAlgo();
         if (!algo) return;
-        console.log(`About to call algo.getFeed(). 'feed' state currently contains ${feed.length} toots...`);
-        const timelineFeed = await algo.getFeed();
-        setFeed(timelineFeed);
-        algo.logFeedInfo()
-
-        // Get all the unique languages that show up in the feed
-        const feedLanguages = timelineFeed.reduce((langCounts, toot) => {
-            const tootLanguage = toot.language || NO_LANGUAGE;
-            langCounts[tootLanguage] = (langCounts[tootLanguage] || 0) + 1;
-            return langCounts;
-        }, {} as CountsType)
-
-        setLanguagesInFeed(feedLanguages);
+        setFeed(await algo.getFeed());
+        algo.logFeedInfo();
     };
 
     // Pull more toots to display from our local cached and sorted toot feed
@@ -195,7 +182,6 @@ export default function Feed() {
 
             <WeightSetter
                 algorithm={algorithm}
-                languagesInFeed={languagesInFeed}
                 updateFilters={updateFilters}
                 updateWeights={updateWeights}
                 userWeights={userWeights}
