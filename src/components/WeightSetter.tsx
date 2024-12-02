@@ -4,17 +4,16 @@
  * are trending in the Fedivers.
  */
 import React from 'react';
-import { usePersistentState } from "react-persistent-state";
 
+import * as ChangeCase from "change-case";
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
-import WeightSlider from './WeightSlider';
 import { DEFAULT_TIME_DECAY, NO_LANGUAGE, TIME_DECAY, FeedFilterSettings, ScoresType, TheAlgorithm } from "fedialgo";
 
+import WeightSlider from './WeightSlider';
 import { CountsType } from "../types";
-import { useAuth } from '../hooks/useAuth';
 
 const TIME_DECAY_DESCRIPTION = "Higher values means toots are demoted sooner";
 
@@ -36,8 +35,6 @@ export default function WeightSetter({
     updateWeights,
     userWeights,
 }: WeightSetterProps) {
-    const { user } = useAuth();
-    // const [selectedLang, setSelectedLanguage] = usePersistentState<string[]>([], user.id + "selectedLangs");
     // Remove TIME_DECAY so we can move it to the top of the panel manually
     const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY).sort();
 
@@ -52,7 +49,7 @@ export default function WeightSetter({
                 checked={isChecked}
                 id={label}
                 key={label}
-                label={label + (labelExtra ? ` (${labelExtra})` : '')}
+                label={ChangeCase.capitalCase(label) + (labelExtra ? ` (${labelExtra})` : '')}
                 onChange={onChange}
                 type="checkbox"
             />
