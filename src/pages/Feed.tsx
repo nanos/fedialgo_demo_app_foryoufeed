@@ -93,6 +93,7 @@ export default function Feed() {
     const getUserAlgo = async (): Promise<TheAlgorithm | null>  => {
         let currentUser: mastodon.v1.Account;
 
+        // TODO: throw an error if user is not set
         if (!user) {
             console.warn(`getUserAlgo() called without a valid user, can't get algorithm...`);
             return null;
@@ -106,7 +107,7 @@ export default function Feed() {
             return null;
         }
 
-        const algo = await TheAlgorithm.create(api, currentUser);
+        const algo = await TheAlgorithm.create({api: api, user: currentUser, setFeedInApp: setFeed});
         setAlgorithm(algo);
         setUserWeights(await algo.getUserWeights());
         return algo;
