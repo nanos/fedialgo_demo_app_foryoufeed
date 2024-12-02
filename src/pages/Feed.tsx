@@ -7,14 +7,14 @@ import { usePersistentState } from "react-persistent-state";
 
 import Container from "react-bootstrap/esm/Container";
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
-import { TRENDING_TOOTS, ScoresType, TheAlgorithm, Toot } from "fedialgo";
+import { DEFAULT_FILTERS, NO_LANGUAGE, TRENDING_TOOTS, FeedFilterSettings, ScoresType, TheAlgorithm, Toot } from "fedialgo";
 
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
 import useOnScreen from "../hooks/useOnScreen";
-import WeightSetter, { NO_LANGUAGE} from "../components/WeightSetter";
-import { CountsType, settingsType } from "../types";
+import WeightSetter from "../components/WeightSetter";
+import { CountsType } from "../types";
 import { useAuth } from "../hooks/useAuth";
 
 const DEFAULT_NUM_TOOTS = 20;
@@ -36,7 +36,7 @@ const DEFAULT_SETTINGS = {
 
 
 export default function Feed() {
-    //Contruct Feed on Page Load
+    // Contruct Feed on Page Load
     const { user, logout } = useAuth();
 
     // State variables
@@ -46,15 +46,14 @@ export default function Feed() {
     const [isLoading, setIsLoading] = useState<boolean>(true);  // true if page is still loading
     const [languagesInFeed, setLanguagesInFeed] = useState<CountsType>({}); // languages that show up at least once in the feed toots
     const [userWeights, setUserWeights] = useState<ScoresType>({});  // weights for each factor
+    // TODO: this should be in persistent state but it's too big?
     const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
 
     // Persistent state variables
     const [numDisplayedToots, setNumDisplayedToots] = usePersistentState<number>(DEFAULT_NUM_TOOTS, user.id + "records"); //how many toots to show
     const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
-    // TODO: changing settings by clicking the checkbox in the GUI doesn't seem to work
-    const [settings, setSettings] = usePersistentState<settingsType>(DEFAULT_SETTINGS, user.id + "settings"); //filter settings for feed
+    const [settings, setSettings] = usePersistentState<FeedFilterSettings>(DEFAULT_FILTERS, user.id + "settings"); //filter settings for feed
 
-    // TODO: what's the point of this?
     window.addEventListener("scroll", () => {
         if (window.scrollY % 10 == 0) setScrollPos(window.scrollY);
     });
@@ -184,40 +183,15 @@ export default function Feed() {
         return newWeights;
     };
 
-    const updateSettings = async (newSettings: settingsType) => {
+    const updateSettings = async (newSettings: FeedFilterSettings) => {
         console.log(`updateSettings() called with newSettings: `, newSettings);
         setSettings(newSettings);
-        setFeed([...feed]);  // TODO: why do we need to do this?
+        algorithm.filters = newSettings;
+        setFeed(algorithm.filteredFeed());
     };
 
-    // Strip out toots we don't want to show to the user for various reasons
-    const filteredFeed = feed.filter((status: Toot) => {
-        const tootLanguage = status.language || NO_LANGUAGE;
-
-        if (settings.onlyLinks && !(status.card || status.reblog?.card)) {
-            console.debug(`Removing ${status.uri} from feed because it's not a link and onlyLinks is enabled...`);
-            return false;
-        } else if (status.reblog && !settings.includeReposts) {
-            console.debug(`Removing reblogged status ${status.uri} from feed...`);
-            return false;
-        } else if (filteredLanguages.length > 0 && !filteredLanguages.includes(tootLanguage)) {
-            console.debug(`Removing toot ${status.uri} w/invalid language ${tootLanguage}. valid langs:`, filteredLanguages);
-            return false;
-        } else if (!settings.includeTrendingToots && status.scoreInfo?.rawScores[TRENDING_TOOTS]) {
-            return false;
-        } else if (!settings.includeFollowedAccounts && !status.scoreInfo?.rawScores[TRENDING_TOOTS]) {
-            return false;
-        } else if (!settings.includeReplies && status.inReplyToId) {
-            return false;
-        } else if (settings.onlyFollowedHashtags && !status.followedTags?.length) {
-            return false;
-        }
-
-        return true;
-    });
-
-    if (feed.length != filteredFeed.length) {
-        console.log(`filtered timeline toots: `, filteredFeed);
+    if (algorithm && algorithm.feed.length != feed.length) {
+        console.log(`filtered ${feed.length} of ${algorithm.feed.length} toots:`, feed);
     }
 
     return (
@@ -232,7 +206,7 @@ export default function Feed() {
 
             <WeightSetter
                 algorithm={algorithm}
-                languages={languagesInFeed}
+                languagesInFeed={languagesInFeed}
                 setSelectedLanguages={setFilteredLanguages}
                 settings={settings}
                 updateSettings={updateSettings}
@@ -243,7 +217,7 @@ export default function Feed() {
             <FindFollowers api={api} user={user} />
 
             {!isLoading && api && (feed.length >= 1) &&
-                filteredFeed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot: Toot) => (
+                feed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot: Toot) => (
                     <StatusComponent
                         api={api}
                         key={toot.uri}

@@ -11,20 +11,19 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
 import WeightSlider from './WeightSlider';
-import { DEFAULT_TIME_DECAY, TIME_DECAY, ScoresType, TheAlgorithm } from "fedialgo";
+import { DEFAULT_TIME_DECAY, NO_LANGUAGE, TIME_DECAY, FeedFilterSettings, ScoresType, TheAlgorithm } from "fedialgo";
 
-import { CountsType, settingsType } from "../types";
+import { CountsType } from "../types";
 import { useAuth } from '../hooks/useAuth';
 
-export const NO_LANGUAGE = '[not specified]';
 const TIME_DECAY_DESCRIPTION = "Higher values means toots are demoted sooner";
 
 interface WeightSetterProps {
     algorithm: TheAlgorithm;
-    languages: CountsType;
+    languagesInFeed: CountsType;
     setSelectedLanguages: (languages: string[]) => void;
-    settings: settingsType;
-    updateSettings: (settings: settingsType) => void;
+    settings: FeedFilterSettings;
+    updateSettings: (settings: FeedFilterSettings) => void;
     updateWeights: (weights: ScoresType) => Promise<ScoresType>;
     userWeights: ScoresType;
 };
@@ -32,15 +31,14 @@ interface WeightSetterProps {
 
 export default function WeightSetter({
     algorithm,
-    languages,
-    setSelectedLanguages,
+    languagesInFeed,
     settings,
     updateSettings,
     updateWeights,
     userWeights,
 }: WeightSetterProps) {
     const { user } = useAuth();
-    const [selectedLang, setSelectedLanguage] = usePersistentState<string[]>([], user.id + "selectedLangs");
+    // const [selectedLang, setSelectedLanguage] = usePersistentState<string[]>([], user.id + "selectedLangs");
     // Remove TIME_DECAY so we can move it to the top of the panel manually
     const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY).sort();
 
@@ -78,22 +76,18 @@ export default function WeightSetter({
         const lang = languageCode || NO_LANGUAGE;
 
         return makeCheckbox(
-            selectedLang.includes(lang),
+            settings.filteredLanguages.includes(lang),
             lang,
             (e) => {
-                const newLang = [...selectedLang];
-
                 if (e.target.checked) {
-                    newLang.push(lang);
+                    settings.filteredLanguages.push(lang);
                 } else {
-                    newLang.splice(newLang.indexOf(lang), 1);
+                    settings.filteredLanguages.splice(settings.filteredLanguages.indexOf(lang), 1);
                 }
 
-                console.log(`newLang:`, newLang);
-                setSelectedLanguage(newLang);
-                setSelectedLanguages(newLang);
+                updateSettings(settings);
             },
-            `${languages[languageCode]} toots`
+            `${languagesInFeed[languageCode]} toots`
         );
     };
 
@@ -108,8 +102,14 @@ export default function WeightSetter({
         );
     };
 
-    const settingCheckboxes = Object.keys(settings).sort().map((setting) => settingCheckbox(setting));
-    const languageCheckboxes = Object.keys(languages).sort().map((lang) => languageCheckbox(lang));
+    const settingCheckboxes = Object.keys(settings)
+                                    .sort()
+                                    .filter((setting) => typeof settings[setting] === 'boolean')
+                                    .map((setting) => settingCheckbox(setting));
+
+    const languageCheckboxes = Object.keys(languagesInFeed)
+                                     .sort()
+                                     .map((lang) => languageCheckbox(lang));
 
     return (
         <Accordion>

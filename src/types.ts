@@ -1,10 +1,6 @@
 import type { mastodon } from 'masto';
 
 
-export interface settingsType {
-    [key: string]: boolean;
-};
-
 export interface CountsType {
     [key: string]: number;
 };
