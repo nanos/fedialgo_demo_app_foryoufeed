@@ -7,14 +7,13 @@ import { usePersistentState } from "react-persistent-state";
 
 import Container from "react-bootstrap/esm/Container";
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
-import { DEFAULT_FILTERS, NO_LANGUAGE, TRENDING_TOOTS, FeedFilterSettings, ScoresType, TheAlgorithm, Toot } from "fedialgo";
+import { FeedFilterSettings, ScoresType, TheAlgorithm, Toot } from "fedialgo";
 
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
-import { CountsType } from "../types";
 import { useAuth } from "../hooks/useAuth";
 
 const DEFAULT_NUM_TOOTS = 20;

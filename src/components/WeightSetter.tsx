@@ -10,12 +10,9 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
-import { DEFAULT_TIME_DECAY, NO_LANGUAGE, TIME_DECAY, FeedFilterSettings, ScoresType, TheAlgorithm } from "fedialgo";
+import { NO_LANGUAGE, TIME_DECAY, FeedFilterSettings, ScoresType, TheAlgorithm } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
-import { CountsType } from "../types";
-
-const TIME_DECAY_DESCRIPTION = "Higher values means toots are demoted sooner";
 
 interface WeightSetterProps {
     algorithm: TheAlgorithm;
@@ -35,16 +32,18 @@ export default function WeightSetter({
 
     const makeCheckbox = (
         isChecked: boolean,
-        label: string,
+        filterName: string,
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
         labelExtra?: string
     ) => {
+        const label = labelExtra ? `${filterName} (${labelExtra})` : ChangeCase.capitalCase(filterName);
+
         return (
             <Form.Check
                 checked={isChecked}
-                id={label}
-                key={label}
-                label={ChangeCase.capitalCase(label) + (labelExtra ? ` (${labelExtra})` : '')}
+                id={filterName}
+                key={filterName}
+                label={label}
                 onChange={(e) => {
                     onChange(e);
                     updateFilters(algorithm.filters);
@@ -54,11 +53,11 @@ export default function WeightSetter({
         );
     };
 
-    const settingCheckbox = (settingName: string) => {
+    const settingCheckbox = (filterName: string) => {
         return makeCheckbox(
-            algorithm.filters[settingName],
-            settingName,
-            (e) => (algorithm.filters[settingName] = e.target.checked)
+            algorithm.filters[filterName],
+            filterName,
+            (e) => (algorithm.filters[filterName] = e.target.checked)
         );
     };
 
@@ -112,8 +111,7 @@ export default function WeightSetter({
                 <Accordion.Body>
                     {/* Time Decay slider */}
                     <WeightSlider
-                        defaultValue={DEFAULT_TIME_DECAY}
-                        description={TIME_DECAY_DESCRIPTION}
+                        description={algorithm.scorerDescriptions[TIME_DECAY]}
                         key={TIME_DECAY}
                         scoreName={TIME_DECAY}
                         updateWeights={updateWeights}
@@ -128,7 +126,7 @@ export default function WeightSetter({
 
                         {userWeights && algorithm.weightedScoreNames.map((scoreName) => (
                             <WeightSlider
-                                description={algorithm.getDescription(scoreName)}
+                                description={algorithm.scorerDescriptions[scoreName]}
                                 key={scoreName}
                                 scoreName={scoreName}
                                 updateWeights={updateWeights}
