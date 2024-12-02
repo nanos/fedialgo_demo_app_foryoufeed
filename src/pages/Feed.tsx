@@ -25,15 +25,6 @@ const EARLIEST_TIMESTAMP = "1970-01-01T00:00:00.000Z";
 const RELOAD_IF_OLDER_THAN_MINUTES = 0.5;
 const RELOAD_IF_OLDER_THAN_MS = RELOAD_IF_OLDER_THAN_MINUTES * 60 * 1000;
 
-const DEFAULT_SETTINGS = {
-    includeFollowedAccounts: true,
-    includeReposts: true,
-    includeReplies: true,
-    includeTrendingToots: true,
-    onlyFollowedHashtags: false,
-    onlyLinks: false,
-};
-
 
 export default function Feed() {
     // Contruct Feed on Page Load
@@ -52,7 +43,6 @@ export default function Feed() {
     // Persistent state variables
     const [numDisplayedToots, setNumDisplayedToots] = usePersistentState<number>(DEFAULT_NUM_TOOTS, user.id + "numDisplayedToots"); //how many toots to show
     const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
-    const [settings, setSettings] = usePersistentState<FeedFilterSettings>(DEFAULT_FILTERS, user.id + "settings"); //filter settings for feed
 
     window.addEventListener("scroll", () => {
         if (window.scrollY % 10 == 0) setScrollPos(window.scrollY);
@@ -183,10 +173,9 @@ export default function Feed() {
         return newWeights;
     };
 
-    const updateFilters = async (newSettings: FeedFilterSettings) => {
-        console.log(`updateFilters() called with newSettings: `, newSettings);
-        setSettings(newSettings);
-        algorithm.filters = newSettings;
+    const updateFilters = async (newFilters: FeedFilterSettings) => {
+        console.log(`updateFilters() called with newSettings: `, newFilters);
+        algorithm.filters = newFilters;
         setFeed(algorithm.filteredFeed());
     };
 
@@ -207,7 +196,6 @@ export default function Feed() {
             <WeightSetter
                 algorithm={algorithm}
                 languagesInFeed={languagesInFeed}
-                settings={settings}
                 updateFilters={updateFilters}
                 updateWeights={updateWeights}
                 userWeights={userWeights}

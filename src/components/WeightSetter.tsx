@@ -20,7 +20,6 @@ const TIME_DECAY_DESCRIPTION = "Higher values means toots are demoted sooner";
 interface WeightSetterProps {
     algorithm: TheAlgorithm;
     languagesInFeed: CountsType;
-    settings: FeedFilterSettings;
     updateFilters: (settings: FeedFilterSettings) => void;
     updateWeights: (weights: ScoresType) => Promise<ScoresType>;
     userWeights: ScoresType;
@@ -30,13 +29,13 @@ interface WeightSetterProps {
 export default function WeightSetter({
     algorithm,
     languagesInFeed,
-    settings,
     updateFilters,
     updateWeights,
     userWeights,
 }: WeightSetterProps) {
     // Remove TIME_DECAY so we can move it to the top of the panel manually
     const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY).sort();
+    if (!algorithm) return <></>;
 
     const makeCheckbox = (
         isChecked: boolean,
@@ -58,12 +57,11 @@ export default function WeightSetter({
 
     const settingCheckbox = (settingName: string) => {
         return makeCheckbox(
-            settings[settingName],
+            algorithm.filters[settingName],
             settingName,
             (e) => {
-                const newSettings = { ...settings };
-                newSettings[settingName] = e.target.checked;
-                updateFilters(newSettings);
+                algorithm.filters[settingName] = e.target.checked;
+                updateFilters(algorithm.filters);
             }
         );
     };
@@ -72,16 +70,16 @@ export default function WeightSetter({
         const lang = languageCode || NO_LANGUAGE;
 
         return makeCheckbox(
-            settings.filteredLanguages.includes(lang),
+            algorithm.filters.filteredLanguages.includes(lang),
             lang,
             (e) => {
                 if (e.target.checked) {
-                    settings.filteredLanguages.push(lang);
+                    algorithm.filters.filteredLanguages.push(lang);
                 } else {
-                    settings.filteredLanguages.splice(settings.filteredLanguages.indexOf(lang), 1);
+                    algorithm.filters.filteredLanguages.splice(algorithm.filters.filteredLanguages.indexOf(lang), 1);
                 }
 
-                updateFilters(settings);
+                updateFilters(algorithm.filters);
             },
             `${languagesInFeed[languageCode]} toots`
         );
@@ -98,10 +96,10 @@ export default function WeightSetter({
         );
     };
 
-    const settingCheckboxes = Object.keys(settings)
+    const settingCheckboxes = Object.keys(algorithm.filters)
                                     .sort()
-                                    .filter((setting) => typeof settings[setting] === 'boolean')
-                                    .map((setting) => settingCheckbox(setting));
+                                    .filter((filter) => typeof algorithm.filters[filter] === 'boolean')
+                                    .map((filter) => settingCheckbox(filter));
 
     const languageCheckboxes = Object.keys(languagesInFeed)
                                      .sort()
@@ -151,7 +149,7 @@ export default function WeightSetter({
                         </Form.Label>
 
                         <Form.Group className="mb-1">
-                            {settings && gridify(settingCheckboxes)}
+                            {algorithm.filters && gridify(settingCheckboxes)}
                         </Form.Group>
                     </div>
 
