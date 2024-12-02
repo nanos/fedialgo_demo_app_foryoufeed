@@ -15,3 +15,5 @@ git push
 
 echo "Re-linking local fedialgo package..."
 npm link fedialgo
+
+echo "Done."
