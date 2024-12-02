@@ -21,9 +21,8 @@ const TIME_DECAY_DESCRIPTION = "Higher values means toots are demoted sooner";
 interface WeightSetterProps {
     algorithm: TheAlgorithm;
     languagesInFeed: CountsType;
-    setSelectedLanguages: (languages: string[]) => void;
     settings: FeedFilterSettings;
-    updateSettings: (settings: FeedFilterSettings) => void;
+    updateFilters: (settings: FeedFilterSettings) => void;
     updateWeights: (weights: ScoresType) => Promise<ScoresType>;
     userWeights: ScoresType;
 };
@@ -33,7 +32,7 @@ export default function WeightSetter({
     algorithm,
     languagesInFeed,
     settings,
-    updateSettings,
+    updateFilters,
     updateWeights,
     userWeights,
 }: WeightSetterProps) {
@@ -67,7 +66,7 @@ export default function WeightSetter({
             (e) => {
                 const newSettings = { ...settings };
                 newSettings[settingName] = e.target.checked;
-                updateSettings(newSettings);
+                updateFilters(newSettings);
             }
         );
     };
@@ -85,7 +84,7 @@ export default function WeightSetter({
                     settings.filteredLanguages.splice(settings.filteredLanguages.indexOf(lang), 1);
                 }
 
-                updateSettings(settings);
+                updateFilters(settings);
             },
             `${languagesInFeed[languageCode]} toots`
         );

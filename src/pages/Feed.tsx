@@ -50,7 +50,7 @@ export default function Feed() {
     const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
 
     // Persistent state variables
-    const [numDisplayedToots, setNumDisplayedToots] = usePersistentState<number>(DEFAULT_NUM_TOOTS, user.id + "records"); //how many toots to show
+    const [numDisplayedToots, setNumDisplayedToots] = usePersistentState<number>(DEFAULT_NUM_TOOTS, user.id + "numDisplayedToots"); //how many toots to show
     const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
     const [settings, setSettings] = usePersistentState<FeedFilterSettings>(DEFAULT_FILTERS, user.id + "settings"); //filter settings for feed
 
@@ -183,8 +183,8 @@ export default function Feed() {
         return newWeights;
     };
 
-    const updateSettings = async (newSettings: FeedFilterSettings) => {
-        console.log(`updateSettings() called with newSettings: `, newSettings);
+    const updateFilters = async (newSettings: FeedFilterSettings) => {
+        console.log(`updateFilters() called with newSettings: `, newSettings);
         setSettings(newSettings);
         algorithm.filters = newSettings;
         setFeed(algorithm.filteredFeed());
@@ -207,9 +207,8 @@ export default function Feed() {
             <WeightSetter
                 algorithm={algorithm}
                 languagesInFeed={languagesInFeed}
-                setSelectedLanguages={setFilteredLanguages}
                 settings={settings}
-                updateSettings={updateSettings}
+                updateFilters={updateFilters}
                 updateWeights={updateWeights}
                 userWeights={userWeights}
             />
