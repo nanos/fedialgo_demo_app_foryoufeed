@@ -20,13 +20,13 @@ export const NO_LANGUAGE = '[not specified]';
 const TIME_DECAY_DESCRIPTION = "Higher values means toots are demoted sooner";
 
 interface WeightSetterProps {
-    algorithm: TheAlgorithm,
-    languages: CountsType,
-    setSelectedLanguages: (languages: string[]) => void,
-    settings: settingsType,
-    updateSettings: (settings: settingsType) => void,
-    updateWeights: (weights: ScoresType) => void,
-    userWeights: ScoresType,
+    algorithm: TheAlgorithm;
+    languages: CountsType;
+    setSelectedLanguages: (languages: string[]) => void;
+    settings: settingsType;
+    updateSettings: (settings: settingsType) => void;
+    updateWeights: (weights: ScoresType) => Promise<ScoresType>;
+    userWeights: ScoresType;
 };
 
 
