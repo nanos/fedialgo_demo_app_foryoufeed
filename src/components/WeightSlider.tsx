@@ -48,10 +48,10 @@ export default function WeightSlider({
                 id={scoreName}
                 min={Math.min(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) - 1 * 1.2}
                 max={Math.max(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) + 1 * 1.2}
-                onChange={(e) => {
+                onChange={async (e) => {
                     const newWeights = Object.assign({}, userWeights);
                     newWeights[scoreName] = Number(e.target.value);
-                    updateWeights(newWeights);
+                    await updateWeights(newWeights);
                 }}
                 step={STEP_SIZE}
                 value={userWeights[scoreName] ?? defaultValue}

@@ -168,17 +168,20 @@ export default function Feed() {
     };
 
     // Update the user weightings stored in TheAlgorithm when a user moves a weight slider
-    const updateWeights = async (newWeights: ScoresType) => {
-        console.log(`updateWeights() called...`)
+    const updateWeights = async (newWeights: ScoresType): Promise<ScoresType> => {
+        console.log(`updateWeights() called...`);
         setUserWeights(newWeights);
 
         if (algorithm) {
             const newFeed = await algorithm.weightTootsInFeed(newWeights);  // Has side effect of updating WeightsStore
             setFeed(newFeed);
-            algorithm.logFeedInfo()
+            algorithm.logFeedInfo();
         } else {
             console.warn(`'algorithm' variable not set, can't updateWeights()!`);
         }
+
+        console.log(`updateWeights() finished...`);
+        return newWeights;
     };
 
     const updateSettings = async (newSettings: settingsType) => {
