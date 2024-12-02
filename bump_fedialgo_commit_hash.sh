@@ -14,7 +14,7 @@ npm install github:michelcrypt4d4mus/fedialgo#${FEDIALGO_COMMIT_HASH}
 git commit -am "Bump fedialgo commit hash to $FEDIALGO_COMMIT_HASH"
 git push
 
-echo "Re-linking local fedialgo package..."
+echo -e "\nRe-linking local fedialgo package..."
 npm link fedialgo
 
-echo "Done."
+echo -e "\nDone."
