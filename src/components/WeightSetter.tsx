@@ -33,8 +33,6 @@ export default function WeightSetter({
     updateWeights,
     userWeights,
 }: WeightSetterProps) {
-    // Remove TIME_DECAY so we can move it to the top of the panel manually
-    const scoringWeightNames = Object.keys(userWeights).filter(name => name != TIME_DECAY).sort();
     if (!algorithm) return <></>;
 
     const makeCheckbox = (
@@ -49,7 +47,10 @@ export default function WeightSetter({
                 id={label}
                 key={label}
                 label={ChangeCase.capitalCase(label) + (labelExtra ? ` (${labelExtra})` : '')}
-                onChange={onChange}
+                onChange={(e) => {
+                    onChange(e);
+                    updateFilters(algorithm.filters);
+                }}
                 type="checkbox"
             />
         );
@@ -59,10 +60,7 @@ export default function WeightSetter({
         return makeCheckbox(
             algorithm.filters[settingName],
             settingName,
-            (e) => {
-                algorithm.filters[settingName] = e.target.checked;
-                updateFilters(algorithm.filters);
-            }
+            (e) => (algorithm.filters[settingName] = e.target.checked)
         );
     };
 
@@ -78,8 +76,6 @@ export default function WeightSetter({
                 } else {
                     algorithm.filters.filteredLanguages.splice(algorithm.filters.filteredLanguages.indexOf(lang), 1);
                 }
-
-                updateFilters(algorithm.filters);
             },
             `${languagesInFeed[languageCode]} toots`
         );
@@ -131,7 +127,7 @@ export default function WeightSetter({
                     <div style={roundedBox}>
                         <p style={headerFont}>Weightings</p>
 
-                        {userWeights && scoringWeightNames.map((scoreName) => (
+                        {userWeights && algorithm.weightedScoreNames.map((scoreName) => (
                             <WeightSlider
                                 description={algorithm.getDescription(scoreName)}
                                 key={scoreName}
