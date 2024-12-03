@@ -5,7 +5,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { Modal } from "react-bootstrap";
 import { usePersistentState } from "react-persistent-state";
 
-import Container from "react-bootstrap/esm/Container";
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
 import { StringNumberDict, TheAlgorithm, Toot } from "fedialgo";
 
@@ -94,7 +96,7 @@ export default function Feed() {
     };
 
     return (
-        <Container style={{backgroundColor: '#15202b', height: 'auto', maxWidth: FEED_WIDTH}}>
+        <Container fluid style={{height: 'auto'}}>
             <Modal show={error !== ""} onHide={() => setError("")}>
                 <Modal.Header closeButton>
                     <Modal.Title>Error</Modal.Title>
@@ -103,30 +105,38 @@ export default function Feed() {
                 <Modal.Body>{error}</Modal.Body>
             </Modal>
 
-            {algorithm && <WeightSetter algorithm={algorithm} />}
-            {algorithm && <FilterSetter algorithm={algorithm} />}
-            <FindFollowers api={api} user={user} />
+            <Row>
+                <Col>
+                    <div className="sticky-top">
+                        {algorithm && <WeightSetter algorithm={algorithm} />}
+                        {algorithm && <FilterSetter algorithm={algorithm} />}
+                        <FindFollowers api={api} user={user} />
+                    </div>
+                </Col>
 
-            {!isLoading && api && (feed.length >= 1) &&
-                feed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot: Toot) => (
-                    <StatusComponent
-                        api={api}
-                        key={toot.uri}
-                        setError={setError}
-                        status={toot}
-                        user={user}
-                        learnWeights={learnWeights}
-                    />
-                ))}
+                <Col style={{backgroundColor: '#15202b', height: 'auto'}} xs lg="7">
+                    {!isLoading && api && (feed.length >= 1) &&
+                        feed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot: Toot) => (
+                            <StatusComponent
+                                api={api}
+                                key={toot.uri}
+                                setError={setError}
+                                status={toot}
+                                user={user}
+                                learnWeights={learnWeights}
+                            />
+                        ))}
 
-            {(isLoading || feed.length == 0) &&
-                <FullPageIsLoading
-                    message={isLoading ? DEFAULT_LOADING_MESSAGE : "No toots found! Maybe check your filter settings"}
-                />}
+                    {(isLoading || feed.length == 0) &&
+                        <FullPageIsLoading
+                            message={isLoading ? DEFAULT_LOADING_MESSAGE : "No toots found! Maybe check your filter settings"}
+                        />}
 
-            <div ref={bottomRef} onClick={showMoreToots}>
-                <p>Load More</p>
-            </div>
+                    <div ref={bottomRef} onClick={showMoreToots}>
+                        <p>Load More</p>
+                    </div>
+                </Col>
+            </Row>
         </Container>
     );
 };
