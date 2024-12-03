@@ -8,8 +8,8 @@ import { User } from "../types";
 
 const AuthContext = createContext({
     user: null,
-    loginUser: async (_user: User) => { },
-    logout: () => { }
+    loginUser: async (_user: User) => {},
+    logout: () => {}
 });
 
 
