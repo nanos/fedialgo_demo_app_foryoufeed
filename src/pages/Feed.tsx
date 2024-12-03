@@ -14,7 +14,7 @@ import FullPageIsLoading, { DEFAULT_LOADING_MESSAGE } from "../components/FullPa
 import StatusComponent from "../components/Status";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
-import { useAuth } from "../hooks/useAuth";
+import { useAuthContext } from "../hooks/useAuth";
 
 const DEFAULT_NUM_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
@@ -23,7 +23,7 @@ const FEED_WIDTH = '800px';
 
 export default function Feed() {
     // Contruct Feed on Page Load
-    const { user, logout } = useAuth();
+    const { user, logout } = useAuthContext();
 
     // State variables
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null); //algorithm to use

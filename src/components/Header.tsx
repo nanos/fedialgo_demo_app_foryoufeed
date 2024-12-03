@@ -2,11 +2,11 @@ import React from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Container } from 'react-bootstrap';
 
-import { useAuth } from "../hooks/useAuth";
+import { useAuthContext } from "../hooks/useAuth";
 
 
 export default function Header() {
-    const { user } = useAuth();
+    const { user } = useAuthContext();
 
     return (
         <Container className='w-100 m-2'>

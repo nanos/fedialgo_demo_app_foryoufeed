@@ -6,7 +6,7 @@ import { createRestAPIClient as loginToMastodon } from "masto"
 import { useSearchParams } from 'react-router-dom';
 
 import { useAppStorage } from '../hooks/useLocalStorage';
-import { useAuth } from '../hooks/useAuth';
+import { useAuthContext } from '../hooks/useAuth';
 import { User } from '../types';
 
 // Permissions this app will request from the user's mastodon account.
@@ -37,7 +37,7 @@ export default function CallbackPage() {
     //     website: "https://mastodon.social",
     // }
     const [app] = useAppStorage({ keyName: "app", defaultValue: null })
-    const { user, loginUser } = useAuth();
+    const { user, loginUser } = useAuthContext();
     const code = searchParams.get('code');
 
     useEffect(() => {

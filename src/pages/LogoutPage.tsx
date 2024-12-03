@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 
-import { useAuth } from '../hooks/useAuth';
+import { useAuthContext } from '../hooks/useAuth';
 
 
 export default function LogoutPage() {
-    const { logout } = useAuth();
+    const { logout } = useAuthContext();
 
     useEffect(() => {
         logout();

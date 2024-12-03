@@ -68,6 +68,6 @@ export default function AuthProvider(props: PropsWithChildren) {
 };
 
 
-export const useAuth = () => {
+export const useAuthContext = () => {
     return useContext(AuthContext);
 };
