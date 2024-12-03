@@ -10,7 +10,6 @@ const DEFAULT_VALUE = 1;
 const STEP_SIZE = 0.05;
 
 interface WeightSliderProps {
-    defaultValue?: number | undefined;
     description: string;
     scoreName: string;
     updateWeights: (newWeights: StringNumberDict) => Promise<void>;
@@ -18,15 +17,8 @@ interface WeightSliderProps {
 };
 
 
-export default function WeightSlider({
-    defaultValue = DEFAULT_VALUE,
-    description,
-    scoreName,
-    updateWeights,
-    userWeights,
-}: WeightSliderProps) {
-    defaultValue = defaultValue ?? DEFAULT_VALUE;
-    const valueString = <span style={monoFont}>{userWeights[scoreName]?.toFixed(2) ?? defaultValue}</span>;
+export default function WeightSlider(props: WeightSliderProps) {
+    const { description, scoreName, updateWeights, userWeights } = props;
 
     return (
         <Form.Group className="mb-1">
@@ -40,7 +32,9 @@ export default function WeightSlider({
                 </div>
 
                 <div style={sliderValue}>
-                    {valueString}
+                    <span style={monoFont}>
+                        {userWeights[scoreName]?.toFixed(2)}
+                    </span>
                 </div>
             </div>
 
@@ -54,7 +48,7 @@ export default function WeightSlider({
                     await updateWeights(newWeights);
                 }}
                 step={STEP_SIZE}
-                value={userWeights[scoreName] ?? defaultValue}
+                value={userWeights[scoreName]}
             />
         </Form.Group>
     );

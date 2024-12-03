@@ -29,7 +29,6 @@ export default function Feed() {
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null); //algorithm to use
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(true);  // true if page is still loading
-    const [userWeights, setUserWeights] = useState<StringNumberDict>({});  // weights for each factor
     const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
 
     // Persistent state variables
@@ -74,7 +73,6 @@ export default function Feed() {
 
         const algo = await TheAlgorithm.create({api: api, user: currentUser, setFeedInApp: setFeed});
         setAlgorithm(algo);
-        setUserWeights(await algo.getUserWeights());
 
         // If there are toots in the cache set isLoading to false early so something is displayed
         if (algo.feed.length > 0) setIsLoading(false);
@@ -91,17 +89,10 @@ export default function Feed() {
 
     // Learn weights based on user action    // TODO: does learning weights really work?
     const learnWeights = async (scores: StringNumberDict): Promise<void> => {
-        const newWeights = await algorithm.learnWeights(scores);
-        if (!newWeights) return;
-        console.log("new userWeights from learnWeights():", newWeights);
-        setUserWeights(newWeights);
-    };
-
-    // Update the user weightings stored in TheAlgorithm when a user moves a weight slider
-    const updateWeights = async (newWeights: StringNumberDict): Promise<void> => {
-        console.debug(`updateWeights() called...`);
-        setUserWeights(newWeights);
-        await algorithm.updateUserWeights(newWeights);
+        // const newWeights = await algorithm.learnWeights(scores);
+        // if (!newWeights) return;
+        // console.log("new userWeights from learnWeights():", newWeights);
+        // setUserWeights(newWeights);
     };
 
     if (algorithm && algorithm.feed.length != feed.length) {
@@ -118,14 +109,7 @@ export default function Feed() {
                 <Modal.Body>{error}</Modal.Body>
             </Modal>
 
-            {algorithm &&
-                <WeightSetter
-                    algorithm={algorithm}
-                    updateFilters={(newFilters) => algorithm.updateFilters(newFilters)}
-                    updateWeights={updateWeights}
-                    userWeights={userWeights}
-                />}
-
+            {algorithm && <WeightSetter algorithm={algorithm} />}
             <FindFollowers api={api} user={user} />
 
             {!isLoading && api && (feed.length >= 1) &&

@@ -3,27 +3,35 @@
  * Things like how much to prefer people you favorite a lot or how much to posts that
  * are trending in the Fedivers.
  */
-import React from 'react';
+import React, { useState, useEffect } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
 import * as ChangeCase from "change-case";
-import { TIME_DECAY, FeedFilterSettings, StringNumberDict, TheAlgorithm } from "fedialgo";
+import { TIME_DECAY, StringNumberDict, TheAlgorithm } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
 
 interface WeightSetterProps {
     algorithm: TheAlgorithm;
-    updateFilters: (settings: FeedFilterSettings) => void;
-    updateWeights: (weights: StringNumberDict) => Promise<void>;
-    userWeights: StringNumberDict;
 };
 
 
 export default function WeightSetter(params: WeightSetterProps) {
-    const { algorithm, updateFilters, updateWeights, userWeights,} = params
+    const { algorithm } = params;
+    const [userWeights, setUserWeights] = useState<StringNumberDict>({});
+
+    useEffect(() => {initWeights()}, []);
+    const initWeights = async () => setUserWeights(await algorithm.getUserWeights());
+
+    // Update the user weightings stored in TheAlgorithm when a user moves a weight slider
+    const updateWeights = async (newWeights: StringNumberDict): Promise<void> => {
+        console.debug(`updateWeights() called with:`, newWeights);
+        setUserWeights(newWeights);
+        await algorithm.updateUserWeights(newWeights);
+    };
 
     const makeCheckbox = (
         isChecked: boolean,
@@ -41,7 +49,7 @@ export default function WeightSetter(params: WeightSetterProps) {
                 label={label}
                 onChange={(e) => {
                     onChange(e);
-                    updateFilters(algorithm.filters);
+                    algorithm.updateFilters(algorithm.filters);
                 }}
                 type="checkbox"
             />
@@ -57,7 +65,7 @@ export default function WeightSetter(params: WeightSetterProps) {
     };
 
     const languageCheckbox = (languageCode: string) => {
-        const filteredLanguages = algorithm.filters.filteredLanguages
+        const filteredLanguages = algorithm.filters.filteredLanguages;
 
         return makeCheckbox(
             algorithm.filters.filteredLanguages.includes(languageCode),
@@ -120,18 +128,18 @@ export default function WeightSetter(params: WeightSetterProps) {
 
                     <div style={roundedBox}>
                         <p style={headerFont}>Weightings</p>
-                        {userWeights && algorithm.weightedScorers.map((scorer) => weightSlider(scorer.name))}
+                        {algorithm.weightedScorers.map((scorer) => weightSlider(scorer.name))}
                     </div>
 
                     <div style={roundedBox}>
                         <p style={headerFont}>Filters</p>
 
                         <Form.Label>
-                            <b>If you turn off both toots from accounts you follow as well as trending toots you will see no toots.</b>
+                            <b>Choose what kind of toots are in your feed.</b>
                         </Form.Label>
 
                         <Form.Group className="mb-1">
-                            {algorithm.filters && gridify(filterCheckboxes)}
+                            {gridify(filterCheckboxes)}
                         </Form.Group>
                     </div>
 
