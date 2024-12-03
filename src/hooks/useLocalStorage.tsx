@@ -18,13 +18,9 @@ export interface UserStorage extends StorageKey {
     defaultValue: User | null;
 };
 
-export const useAppStorage = (key: AppStorage) => {
-    return useLocalStorage<AppStorage>(key);
-};
+export const useAppStorage = (key: AppStorage) => useLocalStorage<AppStorage>(key);
+export const useUserStorage = (key: UserStorage) => useLocalStorage<UserStorage>(key);
 
-export const useUserStorage = (key: UserStorage) => {
-    return useLocalStorage<UserStorage>(key);
-};
 
 export const useLocalStorage = <T extends StorageKey,>(key: T): [T["defaultValue"], (value: T["defaultValue"]) => void] => {
     const { keyName, defaultValue } = key;
