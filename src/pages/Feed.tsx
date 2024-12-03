@@ -39,8 +39,13 @@ export default function Feed() {
 
     // Load the posts in the feed either from mastodon server or from the cache
     useEffect(() => {
+        if (!user) {
+            console.warn("User not set yet!");
+            return;
+        }
+
         constructFeed();
-    }, []);
+    }, [user]);
 
     // Show more toots when the user scrolls to bottom of the page
     // TODO: This doesn't actually trigger any API calls, it just shows more of the preloaded toots

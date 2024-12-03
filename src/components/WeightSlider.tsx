@@ -19,6 +19,7 @@ interface WeightSliderProps {
 
 export default function WeightSlider(props: WeightSliderProps) {
     const { description, scoreName, updateWeights, userWeights } = props;
+    if (!userWeights[scoreName]) return <></>;
 
     return (
         <Form.Group className="mb-1">
