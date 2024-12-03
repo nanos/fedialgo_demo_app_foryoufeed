@@ -10,6 +10,13 @@ import { useLocalStorage, AppStorage } from "../hooks/useLocalStorage";
 
 const DEFAULT_MASTODON_SERVER = "universeodon.com";  // Home of George Takei!
 
+const PREVIEW_IMAGE_STYLE = {
+    border: "5px solid #DDD",
+    borderRadius: "12px",
+    boxShadow: "3px 3px 5px black",
+    maxHeight: "550px",
+};
+
 
 export default function LoginPage() {
     const [server, setServer] = usePersistentState<string>(DEFAULT_MASTODON_SERVER, "server");
@@ -48,15 +55,7 @@ export default function LoginPage() {
             flexDirection: 'column',
             justifyContent: "center",
         }}>
-            <img
-                src={"/assets/Showcase.png"}
-                style={{
-                    border: "5px solid #DDD",
-                    borderRadius: "12px",
-                    boxShadow: "3px 3px 5px black",
-                    maxHeight: "550px",
-                }}
-            />
+            <img src={"/assets/Showcase.png"} style={PREVIEW_IMAGE_STYLE}/>
 
             <div>
                 <p style={{ lineHeight: 1.3, marginBottom: "10px", marginTop: "10px", textAlign: "center" }}>
