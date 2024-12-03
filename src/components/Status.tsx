@@ -297,7 +297,9 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 className="status__display-name muted"
                                 href={`${localServer}/@${status.reblogBy.acct}`}
                             >
-                                <bdi><strong>{emoji.emojify(status.reblogBy.displayName)}</strong></bdi>
+                                <bdi><strong>
+                                    {emoji.emojify(status.reblogBy.displayName)}
+                                </strong></bdi>
                             </a> shared
                         </span>
                     </div>}
