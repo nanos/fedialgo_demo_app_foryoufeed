@@ -109,7 +109,7 @@ export default function WeightSetter({
                 <Accordion.Body>
                     {/* Time Decay slider */}
                     <WeightSlider
-                        description={algorithm.scorerDescriptions[TIME_DECAY]}
+                        description={algorithm.scorersDict[TIME_DECAY].description}
                         key={TIME_DECAY}
                         scoreName={TIME_DECAY}
                         updateWeights={updateWeights}
@@ -124,7 +124,7 @@ export default function WeightSetter({
 
                         {userWeights && algorithm.weightedScoreNames.map((scoreName) => (
                             <WeightSlider
-                                description={algorithm.scorerDescriptions[scoreName]}
+                                description={algorithm.scorersDict[scoreName].description}
                                 key={scoreName}
                                 scoreName={scoreName}
                                 updateWeights={updateWeights}
