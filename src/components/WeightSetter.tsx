@@ -10,7 +10,7 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
-import { NO_LANGUAGE, TIME_DECAY, FeedFilterSettings, StringNumberDict, TheAlgorithm } from "fedialgo";
+import { TIME_DECAY, FeedFilterSettings, StringNumberDict, TheAlgorithm } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
 
@@ -60,7 +60,6 @@ export default function WeightSetter({
     };
 
     const languageCheckbox = (languageCode: string) => {
-        const lang = languageCode || NO_LANGUAGE;
         const filteredLanguages = algorithm.filters.filteredLanguages
 
         return makeCheckbox(
