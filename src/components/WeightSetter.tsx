@@ -28,8 +28,6 @@ export default function WeightSetter({
     updateWeights,
     userWeights,
 }: WeightSetterProps) {
-    if (!algorithm) return <></>;
-
     const makeCheckbox = (
         isChecked: boolean,
         filterName: string,

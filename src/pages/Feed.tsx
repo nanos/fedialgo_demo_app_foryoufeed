@@ -101,7 +101,7 @@ export default function Feed() {
         setUserWeights(newWeights);
 
         if (algorithm) {
-            const newFeed = await algorithm.weightTootsInFeed(newWeights);  // Has side effect of updating WeightsStore
+            const newFeed = await algorithm.updateUserWeights(newWeights);
             setFeed(newFeed);
         } else {
             console.warn(`'algorithm' variable not set, can't updateWeights()!`);
@@ -109,12 +109,6 @@ export default function Feed() {
 
         console.log(`updateWeights() finished...`);
         return newWeights;
-    };
-
-    const updateFilters = async (newFilters: FeedFilterSettings) => {
-        console.log(`updateFilters() called with newSettings: `, newFilters);
-        algorithm.filters = newFilters;
-        setFeed(algorithm.filteredFeed());
     };
 
     if (algorithm && algorithm.feed.length != feed.length) {
@@ -131,12 +125,13 @@ export default function Feed() {
                 <Modal.Body>{error}</Modal.Body>
             </Modal>
 
-            <WeightSetter
-                algorithm={algorithm}
-                updateFilters={updateFilters}
-                updateWeights={updateWeights}
-                userWeights={userWeights}
-            />
+            {algorithm &&
+                <WeightSetter
+                    algorithm={algorithm}
+                    updateFilters={(newFilters) => algorithm.updateFilters(newFilters)}
+                    updateWeights={updateWeights}
+                    userWeights={userWeights}
+                />}
 
             <FindFollowers api={api} user={user} />
 
