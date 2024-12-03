@@ -92,8 +92,9 @@ export default function Feed() {
     };
 
     // Learn weights based on user action    // TODO: does learning weights really work?
-    const weightAdjust = async (scores: ScoresType) => {
+    const learnWeights = async (scores: ScoresType): Promise<void> => {
         const newWeights = await algorithm.learnWeights(scores);
+        if (!newWeights) return;
         console.log("new userWeights from learnWeights():", newWeights);
         setUserWeights(newWeights);
     };
@@ -137,7 +138,7 @@ export default function Feed() {
                         setError={setError}
                         status={toot}
                         user={user}
-                        weightAdjust={weightAdjust}
+                        learnWeights={learnWeights}
                     />
                 ))}
 

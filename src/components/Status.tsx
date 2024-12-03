@@ -60,13 +60,13 @@ interface StatusComponentProps {
     setError: (error: string) => void,
     status: Toot,
     user: User,
-    weightAdjust: (statusWeight: ScoresType) => void,
+    learnWeights: (statusWeight: ScoresType) => void,
 };
 
 
 export default function StatusComponent(props: StatusComponentProps) {
     const localServer = props.user.server;
-    const weightAdjust = props.weightAdjust;
+    const learnWeights = props.learnWeights;
     const masto = props.api;
     let status: Toot = props.status;
 
@@ -215,14 +215,12 @@ export default function StatusComponent(props: StatusComponentProps) {
                     if (actionName == FAVORITE) {
                         if (newState) {
                             await masto.v1.statuses.$select(id).favourite();
-                            weightAdjust(status.scoreInfo?.rawScores)  // TODO: does learning weights really work?
                         } else {
                             await masto.v1.statuses.$select(id).unfavourite();
                         }
                     } else if (actionName == RETOOT) {
                         if (newState) {
                             await masto.v1.statuses.$select(id).reblog();
-                            weightAdjust(status.scoreInfo?.rawScores)  // TODO: does learning weights really work?
                         } else {
                             await masto.v1.statuses.$select(id).unreblog();
                         }
@@ -230,6 +228,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         throw new Error(`Unknown actionName: ${actionName}`);
                     }
 
+                    if (newState) learnWeights(status.scoreInfo?.rawScores);  // TODO: does learning weights really work?
                     console.log(`Successfully changed ${actionName} bool to ${newState}`);
                 } catch (error) {
                     const msg = `Failed to ${actionName} toot!`;
@@ -247,7 +246,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const followUri = async (e: React.MouseEvent) => {
         e.preventDefault()
         const _resolvedStatus = await resolve(status);
-        weightAdjust(status.scoreInfo?.rawScores);  // TODO: does learning weights really work?
+        learnWeights(status.scoreInfo?.rawScores);  // TODO: does learning weights really work?
         console.log(`followUri() _resolvedStatus: `, _resolvedStatus);
         const statusURL = `${localServer}/@${_resolvedStatus.account.acct}/${_resolvedStatus.id}`;
         // new tab:
@@ -387,7 +386,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <a
                             className="status-card compact"
                             href={status.card.url}
-                            onClick={() => weightAdjust(status.scoreInfo?.rawScores)}
+                            onClick={() => learnWeights(status.scoreInfo?.rawScores)}
                             rel="noopener noreferrer"
                             target="_blank"
                         >
