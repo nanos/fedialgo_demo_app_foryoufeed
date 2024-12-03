@@ -73,14 +73,12 @@ export default function Feed() {
         }
 
         const algo = await TheAlgorithm.create({api: api, user: currentUser, setFeedInApp: setFeed});
-        console.log(`algorithm created, calling app level setFeed()`, algo);
-        setFeed(algo.feed);
         setAlgorithm(algo);
         setUserWeights(await algo.getUserWeights());
 
         // If there are toots in the cache set isLoading to false early so something is displayed
         if (algo.feed.length > 0) setIsLoading(false);
-        setFeed(await algo.getFeed());
+        await algo.getFeed();
         setIsLoading(false);
     };
 
