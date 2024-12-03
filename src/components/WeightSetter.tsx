@@ -5,11 +5,11 @@
  */
 import React from 'react';
 
-import * as ChangeCase from "change-case";
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
+import * as ChangeCase from "change-case";
 import { TIME_DECAY, FeedFilterSettings, StringNumberDict, TheAlgorithm } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
@@ -22,12 +22,9 @@ interface WeightSetterProps {
 };
 
 
-export default function WeightSetter({
-    algorithm,
-    updateFilters,
-    updateWeights,
-    userWeights,
-}: WeightSetterProps) {
+export default function WeightSetter(params: WeightSetterProps) {
+    const { algorithm, updateFilters, updateWeights, userWeights,} = params
+
     const makeCheckbox = (
         isChecked: boolean,
         filterName: string,
