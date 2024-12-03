@@ -9,6 +9,7 @@ import Container from "react-bootstrap/esm/Container";
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
 import { StringNumberDict, TheAlgorithm, Toot } from "fedialgo";
 
+import FilterSetter from "../components/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading, { DEFAULT_LOADING_MESSAGE } from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
@@ -103,6 +104,7 @@ export default function Feed() {
             </Modal>
 
             {algorithm && <WeightSetter algorithm={algorithm} />}
+            {algorithm && <FilterSetter algorithm={algorithm} />}
             <FindFollowers api={api} user={user} />
 
             {!isLoading && api && (feed.length >= 1) &&
