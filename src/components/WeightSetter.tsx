@@ -63,13 +63,13 @@ export default function WeightSetter({
         const filteredLanguages = algorithm.filters.filteredLanguages
 
         return makeCheckbox(
-            algorithm.filters.filteredLanguages.includes(lang),
-            lang,
+            algorithm.filters.filteredLanguages.includes(languageCode),
+            languageCode,
             (e) => {
                 if (e.target.checked) {
-                    filteredLanguages.push(lang);
+                    filteredLanguages.push(languageCode);
                 } else {
-                    filteredLanguages.splice(filteredLanguages.indexOf(lang), 1);
+                    filteredLanguages.splice(filteredLanguages.indexOf(languageCode), 1);
                 }
             },
             `${algorithm.feedLanguages[languageCode]} toots`
