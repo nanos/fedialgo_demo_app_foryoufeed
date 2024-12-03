@@ -77,7 +77,7 @@ export default function WeightSetter(params: WeightSetterProps) {
                     filteredLanguages.splice(filteredLanguages.indexOf(languageCode), 1);
                 }
             },
-            `${algorithm.feedLanguages[languageCode]} toots`
+            `${algorithm.feedLanguageCounts[languageCode]} toots`
         );
     };
 
@@ -109,7 +109,7 @@ export default function WeightSetter(params: WeightSetterProps) {
                                    .filter((filter) => typeof algorithm.filters[filter] === 'boolean')
                                    .map((filter) => settingCheckbox(filter));
 
-    const languageCheckboxes = Object.keys(algorithm.feedLanguages)
+    const languageCheckboxes = Object.keys(algorithm.feedLanguageCounts)
                                      .sort()
                                      .map((lang) => languageCheckbox(lang));
 

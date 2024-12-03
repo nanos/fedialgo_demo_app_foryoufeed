@@ -69,6 +69,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const learnWeights = props.learnWeights;
     const masto = props.api;
     let status: Toot = props.status;
+    console.debug(`localServer:`, localServer);
 
     // If it's a retoot then set 'status' to be the thing that was retooted
     if (props.status.reblog) {

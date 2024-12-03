@@ -27,7 +27,7 @@ export default function AttachmentsModal(
     // Check for weird media types
     toot.mediaAttachments.forEach((media, i) => {
         if (!MEDIA_TYPES.includes(media.type)) {
-            console.warn(`Unknown media type: '${media.type}' for toot:`, status);
+            console.warn(`Unknown media type: '${media.type}' for toot:`, toot);
         }
     });
 

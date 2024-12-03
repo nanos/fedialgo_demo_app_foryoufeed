@@ -16,8 +16,8 @@ export default function LoginPage() {
     const [_app, setApp] = useLocalStorage({ keyName: "app", defaultValue: {} } as AppStorage);
 
     const loginRedirect = async (): Promise<void> => {
-        const sanitized_server = server.replace("https://", "").replace("http://", "");
-        const api = await createRestAPIClient({url: `https://${sanitized_server}`});
+        const sanitizedServer = server.replace("https://", "").replace("http://", "");
+        const api = await createRestAPIClient({url: `https://${sanitizedServer}`});
         const scope = "read write:favourites write:statuses write:follows";
         const redirectUri = window.location.origin + "/callback";
 
@@ -25,7 +25,7 @@ export default function LoginPage() {
             clientName: "ForYouFeed",
             redirectUris: redirectUri,
             scopes: scope,
-            website: `https://${sanitized_server}`,
+            website: `https://${sanitizedServer}`,
         });
 
         setApp({ ...app, redirectUri });
@@ -37,7 +37,7 @@ export default function LoginPage() {
             scope: scope,
         });
 
-        window.location.href = `https://${sanitized_server}/oauth/authorize?${query}`;
+        window.location.href = `https://${sanitizedServer}/oauth/authorize?${query}`;
     };
 
     return (
