@@ -7,10 +7,10 @@ import { usePersistentState } from "react-persistent-state";
 
 import Container from "react-bootstrap/esm/Container";
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
-import { FeedFilterSettings, ScoresType, TheAlgorithm, Toot } from "fedialgo";
+import { ScoresType, TheAlgorithm, Toot } from "fedialgo";
 
 import FindFollowers from "../components/FindFollowers";
-import FullPageIsLoading from "../components/FullPageIsLoading";
+import FullPageIsLoading, { DEFAULT_LOADING_MESSAGE } from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
@@ -77,8 +77,11 @@ export default function Feed() {
         setFeed(algo.feed);
         setAlgorithm(algo);
         setUserWeights(await algo.getUserWeights());
-        setIsLoading(false);
+
+        // If there are toots in the cache set isLoading to false early so something is displayed
+        if (algo.feed.length > 0) setIsLoading(false);
         setFeed(await algo.getFeed());
+        setIsLoading(false);
     };
 
     // Pull more toots to display from our local cached and sorted toot feed
@@ -147,7 +150,11 @@ export default function Feed() {
                     />
                 ))}
 
-            {(feed.length == 0 || isLoading) && <FullPageIsLoading />}
+            {(isLoading || feed.length == 0) &&
+                <FullPageIsLoading
+                    message={isLoading ? DEFAULT_LOADING_MESSAGE : "No toots found! Maybe check your filter settings..."}
+                />}
+
             <div ref={bottomRef} onClick={showMoreToots}>Load More</div>
         </Container>
     );
