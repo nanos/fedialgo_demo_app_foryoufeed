@@ -4,7 +4,7 @@
 import parse from 'html-react-parser';
 import React from 'react';
 
-import { MEDIA_TYPES } from 'fedialgo/dist/helpers';
+import { IMAGE, VIDEO, VIDEO_TYPES } from 'fedialgo/dist/helpers';
 import { Modal } from 'react-bootstrap';
 import { Toot } from "fedialgo";
 
@@ -22,16 +22,9 @@ export default function AttachmentsModal(
 ) {
     const media = toot.mediaAttachments[mediaInspectionModalIdx];
     const shouldShowModal = mediaInspectionModalIdx >= 0;
-    let element: JSX.Element;
+    let element: JSX.Element = <></>;
 
-    // Check for weird media types
-    toot.mediaAttachments.forEach((media, i) => {
-        if (!MEDIA_TYPES.includes(media.type)) {
-            console.warn(`Unknown media type: '${media.type}' for toot:`, toot);
-        }
-    });
-
-    if (media?.type === "image") {
+    if (media?.type == IMAGE) {
         element = (
             <img
                 alt={media?.description ?? ""}
@@ -39,7 +32,7 @@ export default function AttachmentsModal(
                 width={"100%"}
             />
         );
-    } else if (media?.type === "video") {
+    } else if (VIDEO_TYPES.includes(media?.type)) {
         element = (
             <video width={"100%"} controls>
                 <source src={media?.url} type="video/mp4" />
