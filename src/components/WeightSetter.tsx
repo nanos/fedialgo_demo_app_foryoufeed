@@ -64,21 +64,29 @@ export default function WeightSetter(params: WeightSetterProps) {
         );
     };
 
-    const languageCheckbox = (languageCode: string) => {
-        const filteredLanguages = algorithm.filters.filteredLanguages;
-
+    const listCheckbox = (element: string, filterList: string[], numToots: number) => {
         return makeCheckbox(
-            algorithm.filters.filteredLanguages.includes(languageCode),
-            languageCode,
+            filterList.includes(element),
+            element,
             (e) => {
                 if (e.target.checked) {
-                    filteredLanguages.push(languageCode);
+                    filterList.push(element);
                 } else {
-                    filteredLanguages.splice(filteredLanguages.indexOf(languageCode), 1);
+                    filterList.splice(filterList.indexOf(element), 1);
                 }
             },
-            `${algorithm.feedLanguageCounts[languageCode]} toots`
+            `${numToots} toots`
         );
+    };
+
+    // Generate a bunch of checkboxes for switches that filter the feed based on an array
+    // of values. For example, this could be used to filter on toots' languages.
+    const listCheckboxes = (counts: StringNumberDict, filterList: string[]) => {
+        console.log(`listCheckboxes() called with counts:`, counts, `and filterList:`, filterList);
+
+        return Object.keys(counts)
+                     .sort()
+                     .map((element) => listCheckbox(element, filterList, counts[element]));
     };
 
     const weightSlider = (scoreName: string) => {
@@ -109,9 +117,10 @@ export default function WeightSetter(params: WeightSetterProps) {
                                    .filter((filter) => typeof algorithm.filters[filter] === 'boolean')
                                    .map((filter) => settingCheckbox(filter));
 
-    const languageCheckboxes = Object.keys(algorithm.feedLanguageCounts)
-                                     .sort()
-                                     .map((lang) => languageCheckbox(lang));
+    const checkboxSections = {
+        languages: listCheckboxes(algorithm.feedLanguageCounts, algorithm.filters.filteredLanguages),
+        apps: listCheckboxes(algorithm.appCounts, algorithm.filters.filteredApps),
+    };
 
     return (
         <Accordion>
@@ -143,17 +152,21 @@ export default function WeightSetter(params: WeightSetterProps) {
                         </Form.Group>
                     </div>
 
-                    <div style={roundedBox}>
-                        <p style={headerFont}>Languages</p>
+                    {Object.entries(checkboxSections).map(([sectionName, checkboxes]) => (
+                        <div style={roundedBox} key={sectionName}>
+                            <p style={headerFont}>{ChangeCase.capitalCase(sectionName)}</p>
 
-                        <Form.Group className="mb-1">
-                            <Form.Label>
-                                <b>Show only toots in these languages:</b>
-                            </Form.Label>
+                            <Form.Group className="mb-1">
+                                <Form.Label>
+                                    <b>Show only toots from these {sectionName}:</b>
+                                </Form.Label>
 
-                            {gridify(languageCheckboxes)}
-                        </Form.Group>
-                    </div>
+                                <Form.Group className="mb-1">
+                                    {gridify(checkboxes)}
+                                </Form.Group>
+                            </Form.Group>
+                        </div>
+                    ))}
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
