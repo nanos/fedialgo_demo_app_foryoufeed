@@ -10,15 +10,15 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
-import { NO_LANGUAGE, TIME_DECAY, FeedFilterSettings, ScoresType, TheAlgorithm } from "fedialgo";
+import { NO_LANGUAGE, TIME_DECAY, FeedFilterSettings, StringNumberDict, TheAlgorithm } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
 
 interface WeightSetterProps {
     algorithm: TheAlgorithm;
     updateFilters: (settings: FeedFilterSettings) => void;
-    updateWeights: (weights: ScoresType) => Promise<void>;
-    userWeights: ScoresType;
+    updateWeights: (weights: StringNumberDict) => Promise<void>;
+    userWeights: StringNumberDict;
 };
 
 

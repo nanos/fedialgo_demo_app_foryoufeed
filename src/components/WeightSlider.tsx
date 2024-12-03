@@ -4,7 +4,7 @@
 import React from 'react';
 
 import Form from 'react-bootstrap/esm/Form';
-import { ScoresType } from "fedialgo";
+import { StringNumberDict } from "fedialgo";
 
 const DEFAULT_VALUE = 1;
 const STEP_SIZE = 0.05;
@@ -13,8 +13,8 @@ interface WeightSliderProps {
     defaultValue?: number | undefined;
     description: string;
     scoreName: string;
-    updateWeights: (newWeights: ScoresType) => Promise<void>;
-    userWeights: ScoresType;
+    updateWeights: (newWeights: StringNumberDict) => Promise<void>;
+    userWeights: StringNumberDict;
 };
 
 

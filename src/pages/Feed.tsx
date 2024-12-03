@@ -7,7 +7,7 @@ import { usePersistentState } from "react-persistent-state";
 
 import Container from "react-bootstrap/esm/Container";
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
-import { ScoresType, TheAlgorithm, Toot } from "fedialgo";
+import { StringNumberDict, TheAlgorithm, Toot } from "fedialgo";
 
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading, { DEFAULT_LOADING_MESSAGE } from "../components/FullPageIsLoading";
@@ -29,7 +29,7 @@ export default function Feed() {
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null); //algorithm to use
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(true);  // true if page is still loading
-    const [userWeights, setUserWeights] = useState<ScoresType>({});  // weights for each factor
+    const [userWeights, setUserWeights] = useState<StringNumberDict>({});  // weights for each factor
     const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
 
     // Persistent state variables
@@ -90,7 +90,7 @@ export default function Feed() {
     };
 
     // Learn weights based on user action    // TODO: does learning weights really work?
-    const learnWeights = async (scores: ScoresType): Promise<void> => {
+    const learnWeights = async (scores: StringNumberDict): Promise<void> => {
         const newWeights = await algorithm.learnWeights(scores);
         if (!newWeights) return;
         console.log("new userWeights from learnWeights():", newWeights);
@@ -98,7 +98,7 @@ export default function Feed() {
     };
 
     // Update the user weightings stored in TheAlgorithm when a user moves a weight slider
-    const updateWeights = async (newWeights: ScoresType): Promise<void> => {
+    const updateWeights = async (newWeights: StringNumberDict): Promise<void> => {
         console.debug(`updateWeights() called...`);
         setUserWeights(newWeights);
         await algorithm.updateUserWeights(newWeights);

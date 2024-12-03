@@ -9,7 +9,7 @@ import * as emoji from 'node-emoji';
 import { imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
-import { ScoresType, Toot } from "fedialgo";
+import { StringNumberDict, Toot } from "fedialgo";
 
 import "../birdUI.css";
 import "../default.css";
@@ -60,7 +60,7 @@ interface StatusComponentProps {
     setError: (error: string) => void,
     status: Toot,
     user: User,
-    learnWeights: (statusWeight: ScoresType) => void,
+    learnWeights: (statusWeight: StringNumberDict) => void,
 };
 
 
