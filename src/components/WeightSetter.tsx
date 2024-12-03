@@ -77,6 +77,18 @@ export default function WeightSetter({
         );
     };
 
+    const weightSlider = (scoreName: string) => {
+        return (
+            <WeightSlider
+                description={algorithm.scorersDict[scoreName].description}
+                key={scoreName}
+                scoreName={scoreName}
+                updateWeights={updateWeights}
+                userWeights={userWeights}
+            />
+        );
+    };
+
     const gridify = (list: Array<any>) => {
         if (!list || list.length === 0) return <></>;
 
@@ -107,29 +119,12 @@ export default function WeightSetter({
                 </Accordion.Header>
 
                 <Accordion.Body>
-                    {/* Time Decay slider */}
-                    <WeightSlider
-                        description={algorithm.scorersDict[TIME_DECAY].description}
-                        key={TIME_DECAY}
-                        scoreName={TIME_DECAY}
-                        updateWeights={updateWeights}
-                        userWeights={userWeights}
-                    />
-
+                    {weightSlider(TIME_DECAY)}
                     <div style={{height: '5px'}} />
 
-                    {/* Other feature weighting sliders */}
                     <div style={roundedBox}>
                         <p style={headerFont}>Weightings</p>
-
-                        {userWeights && algorithm.weightedScoreNames.map((scoreName) => (
-                            <WeightSlider
-                                description={algorithm.scorersDict[scoreName].description}
-                                key={scoreName}
-                                scoreName={scoreName}
-                                updateWeights={updateWeights}
-                                userWeights={userWeights}
-                            />))}
+                        {userWeights && algorithm.weightedScorers.map((scorer) => weightSlider(scorer.name))}
                     </div>
 
                     <div style={roundedBox}>
