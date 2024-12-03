@@ -211,17 +211,18 @@ export default function StatusComponent(props: StatusComponentProps) {
                 try {
                     const status_ = await resolve(status);
                     const id = status_.id;
-                    // favourited ? console.log("skipping fav()") : weightAdjust(status.rawScores);  // TODO: does learning weights really work?
 
                     if (actionName == FAVORITE) {
                         if (newState) {
                             await masto.v1.statuses.$select(id).favourite();
+                            weightAdjust(status.scoreInfo?.rawScores)  // TODO: does learning weights really work?
                         } else {
                             await masto.v1.statuses.$select(id).unfavourite();
                         }
                     } else if (actionName == RETOOT) {
                         if (newState) {
                             await masto.v1.statuses.$select(id).reblog();
+                            weightAdjust(status.scoreInfo?.rawScores)  // TODO: does learning weights really work?
                         } else {
                             await masto.v1.statuses.$select(id).unreblog();
                         }
