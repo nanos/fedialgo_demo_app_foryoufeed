@@ -30,14 +30,8 @@ export default function Feed() {
     const [error, setError] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(true);  // true if page is still loading
     const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
-
     // Persistent state variables
     const [numDisplayedToots, setNumDisplayedToots] = usePersistentState<number>(DEFAULT_NUM_TOOTS, user.id + "numDisplayedToots"); //how many toots to show
-    const [scrollPos, setScrollPos] = usePersistentState<number>(0, user.id + "scroll"); //scroll position
-
-    window.addEventListener("scroll", () => {
-        if (window.scrollY % 10 == 0) setScrollPos(window.scrollY);
-    });
 
     const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
