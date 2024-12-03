@@ -17,7 +17,7 @@ import WeightSlider from './WeightSlider';
 interface WeightSetterProps {
     algorithm: TheAlgorithm;
     updateFilters: (settings: FeedFilterSettings) => void;
-    updateWeights: (weights: ScoresType) => Promise<ScoresType>;
+    updateWeights: (weights: ScoresType) => Promise<void>;
     userWeights: ScoresType;
 };
 

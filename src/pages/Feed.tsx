@@ -94,24 +94,15 @@ export default function Feed() {
     // Learn weights based on user action    // TODO: does learning weights really work?
     const weightAdjust = async (scores: ScoresType) => {
         const newWeights = await algorithm.learnWeights(scores);
-        console.log("new userWeights in weightAdjust():", newWeights);
+        console.log("new userWeights from learnWeights():", newWeights);
         setUserWeights(newWeights);
     };
 
     // Update the user weightings stored in TheAlgorithm when a user moves a weight slider
-    const updateWeights = async (newWeights: ScoresType): Promise<ScoresType> => {
-        console.log(`updateWeights() called...`);
+    const updateWeights = async (newWeights: ScoresType): Promise<void> => {
+        console.debug(`updateWeights() called...`);
         setUserWeights(newWeights);
-
-        if (algorithm) {
-            const newFeed = await algorithm.updateUserWeights(newWeights);
-            setFeed(newFeed);
-        } else {
-            console.warn(`'algorithm' variable not set, can't updateWeights()!`);
-        }
-
-        console.log(`updateWeights() finished...`);
-        return newWeights;
+        await algorithm.updateUserWeights(newWeights);
     };
 
     if (algorithm && algorithm.feed.length != feed.length) {
@@ -152,7 +143,7 @@ export default function Feed() {
 
             {(isLoading || feed.length == 0) &&
                 <FullPageIsLoading
-                    message={isLoading ? DEFAULT_LOADING_MESSAGE : "No toots found! Maybe check your filter settings..."}
+                    message={isLoading ? DEFAULT_LOADING_MESSAGE : "No toots found! Maybe check your filter settings"}
                 />}
 
             <div ref={bottomRef} onClick={showMoreToots}>Load More</div>
