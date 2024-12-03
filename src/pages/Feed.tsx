@@ -89,15 +89,9 @@ export default function Feed() {
 
     // Learn weights based on user action    // TODO: does learning weights really work?
     const learnWeights = async (scores: StringNumberDict): Promise<void> => {
-        // const newWeights = await algorithm.learnWeights(scores);
-        // if (!newWeights) return;
-        // console.log("new userWeights from learnWeights():", newWeights);
-        // setUserWeights(newWeights);
+        const newWeights = await algorithm.learnWeights(scores);
+        if (!newWeights) return;
     };
-
-    if (algorithm && algorithm.feed.length != feed.length) {
-        console.log(`filtered ${feed.length} of ${algorithm.feed.length} toots:`, feed);
-    }
 
     return (
         <Container style={{backgroundColor: '#15202b', height: 'auto', maxWidth: FEED_WIDTH}}>
@@ -129,7 +123,9 @@ export default function Feed() {
                     message={isLoading ? DEFAULT_LOADING_MESSAGE : "No toots found! Maybe check your filter settings"}
                 />}
 
-            <div ref={bottomRef} onClick={showMoreToots}>Load More</div>
+            <div ref={bottomRef} onClick={showMoreToots}>
+                <p>Load More</p>
+            </div>
         </Container>
     );
 };

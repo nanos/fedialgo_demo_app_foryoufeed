@@ -56,15 +56,15 @@ export default function AuthProvider(props: PropsWithChildren) {
     };
 
     const value = useMemo(
-        () => ({
-            user,
-            loginUser,
-            logout
-        }),
+        () => ({ user, loginUser, logout }),
         [user]
     );
 
-    return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={value}>
+            {props.children}
+        </AuthContext.Provider>
+    );
 };
 
 
