@@ -27,7 +27,8 @@
         "predeploy": "npm run build",
         "test": "jest",
         "tsc": "npx tsc --noEmit",
-        "start": "webpack serve --mode development --open --no-cache"
+        "start": "webpack serve --mode development --open --no-cache",
+        "start_clean": "webpack serve --open"
     },
     "eslintConfig": {
         "extends": [
