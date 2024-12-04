@@ -12,7 +12,7 @@ import Row from 'react-bootstrap/Row';
 import * as ChangeCase from "change-case";
 import { StringNumberDict } from "fedialgo";
 
-import { WeightSetterProps, headerFont, roundedBox } from "./WeightSetter";
+import { WeightSetterProps, headerFont, roundedBox, titleStyle } from "./WeightSetter";
 
 const MAX_CHECKBOX_LABEL_LENGTH = 20;
 
@@ -120,7 +120,7 @@ export default function FilterSetter(params: WeightSetterProps) {
         <Accordion>
             <Accordion.Item eventKey="0">
                 <Accordion.Header>
-                    <p style={{fontSize: 25, fontWeight: "bold"}}>
+                    <p style={titleStyle}>
                         Filter Toots
                     </p>
                 </Accordion.Header>

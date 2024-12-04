@@ -45,7 +45,7 @@ export default function WeightSetter(params: WeightSetterProps) {
         <Accordion>
             <Accordion.Item eventKey="0">
                 <Accordion.Header>
-                    <p style={{fontSize: 25, fontWeight: "bold"}}>
+                    <p style={titleStyle}>
                         Feed Algorithmus
                     </p>
                 </Accordion.Header>
@@ -85,4 +85,9 @@ export const roundedBox = {
 
 export const formLabel = {
     marginBottom: "10px",
-}
+};
+
+export const titleStyle = {
+    fontSize: 20,
+    fontWeight: "bold"
+};
