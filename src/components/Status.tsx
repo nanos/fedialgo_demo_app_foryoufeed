@@ -103,12 +103,16 @@ export default function StatusComponent(props: StatusComponentProps) {
     React.useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent): void => {
             if (mediaInspectionModalIdx === -1) return;
+            let newIndex = mediaInspectionModalIdx;
 
-            if (e.key === "ArrowRight" && mediaInspectionModalIdx < status.mediaAttachments.length - 1) {
-                setMediaInspectionModalIdx(mediaInspectionModalIdx + 1);
-            } else if (e.key === "ArrowLeft" && mediaInspectionModalIdx > 0) {
-                setMediaInspectionModalIdx(mediaInspectionModalIdx - 1);
+            if (e.key === "ArrowRight") {
+                newIndex += 1;
+            } else if (e.key === "ArrowLeft") {
+                newIndex -= 1;
+                if (newIndex < 0) newIndex = status.mediaAttachments.length - 1;
             }
+
+            setMediaInspectionModalIdx(newIndex % status.mediaAttachments.length);
         };
 
         window.addEventListener('keydown', handleKeyDown);
