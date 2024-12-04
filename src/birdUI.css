@@ -2166,7 +2166,7 @@ body.embed .button.logo-button:hover,
 @media (min-width: 889px) {
   .layout-single-column .compose-form .autosuggest-textarea__textarea {
     /* stylelint-disable-next-line */
-    max-height: 20vh !important;  /* stylelint-disable-next-line */
+    max-height: 20vh !important;  /* stylelint-disable-next-line */  /* Not the Status component height  */
     overflow-y: auto !important;
     resize: none;
   }
@@ -2779,7 +2779,7 @@ body.embed .button.logo-button:hover,
     bottom: 0;
     height: 3.5rem;
     left: 0;
-    max-height: 16vh;
+    max-height: 16vh;  /* Not the Status component height  */
     width: 100vw;
   }
 
