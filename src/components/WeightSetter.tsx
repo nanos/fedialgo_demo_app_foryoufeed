@@ -6,10 +6,6 @@
 import React, { useState, useEffect } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/esm/Form';
-import Row from 'react-bootstrap/Row';
-import * as ChangeCase from "change-case";
 import { TIME_DECAY, StringNumberDict, TheAlgorithm } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
@@ -68,9 +64,6 @@ export default function WeightSetter(params: WeightSetterProps) {
     );
 };
 
-
-const evenNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 == 0);
-const oddNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 != 0);
 
 export const headerFont = {
     fontFamily: "Tahoma, Geneva, sans-serif",
