@@ -12,7 +12,7 @@ import Row from 'react-bootstrap/Row';
 import * as ChangeCase from "change-case";
 import { StringNumberDict } from "fedialgo";
 
-import { headerFont, roundedBox, WeightSetterProps } from "./WeightSetter";
+import { formLabel, headerFont, roundedBox, WeightSetterProps } from "./WeightSetter";
 
 
 export default function FilterSetter(params: WeightSetterProps) {
@@ -105,11 +105,9 @@ export default function FilterSetter(params: WeightSetterProps) {
 
                 <Accordion.Body>
                     <div style={roundedBox}>
-                        <p style={headerFont}>Filters</p>
-
-                        <Form.Label>
-                            <b>Choose what kind of toots are in your feed.</b>
-                        </Form.Label>
+                        <p style={formLabel}>
+                            <span style={headerFont}>Filters</span> (Choose what kind of toots are in your feed)
+                        </p>
 
                         <Form.Group className="mb-1">
                             {gridify(filterCheckboxes)}
@@ -117,17 +115,25 @@ export default function FilterSetter(params: WeightSetterProps) {
                     </div>
 
                     {Object.entries(checkboxSections).map(([sectionName, checkboxes]) => (
-                        <div style={roundedBox} key={sectionName}>
-                            <p style={{marginBottom: '10px'}}>
-                                <span style={headerFont}>{ChangeCase.capitalCase(sectionName)}</span> (Show only toots from these {sectionName})
-                            </p>
+                        <Accordion>
+                            <Accordion.Item eventKey="5">
+                                <Accordion.Header>
+                                    <p style={formLabel}>
+                                        <span style={headerFont}>{ChangeCase.capitalCase(sectionName)}</span> (Show only toots from these {sectionName})
+                                    </p>
+                                </Accordion.Header>
 
-                            <Form.Group className="mb-1">
-                                <Form.Group className="mb-1">
-                                    {gridify(checkboxes)}
-                                </Form.Group>
-                            </Form.Group>
-                        </div>
+                                <Accordion.Body>
+                                    <div style={roundedBox} key={sectionName}>
+                                        <Form.Group className="mb-1">
+                                            <Form.Group className="mb-1">
+                                                {gridify(checkboxes)}
+                                            </Form.Group>
+                                        </Form.Group>
+                                    </div>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        </Accordion>
                     ))}
                 </Accordion.Body>
             </Accordion.Item>

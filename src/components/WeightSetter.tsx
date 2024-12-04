@@ -78,5 +78,12 @@ export const roundedBox = {
     broderWidth: "1px",
     background: "lightgrey",
     marginBottom: "20px",
-    padding: "12px",
+    paddingLeft: "20px",
+    paddingRight: "20px",
+    paddingBottom: "10px",
+    paddingTop: "10px",
 };
+
+export const formLabel = {
+    marginBottom: "10px",
+}
