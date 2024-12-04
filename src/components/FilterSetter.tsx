@@ -14,6 +14,8 @@ import { StringNumberDict } from "fedialgo";
 
 import { WeightSetterProps, headerFont, roundedBox } from "./WeightSetter";
 
+const MAX_CHECKBOX_LABEL_LENGTH = 20;
+
 
 export default function FilterSetter(params: WeightSetterProps) {
     const { algorithm } = params;
@@ -24,7 +26,13 @@ export default function FilterSetter(params: WeightSetterProps) {
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
         labelExtra?: string
     ) => {
-        const label = labelExtra ? `${filterName} (${labelExtra})` : ChangeCase.capitalCase(filterName);
+        let label = filterName;
+
+        if (filterName.length > MAX_CHECKBOX_LABEL_LENGTH) {
+            label = filterName.slice(0, MAX_CHECKBOX_LABEL_LENGTH) + '...';
+        }
+
+        label = labelExtra ? `${label} (${labelExtra})` : ChangeCase.capitalCase(label);
 
         return (
             <Form.Check
@@ -118,7 +126,7 @@ export default function FilterSetter(params: WeightSetterProps) {
                 </Accordion.Header>
 
                 <Accordion.Body>
-                    <div style={roundedBox}>
+                    <div style={roundedBox} key="baseFilters">
                         <Form.Label>
                             <span style={headerFont}>Filters</span> (Choose what kind of toots are in your feed)
                         </Form.Label>
@@ -129,7 +137,7 @@ export default function FilterSetter(params: WeightSetterProps) {
                     </div>
 
                     {Object.entries(checkboxSections).map(([sectionName, checkboxes]) => (
-                        <Accordion>
+                        <Accordion key={sectionName}>
                             <Accordion.Item eventKey="5">
                                 <Accordion.Header>
                                     <Form.Label>
