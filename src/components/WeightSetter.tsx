@@ -85,5 +85,5 @@ export const roundedBox = {
     broderWidth: "1px",
     background: "lightgrey",
     marginBottom: "20px",
-    padding: "20px",
+    padding: "12px",
 };

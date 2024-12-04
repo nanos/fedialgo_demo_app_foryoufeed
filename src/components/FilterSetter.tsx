@@ -3,7 +3,7 @@
  * Things like how much to prefer people you favorite a lot or how much to posts that
  * are trending in the Fedivers.
  */
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
@@ -91,6 +91,7 @@ export default function FilterSetter(params: WeightSetterProps) {
     const checkboxSections = {
         languages: listCheckboxes(algorithm.feedLanguageCounts, algorithm.filters.filteredLanguages),
         apps: listCheckboxes(algorithm.appCounts, algorithm.filters.filteredApps),
+        tags: listCheckboxes(algorithm.tagFilterCounts, algorithm.filters.filteredTags),
     };
 
     return (
@@ -117,13 +118,11 @@ export default function FilterSetter(params: WeightSetterProps) {
 
                     {Object.entries(checkboxSections).map(([sectionName, checkboxes]) => (
                         <div style={roundedBox} key={sectionName}>
-                            <p style={headerFont}>{ChangeCase.capitalCase(sectionName)}</p>
+                            <p style={{marginBottom: '10px'}}>
+                                <span style={headerFont}>{ChangeCase.capitalCase(sectionName)}</span> (Show only toots from these {sectionName})
+                            </p>
 
                             <Form.Group className="mb-1">
-                                <Form.Label>
-                                    <b>Show only toots from these {sectionName}:</b>
-                                </Form.Label>
-
                                 <Form.Group className="mb-1">
                                     {gridify(checkboxes)}
                                 </Form.Group>
