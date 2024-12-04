@@ -95,6 +95,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     if (!masto) throw new Error("No Mastodon API");
     const images = imageAttachments(status);
     const videos = videoAttachments(status);
+    const hasTrendingTags = status.trendingTags?.length > 0;
 
     // If there's one image try to show it full size; If there's more than one use old image handler.
     const imageHeight = images.length == 1 ? images[0].meta?.small?.height : IMAGES_HEIGHT;
@@ -328,21 +329,21 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <span className="status__visibility-icon">
                                 <i className="fa fa-globe" title="Public" style={{marginRight: '4px'}}/>
 
-                                {(status?.followedTags?.length || status?.trendingTags?.length || 0) > 0 &&
+                                {(status.followedTags?.length || status.trendingTags?.length || 0) > 0 &&
                                     <i
                                         className="fa fa-hashtag"
-                                        style={{color: 'yellow', marginRight: '4px'}}
-                                        title="Contains a Followed or Trending Tag"
+                                        style={{color: hasTrendingTags ? 'orange' : 'yellow', marginRight: '4px'}}
+                                        title={`Contains ${hasTrendingTags ? 'Trending' : 'Followed'} Hashtag`}
                                     />}
 
-                                {(status?.trendingRank || status?.trendingTags?.length > 0) &&
+                                {(status.trendingRank || hasTrendingTags) &&
                                     <i
                                         className="fa fa-fire"
                                         style={{color: 'red', marginRight: '4px'}}
-                                        title="Trending Toot (or Tag)"
+                                        title="Currently Trending"
                                     />}
 
-                                {status?.recommended && <i className="fa fa-bolt" title="Recommended By AI"></i>}
+                                {/* {status.trendingTags?.length > 0 && <i className="fa fa-bolt" title="Trending Tag"></i>} */}
                             </span>
 
                             <time dateTime={status.createdAt} title={status.createdAt}>
