@@ -157,6 +157,8 @@ export default function FilterSetter(params: WeightSetterProps) {
                                 </Accordion.Header>
 
                                 <Accordion.Body>
+                                    {sectionName == "tags" && settingCheckbox("suppressSelectedTags")}
+
                                     <div style={roundedBox} key={sectionName}>
                                         <Form.Group className="mb-1">
                                             <Form.Group className="mb-1">
