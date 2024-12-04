@@ -60,7 +60,7 @@ export default function FilterSetter(params: WeightSetterProps) {
                     filterList.splice(filterList.indexOf(element), 1);
                 }
             },
-            `${numToots} toots`
+            `${numToots}`
         );
     };
 
@@ -79,6 +79,20 @@ export default function FilterSetter(params: WeightSetterProps) {
             <Row>
                 <Col>{evenNumbered(list)}</Col>
                 {list.length > 1 && <Col>{oddNumbered(list)}</Col>}
+            </Row>
+        );
+    };
+
+    const gridify3 = (list: Array<any>) => {
+        const col1 = list.filter((_, index) => index % 3 == 0);
+        const col2 = list.filter((_, index) => (index + 2) % 3 == 0);
+        const col3 = list.filter((_, index) => (index + 1) % 3 == 0);
+
+        return (
+            <Row>
+                <Col>{col1}</Col>
+                <Col>{col2}</Col>
+                <Col>{col3}</Col>
             </Row>
         );
     };
@@ -119,7 +133,8 @@ export default function FilterSetter(params: WeightSetterProps) {
                             <Accordion.Item eventKey="5">
                                 <Accordion.Header>
                                     <Form.Label>
-                                        <span style={headerFont}>{ChangeCase.capitalCase(sectionName)}</span> (Show only toots from these {sectionName})
+                                        <span style={headerFont}>{ChangeCase.capitalCase(sectionName)}</span>
+                                        {'   '}(Show only toots from these {sectionName})
                                     </Form.Label>
                                 </Accordion.Header>
 
@@ -127,7 +142,7 @@ export default function FilterSetter(params: WeightSetterProps) {
                                     <div style={roundedBox} key={sectionName}>
                                         <Form.Group className="mb-1">
                                             <Form.Group className="mb-1">
-                                                {gridify(checkboxes)}
+                                                {gridify3(checkboxes)}
                                             </Form.Group>
                                         </Form.Group>
                                     </div>
