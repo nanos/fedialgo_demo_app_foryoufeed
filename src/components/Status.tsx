@@ -328,7 +328,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     <i
                                         className="fa fa-fire"
                                         style={{color: 'red', marginRight: '4px'}}
-                                        title="Trending Toot"
+                                        title="Trending Toot (or Tag)"
                                     />}
 
                                 {status?.recommended && <i className="fa fa-bolt" title="Recommended By AI"></i>}
