@@ -441,7 +441,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                                 if (video.type == 'gifv') {
                                     videoTag = (
-                                        <video autoPlay height={"100%"} loop playsInline>
+                                        <video autoPlay height={"100%"} loop playsInline style={VIDEO_STYLE}>
                                             {sourceTag}
                                         </video>
                                     );
@@ -457,9 +457,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     <div
                                         className="media-gallery__item"
                                         key={i}
-                                        style={{ height: "100%", inset: "auto", width: "100%", margin: "auto", display: "block",
-                                            marginLeft: "auto",
-                                            marginRight: "auto" }}
+                                        style={{ height: "100%", inset: "auto", width: "100%" }}
                                     >
                                         <canvas
                                             className="media-gallery__preview media-gallery__preview--hidden"
