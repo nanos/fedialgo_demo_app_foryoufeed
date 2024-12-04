@@ -21,7 +21,6 @@ import { useAuthContext } from "../hooks/useAuth";
 
 const DEFAULT_NUM_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
-const FEED_WIDTH = '800px';
 
 
 export default function Feed() {
