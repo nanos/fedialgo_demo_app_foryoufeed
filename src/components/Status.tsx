@@ -21,7 +21,7 @@ import { User } from '../types';
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
 const IMAGES_HEIGHT = 314;
-const VIDEO_HEIGHT = IMAGES_HEIGHT + 100;
+const VIDEO_HEIGHT = IMAGES_HEIGHT * 2;
 
 const FAVORITE = 'favourite';
 const RETOOT = 'reblog';
@@ -53,6 +53,13 @@ const ACTION_ICONS = {
     Retoot: 'retweet',
     Score: 'balance-scale',
 };
+
+const VIDEO_STYLE = {
+    display: "block",
+    margin: "auto",
+    marginLeft: "auto",
+    marginRight: "auto",
+}
 
 
 interface StatusComponentProps {
@@ -440,7 +447,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     );
                                 } else {
                                     videoTag = (
-                                        <video controls height={"100%"} playsInline>
+                                        <video controls height={"100%"} playsInline style={VIDEO_STYLE}>
                                             {sourceTag}
                                         </video>
                                     );
@@ -450,7 +457,9 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     <div
                                         className="media-gallery__item"
                                         key={i}
-                                        style={{ height: "100%", inset: "auto", width: "100%" }}
+                                        style={{ height: "100%", inset: "auto", width: "100%", margin: "auto", display: "block",
+                                            marginLeft: "auto",
+                                            marginRight: "auto" }}
                                     >
                                         <canvas
                                             className="media-gallery__preview media-gallery__preview--hidden"
