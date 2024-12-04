@@ -333,7 +333,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     <i
                                         className="fa fa-hashtag"
                                         style={{color: hasTrendingTags ? 'orange' : 'yellow', marginRight: '4px'}}
-                                        title={`Contains ${hasTrendingTags ? 'Trending' : 'Followed'} Hashtag`}
+                                        title={`Contains a ${hasTrendingTags ? 'Trending' : 'Followed'} Hashtag`}
                                     />}
 
                                 {(status.trendingRank || hasTrendingTags) &&
