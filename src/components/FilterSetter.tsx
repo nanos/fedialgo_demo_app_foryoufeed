@@ -126,15 +126,25 @@ export default function FilterSetter(params: WeightSetterProps) {
                 </Accordion.Header>
 
                 <Accordion.Body>
-                    <div style={{...roundedBox, marginBottom: "15px"}} key="baseFilters">
-                        <Form.Label>
-                            <span style={headerFont}>Filters</span> (Choose what kind of toots are in your feed)
-                        </Form.Label>
+                    <Accordion key={"baseFilters"}>
+                        <Accordion.Item eventKey="5">
+                            <Accordion.Header>
+                                <Form.Label>
+                                    <span style={headerFont}>Filters</span> (Choose what kind of toots are in your feed)
+                                </Form.Label>
+                            </Accordion.Header>
 
-                        <Form.Group className="mb-1">
-                            {gridify(filterCheckboxes)}
-                        </Form.Group>
-                    </div>
+                            <Accordion.Body>
+                                <div style={roundedBox}>
+                                    <Form.Group className="mb-1">
+                                        <Form.Group className="mb-1">
+                                            {gridify(filterCheckboxes)}
+                                        </Form.Group>
+                                    </Form.Group>
+                                </div>
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    </Accordion>
 
                     {Object.entries(checkboxSections).map(([sectionName, checkboxes]) => (
                         <Accordion key={sectionName}>
