@@ -126,7 +126,7 @@ export default function FilterSetter(params: WeightSetterProps) {
                 </Accordion.Header>
 
                 <Accordion.Body>
-                    <div style={roundedBox} key="baseFilters">
+                    <div style={{...roundedBox, marginBottom: "15px"}} key="baseFilters">
                         <Form.Label>
                             <span style={headerFont}>Filters</span> (Choose what kind of toots are in your feed)
                         </Form.Label>

@@ -77,7 +77,7 @@ export const roundedBox = {
     borderRadius: "25px",
     broderWidth: "1px",
     background: "lightgrey",
-    marginBottom: "10px",
+    // marginBottom: "10px",
     paddingLeft: "30px",
     paddingRight: "30px",
     paddingBottom: "13px",
