@@ -5719,8 +5719,8 @@ a.status-card.compact:hover {
 
 .status-card__image-image {
     -o-object-fit: contain;
-    object-fit: contain;
-    background-size: contain;
+    object-fit: cover;
+    background-size: cover;
     background-position: 50%;
 }
 

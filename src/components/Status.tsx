@@ -170,7 +170,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                     alt={image.description}
                     onClick={() => setMediaInspectionModalIdx(idx)}
                     src={image.previewUrl}
-                    style={{ objectPosition: "top", height: "100%", objectFit: "cover", width: "100%" }}
+                    style={{ objectPosition: "top", height: "100%", objectFit: "contain", width: "100%" }}
                 />
             </div>
         );
