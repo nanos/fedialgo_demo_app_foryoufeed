@@ -4,7 +4,7 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 
-import { describeAccount } from 'fedialgo/dist/helpers';
+import { describeAccount } from 'fedialgo/dist/objects/toot';
 import { Toot } from 'fedialgo';
 
 

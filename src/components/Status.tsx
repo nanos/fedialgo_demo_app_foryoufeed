@@ -2,12 +2,12 @@
  * Render a Status, also known as a Toot.
  */
 import React from "react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
 import * as emoji from 'node-emoji';
-import { imageAttachments, videoAttachments } from 'fedialgo/dist/helpers';
-import { LazyLoadImage } from "react-lazy-load-image-component";
+import { imageAttachments, videoAttachments } from 'fedialgo/dist/objects/toot';
 import { mastodon } from 'masto';
 import { StringNumberDict, Toot } from "fedialgo";
 

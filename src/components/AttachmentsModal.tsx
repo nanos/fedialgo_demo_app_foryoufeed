@@ -4,7 +4,7 @@
 import parse from 'html-react-parser';
 import React from 'react';
 
-import { IMAGE, VIDEO, VIDEO_TYPES } from 'fedialgo/dist/helpers';
+import { IMAGE, VIDEO_TYPES } from 'fedialgo/dist/helpers';
 import { Modal } from 'react-bootstrap';
 import { Toot } from "fedialgo";
 
