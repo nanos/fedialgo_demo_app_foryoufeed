@@ -321,7 +321,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     <i
                                         className="fa fa-hashtag"
                                         style={{color: 'yellow', marginRight: '4px'}}
-                                        title="Contains a Followed Tag"
+                                        title="Contains a Followed or Trending Tag"
                                     />}
 
                                 {(status?.trendingRank || status?.trendingTags?.length > 0) &&
