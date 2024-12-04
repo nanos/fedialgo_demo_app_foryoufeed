@@ -5721,7 +5721,7 @@ a.status-card.compact:hover {
     -o-object-fit: contain;
     object-fit: contain;
     background-size: contain;
-    background-position:50%
+    background-position: 50%;
 }
 
 .status-card__image-image, .status-card__image-preview {
@@ -5729,7 +5729,7 @@ a.status-card.compact:hover {
     display: block;
     margin: 0;
     width: 100%;
-    height:100%
+    height: 100%;
 }
 
 .status-card__image-preview {
@@ -8075,8 +8075,8 @@ a.status-card.compact:hover {
 }
 
 .media-gallery__item-thumbnail img, .media-gallery__preview {
-    -o-object-fit: cover;
-    object-fit:cover
+    -o-object-fit: cover; /* Changing to contain didn't do anything? */
+    object-fit: cover;
 }
 
 .media-gallery__preview {
@@ -8090,26 +8090,26 @@ a.status-card.compact:hover {
 }
 
 .media-gallery__preview--hidden {
-    display:none
+    display: none;
 }
 
 .media-gallery__gifv {
     height: 100%;
     overflow: hidden;
     position: relative;
-    width:100%
+    width: 100%;
 }
 
 .media-gallery__item-gifv-thumbnail {
     cursor: zoom-in;
     height: 100%;
     -o-object-fit: cover;
-    object-fit: cover;
+    object-fit: cover;      /* This maybe should be changed to contain (tried it, didn't see anything */
     position: relative;
     top: 50%;
     transform: translateY(-50%);
     width: 100%;
-    z-index:1
+    z-index: 1;
 }
 
 .media-gallery__item-thumbnail-label {
@@ -8226,7 +8226,7 @@ a.status-card.compact:hover {
 
 .video-player.inline video {
     -o-object-fit: contain;
-    object-fit: contain;
+    object-fit: contain;     /* Should this be cover? */
     position: relative;
     top: 50%;
     transform:translateY(-50%)
@@ -10372,7 +10372,7 @@ noscript div a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    -o-object-fit: cover;
+    -o-object-fit: cover; /* Changing to contain didn't do anything? */
     object-fit:cover
 }
 
@@ -10384,7 +10384,7 @@ noscript div a:hover {
     display: block;
     width: 100%;
     height: 100%;
-    -o-object-fit: cover;
+    -o-object-fit: cover;   /* Changing this to contain didn't do anything? */
     object-fit: cover;
     border: 0;
     background: transparent;
