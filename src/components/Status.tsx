@@ -404,7 +404,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     alt=""
                                     className="status-card__image-image"
                                     src={status.card.image}
-                                    style={{ maxHeight: "35vh", objectPosition: "top" }}
+                                    style={{ maxHeight: "45vh", objectPosition: "top" }}
                                 />
                             </div>
 
