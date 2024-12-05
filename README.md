@@ -42,7 +42,7 @@ There's [a script](./quick_install.sh) in this repo that will do all the steps f
 
 
 # Usage
-### Setting Weights
+## Setting Weights
 Once the initial load is complete you can adjust the way the algorithm weights various aspects of a toot when it decides what should be at or near the top of your feed. Hopefully these are self explanatory:
 
 <p align="center">
@@ -51,7 +51,16 @@ Once the initial load is complete you can adjust the way the algorithm weights v
 
 One thing that's kind of a gotcha is the way the `topPosts - Favor posts that are trending in the Fediverse` slider works. Because trending posts often have tons of engagement in the form of replies, favorites, and retoots they can easily drown out the toots from people you are actually following. As a result the impact of this slider gets increasingly drastic _but only if the value is below 1.0_. At 1.0 and above it behaves like all the other weighting sliders.
 
-### Investigating A Toot's Score
+## Filtering
+You can filter based on hashtag, source (accounts you follow, hashtags you follow, various kinds of trending toots), language, and application.
+
+<div style="display: flex; justify-content: space-around;">
+    <img src="doc/source_and_language_filters.png">
+    <img src="doc/tag_filters.png">
+</div>
+
+
+## Investigating A Toot's Score
 Clicking the "i" in the GUI will bring up a popup that will show you the gorey details of how a toot measured up.
 
 <p align="center">
@@ -64,13 +73,13 @@ Here's an example of the elements that go into scoring a toot:
     <img src="doc/toot_score_modal.png" alt="An example of the way a toot is weighted." width="600">
 </p>
 
-### Tooting And Favoriting
+## Tooting And Favoriting
 Currently you can retoot and favorite other people's toots through the app's web interface. For replies you'll have to click through to the standard Mastodon web app.
 
-### Shutdown
+## Shutdown
 `Ctrl-C` in the terminal window you launched the `node.js` server in (with `npm run start`) will kill the app.
 
-### Known Issues
+# Known Issues
 * If you get an error about `GenerateSW() was called more than once` or whatever just ignore it.
 * Sometimes (always?) when starting the app after the first time you will find your Mastodon login has expired in which case you will be kicked back to the login screen for reauthorization.
 * Infinite scroll isn't _really_ infinite (yet). If you scroll far enough you will run out of toots to peruse.
