@@ -60,7 +60,7 @@ export default function Feed() {
 
     // Check that we have valid user credentials and load timeline toots, otherwise force a logout.
     const constructFeed = async (): Promise<void> => {
-        console.log(`constructFeed() called with user ID ${user?.id} ('feed' currently contains ${feed.length} toots)`);
+        console.log(`constructFeed() called with user ID ${user?.id} (feed already has ${feed.length} toots)`);
         let currentUser: mastodon.v1.Account;
 
         try {
@@ -84,7 +84,7 @@ export default function Feed() {
     // Pull more toots to display from our local cached and sorted toot feed
     // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
     const showMoreToots = () => {
-        console.log(`numDisplayedToots=${numDisplayedToots}, feed.length=${feed.length}. loading ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more toots...`);
+        console.log(`Showing ${numDisplayedToots} toots, ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more (${feed.length} available to show)`);
         setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
     };
 
