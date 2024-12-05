@@ -28,7 +28,7 @@ export default function WeightSlider(props: WeightSliderProps) {
     const decimals = (minValue > 0 && minValue < 0.01) ? 3 : 2;
 
     return (
-        <Form.Group className="me-1">
+        <Form.Group className="me-2">
             <div style={{alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
                 <div style={sliderValue}>
                     <span style={monoFont}>
@@ -78,8 +78,8 @@ const sliderValue = {
     borderWidth: '1px',
     fontColor: 'white',
     marginRight: '10px',
-    paddingBottom: '2px',
-    paddingLeft: '10px',
-    paddingRight: '10px',
-    paddingTop: '2px',
+    paddingBottom: '1px',
+    paddingLeft: '8px',
+    paddingRight: '8px',
+    paddingTop: '1px',
 };
