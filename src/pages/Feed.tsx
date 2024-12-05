@@ -28,16 +28,15 @@ export default function Feed() {
     const { user, logout } = useAuthContext();
 
     // State variables
-    const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null); //algorithm to use
+    const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
     const [error, setError] = useState<string>("");
-    const [isLoading, setIsLoading] = useState<boolean>(true);  // true if page is still loading
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
-    // Persistent state variables
-    const [numDisplayedToots, setNumDisplayedToots] = usePersistentState<number>(DEFAULT_NUM_TOOTS, user.id + "numDisplayedToots"); //how many toots to show
+    const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
 
     const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
-    const isBottom = useOnScreen(bottomRef);  // TODO: this works after the initial load but after loading from cache it doesn't work sometimes?
+    const isBottom = useOnScreen(bottomRef);
 
     // Load the posts in the feed either from mastodon server or from the cache
     useEffect(() => {
