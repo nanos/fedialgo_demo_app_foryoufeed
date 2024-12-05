@@ -55,8 +55,8 @@ One thing that's kind of a gotcha is the way the `topPosts - Favor posts that ar
 You can filter based on hashtag, source (accounts you follow, hashtags you follow, various kinds of trending toots), language, and application.
 
 <p align="center">
-    <img src="doc/source_and_language_filters.png" width="300">
-    <img src="doc/tag_filters.png" width="300">
+    <img src="doc/source_and_language_filters.png" style="margin-right: 10px;" width="300">
+    <img src="doc/tag_filters.png" style="margin-left: 10px;" width="300">
 </p>
 <!-- <div style="display: flex; flex-direction: row; justify-content: space-around;">
     <div width="40%"><img src="doc/source_and_language_filters.png" width="300"></div>
