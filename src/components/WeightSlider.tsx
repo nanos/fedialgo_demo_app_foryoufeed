@@ -54,7 +54,7 @@ export default function WeightSlider(props: WeightSliderProps) {
                     newWeights[scoreName] = Number(e.target.value);
                     await updateWeights(newWeights);
                 }}
-                step={info.stepSize || DEFAULT_STEP_SIZE}
+                step={minValue < DEFAULT_STEP_SIZE ? minValue : DEFAULT_STEP_SIZE}
                 value={userWeights[scoreName]}
             />
         </Form.Group>

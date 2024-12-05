@@ -46,7 +46,7 @@ export default function AttachmentsModal(
             fullscreen={'xxl-down'}
             onHide={() => setMediaInspectionModalIdx(-1)}
             show={shouldShowModal}
-            size='lg'
+            size={'lg'}
         >
             <Modal.Header closeButton>
                 <Modal.Title>
@@ -55,10 +55,7 @@ export default function AttachmentsModal(
             </Modal.Header>
 
             <Modal.Body>
-                {shouldShowModal &&
-                    <div>
-                        {element}
-                    </div>}
+                {shouldShowModal && <div>{element}</div>}
             </Modal.Body>
         </Modal>
     );
