@@ -160,6 +160,7 @@ export default function FilterSetter(params: WeightSetterProps) {
                                     {sectionName == "tags" &&
                                         <div style={invertTagSelectionStyle}>
                                             {settingCheckbox("suppressSelectedTags")}
+                                            <span style={{fontWeight: '500', marginLeft: "8px"}}>(Invert selections)</span>
                                         </div>}
 
                                     <div style={roundedBox} key={sectionName}>
