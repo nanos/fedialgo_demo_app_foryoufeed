@@ -6,7 +6,6 @@ import React from 'react';
 import Form from 'react-bootstrap/esm/Form';
 import { StringNumberDict } from "fedialgo";
 
-const DEFAULT_VALUE = 1;
 const STEP_SIZE = 0.02;
 
 interface WeightSliderProps {
