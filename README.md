@@ -58,10 +58,6 @@ You can filter based on hashtag, source (accounts you follow, hashtags you follo
     <img src="doc/source_and_language_filters.png" hspace="20" width="300">
     <img src="doc/tag_filters.png" hspace="20" width="300">
 </p>
-<!-- <div style="display: flex; flex-direction: row; justify-content: space-around;">
-    <div width="40%"><img src="doc/source_and_language_filters.png" width="300"></div>
-    <div width="40%"><img src="doc/tag_filters.png" width="300"></div>
-</div> -->
 
 
 ## Investigating A Toot's Score
