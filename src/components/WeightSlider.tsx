@@ -28,7 +28,7 @@ export default function WeightSlider(props: WeightSliderProps) {
     const decimals = (minValue > 0 && minValue < 0.01) ? 3 : 2;
 
     return (
-        <Form.Group className="mb-1">
+        <Form.Group className="me-1">
             <div style={{alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
                 <div style={sliderValue}>
                     <span style={monoFont}>
@@ -46,6 +46,7 @@ export default function WeightSlider(props: WeightSliderProps) {
             </div>
 
             <Form.Range
+                className={"custom-slider"}
                 id={scoreName}
                 min={minValue}
                 max={defaultMax}
@@ -54,7 +55,7 @@ export default function WeightSlider(props: WeightSliderProps) {
                     newWeights[scoreName] = Number(e.target.value);
                     await updateWeights(newWeights);
                 }}
-                step={minValue < DEFAULT_STEP_SIZE ? minValue : DEFAULT_STEP_SIZE}
+                step={(info.minValue && info.minValue < DEFAULT_STEP_SIZE) ? minValue : DEFAULT_STEP_SIZE}
                 value={userWeights[scoreName]}
             />
         </Form.Group>

@@ -13896,4 +13896,31 @@ body.rtl .picture-in-picture {
     display: none
 }
 
+.custom-slider {
+    /* width: 70%; */
+    margin: 0 auto;
+}
+
+/* Range sliders */
+input[type="range"]::-webkit-slider-thumb {
+    background: rgb(74, 40, 250) !important;
+    height: 15px;
+    width: 12px;
+}
+
+  /* All the same stuff for Firefox */
+input[type="range"]::-moz-range-thumb {
+    background: rgb(74, 40, 250) !important;
+    height: 15px;
+    width: 12px;
+}
+
+  /* All the same stuff for IE */
+input[type="range"]::-ms-thumb {
+    background: rgb(74, 40, 250) !important;
+    height: 15px;
+    width: 12px;
+}
+
+
 /*# sourceMappingURL=default-c8d46ae9.chunk.css.map*/
