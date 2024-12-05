@@ -77,8 +77,10 @@ Here's an example of the elements that go into scoring a toot:
     <img src="doc/toot_score_modal.png" alt="An example of the way a toot is weighted." width="600">
 </p>
 
-## Tooting And Favoriting
-Currently you can retoot and favorite other people's toots through the app's web interface. For replies you'll have to click through to the standard Mastodon web app.
+## Retooting And Favoriting
+* You can retoot and favorite other people's toots through this app's web interface.
+* Clicking the reply icon will take you to the standard Mastodon web app view of the toot you want to reply to on your home server.
+* Clicking the timestamp in the top right corner will take you to the toot on that tooter's home server (you'll only be able to reply if that's also your home server).
 
 ## Shutdown
 `Ctrl-C` in the terminal window you launched the `node.js` server in (with `npm run start`) will kill the app.
