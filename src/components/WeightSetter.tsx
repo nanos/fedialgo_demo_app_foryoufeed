@@ -55,7 +55,7 @@ export default function WeightSetter(params: WeightSetterProps) {
                     <div style={{height: '5px'}} />
 
                     <div style={roundedBox}>
-                        <p style={headerFont}>Weightings</p>
+                        <p style={{...titleStyle, marginBottom: "15px", marginTop: "-5px"}}>Weightings</p>
                         {algorithm.weightedScorers.map((scorer) => weightSlider(scorer.name))}
                     </div>
                 </Accordion.Body>
