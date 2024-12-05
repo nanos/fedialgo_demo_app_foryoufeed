@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
-import { StringNumberDict, TheAlgorithm, Toot } from "fedialgo";
+import { TheAlgorithm, Toot, Weights } from "fedialgo";
 
 import FilterSetter from "../components/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
@@ -89,7 +89,7 @@ export default function Feed() {
     };
 
     // Learn weights based on user action    // TODO: does learning weights really work?
-    const learnWeights = async (scores: StringNumberDict): Promise<void> => {
+    const learnWeights = async (scores: Weights): Promise<void> => {
         const newWeights = await algorithm.learnWeights(scores);
         if (!newWeights) return;
     };

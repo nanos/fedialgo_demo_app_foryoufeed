@@ -148,7 +148,7 @@ export default function FilterSetter(params: WeightSetterProps) {
 
                     {Object.entries(checkboxSections).map(([sectionName, checkboxes]) => (
                         <Accordion key={sectionName}>
-                            <Accordion.Item eventKey="5">
+                            <Accordion.Item eventKey={sectionName}>
                                 <Accordion.Header>
                                     <Form.Label>
                                         <span style={headerFont}>{ChangeCase.capitalCase(sectionName)}</span>

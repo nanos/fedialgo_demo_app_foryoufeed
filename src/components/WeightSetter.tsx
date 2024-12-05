@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import { TIME_DECAY, StringNumberDict, TheAlgorithm } from "fedialgo";
+import { TIME_DECAY, TheAlgorithm, Weights } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
 
@@ -17,13 +17,13 @@ export interface WeightSetterProps {
 
 export default function WeightSetter(params: WeightSetterProps) {
     const { algorithm } = params;
-    const [userWeights, setUserWeights] = useState<StringNumberDict>({});
+    const [userWeights, setUserWeights] = useState<Weights>({} as Weights);
 
     useEffect(() => {initWeights()}, []);
     const initWeights = async () => setUserWeights(await algorithm.getUserWeights());
 
     // Update the user weightings stored in TheAlgorithm when a user moves a weight slider
-    const updateWeights = async (newWeights: StringNumberDict): Promise<void> => {
+    const updateWeights = async (newWeights: Weights): Promise<void> => {
         console.debug(`updateWeights() called with:`, newWeights);
         setUserWeights(newWeights);
         await algorithm.updateUserWeights(newWeights);
@@ -32,7 +32,7 @@ export default function WeightSetter(params: WeightSetterProps) {
     const weightSlider = (scoreName: string) => {
         return (
             <WeightSlider
-                description={algorithm.scorersDict[scoreName].description + '.'}
+                info={algorithm.scorersDict[scoreName]}
                 key={scoreName}
                 scoreName={scoreName}
                 updateWeights={updateWeights}
@@ -43,8 +43,8 @@ export default function WeightSetter(params: WeightSetterProps) {
 
     return (
         <Accordion>
-            <Accordion.Item eventKey="0">
-                <Accordion.Header>
+            <Accordion.Item eventKey="9">
+                <Accordion.Header style={accordionHeader}>
                     <p style={titleStyle}>
                         Feed Algorithmus
                     </p>
@@ -91,3 +91,8 @@ export const titleStyle = {
     fontSize: 20,
     fontWeight: "bold"
 };
+
+// export const accordionHeader = {
+//     height: "20px",
+// };
+const accordionHeader = {}

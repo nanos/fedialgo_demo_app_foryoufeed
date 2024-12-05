@@ -9,7 +9,7 @@ import Toast from 'react-bootstrap/Toast';
 import * as emoji from 'node-emoji';
 import { imageAttachments, videoAttachments } from 'fedialgo/dist/objects/toot';
 import { mastodon } from 'masto';
-import { StringNumberDict, Toot } from "fedialgo";
+import { Toot, Weights } from "fedialgo";
 
 import "../birdUI.css";
 import "../default.css";
@@ -67,7 +67,7 @@ interface StatusComponentProps {
     setError: (error: string) => void,
     status: Toot,
     user: User,
-    learnWeights: (statusWeight: StringNumberDict) => void,
+    learnWeights: (statusWeight: Weights) => void,
 };
 
 

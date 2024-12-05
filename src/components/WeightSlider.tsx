@@ -4,12 +4,13 @@
 import React from 'react';
 
 import Form from 'react-bootstrap/esm/Form';
-import { StringNumberDict } from "fedialgo";
+import { ScorerInfo, StringNumberDict } from "fedialgo";
 
-const STEP_SIZE = 0.02;
+const SCALE_MULTIPLIER = 1.2;
+const DEFAULT_STEP_SIZE = 0.02;
 
 interface WeightSliderProps {
-    description: string;
+    info: ScorerInfo;
     scoreName: string;
     updateWeights: (newWeights: StringNumberDict) => Promise<void>;
     userWeights: StringNumberDict;
@@ -17,8 +18,14 @@ interface WeightSliderProps {
 
 
 export default function WeightSlider(props: WeightSliderProps) {
-    const { description, scoreName, updateWeights, userWeights } = props;
+    const { info, scoreName, updateWeights, userWeights } = props;
     if (!userWeights[scoreName] && userWeights[scoreName] != 0) return <></>;
+
+    const weightValues = Object.values(userWeights).filter(x => !isNaN(x)) ?? [0];
+    const defaultMin = Math.min(...weightValues) - 1 * SCALE_MULTIPLIER;
+    const defaultMax = Math.max(...weightValues) + 1 * SCALE_MULTIPLIER;
+    const minValue = info.minValue ?? defaultMin;
+    const decimals = (minValue > 0 && minValue < 0.01) ? 3 : 2;
 
     return (
         <Form.Group className="mb-1">
@@ -28,26 +35,26 @@ export default function WeightSlider(props: WeightSliderProps) {
                         {`${scoreName}: `}
                     </span>
 
-                    <span>{description}</span>
+                    <span>{info.description}</span>
                 </div>
 
                 <div style={sliderValue}>
                     <span style={monoFont}>
-                        {userWeights[scoreName]?.toFixed(2)}
+                        {userWeights[scoreName]?.toFixed(decimals)}
                     </span>
                 </div>
             </div>
 
             <Form.Range
                 id={scoreName}
-                min={Math.min(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) - 1 * 1.2}
-                max={Math.max(...Object.values(userWeights).filter(x => !isNaN(x)) ?? [0]) + 1 * 1.2}
+                min={minValue}
+                max={defaultMax}
                 onChange={async (e) => {
                     const newWeights = Object.assign({}, userWeights);
                     newWeights[scoreName] = Number(e.target.value);
                     await updateWeights(newWeights);
                 }}
-                step={STEP_SIZE}
+                step={info.stepSize || DEFAULT_STEP_SIZE}
                 value={userWeights[scoreName]}
             />
         </Form.Group>
