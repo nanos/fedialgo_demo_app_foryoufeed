@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 
 import { useAuthContext } from "../hooks/useAuth";
 
-const XS_VALUE = 4;
+const XS_VALUE = 4;  // React Bootstrap Grid System
 
 
 export default function Header() {
