@@ -112,25 +112,26 @@ export default function FilterSetter(params: WeightSetterProps) {
 
     const checkboxSections = {
         languages: listCheckboxes(algorithm.feedLanguageCounts, algorithm.filters.filteredLanguages),
-        apps: listCheckboxes(algorithm.appCounts, algorithm.filters.filteredApps),
         tags: listCheckboxes(algorithm.tagFilterCounts, algorithm.filters.filteredTags),
+        apps: listCheckboxes(algorithm.appCounts, algorithm.filters.filteredApps),
     };
 
     return (
         <Accordion>
             <Accordion.Item eventKey="0">
-                <Accordion.Header>
+                <Accordion.Header style={{padding: "0px"}}>
                     <p style={titleStyle}>
                         Filter Toots
                     </p>
                 </Accordion.Header>
 
-                <Accordion.Body>
+                <Accordion.Body style={{padding: "0px"}}>
                     <Accordion key={"baseFilters"}>
                         <Accordion.Item eventKey="5">
                             <Accordion.Header>
-                                <Form.Label>
-                                    <span style={headerFont}>Filters</span> (Choose what kind of toots are in your feed)
+                                <Form.Label style={subHeaderLabel}>
+                                    <span style={headerFont}>Filters</span>
+                                    <span style={subHeaderFont}>{'   '}(Choose what kind of toots are in your feed)</span>
                                 </Form.Label>
                             </Accordion.Header>
 
@@ -148,11 +149,11 @@ export default function FilterSetter(params: WeightSetterProps) {
 
                     {Object.entries(checkboxSections).map(([sectionName, checkboxes]) => (
                         <Accordion key={sectionName}>
-                            <Accordion.Item eventKey={sectionName}>
+                            <Accordion.Item eventKey={sectionName} className="accordion-inner-button">
                                 <Accordion.Header>
-                                    <Form.Label>
+                                    <Form.Label style={subHeaderLabel}>
                                         <span style={headerFont}>{ChangeCase.capitalCase(sectionName)}</span>
-                                        {'   '}(Show only toots from these {sectionName})
+                                        <span style={subHeaderFont}>{'   '}(Show only toots from these {sectionName})</span>
                                     </Form.Label>
                                 </Accordion.Header>
 
@@ -187,10 +188,21 @@ const oddNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 !=
 const invertTagSelectionStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
     fontSize: '16px',
     fontWeight: "bold",
     height: "30px",
+    justifyContent: 'center',
     marginBottom: '8px',
     padding: "4px"
+};
+
+const subHeaderFont: React.CSSProperties = {
+    fontFamily: "Tahoma, Geneva, sans-serif",
+    fontSize: 13,
+    fontWeight: 500,
+};
+
+const subHeaderLabel: React.CSSProperties = {
+    marginBottom: "-5px",
+    marginTop: "-5px"
 };

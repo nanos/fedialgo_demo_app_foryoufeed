@@ -13923,4 +13923,38 @@ input[type="range"]::-ms-thumb {
 }
 
 
+/* accordion-button.collapsed i {
+    color: "red";
+    padding: "1px";
+} */
+
+.accordion-button {
+    /* background-color: #d0f1f7; */
+    padding: 6px;
+}
+
+/* .accordion-inner-button {
+    padding: 1px;
+} */
+
+/* .accordion-button:focus {
+    box-shadow: none;
+} */
+
+/* .accordion-button:not(.collapsed) {
+    color: #212529;
+} */
+
+/*
+.accordion-button i {
+    transition: color 0.3s;
+}
+
+.accordion-button.collapsed i {
+    color: red;
+}
+
+.accordion-button:not(.collapsed) i {
+    color: green;
+} */
 /*# sourceMappingURL=default-c8d46ae9.chunk.css.map*/

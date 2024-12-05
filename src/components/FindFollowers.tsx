@@ -4,6 +4,7 @@ import parse from 'html-react-parser';
 import { Accordion, Button, Card, Col, Row } from 'react-bootstrap';
 import { mastodon } from 'masto';
 
+import { titleStyle } from './WeightSetter';
 import { User } from '../types';
 
 const NUM_SUGGESTIONS = 4;
@@ -40,7 +41,12 @@ export default function FindFollowers({ api, user }: { api: mastodon.rest.Client
     return (
         <Accordion>
             <Accordion.Item eventKey="0">
-                <Accordion.Header>Find Followers</Accordion.Header>
+                <Accordion.Header>
+                    <p style={titleStyle}>
+                        Find Followers
+                    </p>
+                </Accordion.Header>
+
                 <Accordion.Body onEnter={() => setOpen(true)}>
                     <Row className="g-4 m-3">
                         {suggestions.length == 0 && (

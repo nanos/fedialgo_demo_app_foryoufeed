@@ -44,7 +44,7 @@ export default function WeightSetter(params: WeightSetterProps) {
     return (
         <Accordion>
             <Accordion.Item eventKey="9">
-                <Accordion.Header style={accordionHeader}>
+                <Accordion.Header>
                     <p style={titleStyle}>
                         Feed Algorithmus
                     </p>
@@ -67,10 +67,12 @@ export default function WeightSetter(params: WeightSetterProps) {
 
 export const headerFont = {
     fontFamily: "Tahoma, Geneva, sans-serif",
-    fontSize: "18px",
-    fontWeight: 700,
-    marginBottom: "15px",
-    textDecoration: "underline",
+    fontSize: 15,
+    fontWeight: 800,
+    marginLeft: "15px",
+    marginBottom: "0px",
+    marginTop: "0px",
+    // marginBottom: "15px",
 };
 
 export const roundedBox = {
@@ -83,13 +85,13 @@ export const roundedBox = {
     paddingTop: "20px",
 };
 
-export const formLabel = {
-    marginBottom: "10px",
-};
-
 export const titleStyle = {
-    fontSize: 20,
-    fontWeight: "bold"
+    fontFamily: "Tahoma, Geneva, sans-serif",
+    fontSize: 19,
+    fontWeight: "bold",
+    marginBottom: "5px",
+    marginTop: "0px",
+    textDecoration: "underline",
 };
 
 // export const accordionHeader = {
