@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Script to bump the commit hash of the fedialgo package.
 set -e
 
