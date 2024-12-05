@@ -14,7 +14,7 @@ import { StringNumberDict } from "fedialgo";
 
 import { WeightSetterProps, headerFont, roundedBox, titleStyle } from "./WeightSetter";
 
-const MAX_CHECKBOX_LABEL_LENGTH = 20;
+const MAX_CHECKBOX_LABEL_LENGTH = 23;
 
 
 export default function FilterSetter(params: WeightSetterProps) {
