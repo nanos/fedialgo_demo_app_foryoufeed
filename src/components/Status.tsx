@@ -95,7 +95,11 @@ export default function StatusComponent(props: StatusComponentProps) {
     if (!masto) throw new Error("No Mastodon API");
     const images = imageAttachments(status);
     const videos = videoAttachments(status);
-    const hasTrendingTags = status.trendingTags?.length > 0;
+    const numTrendingTags = status.trendingTags?.length || 0;
+    const hasTrendingTags = numTrendingTags > 0;
+
+    let trendingTagMsg = (`Contains ${hasTrendingTags ? 'Trending' : 'Followed'} Hashtag${numTrendingTags > 1 ? 's' : ''}` +
+        (hasTrendingTags ? `: ${status.trendingTags.map(t => `#${t.name}`).join(', ')}` : ''))
 
     // If there's one image try to show it full size; If there's more than one use old image handler.
     const imageHeight = images.length == 1 ? images[0].meta?.small?.height : IMAGES_HEIGHT;
@@ -333,7 +337,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     <i
                                         className="fa fa-hashtag"
                                         style={{color: hasTrendingTags ? 'orange' : 'yellow', marginRight: '4px'}}
-                                        title={`Contains a ${hasTrendingTags ? 'Trending' : 'Followed'} Hashtag`}
+                                        title={trendingTagMsg}
                                     />}
 
                                 {(status.trendingRank || hasTrendingTags) &&
