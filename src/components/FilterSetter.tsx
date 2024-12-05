@@ -156,8 +156,11 @@ export default function FilterSetter(params: WeightSetterProps) {
                                     </Form.Label>
                                 </Accordion.Header>
 
-                                <Accordion.Body>
-                                    {sectionName == "tags" && settingCheckbox("suppressSelectedTags")}
+                                <Accordion.Body style={{backgroundColor: '#b2bfd4'}}>
+                                    {sectionName == "tags" &&
+                                        <div style={invertTagSelectionStyle}>
+                                            {settingCheckbox("suppressSelectedTags")}
+                                        </div>}
 
                                     <div style={roundedBox} key={sectionName}>
                                         <Form.Group className="mb-1">
@@ -179,3 +182,14 @@ export default function FilterSetter(params: WeightSetterProps) {
 
 const evenNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 == 0);
 const oddNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 != 0);
+
+const invertTagSelectionStyle: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    fontSize: '16px',
+    fontWeight: "bold",
+    height: "30px",
+    marginBottom: '8px',
+    padding: "4px"
+};
