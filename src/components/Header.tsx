@@ -30,7 +30,7 @@ export default function Header() {
 
                 <Col xs={XS_VALUE} className='text-center p-0'>
                     <img
-                        className="d-inline-block align-top"
+                        className="d-inline-block align-middle"
                         src={"/assets/logo.png"}
                         style={{ borderRadius: 5, height: 20, width: 20 }}
                     />
