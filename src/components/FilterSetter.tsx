@@ -107,20 +107,20 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
                 <Accordion.Body style={{padding: "0px"}}>
                     {Object.entries(checkboxSections).map(([sectionName, checkboxes]) => (
-                        <Accordion key={sectionName}>
+                        <Accordion key={sectionName + "accordion"}>
                             <Accordion.Item eventKey={sectionName} className="accordion-inner-button">
-                                <Accordion.Header>
+                                <Accordion.Header key={`${sectionName}_accordionhead`}>
                                     <Form.Label style={subHeaderLabel}>
-                                        <span style={headerFont} key="boldhead">{capitalCase(sectionName)}</span>
+                                        <span style={headerFont} key={`${sectionName}_label1`}>{capitalCase(sectionName)}</span>
 
-                                        <span style={subHeaderFont} key="subhead">
+                                        <span style={subHeaderFont} key={`${sectionName}_label2`}>
                                             {'   '}({algorithm.filters.filterSections[sectionName].description})
                                         </span>
                                     </Form.Label>
                                 </Accordion.Header>
 
-                                <Accordion.Body style={{backgroundColor: '#b2bfd4'}}>
-                                    <div style={invertTagSelectionStyle}>
+                                <Accordion.Body key={`${sectionName}_accordionbody`} style={{backgroundColor: '#b2bfd4'}}>
+                                    <div style={invertTagSelectionStyle} key={"invertSelection"}>
                                         {invertSelectionCheckbox(sectionName as FilterOptionName)}
                                     </div>
 
