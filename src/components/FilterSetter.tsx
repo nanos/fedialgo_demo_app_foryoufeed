@@ -3,7 +3,7 @@
  * Things like how much to prefer people you favorite a lot or how much to posts that
  * are trending in the Fedivers.
  */
-import React, { ReactNode } from "react";
+import React, { CSSProperties, ReactNode } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
@@ -20,26 +20,25 @@ const CAPITALIZED_LABELS = [INVERT_SELECTION].concat(Object.values(SourceFilterN
 
 
 export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm }) {
-    const sections = algorithm.filters.filterSections;
-
     const makeCheckbox = (
         isChecked: boolean,
         filterName: string,
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
         labelExtra?: number | string
     ) => {
-        let label = filterName;
         labelExtra = typeof labelExtra == "number" ? labelExtra.toLocaleString() : labelExtra;
+        const style: CSSProperties = {fontWeight: "bold"};
+        let label = filterName;
 
         if (CAPITALIZED_LABELS.includes(filterName)) {
             label = capitalCase(filterName);
+            style.fontSize = "16px";
         } else {
             label = label.length > MAX_LABEL_LENGTH ? (label.slice(0, MAX_LABEL_LENGTH) + '...') : label;
         }
 
         const labelNode = <>
-            <span style={{fontWeight: "bold"}}>{label}</span>
-            {labelExtra && ` (${labelExtra})`}
+            <span style={style}>{label}</span>{labelExtra && ` (${labelExtra})`}
         </>;
 
         return (
@@ -147,7 +146,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 };
 
 
-const invertTagSelectionStyle: React.CSSProperties = {
+const invertTagSelectionStyle: CSSProperties = {
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
@@ -158,13 +157,13 @@ const invertTagSelectionStyle: React.CSSProperties = {
     marginBottom: '8px',
 };
 
-const subHeaderFont: React.CSSProperties = {
+const subHeaderFont: CSSProperties = {
     fontFamily: "Tahoma, Geneva, sans-serif",
     fontSize: 13,
     fontWeight: 500,
 };
 
-const subHeaderLabel: React.CSSProperties = {
+const subHeaderLabel: CSSProperties = {
     marginBottom: "-5px",
     marginTop: "-5px"
 };
