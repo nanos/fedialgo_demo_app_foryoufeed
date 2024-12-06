@@ -12,8 +12,7 @@ import Row from 'react-bootstrap/Row';
 import { capitalCase } from "change-case";
 
 import { headerFont, roundedBox, titleStyle } from "./WeightSetter";
-import FeedFilterSection, { FilterOptionName, SourceFilterName } from "fedialgo/dist/objects/feed_filter_section";
-import { TheAlgorithm } from "fedialgo";
+import { FeedFilterSection, FilterOptionName, SourceFilterName, TheAlgorithm } from "fedialgo";
 
 const MAX_LABEL_LENGTH = 23;
 const INVERT_SELECTION = "invertSelection";
