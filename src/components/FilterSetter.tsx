@@ -3,7 +3,7 @@
  * Things like how much to prefer people you favorite a lot or how much to posts that
  * are trending in the Fedivers.
  */
-import React from "react";
+import React, { ReactNode } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
@@ -75,13 +75,13 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         );
     };
 
-    const gridify = (list: Array<any>) => {
+    const gridify = (list: ReactNode[]): ReactNode => {
         if (!list || list.length === 0) return <></>;
         const numCols = list.length > 10 ? 3 : 2;
 
         const columns = list.reduce((cols, element, index) => {
             const colIndex = index % numCols;
-            cols[colIndex] ??= cols[colIndex] || [];
+            cols[colIndex] ??= [];
             cols[colIndex].push(element);
             return cols;
         }, []);
@@ -89,12 +89,17 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         return <Row>{columns.map((col) => <Col>{col}</Col>)}</Row>;
     };
 
-    const checkboxSections = Object.entries(sections).reduce((sections, [name, filterSection]) => {
-        sections[name] =  Object.keys(filterSection.optionInfo)
-                                .sort()
-                                .map((element) => listCheckbox(element, filterSection));
-        return sections;
-    }, {});
+    const filterSections: Record<string, ReactNode> = Object.entries(algorithm.filters.filterSections).reduce(
+        (sections, [name, section]) => {
+            sections[name] =  Object.keys(section.optionInfo)
+                                    .sort()
+                                    .map((element) => listCheckbox(element, section));
+
+            sections[name] = gridify(sections[name]);
+            return sections;
+        },
+        {}
+    );
 
     return (
         <Accordion>
@@ -106,7 +111,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                 </Accordion.Header>
 
                 <Accordion.Body style={{padding: "0px"}}>
-                    {Object.entries(checkboxSections).map(([sectionName, checkboxes]) => (
+                    {Object.entries(filterSections).map(([sectionName, checkboxes]) => (
                         <Accordion key={sectionName + "accordion"}>
                             <Accordion.Item eventKey={sectionName} className="accordion-inner-button">
                                 <Accordion.Header key={`${sectionName}_accordionhead`}>
@@ -127,7 +132,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                                     <div style={roundedBox} key={sectionName}>
                                         <Form.Group className="mb-1">
                                             <Form.Group className="mb-1">
-                                                {gridify(checkboxes)}
+                                                {checkboxes}
                                             </Form.Group>
                                         </Form.Group>
                                     </div>
