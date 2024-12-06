@@ -10,9 +10,9 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
 import * as ChangeCase from "change-case";
-import { StringNumberDict } from "fedialgo";
 
 import { WeightSetterProps, headerFont, roundedBox, titleStyle } from "./WeightSetter";
+import FeedFilterSection, { FilterOptionName } from "fedialgo/dist/objects/feed_filter_section";
 
 const MAX_CHECKBOX_LABEL_LENGTH = 23;
 
@@ -37,6 +37,7 @@ export default function FilterSetter(params: WeightSetterProps) {
         return (
             <Form.Check
                 checked={isChecked}
+                // className="d-flex align-items-end"
                 id={filterName}
                 key={filterName}
                 label={label}
@@ -57,27 +58,31 @@ export default function FilterSetter(params: WeightSetterProps) {
         );
     };
 
-    const listCheckbox = (element: string, filterList: string[], numToots: number) => {
+    const invertSelectionCheckbox = (sectionName: FilterOptionName) => {
+        const filterSection = algorithm.filters.filterSections[sectionName];
+
         return makeCheckbox(
-            filterList.includes(element),
+            filterSection.invertSelection,
+            "invertSelection",
+            (e) => (filterSection.invertSelection = e.target.checked)
+        );
+    };
+
+    const listCheckbox = (element: string, filterSection: FeedFilterSection) => {
+        return makeCheckbox(
+            filterSection.validValues.includes(element),
             element,
-            (e) => {
-                if (e.target.checked) {
-                    filterList.push(element);
-                } else {
-                    filterList.splice(filterList.indexOf(element), 1);
-                }
-            },
-            `${numToots}`
+            (e) => filterSection.updateValidOptions(element, e.target.checked),
+            `${filterSection.optionInfo[element]}`
         );
     };
 
     // Generate a bunch of checkboxes for switches that filter the feed based on an array
     // of values. For example, this could be used to filter on toots' languages.
-    const listCheckboxes = (counts: StringNumberDict, filterList: string[]) => {
-        return Object.keys(counts)
+    const listCheckboxes = (filterSection: FeedFilterSection) => {
+        return Object.keys(filterSection.optionInfo)
                      .sort()
-                     .map((element) => listCheckbox(element, filterList, counts[element]));
+                     .map((element) => listCheckbox(element, filterSection));
     };
 
     const gridify = (list: Array<any>) => {
@@ -105,16 +110,15 @@ export default function FilterSetter(params: WeightSetterProps) {
         );
     };
 
-    const filterCheckboxes = Object.keys(algorithm.filters)
-                                   .sort()
-                                   .filter((filter) => typeof algorithm.filters[filter] === 'boolean')
-                                   .map((filter) => settingCheckbox(filter));
+    const tootSourceFilterCheckboxes = Object.keys(algorithm.filters)
+                                             .sort()
+                                             .filter((filter) => typeof algorithm.filters[filter] === 'boolean')
+                                             .map((filter) => settingCheckbox(filter));
 
-    const checkboxSections = {
-        languages: listCheckboxes(algorithm.feedLanguageCounts, algorithm.filters.filteredLanguages),
-        tags: listCheckboxes(algorithm.tagFilterCounts, algorithm.filters.filteredTags),
-        apps: listCheckboxes(algorithm.appCounts, algorithm.filters.filteredApps),
-    };
+    const checkboxSections = Object.entries(algorithm.filters.filterSections).reduce((sections, [name, filterSection]) => {
+        sections[name] = listCheckboxes(filterSection);
+        return sections;
+    }, {});
 
     return (
         <Accordion>
@@ -139,7 +143,7 @@ export default function FilterSetter(params: WeightSetterProps) {
                                 <div style={roundedBox}>
                                     <Form.Group className="mb-1">
                                         <Form.Group className="mb-1">
-                                            {gridify(filterCheckboxes)}
+                                            {gridify(tootSourceFilterCheckboxes)}
                                         </Form.Group>
                                     </Form.Group>
                                 </div>
@@ -153,16 +157,17 @@ export default function FilterSetter(params: WeightSetterProps) {
                                 <Accordion.Header>
                                     <Form.Label style={subHeaderLabel}>
                                         <span style={headerFont}>{ChangeCase.capitalCase(sectionName)}</span>
-                                        <span style={subHeaderFont}>{'   '}(Show only toots from these {sectionName})</span>
+
+                                        <span style={subHeaderFont}>
+                                            {'   '}({algorithm.filters.filterSections[sectionName].description})
+                                        </span>
                                     </Form.Label>
                                 </Accordion.Header>
 
                                 <Accordion.Body style={{backgroundColor: '#b2bfd4'}}>
-                                    {sectionName == "tags" &&
-                                        <div style={invertTagSelectionStyle}>
-                                            {settingCheckbox("suppressSelectedTags")}
-                                            <span style={{fontWeight: '500', marginLeft: "8px"}}>(Invert selections)</span>
-                                        </div>}
+                                    <div style={invertTagSelectionStyle}>
+                                        {invertSelectionCheckbox(sectionName as FilterOptionName)}
+                                    </div>
 
                                     <div style={roundedBox} key={sectionName}>
                                         <Form.Group className="mb-1">
@@ -186,14 +191,14 @@ const evenNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 =
 const oddNumbered = (list: Array<any>) => list.filter((_, index) => index % 2 != 0);
 
 const invertTagSelectionStyle: React.CSSProperties = {
+    alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
     fontSize: '16px',
     fontWeight: "bold",
-    height: "30px",
+    height: "25px",
     justifyContent: 'center',
     marginBottom: '8px',
-    padding: "4px"
 };
 
 const subHeaderFont: React.CSSProperties = {
