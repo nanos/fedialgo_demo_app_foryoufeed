@@ -117,10 +117,10 @@ export default function Feed() {
                             <StatusComponent
                                 api={api}
                                 key={toot.uri}
+                                learnWeights={learnWeights}
                                 setError={setError}
                                 status={toot}
                                 user={user}
-                                learnWeights={learnWeights}
                             />
                         ))}
 
