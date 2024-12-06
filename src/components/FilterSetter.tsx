@@ -75,14 +75,6 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         );
     };
 
-    // Generate a bunch of checkboxes for switches that filter the feed based on an array
-    // of values. For example, this could be used to filter on toots' languages.
-    const filterSectionCheckboxes = (filterSection: FeedFilterSection) => {
-        return Object.keys(filterSection.optionInfo)
-                     .sort()
-                     .map((element) => listCheckbox(element, filterSection));
-    };
-
     const gridify = (list: Array<any>) => {
         if (!list || list.length === 0) return <></>;
         const numCols = list.length > 10 ? 3 : 2;
@@ -98,7 +90,9 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
     };
 
     const checkboxSections = Object.entries(sections).reduce((sections, [name, filterSection]) => {
-        sections[name] = filterSectionCheckboxes(filterSection);
+        sections[name] =  Object.keys(filterSection.optionInfo)
+                                .sort()
+                                .map((element) => listCheckbox(element, filterSection));
         return sections;
     }, {});
 
