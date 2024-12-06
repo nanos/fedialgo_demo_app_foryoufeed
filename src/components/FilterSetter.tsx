@@ -15,6 +15,7 @@ import { WeightSetterProps, headerFont, roundedBox, titleStyle } from "./WeightS
 import FeedFilterSection, { FilterOptionName, SourceFilterName } from "fedialgo/dist/objects/feed_filter_section";
 
 const MAX_LABEL_LENGTH = 23;
+const INVERT_SELECTION = "invertSelection";
 
 
 export default function FilterSetter(params: WeightSetterProps) {
@@ -27,7 +28,8 @@ export default function FilterSetter(params: WeightSetterProps) {
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
         labelExtra?: string
     ) => {
-        const isSourceFilter = Object.values(SourceFilterName).includes(filterName as SourceFilterName);
+        let isSourceFilter = Object.values(SourceFilterName).includes(filterName as SourceFilterName) || filterName === INVERT_SELECTION;;
+
         let label = isSourceFilter ? ChangeCase.capitalCase(filterName) : filterName;
         label = label.length > MAX_LABEL_LENGTH ? (label.slice(0, MAX_LABEL_LENGTH) + '...') : label;
         label = labelExtra ? `${label} (${labelExtra})` : label;
@@ -99,7 +101,7 @@ export default function FilterSetter(params: WeightSetterProps) {
             <Accordion.Item eventKey="0">
                 <Accordion.Header style={{padding: "0px"}}>
                     <p style={titleStyle}>
-                        Filter Toots
+                        Filters
                     </p>
                 </Accordion.Header>
 

@@ -87,9 +87,10 @@ export const roundedBox = {
 
 export const titleStyle = {
     fontFamily: "Tahoma, Geneva, sans-serif",
-    fontSize: 19,
+    fontSize: 17,
     fontWeight: "bold",
     marginBottom: "5px",
+    marginLeft: "5px",
     marginTop: "0px",
     textDecoration: "underline",
 };
