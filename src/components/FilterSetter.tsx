@@ -9,7 +9,7 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
-import * as ChangeCase from "change-case";
+import { capitalCase } from "change-case";
 
 import { headerFont, roundedBox, titleStyle } from "./WeightSetter";
 import FeedFilterSection, { FilterOptionName, SourceFilterName } from "fedialgo/dist/objects/feed_filter_section";
@@ -29,9 +29,13 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
         labelExtra?: string
     ) => {
-        let label = CAPITALIZED_LABELS.includes(filterName) ? ChangeCase.capitalCase(filterName) : filterName;
+        let label = CAPITALIZED_LABELS.includes(filterName) ? capitalCase(filterName) : filterName;
         label = label.length > MAX_LABEL_LENGTH ? (label.slice(0, MAX_LABEL_LENGTH) + '...') : label;
-        label = labelExtra ? `${label} (${labelExtra})` : label;
+
+        const labelNode = <>
+            <span style={{fontWeight: "bold"}}>{label}</span>
+            {labelExtra && ` (${labelExtra})`}
+        </>;
 
         return (
             <Form.Switch
@@ -40,7 +44,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                 id={filterName}
                 // inline={true}
                 key={filterName}
-                label={label}
+                label={labelNode}
                 onChange={(e) => {
                     onChange(e);
                     algorithm.updateFilters(algorithm.filters);
@@ -77,8 +81,6 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
     };
 
     const gridify = (list: Array<any>) => {
-        // if (!list || list.length > 10) return list;
-        // return list;
         if (!list || list.length === 0) return <></>;
         const numCols = list.length > 10 ? 3 : 2;
 
@@ -112,7 +114,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                             <Accordion.Item eventKey={sectionName} className="accordion-inner-button">
                                 <Accordion.Header>
                                     <Form.Label style={subHeaderLabel}>
-                                        <span style={headerFont}>{ChangeCase.capitalCase(sectionName)}</span>
+                                        <span style={headerFont}>{capitalCase(sectionName)}</span>
 
                                         <span style={subHeaderFont}>
                                             {'   '}({algorithm.filters.filterSections[sectionName].description})

@@ -13960,8 +13960,13 @@ input[type="range"]::-ms-thumb {
 /*# sourceMappingURL=default-c8d46ae9.chunk.css.map*/
 
 /* This centers the text in line with the checkbox */
+
+
 .form-check {
     height: 15px;
     line-height: 25px;
     margin-bottom: 0.1rem;
+    overflow: hidden;
+    text-overflow: clip;
+    white-space: nowrap;
 }

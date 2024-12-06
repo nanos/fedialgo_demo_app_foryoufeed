@@ -3,7 +3,6 @@
  */
 import React, { useState, useEffect, useRef } from "react";
 import { Modal } from "react-bootstrap";
-import { usePersistentState } from "react-persistent-state";
 
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -104,7 +103,7 @@ export default function Feed() {
             </Modal>
 
             <Row>
-                <Col>
+                <Col xs={6}>
                     <div className="sticky-top">
                         {algorithm && <WeightSetter algorithm={algorithm} />}
                         {algorithm && <FilterSetter algorithm={algorithm} />}
@@ -112,9 +111,9 @@ export default function Feed() {
                     </div>
                 </Col>
 
-                <Col style={{backgroundColor: '#15202b', height: 'auto'}} xs lg="7">
+                <Col style={{backgroundColor: '#15202b', height: 'auto'}} xs={6}>
                     {!isLoading && api && (feed.length >= 1) &&
-                        feed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot: Toot) => (
+                        feed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot) => (
                             <StatusComponent
                                 api={api}
                                 key={toot.uri}
