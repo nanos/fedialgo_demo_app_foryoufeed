@@ -39,9 +39,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         return (
             <Form.Switch
                 checked={isChecked}
-                // className="d-flex align-items-end"
                 id={filterName}
-                // inline={true}
                 key={filterName}
                 label={labelNode}
                 onChange={(e) => {
