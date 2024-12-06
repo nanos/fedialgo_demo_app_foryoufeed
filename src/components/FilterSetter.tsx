@@ -34,7 +34,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         label = labelExtra ? `${label} (${labelExtra})` : label;
 
         return (
-            <Form.Check
+            <Form.Switch
                 checked={isChecked}
                 // className="d-flex align-items-end"
                 id={filterName}
@@ -44,7 +44,6 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                     onChange(e);
                     algorithm.updateFilters(algorithm.filters);
                 }}
-                type="checkbox"
             />
         );
     };
