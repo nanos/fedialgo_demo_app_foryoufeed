@@ -14,7 +14,7 @@ import { capitalCase } from "change-case";
 import { headerFont, roundedBox, titleStyle } from "./WeightSetter";
 import { FeedFilterSection, FilterOptionName, SourceFilterName, TheAlgorithm } from "fedialgo";
 
-const MAX_LABEL_LENGTH = 23;
+const MAX_LABEL_LENGTH = 17;
 const INVERT_SELECTION = "invertSelection";
 const CAPITALIZED_LABELS = [INVERT_SELECTION].concat(Object.values(SourceFilterName) as string[]);
 
@@ -26,10 +26,16 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         isChecked: boolean,
         filterName: string,
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-        labelExtra?: string
+        labelExtra?: number | string
     ) => {
-        let label = CAPITALIZED_LABELS.includes(filterName) ? capitalCase(filterName) : filterName;
-        label = label.length > MAX_LABEL_LENGTH ? (label.slice(0, MAX_LABEL_LENGTH) + '...') : label;
+        let label = filterName;
+        labelExtra = typeof labelExtra == "number" ? labelExtra.toLocaleString() : labelExtra;
+
+        if (CAPITALIZED_LABELS.includes(filterName)) {
+            label = capitalCase(filterName);
+        } else {
+            label = label.length > MAX_LABEL_LENGTH ? (label.slice(0, MAX_LABEL_LENGTH) + '...') : label;
+        }
 
         const labelNode = <>
             <span style={{fontWeight: "bold"}}>{label}</span>
@@ -65,7 +71,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             filterSection.validValues.includes(element),
             element,
             (e) => filterSection.updateValidOptions(element, e.target.checked),
-            `${filterSection.optionInfo[element]}`
+            filterSection.optionInfo[element]
         );
     };
 
