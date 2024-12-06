@@ -83,7 +83,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             cols[colIndex] ??= [];
             cols[colIndex].push(element);
             return cols;
-        }, []);
+        }, [] as ReactNode[][]);
 
         return <Row>{columns.map((col) => <Col>{col}</Col>)}</Row>;
     };
