@@ -38,6 +38,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                 checked={isChecked}
                 // className="d-flex align-items-end"
                 id={filterName}
+                // inline={true}
                 key={filterName}
                 label={label}
                 onChange={(e) => {
@@ -76,6 +77,8 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
     };
 
     const gridify = (list: Array<any>) => {
+        // if (!list || list.length > 10) return list;
+        // return list;
         if (!list || list.length === 0) return <></>;
         const numCols = list.length > 10 ? 3 : 2;
 
