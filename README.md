@@ -11,6 +11,9 @@ Each incoming toot in your recent timeline will be scored based on a variety of 
 
 Both this repo and the `fedialgo` package linked above were forked from [pkreissel's original implementations](https://github.com/pkreissel/fedialgo).
 
+### Demo Video
+[![FediAlgo in action](https://img.youtube.com/vi/_0TaYxU1Tpk/0.jpg)](https://www.youtube.com/watch?v=_0TaYxU1Tpk)
+
 
 # Installation
 ### Prerequisites
