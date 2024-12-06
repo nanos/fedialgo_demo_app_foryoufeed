@@ -130,27 +130,6 @@ export default function FilterSetter(params: WeightSetterProps) {
                 </Accordion.Header>
 
                 <Accordion.Body style={{padding: "0px"}}>
-                    <Accordion key={"baseFilters"}>
-                        <Accordion.Item eventKey="5">
-                            <Accordion.Header>
-                                <Form.Label style={subHeaderLabel}>
-                                    <span style={headerFont}>Filters</span>
-                                    <span style={subHeaderFont}>{'   '}(Choose what kind of toots are in your feed)</span>
-                                </Form.Label>
-                            </Accordion.Header>
-
-                            <Accordion.Body>
-                                <div style={roundedBox}>
-                                    <Form.Group className="mb-1">
-                                        <Form.Group className="mb-1">
-                                            {gridify(tootSourceFilterCheckboxes)}
-                                        </Form.Group>
-                                    </Form.Group>
-                                </div>
-                            </Accordion.Body>
-                        </Accordion.Item>
-                    </Accordion>
-
                     {Object.entries(checkboxSections).map(([sectionName, checkboxes]) => (
                         <Accordion key={sectionName}>
                             <Accordion.Item eventKey={sectionName} className="accordion-inner-button">
@@ -172,7 +151,7 @@ export default function FilterSetter(params: WeightSetterProps) {
                                     <div style={roundedBox} key={sectionName}>
                                         <Form.Group className="mb-1">
                                             <Form.Group className="mb-1">
-                                                {gridify3(checkboxes)}
+                                                {sectionName == FilterOptionName.SOURCE ? gridify(checkboxes) : gridify3(checkboxes)}
                                             </Form.Group>
                                         </Form.Group>
                                     </div>
