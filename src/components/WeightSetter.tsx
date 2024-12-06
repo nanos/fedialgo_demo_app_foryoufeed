@@ -10,13 +10,8 @@ import { TIME_DECAY, TheAlgorithm, Weights } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
 
-export interface WeightSetterProps {
-    algorithm: TheAlgorithm;
-};
 
-
-export default function WeightSetter(params: WeightSetterProps) {
-    const { algorithm } = params;
+export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm }) {
     const [userWeights, setUserWeights] = useState<Weights>({} as Weights);
 
     useEffect(() => {initWeights()}, []);

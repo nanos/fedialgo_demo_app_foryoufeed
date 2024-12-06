@@ -11,15 +11,16 @@ import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
 import * as ChangeCase from "change-case";
 
-import { WeightSetterProps, headerFont, roundedBox, titleStyle } from "./WeightSetter";
+import { headerFont, roundedBox, titleStyle } from "./WeightSetter";
 import FeedFilterSection, { FilterOptionName, SourceFilterName } from "fedialgo/dist/objects/feed_filter_section";
+import { TheAlgorithm } from "fedialgo";
 
 const MAX_LABEL_LENGTH = 23;
 const INVERT_SELECTION = "invertSelection";
+const CAPITALIZED_LABELS = [INVERT_SELECTION].concat(Object.values(SourceFilterName) as string[]);
 
 
-export default function FilterSetter(params: WeightSetterProps) {
-    const { algorithm } = params;
+export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm }) {
     const sections = algorithm.filters.filterSections;
 
     const makeCheckbox = (
@@ -28,9 +29,7 @@ export default function FilterSetter(params: WeightSetterProps) {
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
         labelExtra?: string
     ) => {
-        let isSourceFilter = Object.values(SourceFilterName).includes(filterName as SourceFilterName) || filterName === INVERT_SELECTION;;
-
-        let label = isSourceFilter ? ChangeCase.capitalCase(filterName) : filterName;
+        let label = CAPITALIZED_LABELS.includes(filterName) ? ChangeCase.capitalCase(filterName) : filterName;
         label = label.length > MAX_LABEL_LENGTH ? (label.slice(0, MAX_LABEL_LENGTH) + '...') : label;
         label = labelExtra ? `${label} (${labelExtra})` : label;
 
