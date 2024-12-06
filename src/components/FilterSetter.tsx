@@ -111,9 +111,9 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                             <Accordion.Item eventKey={sectionName} className="accordion-inner-button">
                                 <Accordion.Header>
                                     <Form.Label style={subHeaderLabel}>
-                                        <span style={headerFont}>{capitalCase(sectionName)}</span>
+                                        <span style={headerFont} key="boldhead">{capitalCase(sectionName)}</span>
 
-                                        <span style={subHeaderFont}>
+                                        <span style={subHeaderFont} key="subhead">
                                             {'   '}({algorithm.filters.filterSections[sectionName].description})
                                         </span>
                                     </Form.Label>
