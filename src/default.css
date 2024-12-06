@@ -13922,11 +13922,17 @@ input[type="range"]::-ms-thumb {
     width: 12px;
 }
 
+.accordion-button:not(.collapsed){
+    background-color: #7ac5cc;
+}
+.accordion-button.collapsed {
+    /* color: red; */
+    /* padding: 1px; */
+}
 
-/* accordion-button.collapsed i {
-    color: "red";
-    padding: "1px";
-} */
+.accordion-button:hover {
+    background-color: #d0f1f7;
+}
 
 .accordion-button {
     /* background-color: #d0f1f7; */
@@ -13941,9 +13947,9 @@ input[type="range"]::-ms-thumb {
     box-shadow: none;
 } */
 
-/* .accordion-button:not(.collapsed) {
+.accordion-button:not(.collapsed) {
     color: #212529;
-} */
+}
 
 /*
 .accordion-button i {
