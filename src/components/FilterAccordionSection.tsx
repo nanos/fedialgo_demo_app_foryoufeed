@@ -21,7 +21,9 @@ interface AccordionProps {
     sectionName: string;
 }
 
-export default function FilterAccordionSection({ children, description, invertCheckbox, isActive, sectionName }: AccordionProps) {
+export default function FilterAccordionSection(props: AccordionProps) {
+    const { children, description, invertCheckbox, isActive, sectionName } = props;
+
     return (
         <Accordion.Item eventKey={sectionName} >
             <Accordion.Header key={`${sectionName}_accordionhead`}>
