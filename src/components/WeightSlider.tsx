@@ -3,11 +3,10 @@
  */
 import React from 'react';
 
-import Form from 'react-bootstrap/esm/Form';
+import Slider, { DEFAULT_STEP_SIZE } from './Slider';
 import { ScorerInfo, StringNumberDict } from "fedialgo";
 
 const SCALE_MULTIPLIER = 1.2;
-const DEFAULT_STEP_SIZE = 0.02;
 
 interface WeightSliderProps {
     info: ScorerInfo;
@@ -25,40 +24,22 @@ export default function WeightSlider(props: WeightSliderProps) {
     const defaultMin = Math.min(...weightValues) - 1 * SCALE_MULTIPLIER;
     const defaultMax = Math.max(...weightValues) + 1 * SCALE_MULTIPLIER;
     const minValue = info.minValue ?? defaultMin;
-    const decimals = (minValue > 0 && minValue < 0.01) ? 3 : 2;
 
     return (
-        <Form.Group className="me-2">
-            <div style={{alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
-                <div style={sliderValue}>
-                    <span style={monoFont}>
-                        {userWeights[scoreName]?.toFixed(decimals)}
-                    </span>
-                </div>
-
-                <span>
-                    <span style={{fontWeight: 'bold', marginRight: '3px'}}>
-                        {`${scoreName}:`}
-                    </span>
-
-                    <span>{info.description}</span>
-                </span>
-            </div>
-
-            <Form.Range
-                className={"custom-slider"}
-                id={scoreName}
-                min={minValue}
-                max={defaultMax}
-                onChange={async (e) => {
-                    const newWeights = Object.assign({}, userWeights);
-                    newWeights[scoreName] = Number(e.target.value);
-                    await updateWeights(newWeights);
-                }}
-                step={(info.minValue && info.minValue < DEFAULT_STEP_SIZE) ? minValue : DEFAULT_STEP_SIZE}
-                value={userWeights[scoreName]}
-            />
-        </Form.Group>
+        <Slider
+            description={info.description}
+            key={scoreName}
+            label={scoreName}
+            minValue={minValue}
+            maxValue={defaultMax}
+            onChange={async (e) => {
+                const newWeights = Object.assign({}, userWeights);
+                newWeights[scoreName] = Number(e.target.value);
+                await updateWeights(newWeights);
+            }}
+            stepSize={(info.minValue && info.minValue < DEFAULT_STEP_SIZE) ? minValue : DEFAULT_STEP_SIZE}
+            value={userWeights[scoreName]}
+        />
     );
 };
 

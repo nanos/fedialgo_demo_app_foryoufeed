@@ -4,29 +4,31 @@
 import React, { ChangeEvent } from 'react';
 
 import Form from 'react-bootstrap/esm/Form';
-import { WeightName } from 'fedialgo/dist/types';
+
+export const DEFAULT_STEP_SIZE = 0.02;
 
 interface SliderProps {
     description: string;
-    label: WeightName;
+    label: string;
     minValue: number;
     maxValue: number;
     onChange: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
+    stepSize?: number;
     value: number;
 };
 
 
 export default function Slider(props: SliderProps) {
-    const { description, label, minValue, maxValue, onChange, value } = props;
+    const { description, label, minValue, maxValue, onChange, stepSize, value } = props;
     if (!value && value != 0) return <></>;
-    let stepSize = minValue;
+    let step = stepSize ?? (minValue >= 0 ? DEFAULT_STEP_SIZE : 1);
     let decimals = 2;
 
     if (minValue > 0 && minValue < 0.01) {
         decimals = 3;
     } else if (minValue % 1 == 0) {
         decimals = 0;
-        stepSize = 1;
+        step = 1;
     }
 
     return (
@@ -53,7 +55,7 @@ export default function Slider(props: SliderProps) {
                 min={minValue}
                 max={maxValue}
                 onChange={onChange}
-                step={stepSize}
+                step={step}
                 value={value}
             />
         </Form.Group>
