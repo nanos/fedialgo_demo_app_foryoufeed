@@ -13,7 +13,7 @@ import { capitalCase } from "change-case";
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import Slider from "./Slider";
-import { NumericFilter, PropertyFilter, StringNumberDict, SourceFilterName, TheAlgorithm, PropertyName } from "fedialgo";
+import { NumericFilter, PropertyFilter, SourceFilterName, TheAlgorithm, PropertyName } from "fedialgo";
 import { titleStyle } from "./WeightSetter";
 
 const MAX_LABEL_LENGTH = 17;
