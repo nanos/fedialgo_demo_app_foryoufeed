@@ -135,6 +135,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                 <Accordion.Body style={{padding: "0px"}}>
                     <Accordion key={"fiaccordion"}>
 
+                        {/* List filters (language, source, etc) */}
                         {Object.entries(filterSections).map(([sectionName, checkboxes]) => (
                             <Accordion.Item eventKey={sectionName} className="accordion-inner-button">
                                 <Accordion.Header key={`${sectionName}_accordionhead`}>
@@ -164,20 +165,18 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                                 </Accordion.Body>
                             </Accordion.Item>))}
 
+                            {/* Numeric filters (min/max replies, reposts, etc) */}
                             <Accordion.Item eventKey="numericFilters">
                                 <Accordion.Header>
+                                    <Form.Label style={subHeaderLabel}>
+                                        <span style={headerFont} key={`numericFilters_label1`}>
+                                            {"Interactions"}
+                                        </span>
 
-                                <Form.Label style={subHeaderLabel}>
-                                    <span style={headerFont} key={`numericFilters_label1`}>
-                                        {"Interactions"}
-                                    </span>
-
-                                    <span style={subHeaderFont} key={`numericFilters_label2`}>
-                                        {'   '}(Filter based on a minimumm or maximum number of replies, reposts, etc.)
-                                    </span>
-                                </Form.Label>
-
-
+                                        <span style={subHeaderFont} key={`numericFilters_label2`}>
+                                            {'   '}(Filter based on a minimumm or maximum number of replies, reposts, etc.)
+                                        </span>
+                                    </Form.Label>
                                 </Accordion.Header>
 
                                 <Accordion.Body>
