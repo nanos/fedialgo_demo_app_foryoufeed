@@ -13,7 +13,7 @@ import { capitalCase } from "change-case";
 
 import Slider from "./Slider";
 import { headerFont, roundedBox, titleStyle } from "./WeightSetter";
-import { FeedFilterSection, FilterOptionName, NumericFilter, SourceFilterName, TheAlgorithm } from "fedialgo";
+import { FeedFilterSection, NumericFilter, SourceFilterName, TheAlgorithm } from "fedialgo";
 
 const MAX_LABEL_LENGTH = 17;
 const INVERT_SELECTION = "invertSelection";
