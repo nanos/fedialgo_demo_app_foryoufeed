@@ -11,6 +11,7 @@ import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
 import { capitalCase } from "change-case";
 
+import Slider from "./Slider";
 import { headerFont, roundedBox, titleStyle } from "./WeightSetter";
 import { FeedFilterSection, FilterOptionName, SourceFilterName, TheAlgorithm } from "fedialgo";
 
@@ -60,7 +61,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
         return makeCheckbox(
             filterSection.invertSelection,
-            "invertSelection",
+            INVERT_SELECTION,
             (e) => (filterSection.invertSelection = e.target.checked)
         );
     };
@@ -100,6 +101,28 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         {}
     );
 
+    const numericSliders = Object.entries(algorithm.filters.numericFilters).reduce(
+        (sliders, [name, numericFilter]) => {
+            const slider = (
+                <Slider
+                    description={numericFilter.description}
+                    label={numericFilter.title}
+                    maxValue={50}
+                    minValue={0}
+                    onChange={async (e) => {
+                        numericFilter.value = Number(e.target.value);
+                        algorithm.updateFilters(algorithm.filters);
+                    }}
+                    value={numericFilter.value}
+                />
+            );
+
+            sliders.push(slider);
+            return sliders;
+        },
+        [] as ReactNode[]
+    );
+
     return (
         <Accordion>
             <Accordion.Item eventKey="0">
@@ -110,12 +133,15 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                 </Accordion.Header>
 
                 <Accordion.Body style={{padding: "0px"}}>
-                    {Object.entries(filterSections).map(([sectionName, checkboxes]) => (
-                        <Accordion key={sectionName + "accordion"}>
+                    <Accordion key={"fiaccordion"}>
+
+                        {Object.entries(filterSections).map(([sectionName, checkboxes]) => (
                             <Accordion.Item eventKey={sectionName} className="accordion-inner-button">
                                 <Accordion.Header key={`${sectionName}_accordionhead`}>
                                     <Form.Label style={subHeaderLabel}>
-                                        <span style={headerFont} key={`${sectionName}_label1`}>{capitalCase(sectionName)}</span>
+                                        <span style={headerFont} key={`${sectionName}_label1`}>
+                                            {capitalCase(sectionName)}
+                                        </span>
 
                                         <span style={subHeaderFont} key={`${sectionName}_label2`}>
                                             {'   '}({algorithm.filters.filterSections[sectionName].description})
@@ -136,9 +162,32 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                                         </Form.Group>
                                     </div>
                                 </Accordion.Body>
+                            </Accordion.Item>))}
+
+                            <Accordion.Item eventKey="numericFilters">
+                                <Accordion.Header>
+
+                                <Form.Label style={subHeaderLabel}>
+                                    <span style={headerFont} key={`numericFilters_label1`}>
+                                        {"Interactions"}
+                                    </span>
+
+                                    <span style={subHeaderFont} key={`numericFilters_label2`}>
+                                        {'   '}Filter based on a minimumm or maximum number of replies, reposts, etc.
+                                    </span>
+                                </Form.Label>
+
+
+                                </Accordion.Header>
+
+                                <Accordion.Body>
+                                    <div style={roundedBox}>
+                                        {numericSliders}
+                                    </div>
+                                </Accordion.Body>
                             </Accordion.Item>
-                        </Accordion>
-                    ))}
+
+                    </Accordion>
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
