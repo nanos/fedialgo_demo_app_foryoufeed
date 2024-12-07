@@ -13,13 +13,12 @@ import { capitalCase } from "change-case";
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import Slider from "./Slider";
-import { headerFont, roundedBox, titleStyle } from "./WeightSetter";
 import { NumericFilter, PropertyFilter, SourceFilterName, TheAlgorithm } from "fedialgo";
+import { titleStyle } from "./WeightSetter";
 
 const MAX_LABEL_LENGTH = 17;
 const INVERT_SELECTION = "invertSelection";
 const CAPITALIZED_LABELS = [INVERT_SELECTION].concat(Object.values(SourceFilterName) as string[]);
-const JUNK_CLASS = "JUNKJUNKJUNK";
 
 
 export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm }) {

@@ -6,18 +6,11 @@
 import React, { CSSProperties, ReactNode } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
-import Row from 'react-bootstrap/Row';
 import { capitalCase } from "change-case";
 
-import Slider from "./Slider";
-import { headerFont, roundedBox, titleStyle } from "./WeightSetter";
-import { NumericFilter, PropertyFilter, SourceFilterName, TheAlgorithm } from "fedialgo";
+import { headerFont, roundedBox } from "./WeightSetter";
 
-const MAX_LABEL_LENGTH = 17;
-const INVERT_SELECTION = "invertSelection";
-const CAPITALIZED_LABELS = [INVERT_SELECTION].concat(Object.values(SourceFilterName) as string[]);
 const JUNK_CLASS = "JUNKJUNKJUNK";
 
 interface AccordionProps {
