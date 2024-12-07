@@ -41,16 +41,12 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             label = label.length > MAX_LABEL_LENGTH ? (label.slice(0, MAX_LABEL_LENGTH) + '...') : label;
         }
 
-        const labelNode = <>
-            <span style={style}>{label}</span>{labelExtra && ` (${labelExtra})`}
-        </>;
-
         return (
             <Form.Switch
                 checked={isChecked}
                 id={filterName}
                 key={filterName}
-                label={labelNode}
+                label={<><span style={style}>{label}</span>{labelExtra && ` (${labelExtra})`}</>}
                 onChange={(e) => {
                     onChange(e);
                     algorithm.updateFilters(algorithm.filters);
