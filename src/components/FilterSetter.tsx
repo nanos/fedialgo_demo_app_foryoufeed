@@ -13,7 +13,7 @@ import { capitalCase } from "change-case";
 
 import Slider from "./Slider";
 import { headerFont, roundedBox, titleStyle } from "./WeightSetter";
-import { FeedFilterSection, NumericFilter, SourceFilterName, TheAlgorithm } from "fedialgo";
+import { NumericFilter, PropertyFilter, SourceFilterName, TheAlgorithm } from "fedialgo";
 
 const MAX_LABEL_LENGTH = 17;
 const INVERT_SELECTION = "invertSelection";
@@ -59,7 +59,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         );
     };
 
-    const invertSelectionCheckbox = (filter: FeedFilterSection) => {
+    const invertSelectionCheckbox = (filter: PropertyFilter) => {
         return makeCheckbox(
             filter.invertSelection,
             INVERT_SELECTION,
@@ -75,7 +75,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         );
     };
 
-    const listCheckbox = (element: string, filterSection: FeedFilterSection) => {
+    const listCheckbox = (element: string, filterSection: PropertyFilter) => {
         return makeCheckbox(
             filterSection.validValues.includes(element),
             element,
@@ -98,7 +98,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         return <Row>{columns.map((col) => <Col>{col}</Col>)}</Row>;
     };
 
-    const makeCheckboxList = (filterSection: FeedFilterSection) => {
+    const makeCheckboxList = (filterSection: PropertyFilter) => {
         const checkboxes = Object.keys(filterSection.optionInfo)
                                  .sort()
                                  .map((element) => listCheckbox(element, filterSection));
