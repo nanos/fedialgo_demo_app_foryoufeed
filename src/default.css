@@ -13951,6 +13951,13 @@ input[type="range"]::-ms-thumb {
     color: #212529;
 }
 
+.someFilterActive {
+    background-color: #4b2852;
+    border-radius: 20px;
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+}
 
 /* This centers the text in line with the checkbox */
 .form-check {

@@ -95,17 +95,13 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         return <Row>{columns.map((col) => <Col>{col}</Col>)}</Row>;
     };
 
-    const filterSections: Record<string, ReactNode> = Object.entries(algorithm.filters.filterSections).reduce(
-        (sections, [name, section]) => {
-            sections[name] =  Object.keys(section.optionInfo)
-                                    .sort()
-                                    .map((element) => listCheckbox(element, section));
+    const makeCheckboxList = (filterSection: FeedFilterSection) => {
+        const checkboxes = Object.keys(filterSection.optionInfo)
+                                 .sort()
+                                 .map((element) => listCheckbox(element, filterSection));
 
-            sections[name] = gridify(sections[name]);
-            return sections;
-        },
-        {}
-    );
+        return gridify(checkboxes);
+    }
 
     const numericSliders = Object.entries(algorithm.filters.numericFilters).reduce(
         (sliders, [name, numericFilter]) => {
@@ -143,29 +139,29 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                     <Accordion key={"fiaccordion"}>
 
                         {/* List filters (language, source, etc) */}
-                        {Object.entries(filterSections).map(([sectionName, checkboxes]) => (
-                            <Accordion.Item eventKey={sectionName} className="accordion-inner-button">
+                        {Object.entries(algorithm.filters.filterSections).map(([sectionName, filterSection]) => (
+                            <Accordion.Item eventKey={sectionName} >
                                 <Accordion.Header key={`${sectionName}_accordionhead`}>
-                                    <Form.Label style={subHeaderLabel}>
-                                        <span style={headerFont} key={`${sectionName}_label1`}>
+                                    <Form.Label style={subHeaderLabel} >
+                                        <span style={headerFont} key={`${sectionName}_label1`} className="someFilterActive">
                                             {capitalCase(sectionName)}
                                         </span>
 
                                         <span style={subHeaderFont} key={`${sectionName}_label2`}>
-                                            {'   '}({algorithm.filters.filterSections[sectionName].description})
+                                            {'   '}({filterSection.description})
                                         </span>
                                     </Form.Label>
                                 </Accordion.Header>
 
                                 <Accordion.Body key={`${sectionName}_accordionbody`} style={{backgroundColor: '#b2bfd4'}}>
                                     <div style={invertTagSelectionStyle} key={"invertSelection"}>
-                                        {invertSelectionCheckbox(algorithm.filters.filterSections[sectionName])}
+                                        {invertSelectionCheckbox(filterSection)}
                                     </div>
 
                                     <div style={roundedBox} key={sectionName}>
                                         <Form.Group className="mb-1">
                                             <Form.Group className="mb-1">
-                                                {checkboxes}
+                                                {makeCheckboxList(filterSection)}
                                             </Form.Group>
                                         </Form.Group>
                                     </div>
