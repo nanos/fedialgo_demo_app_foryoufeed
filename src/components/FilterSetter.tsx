@@ -26,26 +26,25 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
     const makeCheckbox = (
         isChecked: boolean,
-        filterName: string,
+        label: string,
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
         labelExtra?: number | string
     ) => {
-        labelExtra = typeof labelExtra == "number" ? labelExtra.toLocaleString() : labelExtra;
+        labelExtra = (typeof labelExtra == "number") ? labelExtra.toLocaleString() : labelExtra;
         const style: CSSProperties = {fontWeight: "bold"};
-        let label = filterName;
 
-        if (CAPITALIZED_LABELS.includes(filterName)) {
-            label = capitalCase(filterName);
+        if (CAPITALIZED_LABELS.includes(label)) {
+            label = capitalCase(label);
             style.fontSize = "14px";
         } else {
-            label = label.length > MAX_LABEL_LENGTH ? (label.slice(0, MAX_LABEL_LENGTH) + '...') : label;
+            label = (label.length > (MAX_LABEL_LENGTH - 2)) ? `${label.slice(0, MAX_LABEL_LENGTH)}...` : label;
         }
 
         return (
             <Form.Switch
                 checked={isChecked}
-                id={filterName}
-                key={filterName}
+                id={label}
+                key={label}
                 label={<><span style={style}>{label}</span>{labelExtra && ` (${labelExtra})`}</>}
                 onChange={(e) => {
                     onChange(e);
