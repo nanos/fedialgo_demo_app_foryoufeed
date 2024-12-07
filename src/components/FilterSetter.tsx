@@ -147,7 +147,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                         {/* property filters (language, source, etc) */}
                         {visibleSections.map((filterSection) => (
                             <FilterAccordionSection
-                                description={filterSection.description}
+                                description={filterSection.description + (FILTERED_FILTERS.includes(filterSection.title) ? ` with at least ${MIN_TOOTS_TO_APPEAR_IN_FILTER} toots` : "")}
                                 invertCheckbox={invertSelectionCheckbox(filterSection)}
                                 key={filterSection.title}
                                 isActive={filterSection.validValues.length > 0}
