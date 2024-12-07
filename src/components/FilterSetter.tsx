@@ -94,7 +94,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             return cols;
         }, [] as ReactNode[][]);
 
-        return <Row>{columns.map((col, i) => <Col key={i}>{col}</Col>)}</Row>;
+        return <Row>{columns.map((col, i: number) => <Col key={i}>{col}</Col>)}</Row>;
     };
 
     const makeCheckboxList = (filter: PropertyFilter) => {
