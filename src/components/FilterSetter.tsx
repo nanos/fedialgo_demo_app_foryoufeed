@@ -23,6 +23,7 @@ const CAPITALIZED_LABELS = [INVERT_SELECTION].concat(Object.values(SourceFilterN
 
 export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm }) {
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
+    const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
 
     const makeCheckbox = (
         isChecked: boolean,
@@ -90,7 +91,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             return cols;
         }, [] as ReactNode[][]);
 
-        return <Row>{columns.map((col) => <Col>{col}</Col>)}</Row>;
+        return <Row>{columns.map((col, i) => <Col key={i}>{col}</Col>)}</Row>;
     };
 
     const makeCheckboxList = (filter: PropertyFilter) => {
@@ -102,6 +103,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             const slider = (
                 <Slider
                     description={numericFilter.description}
+                    key={name}
                     label={numericFilter.title}
                     maxValue={50}
                     minValue={0}
@@ -132,12 +134,13 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                 <Accordion.Body style={{padding: "0px"}}>
                     <Accordion key={"fiaccordion"}>
                         {/* property filters (language, source, etc) */}
-                        {Object.entries(algorithm.filters.filterSections).map(([sectionName, filterSection]) => (
+                        {visibleSections.map((filterSection) => (
                             <FilterAccordionSection
                                 description={filterSection.description}
                                 invertCheckbox={invertSelectionCheckbox(filterSection)}
+                                key={filterSection.title}
                                 isActive={filterSection.validValues.length > 0}
-                                sectionName={sectionName}
+                                sectionName={filterSection.title}
                             >
                                 {makeCheckboxList(filterSection)}
                             </FilterAccordionSection>))}
@@ -146,6 +149,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                             description={"Filter based on minimum/maximum number of replies, reposts, etc"}
                             invertCheckbox={invertNumericFilterCheckbox(Object.values(algorithm.filters.numericFilters))}
                             isActive={hasActiveNumericFilter}
+                            key={"numericFilters"}
                             sectionName="Interactions"
                         >
                             {numericSliders}
