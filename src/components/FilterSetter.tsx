@@ -121,6 +121,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                         numericFilter.value = Number(e.target.value);
                         algorithm.updateFilters(algorithm.filters);
                     }}
+                    stepSize={1}
                     value={numericFilter.value}
                 />
             );
