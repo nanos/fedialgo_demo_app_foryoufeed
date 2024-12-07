@@ -13,12 +13,15 @@ import { capitalCase } from "change-case";
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import Slider from "./Slider";
-import { NumericFilter, PropertyFilter, SourceFilterName, TheAlgorithm } from "fedialgo";
+import { NumericFilter, PropertyFilter, StringNumberDict, SourceFilterName, TheAlgorithm, PropertyName } from "fedialgo";
 import { titleStyle } from "./WeightSetter";
 
 const MAX_LABEL_LENGTH = 17;
 const INVERT_SELECTION = "invertSelection";
 const CAPITALIZED_LABELS = [INVERT_SELECTION].concat(Object.values(SourceFilterName) as string[]);
+
+const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
+const MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
 
 
 export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm }) {
@@ -95,7 +98,15 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
     };
 
     const makeCheckboxList = (filter: PropertyFilter) => {
-        return gridify(Object.keys(filter.optionInfo).sort().map((e) => propertyCheckbox(e, filter)));
+        let optionInfo = filter.optionInfo;
+
+        if (FILTERED_FILTERS.includes(filter.title)) {
+            optionInfo = Object.fromEntries(Object.entries(filter.optionInfo).filter(
+                ([_k, v]) => v >= MIN_TOOTS_TO_APPEAR_IN_FILTER)
+            )
+        }
+
+        return gridify(Object.keys(optionInfo).sort().map((e) => propertyCheckbox(e, filter)));
     }
 
     const numericSliders = Object.entries(algorithm.filters.numericFilters).reduce(
