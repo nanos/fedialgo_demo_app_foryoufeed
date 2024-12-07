@@ -65,7 +65,7 @@ You can filter based on hashtag, source (accounts you follow, hashtags you follo
 
 
 ## Investigating A Toot's Score
-Clicking the "⚖️" in the GUI will bring up a popup that will show you the gorey details of how a toot measured up.
+Clicking the ⚖️ in the GUI will bring up a popup that will show you the gorey details of how a toot measured up.
 
 <p align="center">
     <img src="doc/click_the_i_for_score_info.png" alt="click_the_i_for_score_info" width="600">
