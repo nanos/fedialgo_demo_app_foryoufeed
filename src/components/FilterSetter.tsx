@@ -22,6 +22,7 @@ const CAPITALIZED_LABELS = [INVERT_SELECTION].concat(Object.values(SourceFilterN
 
 const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
 const MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
+const MIN_TOOT_MSG = `with at least ${MIN_TOOTS_TO_APPEAR_IN_FILTER} toots`;
 
 
 export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm }) {
@@ -147,7 +148,10 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                         {/* property filters (language, source, etc) */}
                         {visibleSections.map((filterSection) => (
                             <FilterAccordionSection
-                                description={filterSection.description + (FILTERED_FILTERS.includes(filterSection.title) ? ` with at least ${MIN_TOOTS_TO_APPEAR_IN_FILTER} toots` : "")}
+                                description={
+                                    filterSection.description +
+                                    (FILTERED_FILTERS.includes(filterSection.title) ? MIN_TOOT_MSG : "")
+                                }
                                 invertCheckbox={invertSelectionCheckbox(filterSection)}
                                 key={filterSection.title}
                                 isActive={filterSection.validValues.length > 0}
