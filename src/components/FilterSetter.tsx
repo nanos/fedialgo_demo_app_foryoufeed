@@ -13,7 +13,7 @@ import { capitalCase } from "change-case";
 
 import Slider from "./Slider";
 import { headerFont, roundedBox, titleStyle } from "./WeightSetter";
-import { FeedFilterSection, FilterOptionName, SourceFilterName, TheAlgorithm } from "fedialgo";
+import { FeedFilterSection, FilterOptionName, NumericFilter, SourceFilterName, TheAlgorithm } from "fedialgo";
 
 const MAX_LABEL_LENGTH = 17;
 const INVERT_SELECTION = "invertSelection";
@@ -56,13 +56,21 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         );
     };
 
-    const invertSelectionCheckbox = (sectionName: FilterOptionName) => {
-        const filterSection = algorithm.filters.filterSections[sectionName];
-
+    const invertSelectionCheckbox = (filter: FeedFilterSection) => {
         return makeCheckbox(
-            filterSection.invertSelection,
+            filter.invertSelection,
             INVERT_SELECTION,
-            (e) => (filterSection.invertSelection = e.target.checked)
+            (e) => (filter.invertSelection = e.target.checked)
+        );
+    };
+
+    const invertNumericFilterCheckbox = (filters: NumericFilter[]) => {
+        return makeCheckbox(
+            filters.every((filter) => filter.invertSelection),
+            INVERT_SELECTION,
+            (e) => {
+                filters.map(filter => filter.invertSelection = e.target.checked);
+            }
         );
     };
 
@@ -152,7 +160,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
                                 <Accordion.Body key={`${sectionName}_accordionbody`} style={{backgroundColor: '#b2bfd4'}}>
                                     <div style={invertTagSelectionStyle} key={"invertSelection"}>
-                                        {invertSelectionCheckbox(sectionName as FilterOptionName)}
+                                        {invertSelectionCheckbox(algorithm.filters.filterSections[sectionName])}
                                     </div>
 
                                     <div style={roundedBox} key={sectionName}>
@@ -180,6 +188,10 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                                 </Accordion.Header>
 
                                 <Accordion.Body>
+                                    <div style={invertTagSelectionStyle} key={"invertSelection"}>
+                                        {invertNumericFilterCheckbox(Object.values(algorithm.filters.numericFilters))}
+                                    </div>
+
                                     <div style={roundedBox}>
                                         {numericSliders}
                                     </div>
