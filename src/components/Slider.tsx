@@ -68,6 +68,7 @@ const labelContainer: CSSProperties = {
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
+    fontSize: '14px',
     justifyContent: 'start'
 };
 
@@ -84,7 +85,6 @@ const sliderValue: CSSProperties = {
     borderColor: 'black',
     borderRadius: '3px',
     borderWidth: '1px',
-    fontColor: 'white',
     marginRight: '10px',
     paddingBottom: '1px',
     paddingLeft: '8px',

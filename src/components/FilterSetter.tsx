@@ -18,9 +18,12 @@ import { FeedFilterSection, NumericFilter, SourceFilterName, TheAlgorithm } from
 const MAX_LABEL_LENGTH = 17;
 const INVERT_SELECTION = "invertSelection";
 const CAPITALIZED_LABELS = [INVERT_SELECTION].concat(Object.values(SourceFilterName) as string[]);
+const JUNK_CLASS = "JUNKJUNKJUNK";
 
 
 export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm }) {
+    const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
+
     const makeCheckbox = (
         isChecked: boolean,
         filterName: string,
@@ -33,7 +36,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
         if (CAPITALIZED_LABELS.includes(filterName)) {
             label = capitalCase(filterName);
-            style.fontSize = "16px";
+            style.fontSize = "14px";
         } else {
             label = label.length > MAX_LABEL_LENGTH ? (label.slice(0, MAX_LABEL_LENGTH) + '...') : label;
         }
@@ -144,7 +147,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                                 <Accordion.Header key={`${sectionName}_accordionhead`}>
                                     <Form.Label style={subHeaderLabel} >
                                         <span
-                                            className={filterSection.validValues.length > 0 ? "someFilterActive" : "JUNKJUNKJUNKJUNKJUNK"}
+                                            className={filterSection.validValues.length > 0 ? "someFilterActive" : JUNK_CLASS}
                                             key={`${sectionName}_label1`}
                                             style={headerFont}
                                         >
@@ -157,7 +160,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                                     </Form.Label>
                                 </Accordion.Header>
 
-                                <Accordion.Body key={`${sectionName}_accordionbody`} style={{backgroundColor: '#b2bfd4'}}>
+                                <Accordion.Body key={`${sectionName}_accordionbody`} style={accordionBody}>
                                     <div style={invertTagSelectionStyle} key={"invertSelection"}>
                                         {invertSelectionCheckbox(filterSection)}
                                     </div>
@@ -176,8 +179,9 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                             <Accordion.Item eventKey="numericFilters">
                                 <Accordion.Header>
                                     <Form.Label style={subHeaderLabel}>
+                                        {/* Highlight the header if anything is active */}
                                         <span
-                                            className={Object.values(algorithm.filters.numericFilters).some(f => f.value > 0) ? "someFilterActive" : "JUNKJUNKJUNKJUNKJUNK"}
+                                            className={hasActiveNumericFilter ? "someFilterActive" : JUNK_CLASS}
                                             key={`numericFilters_label1`}
                                             style={headerFont}
                                         >
@@ -185,12 +189,12 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                                         </span>
 
                                         <span style={subHeaderFont} key={`numericFilters_label2`}>
-                                            {'   '}(Filter based on a minimumm or maximum number of replies, reposts, etc.)
+                                            {'   '}(Filter based on minimum/maximum number of replies, reposts, etc.)
                                         </span>
                                     </Form.Label>
                                 </Accordion.Header>
 
-                                <Accordion.Body>
+                                <Accordion.Body style={accordionBody}>
                                     <div style={invertTagSelectionStyle} key={"invertSelection"}>
                                         {invertNumericFilterCheckbox(Object.values(algorithm.filters.numericFilters))}
                                     </div>
@@ -208,6 +212,10 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
     );
 };
 
+
+const accordionBody = {
+    backgroundColor: '#b2bfd4',
+};
 
 const invertTagSelectionStyle: CSSProperties = {
     alignItems: 'center',
