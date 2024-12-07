@@ -1,7 +1,7 @@
 /*
  * Slider that sets a weight for the algorithm.
  */
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, CSSProperties } from 'react';
 
 import Form from 'react-bootstrap/esm/Form';
 
@@ -34,7 +34,7 @@ export default function Slider(props: SliderProps) {
 
     return (
         <Form.Group className="me-2">
-            <div style={{alignItems: 'center', display: 'flex', flexDirection: 'row', justifyContent: 'start'}}>
+            <div style={labelContainer}>
                 <div style={sliderValue}>
                     <span style={monoFont}>
                         {value?.toFixed(decimals)}
@@ -64,13 +64,20 @@ export default function Slider(props: SliderProps) {
 };
 
 
-const monoFont = {
+const labelContainer: CSSProperties = {
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'start'
+};
+
+const monoFont: CSSProperties = {
     fontFamily: "AnonymousPro, Courier New, monospace",
     fontSize: "13px",
     fontWeight: 'bold',
 };
 
-const sliderValue = {
+const sliderValue: CSSProperties = {
     alignSelf: 'end',
     backgroundColor: 'white',
     border: "1px solid #000",

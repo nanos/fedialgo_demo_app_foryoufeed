@@ -143,7 +143,11 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                             <Accordion.Item eventKey={sectionName} >
                                 <Accordion.Header key={`${sectionName}_accordionhead`}>
                                     <Form.Label style={subHeaderLabel} >
-                                        <span style={headerFont} key={`${sectionName}_label1`} className="someFilterActive">
+                                        <span
+                                            className={filterSection.validValues.length > 0 ? "someFilterActive" : "JUNKJUNKJUNKJUNKJUNK"}
+                                            key={`${sectionName}_label1`}
+                                            style={headerFont}
+                                        >
                                             {capitalCase(sectionName)}
                                         </span>
 
@@ -172,8 +176,12 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                             <Accordion.Item eventKey="numericFilters">
                                 <Accordion.Header>
                                     <Form.Label style={subHeaderLabel}>
-                                        <span style={headerFont} key={`numericFilters_label1`}>
-                                            {"Interactions"}
+                                        <span
+                                            className={Object.values(algorithm.filters.numericFilters).some(f => f.value > 0) ? "someFilterActive" : "JUNKJUNKJUNKJUNKJUNK"}
+                                            key={`numericFilters_label1`}
+                                            style={headerFont}
+                                        >
+                                            Interactions
                                         </span>
 
                                         <span style={subHeaderFont} key={`numericFilters_label2`}>
