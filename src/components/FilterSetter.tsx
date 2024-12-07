@@ -173,7 +173,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                                     </span>
 
                                     <span style={subHeaderFont} key={`numericFilters_label2`}>
-                                        {'   '}Filter based on a minimumm or maximum number of replies, reposts, etc.
+                                        {'   '}(Filter based on a minimumm or maximum number of replies, reposts, etc.)
                                     </span>
                                 </Form.Label>
 
