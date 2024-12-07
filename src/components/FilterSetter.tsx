@@ -68,9 +68,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         return makeCheckbox(
             filters.every((filter) => filter.invertSelection),
             INVERT_SELECTION,
-            (e) => {
-                filters.map(filter => filter.invertSelection = e.target.checked);
-            }
+            (e) => filters.map(filter => filter.invertSelection = e.target.checked)
         );
     };
 
