@@ -13939,6 +13939,9 @@ input[type="range"]::-ms-thumb {
     padding: 6px;
 }
 
+.accordion-body {
+    padding: 8px;
+}
 /* .accordion-inner-button {
     padding: 1px;
 } */
