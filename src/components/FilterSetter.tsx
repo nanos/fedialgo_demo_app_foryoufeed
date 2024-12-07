@@ -11,6 +11,7 @@ import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
 import { capitalCase } from "change-case";
 
+import FilterAccordionSection from "./FilterAccordionSection";
 import Slider from "./Slider";
 import { headerFont, roundedBox, titleStyle } from "./WeightSetter";
 import { NumericFilter, PropertyFilter, SourceFilterName, TheAlgorithm } from "fedialgo";
@@ -140,71 +141,25 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
                 <Accordion.Body style={{padding: "0px"}}>
                     <Accordion key={"fiaccordion"}>
-
                         {/* List filters (language, source, etc) */}
                         {Object.entries(algorithm.filters.filterSections).map(([sectionName, filterSection]) => (
-                            <Accordion.Item eventKey={sectionName} >
-                                <Accordion.Header key={`${sectionName}_accordionhead`}>
-                                    <Form.Label style={subHeaderLabel} >
-                                        <span
-                                            className={filterSection.validValues.length > 0 ? "someFilterActive" : JUNK_CLASS}
-                                            key={`${sectionName}_label1`}
-                                            style={headerFont}
-                                        >
-                                            {capitalCase(sectionName)}
-                                        </span>
+                            <FilterAccordionSection
+                                description={filterSection.description}
+                                invertCheckbox={invertSelectionCheckbox(filterSection)}
+                                isActive={filterSection.validValues.length > 0}
+                                sectionName={sectionName}
+                            >
+                                {makeCheckboxList(filterSection)}
+                            </FilterAccordionSection>))}
 
-                                        <span style={subHeaderFont} key={`${sectionName}_label2`}>
-                                            {'   '}({filterSection.description})
-                                        </span>
-                                    </Form.Label>
-                                </Accordion.Header>
-
-                                <Accordion.Body key={`${sectionName}_accordionbody`} style={accordionBody}>
-                                    <div style={invertTagSelectionStyle} key={"invertSelection"}>
-                                        {invertSelectionCheckbox(filterSection)}
-                                    </div>
-
-                                    <div style={roundedBox} key={sectionName}>
-                                        <Form.Group className="mb-1">
-                                            <Form.Group className="mb-1">
-                                                {makeCheckboxList(filterSection)}
-                                            </Form.Group>
-                                        </Form.Group>
-                                    </div>
-                                </Accordion.Body>
-                            </Accordion.Item>))}
-
-                            {/* Numeric filters (min/max replies, reposts, etc) */}
-                            <Accordion.Item eventKey="numericFilters">
-                                <Accordion.Header>
-                                    <Form.Label style={subHeaderLabel}>
-                                        {/* Highlight the header if anything is active */}
-                                        <span
-                                            className={hasActiveNumericFilter ? "someFilterActive" : JUNK_CLASS}
-                                            key={`numericFilters_label1`}
-                                            style={headerFont}
-                                        >
-                                            Interactions
-                                        </span>
-
-                                        <span style={subHeaderFont} key={`numericFilters_label2`}>
-                                            {'   '}(Filter based on minimum/maximum number of replies, reposts, etc.)
-                                        </span>
-                                    </Form.Label>
-                                </Accordion.Header>
-
-                                <Accordion.Body style={accordionBody}>
-                                    <div style={invertTagSelectionStyle} key={"invertSelection"}>
-                                        {invertNumericFilterCheckbox(Object.values(algorithm.filters.numericFilters))}
-                                    </div>
-
-                                    <div style={roundedBox}>
-                                        {numericSliders}
-                                    </div>
-                                </Accordion.Body>
-                            </Accordion.Item>
-
+                        <FilterAccordionSection
+                            description={"Filter based on minimum/maximum number of replies, reposts, etc"}
+                            invertCheckbox={invertNumericFilterCheckbox(Object.values(algorithm.filters.numericFilters))}
+                            isActive={hasActiveNumericFilter}
+                            sectionName="Interactions"
+                        >
+                            {numericSliders}
+                        </FilterAccordionSection>
                     </Accordion>
                 </Accordion.Body>
             </Accordion.Item>
