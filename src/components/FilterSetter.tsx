@@ -71,7 +71,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         );
     };
 
-    const listCheckbox = (element: string, filterSection: PropertyFilter) => {
+    const propertyCheckbox = (element: string, filterSection: PropertyFilter) => {
         return makeCheckbox(
             filterSection.validValues.includes(element),
             element,
@@ -94,12 +94,8 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         return <Row>{columns.map((col) => <Col>{col}</Col>)}</Row>;
     };
 
-    const makeCheckboxList = (filterSection: PropertyFilter) => {
-        const checkboxes = Object.keys(filterSection.optionInfo)
-                                 .sort()
-                                 .map((element) => listCheckbox(element, filterSection));
-
-        return gridify(checkboxes);
+    const makeCheckboxList = (filter: PropertyFilter) => {
+        return gridify(Object.keys(filter.optionInfo).sort().map((e) => propertyCheckbox(e, filter)));
     }
 
     const numericSliders = Object.entries(algorithm.filters.numericFilters).reduce(
@@ -136,7 +132,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
                 <Accordion.Body style={{padding: "0px"}}>
                     <Accordion key={"fiaccordion"}>
-                        {/* List filters (language, source, etc) */}
+                        {/* property filters (language, source, etc) */}
                         {Object.entries(algorithm.filters.filterSections).map(([sectionName, filterSection]) => (
                             <FilterAccordionSection
                                 description={filterSection.description}
@@ -160,31 +156,4 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             </Accordion.Item>
         </Accordion>
     );
-};
-
-
-const accordionBody = {
-    backgroundColor: '#b2bfd4',
-};
-
-const invertTagSelectionStyle: CSSProperties = {
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    fontSize: '16px',
-    fontWeight: "bold",
-    height: "25px",
-    justifyContent: 'center',
-    marginBottom: '8px',
-};
-
-const subHeaderFont: CSSProperties = {
-    fontFamily: "Tahoma, Geneva, sans-serif",
-    fontSize: 13,
-    fontWeight: 500,
-};
-
-const subHeaderLabel: CSSProperties = {
-    marginBottom: "-5px",
-    marginTop: "-5px"
 };
