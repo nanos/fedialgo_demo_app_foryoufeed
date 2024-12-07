@@ -42,25 +42,3 @@ export default function WeightSlider(props: WeightSliderProps) {
         />
     );
 };
-
-
-const monoFont = {
-    fontFamily: "AnonymousPro, Courier New, monospace",
-    fontSize: "13px",
-    fontWeight: 'bold',
-};
-
-const sliderValue = {
-    alignSelf: 'end',
-    backgroundColor: 'white',
-    border: "1px solid #000",
-    borderColor: 'black',
-    borderRadius: '3px',
-    borderWidth: '1px',
-    fontColor: 'white',
-    marginRight: '10px',
-    paddingBottom: '1px',
-    paddingLeft: '8px',
-    paddingRight: '8px',
-    paddingTop: '1px',
-};

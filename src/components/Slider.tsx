@@ -20,7 +20,8 @@ interface SliderProps {
 
 export default function Slider(props: SliderProps) {
     const { description, label, minValue, maxValue, onChange, stepSize, value } = props;
-    if (!value && value != 0) return <></>;
+    if (!value && value != 0) return;
+
     let step = stepSize ?? (minValue >= 0 ? DEFAULT_STEP_SIZE : 1);
     let decimals = 2;
 
