@@ -45,6 +45,18 @@ export default function Feed() {
         }
 
         constructFeed();
+        const handleVisibility = () => console.log(`Tab is ${document.visibilityState}`);
+        window.addEventListener("visibilitychange", handleVisibility);
+        const handleFocus = () => {
+            console.log(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
+            algorithm.getFeed();
+        }
+        window.addEventListener("focus", handleFocus);
+
+        return () => {
+            window.removeEventListener('visibilitychange', handleVisibility);
+            window.removeEventListener('focus', handleFocus);
+        }
     }, [user]);
 
     // Show more toots when the user scrolls to bottom of the page
