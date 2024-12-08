@@ -7,9 +7,8 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
 import * as emoji from 'node-emoji';
-import { imageAttachments, videoAttachments } from 'fedialgo/dist/objects/toot';
 import { mastodon } from 'masto';
-import { Toot, Weights } from "fedialgo";
+import { imageAttachments, Toot, videoAttachments, Weights } from "fedialgo";
 
 import "../birdUI.css";
 import "../default.css";

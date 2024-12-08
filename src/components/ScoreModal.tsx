@@ -4,8 +4,7 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap';
 
-import { describeAccount } from 'fedialgo/dist/objects/toot';
-import { Toot } from 'fedialgo';
+import { Toot, describeAccount } from 'fedialgo';
 
 
 export default function ScoreModal({
