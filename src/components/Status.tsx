@@ -365,7 +365,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                             <span className="display-name">
                                 <bdi>
-                                    <strong className="display-name__html">
+                                    <strong key="internalBDI" className="display-name__html">
                                         <a
                                             href={localServer + "/@" + status.account.acct}
                                             rel="noopener noreferrer"
@@ -388,7 +388,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     </strong>
                                 </bdi>
 
-                                <span className="display-name__account">@{status.account.acct}</span>
+                                <span key="acctdisplay" className="display-name__account">@{status.account.acct}</span>
                             </span>
                         </div>
                     </div>
