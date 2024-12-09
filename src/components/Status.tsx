@@ -92,7 +92,6 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // TODO: I don't think we need a mastodon instance to display data? it's for retooting & favoriting
     if (!masto) throw new Error("No Mastodon API");
-    console.log(`StatusComponent() status: `, status);
     const images = status.imageAttachments();
     const videos = status.videoAttachments();
     const numTrendingTags = status.trendingTags?.length || 0;

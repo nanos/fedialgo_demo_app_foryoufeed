@@ -16,6 +16,15 @@ export default function ScoreModal({
     showScoreModal: boolean,
     toot: Toot
 }) {
+    let computedScore: string;
+
+    if (!toot.scoreInfo) {
+        computedScore = "No score computed yet.";
+        console.warn("No score computed yet for toot:", toot);
+    } else {
+        computedScore = `${toot.scoreInfo.score > 0.000001 ? toot.scoreInfo.score.toFixed(10) : toot.scoreInfo.score}`;
+    }
+
     return (
         <Modal onHide={() => setShowScoreModal(false)} show={showScoreModal} style={{ color: "black" }}>
             <Modal.Header closeButton>
@@ -25,7 +34,7 @@ export default function ScoreModal({
             <Modal.Body>
                 <div style={{marginBottom: "10px"}}>
                     <p style={headerFont}>
-                        Computed Score: <code>{toot.scoreInfo.score > 0.000001 ? toot.scoreInfo.score.toFixed(10) : toot.scoreInfo.score}</code>
+                        Computed Score: <code>{computedScore}</code>
                     </p>
 
                     <p>Posted by {toot.describeAccount()}</p>
