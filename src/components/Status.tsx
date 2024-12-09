@@ -8,7 +8,7 @@ import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
 import * as emoji from 'node-emoji';
 import { mastodon } from 'masto';
-import { imageAttachments, Toot, videoAttachments, Weights } from "fedialgo";
+import { Toot, Weights } from "fedialgo";
 
 import "../birdUI.css";
 import "../default.css";
@@ -92,8 +92,9 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // TODO: I don't think we need a mastodon instance to display data? it's for retooting & favoriting
     if (!masto) throw new Error("No Mastodon API");
-    const images = imageAttachments(status);
-    const videos = videoAttachments(status);
+    console.log(`StatusComponent() status: `, status);
+    const images = status.imageAttachments();
+    const videos = status.videoAttachments();
     const numTrendingTags = status.trendingTags?.length || 0;
     const hasTrendingTags = numTrendingTags > 0;
 
