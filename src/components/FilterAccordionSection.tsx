@@ -18,11 +18,12 @@ interface AccordionProps {
     description: string,
     invertCheckbox: React.ReactElement,
     isActive: boolean,
+    sortKeysCheckbox?: React.ReactElement,
     sectionName: string;
 }
 
 export default function FilterAccordionSection(props: AccordionProps) {
-    const { children, description, invertCheckbox, isActive, sectionName } = props;
+    const { children, description, invertCheckbox, isActive, sectionName, sortKeysCheckbox } = props;
 
     return (
         <Accordion.Item eventKey={sectionName} >
@@ -45,6 +46,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
             <Accordion.Body key={`${sectionName}_accordionbody`} style={accordionBody}>
                 <div style={invertTagSelectionStyle} key={"invertSelection"}>
                     {invertCheckbox}
+                    {sortKeysCheckbox && <><div style={{width: "30px"}} />{sortKeysCheckbox}</>}
                 </div>
 
                 <div style={roundedBox} key={sectionName}>
@@ -56,7 +58,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
                 </div>
             </Accordion.Body>
         </Accordion.Item>
-    )
+    );
 };
 
 

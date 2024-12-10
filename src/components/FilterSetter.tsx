@@ -3,7 +3,7 @@
  * Things like how much to prefer people you favorite a lot or how much to posts that
  * are trending in the Fedivers.
  */
-import React, { CSSProperties, ReactNode } from "react";
+import React, { CSSProperties, ReactNode, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
@@ -18,7 +18,8 @@ import { titleStyle } from "./WeightSetter";
 
 const MAX_LABEL_LENGTH = 17;
 const INVERT_SELECTION = "invertSelection";
-const CAPITALIZED_LABELS = [INVERT_SELECTION].concat(Object.values(SourceFilterName) as string[]);
+const SORT_KEYS = "sortByValue";
+const CAPITALIZED_LABELS = [INVERT_SELECTION, SORT_KEYS].concat(Object.values(SourceFilterName) as string[]);
 
 const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
 const MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
@@ -29,11 +30,18 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
     const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
 
+    const [sortByValue, setSortByValue] = useState<Record<PropertyName, boolean>>(
+        visibleSections.reduce((acc, section) => {
+            acc[section.title] = false;
+            return acc
+        }, {} as Record<PropertyName, boolean>)
+    );
+
     const makeCheckbox = (
         isChecked: boolean,
         label: string,
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-        labelExtra?: number | string
+        labelExtra?: number | string,
     ) => {
         labelExtra = (typeof labelExtra == "number") ? labelExtra.toLocaleString() : labelExtra;
         const style: CSSProperties = {fontWeight: "bold"};
@@ -53,7 +61,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                 label={<><span style={style}>{label}</span>{labelExtra && ` (${labelExtra})`}</>}
                 onChange={(e) => {
                     onChange(e);
-                    algorithm.updateFilters(algorithm.filters);
+                    algorithm.updateFilters(algorithm.filters)
                 }}
             />
         );
@@ -64,6 +72,20 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             filter.invertSelection,
             INVERT_SELECTION,
             (e) => (filter.invertSelection = e.target.checked)
+        );
+    };
+
+    const sortKeysCheckbox = (filter: PropertyFilter) => {
+        return makeCheckbox(
+            sortByValue[filter.title],
+            SORT_KEYS,
+            (e) => {
+                console.log(`sortKeysCheckbox: ${filter.title} called with ${e.target.checked}:`, e);
+                const newSortByValue = {...sortByValue};
+                newSortByValue[filter.title] = e.target.checked;
+                setSortByValue(newSortByValue);
+                console.log(`sortByValue:`, newSortByValue);
+            }
         );
     };
 
@@ -100,6 +122,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
     const makeCheckboxList = (filter: PropertyFilter) => {
         let optionInfo = filter.optionInfo;
+        let optionKeys = Object.keys(optionInfo);
 
         if (FILTERED_FILTERS.includes(filter.title)) {
             optionInfo = Object.fromEntries(Object.entries(filter.optionInfo).filter(
@@ -107,7 +130,13 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             )
         }
 
-        return gridify(Object.keys(optionInfo).sort().map((e) => propertyCheckbox(e, filter)));
+        if (sortByValue[filter.title]) {
+            optionKeys = optionKeys.sort((a, b) => (optionInfo[b] || 0) - (optionInfo[a] || 0));
+        } else {
+            optionKeys = optionKeys.sort();
+        }
+
+        return gridify(optionKeys.map((e) => propertyCheckbox(e, filter)));
     }
 
     const numericSliders = Object.entries(algorithm.filters.numericFilters).reduce(
@@ -156,6 +185,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                                 key={filterSection.title}
                                 isActive={filterSection.validValues.length > 0}
                                 sectionName={filterSection.title}
+                                sortKeysCheckbox={sortKeysCheckbox(filterSection)}
                             >
                                 {makeCheckboxList(filterSection)}
                             </FilterAccordionSection>))}
