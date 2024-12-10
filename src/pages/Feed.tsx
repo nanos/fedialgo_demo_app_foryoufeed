@@ -46,17 +46,18 @@ export default function Feed() {
 
         constructFeed();
         const handleVisibility = () => console.log(`Tab is ${document.visibilityState}`);
-        window.addEventListener("visibilitychange", handleVisibility);
 
         const handleFocus = () => {
             console.log(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
 
-            // if (algorithm) {
-            //     algorithm.getFeed();
-            // } else {
-            //     console.warn(`Algorithm not set yet!`);
-            // }
+            if (algorithm) {
+                algorithm.getFeed();
+            } else {
+                console.warn(`Algorithm not set yet!`);
+            }
         }
+
+        window.addEventListener("visibilitychange", handleVisibility);
         window.addEventListener("focus", handleFocus);
 
         return () => {
