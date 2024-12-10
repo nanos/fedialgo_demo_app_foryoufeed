@@ -105,6 +105,7 @@ export default function Feed() {
         // If there are toots in the cache set isLoading to false early so something is displayed
         if (algo.feed.length > 0) setIsLoading(false);
         await algo.getFeed();
+        console.log(`constructFeed() finished; feed has ${algo.feed.length} toots, setting isLoading=false`);
         setIsLoading(false);
     };
 
