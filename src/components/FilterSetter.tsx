@@ -18,7 +18,7 @@ import { titleStyle } from "./WeightSetter";
 
 const MAX_LABEL_LENGTH = 17;
 const INVERT_SELECTION = "invertSelection";
-const SORT_KEYS = "sortByValue";
+const SORT_KEYS = "sortByCount";
 const CAPITALIZED_LABELS = [INVERT_SELECTION, SORT_KEYS].concat(Object.values(SourceFilterName) as string[]);
 
 const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
