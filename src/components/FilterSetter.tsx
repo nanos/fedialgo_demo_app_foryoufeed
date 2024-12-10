@@ -122,13 +122,14 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
     const makeCheckboxList = (filter: PropertyFilter) => {
         let optionInfo = filter.optionInfo;
-        let optionKeys = Object.keys(optionInfo);
 
         if (FILTERED_FILTERS.includes(filter.title)) {
             optionInfo = Object.fromEntries(Object.entries(filter.optionInfo).filter(
                 ([_k, v]) => v >= MIN_TOOTS_TO_APPEAR_IN_FILTER)
             )
         }
+
+        let optionKeys = Object.keys(optionInfo);
 
         if (sortByValue[filter.title]) {
             optionKeys = optionKeys.sort((a, b) => (optionInfo[b] || 0) - (optionInfo[a] || 0));

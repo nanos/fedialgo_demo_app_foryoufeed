@@ -105,3 +105,4 @@ Assuming you check both `fedialgo` and this repo out to the same directory there
 * There's tons of info on how the scoring and weighting of toots is being done in your browser's javascript debug console logs.
 * The interesting stuff that actually handles the feed is in the [`Feed.tsx`](src/pages/Feed.tsx) file.
 * The bird UI of this app is based on the following repo: https://github.com/ronilaukkarinen/mastodon-bird-ui
+* If you click on the score icon for a toot the `Toot` object will be logged to the javascript console.
