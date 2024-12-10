@@ -22,6 +22,9 @@ const DEFAULT_NUM_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
 const RELOAD_IF_OLDER_THAN_MS = 1000 * 60 * 15; // 15 minutes
 
+const FOCUS = "focus";
+const VISIBILITY_CHANGE = "visibilitychange";
+
 
 export default function Feed() {
     // Contruct Feed on Page Load
@@ -30,13 +33,30 @@ export default function Feed() {
     // State variables
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
     const [error, setError] = useState<string>("");
-    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
 
     const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
+
+    const handleFocus = () => {
+        console.log(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
+
+        if (isLoading) {
+            console.log(`isLoading=True; not reloading feed...`);
+            return;
+        } else if (!algorithm) {
+            console.warn("Algorithm not set yet!");
+            return;
+        } else if (!shouldReloadFeed()) {
+            console.log(`shouldReloadFeed() returned false; not reloading feed...`);
+            return;
+        }
+
+        algorithm.getFeed();
+    };
 
     // Load the posts in the feed either from mastodon server or from the cache
     useEffect(() => {
@@ -47,27 +67,12 @@ export default function Feed() {
 
         constructFeed();
         const handleVisibility = () => console.log(`Tab is ${document.visibilityState}`);
-
-        const handleFocus = () => {
-            console.log(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
-
-            if (algorithm) {
-                if (shouldReloadFeed()) {
-                    algorithm.getFeed();
-                } else {
-                    console.log(`shouldReloadFeed() returned false; not reloading feed`);
-                }
-            } else {
-                console.warn(`Algorithm not set yet!`);
-            }
-        }
-
-        window.addEventListener("visibilitychange", handleVisibility);
-        window.addEventListener("focus", handleFocus);
+        window.addEventListener(VISIBILITY_CHANGE, handleVisibility);
+        window.addEventListener(FOCUS, handleFocus);
 
         return () => {
-            window.removeEventListener('visibilitychange', handleVisibility);
-            window.removeEventListener('focus', handleFocus);
+            window.removeEventListener(VISIBILITY_CHANGE, handleVisibility);
+            window.removeEventListener(FOCUS, handleFocus);
         }
     }, [user]);
 
