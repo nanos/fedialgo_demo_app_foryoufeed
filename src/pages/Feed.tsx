@@ -20,6 +20,7 @@ import { useAuthContext } from "../hooks/useAuth";
 
 const DEFAULT_NUM_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
+const RELOAD_IF_OLDER_THAN_MS = 1000 * 60 * 15; // 15 minutes
 
 
 export default function Feed() {
@@ -51,7 +52,11 @@ export default function Feed() {
             console.log(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
 
             if (algorithm) {
-                algorithm.getFeed();
+                if (shouldReloadFeed()) {
+                    algorithm.getFeed();
+                } else {
+                    console.log(`shouldReloadFeed() returned false; not reloading feed`);
+                }
             } else {
                 console.warn(`Algorithm not set yet!`);
             }
@@ -97,6 +102,14 @@ export default function Feed() {
         await algo.getFeed();
         setIsLoading(false);
     };
+
+    const shouldReloadFeed = (): boolean => {
+        if (!algorithm || !feed || feed.length == 0) return false;
+        const mostRecentAt = algorithm.mostRecentTootAt();
+        const should = ((Date.now() - mostRecentAt.getTime()) > RELOAD_IF_OLDER_THAN_MS);
+        console.log(`shouldReloadFeed() mostRecentAt: ${mostRecentAt}, should: ${should}`);
+        return should;
+    }
 
     // Pull more toots to display from our local cached and sorted toot feed
     // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
