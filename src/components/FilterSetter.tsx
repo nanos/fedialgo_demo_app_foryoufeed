@@ -23,7 +23,7 @@ const CAPITALIZED_LABELS = [INVERT_SELECTION, SORT_KEYS].concat(Object.values(So
 
 const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
 const MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
-const MIN_TOOT_MSG = `with at least ${MIN_TOOTS_TO_APPEAR_IN_FILTER} toots`;
+const MIN_TOOT_MSG = ` with at least ${MIN_TOOTS_TO_APPEAR_IN_FILTER} toots`;
 
 
 export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm }) {
