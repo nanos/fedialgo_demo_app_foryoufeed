@@ -335,6 +335,13 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     ? <i className="fa fa-lock" title="Direct Message" style={{...iconStyle, color: "purple"}} />
                                     : <i className="fa fa-globe" title="Public" style={iconStyle} />}
 
+                                {status.inReplyToAccountId &&
+                                    <i
+                                        className="fa fa-reply"
+                                        style={{color: "blue", ...iconStyle}}
+                                        title="Reply"
+                                    />}
+
                                 {(status.followedTags?.length || status.trendingTags?.length || 0) > 0 &&
                                     <i
                                         className="fa fa-hashtag"
