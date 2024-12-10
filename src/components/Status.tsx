@@ -16,6 +16,7 @@ import AttachmentsModal from './AttachmentsModal';
 import ScoreModal from './ScoreModal';
 import { scoreString, timeString } from '../helpers/string_helpers';
 import { User } from '../types';
+import { icon } from "@fortawesome/fontawesome-svg-core";
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
@@ -330,19 +331,21 @@ export default function StatusComponent(props: StatusComponentProps) {
                             target="_blank"
                         >
                             <span className="status__visibility-icon">
-                                <i className="fa fa-globe" title="Public" style={{marginRight: '4px'}}/>
+                                {status.isDM()
+                                    ? <i className="fa fa-lock" title="Direct Message" style={{...iconStyle, color: "purple"}} />
+                                    : <i className="fa fa-globe" title="Public" style={iconStyle} />}
 
                                 {(status.followedTags?.length || status.trendingTags?.length || 0) > 0 &&
                                     <i
                                         className="fa fa-hashtag"
-                                        style={{color: hasTrendingTags ? 'orange' : 'yellow', marginRight: '4px'}}
+                                        style={{color: hasTrendingTags ? 'orange' : 'yellow', ...iconStyle}}
                                         title={trendingTagMsg}
                                     />}
 
                                 {(status.trendingRank || hasTrendingTags) &&
                                     <i
                                         className="fa fa-fire"
-                                        style={{color: 'red', marginRight: '4px'}}
+                                        style={{color: 'red', ...iconStyle}}
                                         title="Currently Trending"
                                     />}
 
@@ -504,4 +507,9 @@ export default function StatusComponent(props: StatusComponentProps) {
             </div>
         </div>
     );
+};
+
+
+const iconStyle = {
+    marginRight: "4px",
 };
