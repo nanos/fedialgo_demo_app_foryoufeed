@@ -16,6 +16,7 @@ import AttachmentsModal from './AttachmentsModal';
 import ScoreModal from './ScoreModal';
 import { scoreString, timeString } from '../helpers/string_helpers';
 import { User } from '../types';
+import { WeightName } from "fedialgo/dist/types";
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
@@ -352,8 +353,16 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     <i
                                         className="fa fa-fire"
                                         style={{color: 'red', ...iconStyle}}
-                                        title="Currently Trending"
+                                        title="Trending Toot"
                                     />}
+
+                                {status.scoreInfo?.rawScores?.[WeightName.TRENDING_LINKS] &&
+                                    <i
+                                        className="fa fa-link"
+                                        style={{color: 'orange', ...iconStyle}}
+                                        title="Trending Link"
+                                    />}
+
 
                                 {/* {status.trendingTags?.length > 0 && <i className="fa fa-bolt" title="Trending Tag"></i>} */}
                             </span>
