@@ -13,6 +13,7 @@ import WeightSlider from './WeightSlider';
 
 export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm }) {
     const [userWeights, setUserWeights] = useState<Weights>({} as Weights);
+    const sortedScorers = algorithm.weightedScorers.sort((a, b) => a.name.localeCompare(b.name));
 
     useEffect(() => {initWeights()}, []);
     const initWeights = async () => setUserWeights(await algorithm.getUserWeights());
@@ -54,7 +55,7 @@ export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm })
                             Weightings
                         </p>
 
-                        {algorithm.weightedScorers.map((scorer) => weightSlider(scorer.name))}
+                        {sortedScorers.map((scorer) => weightSlider(scorer.name))}
                     </div>
                 </Accordion.Body>
             </Accordion.Item>
