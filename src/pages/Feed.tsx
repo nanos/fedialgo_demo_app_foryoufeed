@@ -44,7 +44,7 @@ export default function Feed() {
     const handleFocus = () => {
         console.log(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
 
-        if (isLoading) {
+        if (isLoading && feed.length == 0) {
             console.log(`isLoading=True; not reloading feed...`);
             return;
         } else if (!algorithm) {
