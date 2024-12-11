@@ -103,10 +103,6 @@ export default function StatusComponent(props: StatusComponentProps) {
     // If there's one image try to show it full size; If there's more than one use old image handler.
     const imageHeight = images.length == 1 ? images[0].meta?.small?.height : IMAGES_HEIGHT;
 
-    // if (status.mentions.length > 0) {
-    //     console.log(`toot with some mentions:`, status);
-    // }
-
     // Increase mediaInspectionModalIdx on Right Arrow
     React.useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent): void => {
