@@ -8,7 +8,7 @@ export const timeString = (tootedAt: Date | string): string => {
     if (tootedAt.getDate() === currentDateNumber) {
         return tootedAt.toLocaleTimeString();
     } else {
-        return `${DAY_NAMES[tootedAt.getDay()]} ${tootedAt.toLocaleDateString()}`;
+        return `${DAY_NAMES[tootedAt.getDay()]} ${tootedAt.toLocaleTimeString()}`;
     }
 };
 

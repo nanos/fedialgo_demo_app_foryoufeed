@@ -16,7 +16,6 @@ import AttachmentsModal from './AttachmentsModal';
 import ScoreModal from './ScoreModal';
 import { scoreString, timeString } from '../helpers/string_helpers';
 import { User } from '../types';
-import { icon } from "@fortawesome/fontawesome-svg-core";
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
