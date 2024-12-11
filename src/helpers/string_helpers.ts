@@ -18,7 +18,9 @@ export const scoreString = (score: number | null): string => {
     let decimalPlaces = 1;
 
     // find the number of decimal places before a non-zero digit
-    if (score < 0.0001) {
+    if (score < 0.0000001) {
+        decimalPlaces = 10;
+    } else if (score < 0.0001) {
         decimalPlaces = 7;
     } else if (score < 0.001) {
         decimalPlaces = 5;
