@@ -13,13 +13,13 @@ import { capitalCase } from "change-case";
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import Slider from "./Slider";
-import { NumericFilter, PropertyFilter, SourceFilterName, TheAlgorithm, PropertyName } from "fedialgo";
+import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm, TypeFilterName } from "fedialgo";
 import { titleStyle } from "./WeightSetter";
 
 const MAX_LABEL_LENGTH = 20;
 const INVERT_SELECTION = "invertSelection";
 const SORT_KEYS = "sortByCount";
-const CAPITALIZED_LABELS = [INVERT_SELECTION, SORT_KEYS].concat(Object.values(SourceFilterName) as string[]);
+const CAPITALIZED_LABELS = [INVERT_SELECTION, SORT_KEYS].concat(Object.values(TypeFilterName) as string[]);
 
 const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
 const MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
@@ -175,7 +175,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
                 <Accordion.Body style={{padding: "0px"}}>
                     <Accordion key={"fiaccordion"}>
-                        {/* property filters (language, source, etc) */}
+                        {/* property filters (language, type, etc) */}
                         {visibleSections.map((filterSection) => (
                             <FilterAccordionSection
                                 description={
