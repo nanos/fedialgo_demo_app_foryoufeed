@@ -71,7 +71,6 @@ export const headerFont = {
     marginLeft: "15px",
     marginBottom: "0px",
     marginTop: "0px",
-    // marginBottom: "15px",
 };
 
 export const roundedBox = {
@@ -93,8 +92,3 @@ export const titleStyle = {
     marginTop: "0px",
     textDecoration: "underline",
 };
-
-// export const accordionHeader = {
-//     height: "20px",
-// };
-const accordionHeader = {}
