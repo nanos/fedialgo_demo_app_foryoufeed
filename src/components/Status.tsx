@@ -92,6 +92,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // TODO: I don't think we need a mastodon instance to display data? it's for retooting & favoriting
     if (!masto) throw new Error("No Mastodon API");
+    const audios = status.audioAttachments();
     const images = status.imageAttachments();
     const videos = status.videoAttachments();
     const numTrendingTags = status.trendingTags?.length || 0;
@@ -444,6 +445,13 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 </p>
                             </div>
                         </a>)}
+
+                    {audios.length > 0 &&
+                        <div className="media-gallery" style={{ height: `${imageHeight / 4}px`, overflow: "hidden" }}>
+                            <audio controls style={{ width: "100%" }}>
+                                <source src={audios[0].remoteUrl} type="audio/mpeg" />
+                            </audio>
+                        </div>}
 
                     {images.length > 0 &&
                         <div className="media-gallery" style={{ height: `${imageHeight}px`, overflow: "hidden" }}>
