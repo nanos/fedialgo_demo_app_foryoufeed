@@ -349,20 +349,19 @@ export default function StatusComponent(props: StatusComponentProps) {
                                         title={trendingTagMsg}
                                     />}
 
-                                {status.trendingRank &&
+                                {status.trendingRank > 0 &&
                                     <i
                                         className="fa fa-fire"
                                         style={{color: 'red', ...iconStyle}}
                                         title="Trending Toot"
                                     />}
 
-                                {status.scoreInfo?.rawScores?.[WeightName.TRENDING_LINKS] &&
+                                {(status.scoreInfo?.rawScores?.[WeightName.TRENDING_LINKS] || 0) > 0 &&
                                     <i
                                         className="fa fa-link"
                                         style={{color: 'orange', ...iconStyle}}
                                         title="Trending Link"
                                     />}
-
 
                                 {/* {status.trendingTags?.length > 0 && <i className="fa fa-bolt" title="Trending Tag"></i>} */}
                             </span>
