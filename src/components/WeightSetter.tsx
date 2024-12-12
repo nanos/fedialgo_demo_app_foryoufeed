@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import { TIME_DECAY, TheAlgorithm, Weights } from "fedialgo";
+import { TIME_DECAY, TRENDING, TheAlgorithm, Weights } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
 
@@ -48,6 +48,7 @@ export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm })
 
                 <Accordion.Body>
                     {weightSlider(TIME_DECAY)}
+                    {weightSlider(TRENDING)}
                     <div style={{height: '5px'}} />
 
                     <div style={roundedBox}>
