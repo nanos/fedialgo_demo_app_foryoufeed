@@ -36,31 +36,36 @@ export default function Slider(props: SliderProps) {
 
     return (
         <Form.Group className="me-2">
-            <div style={labelContainer}>
-                <div style={sliderValue}>
-                    <span style={monoFont}>
-                        {value?.toFixed(decimals)}
+            <div style={{...labelContainer}} id="outer_doop">
+                <div style={labelContainer} id="innter_doop">
+                    <div style={sliderValue} id="innerest_doop">
+                        <span style={monoFont}>
+                            {value?.toFixed(decimals)}
+                        </span>
+                    </div>
+
+                    <span>
+                        <span style={{fontWeight: 'bold', marginRight: '3px'}}>
+                            {`${label}:`}
+                        </span>
+
+                        <span>{description}</span>
                     </span>
                 </div>
 
-                <span>
-                    <span style={{fontWeight: 'bold', marginRight: '3px'}}>
-                        {`${label}:`}
-                    </span>
-
-                    <span>{description}</span>
-                </span>
+                <div style={{display: 'flex', flexDirection: 'row', justifyContent: "end"}}>
+                    <Form.Range
+                        className={"custom-slider"}
+                        id={label}
+                        min={minValue}
+                        max={maxValue}
+                        onChange={onChange}
+                        style={{width: '100%'}}
+                        step={step}
+                        value={value}
+                    />
+                </div>
             </div>
-
-            <Form.Range
-                className={"custom-slider"}
-                id={label}
-                min={minValue}
-                max={maxValue}
-                onChange={onChange}
-                step={step}
-                value={value}
-            />
         </Form.Group>
     );
 };
@@ -71,7 +76,7 @@ const labelContainer: CSSProperties = {
     display: 'flex',
     flexDirection: 'row',
     fontSize: '14px',
-    justifyContent: 'start'
+    justifyContent: 'space-between',
 };
 
 const monoFont: CSSProperties = {
