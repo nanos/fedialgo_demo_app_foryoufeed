@@ -62,7 +62,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
 };
 
 
-const accordionBody = {
+export const accordionBody = {
     backgroundColor: '#b2bfd4',
 };
 

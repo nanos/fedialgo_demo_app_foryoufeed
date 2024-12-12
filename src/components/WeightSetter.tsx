@@ -9,6 +9,7 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import { TIME_DECAY, TRENDING, TheAlgorithm, Weights } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
+import { accordionBody } from "./FilterAccordionSection";
 
 
 export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm }) {
@@ -46,10 +47,10 @@ export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm })
                     </p>
                 </Accordion.Header>
 
-                <Accordion.Body>
+                <Accordion.Body style={accordionBody}>
                     {weightSlider(TIME_DECAY)}
                     {weightSlider(TRENDING)}
-                    <div style={{height: '5px'}} />
+                    <div style={{height: '12px'}} />
 
                     <div style={roundedBox}>
                         <p style={{...titleStyle, marginBottom: "15px", marginTop: "-5px"}}>
