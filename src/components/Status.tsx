@@ -349,7 +349,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                         title={trendingTagMsg}
                                     />}
 
-                                {(status.trendingRank || hasTrendingTags) &&
+                                {status.trendingRank &&
                                     <i
                                         className="fa fa-fire"
                                         style={{color: 'red', ...iconStyle}}
