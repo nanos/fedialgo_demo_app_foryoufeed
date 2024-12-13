@@ -8,7 +8,7 @@ import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
 import * as emoji from 'node-emoji';
 import { mastodon } from 'masto';
-import { Toot, Weights } from "fedialgo";
+import { Toot, WeightName, Weights } from "fedialgo";
 
 import "../birdUI.css";
 import "../default.css";
@@ -16,7 +16,6 @@ import AttachmentsModal from './AttachmentsModal';
 import ScoreModal from './ScoreModal';
 import { scoreString, timeString } from '../helpers/string_helpers';
 import { User } from '../types';
-import { WeightName } from "fedialgo/dist/types";
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
