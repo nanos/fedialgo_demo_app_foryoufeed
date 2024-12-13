@@ -90,13 +90,17 @@ export default function StatusComponent(props: StatusComponentProps) {
     const videos = status.videoAttachments();
     const numTrendingTags = status.trendingTags?.length || 0;
     const hasTrendingTags = numTrendingTags > 0;
+    let imageHeight: number;
 
     let trendingTagMsg = (`Contains ${hasTrendingTags ? 'Trending' : 'Followed'} Hashtag${numTrendingTags > 1 ? 's' : ''}` +
         (hasTrendingTags ? `: ${status.trendingTags.map(t => `#${t.name}`).join(', ')}` : ''))
 
     // If there's one image try to show it full size; If there's more than one use old image handler.
-    const imageHeight = images.length == 1 ? images[0].meta?.small?.height : IMAGES_HEIGHT;
-
+    if (images.length == 1 ) {
+        imageHeight = images[0].meta?.small?.height || IMAGES_HEIGHT;
+    } else {
+        imageHeight = Math.min(IMAGES_HEIGHT, ...images.map(i => i.meta?.small?.height || IMAGES_HEIGHT));
+    }
 
     // Increase mediaInspectionModalIdx on Right Arrow
     React.useEffect(() => {
