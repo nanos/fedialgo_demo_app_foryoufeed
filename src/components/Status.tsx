@@ -73,14 +73,8 @@ export default function StatusComponent(props: StatusComponentProps) {
     const localServer = props.user.server;
     const learnWeights = props.learnWeights;
     const masto = props.api;
-    let status: Toot = props.status;
+    const status: Toot = props.status.reblog || props.status;  // If it's a retoot set 'status' to the toot that was retooted
     console.debug(`localServer:`, localServer);
-
-    // If it's a retoot then set 'status' to be the thing that was retooted
-    if (props.status.reblog) {
-        status = props.status.reblog;
-        status.reblogBy = props.status.account;
-    }
 
     const [error, _setError] = React.useState<string>("");
     const [favourited, setFavourited] = React.useState<boolean>(status.favourited);
@@ -102,6 +96,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // If there's one image try to show it full size; If there's more than one use old image handler.
     const imageHeight = images.length == 1 ? images[0].meta?.small?.height : IMAGES_HEIGHT;
+
 
     // Increase mediaInspectionModalIdx on Right Arrow
     React.useEffect(() => {
@@ -277,6 +272,14 @@ export default function StatusComponent(props: StatusComponentProps) {
         setShowScoreModal(true);
     };
 
+    const reblogger = (account: mastodon.v1.Account, i: number): React.ReactNode => (
+        <a className="status__display-name muted" href={`${localServer}/@${account.acct}`} key={i}>
+            <bdi><strong>
+                {emoji.emojify(account.displayName)}
+            </strong></bdi>
+        </a>
+    );
+
 
     return (
         <div>
@@ -302,21 +305,22 @@ export default function StatusComponent(props: StatusComponentProps) {
                 className="status__wrapper status__wrapper-public focusable"
             >
                 {/* Name of account that reblogged the toot (if it exists) */}
-                {status.reblogBy &&
+                {status.reblogsBy.length > 0 &&
                     <div className="status__prepend">
                         <div className="status__prepend-icon-wrapper">
                             <i className="fa fa-retweet status__prepend-icon fa-fw" />
                         </div>
 
                         <span>
-                            <a
-                                className="status__display-name muted"
-                                href={`${localServer}/@${status.reblogBy.acct}`}
-                            >
-                                <bdi><strong>
-                                    {emoji.emojify(status.reblogBy.displayName)}
-                                </strong></bdi>
-                            </a> shared
+                            {status.reblogsBy.map((r, i) => {
+                                const result = reblogger(r, i);
+
+                                if (i < status.reblogsBy.length - 1) {
+                                    return [result, ', '];
+                                } else {
+                                    return result;
+                                }
+                            })} boosted
                         </span>
                     </div>}
 
