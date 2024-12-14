@@ -74,7 +74,7 @@ const invertTagSelectionStyle: CSSProperties = {
     fontWeight: "bold",
     height: "25px",
     justifyContent: 'center',
-    marginBottom: '8px',
+    marginBottom: '7px',
 };
 
 const subHeaderFont: CSSProperties = {
