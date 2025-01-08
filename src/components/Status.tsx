@@ -4,11 +4,11 @@
 import React from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
+// import * as emoji from 'node-emoji';
 import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
-import * as emoji from 'node-emoji';
 import { mastodon } from 'masto';
-import { Toot, WeightName, Weights } from "fedialgo";
+import { Toot, WeightName, Weights, accountNameWithEmojis } from "fedialgo";
 
 import "../birdUI.css";
 import "../default.css";
@@ -279,7 +279,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const reblogger = (account: mastodon.v1.Account, i: number): React.ReactNode => (
         <a className="status__display-name muted" href={`${localServer}/@${account.acct}`} key={i}>
             <bdi><strong>
-                {emoji.emojify(account.displayName)}
+                {parse(accountNameWithEmojis(account))}
             </strong></bdi>
         </a>
     );
@@ -395,7 +395,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                             style={{ color: "white", textDecoration: "none" }}
                                             target="_blank"
                                         >
-                                            {emoji.emojify(status.account.displayName)}
+                                            {parse(accountNameWithEmojis(status.account))}
                                         </a>
 
                                         {status.account.fields.filter(f => f.verifiedAt).map(f => (
@@ -419,7 +419,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                     {/* Text of the toot */}
                     <div className="status__content status__content--with-action" >
                         <div className="status__content__text status__content__text--visible translate" lang="en">
-                            {parse(status.content)}
+                            {parse(status.contentWithEmojis())}
                         </div>
                     </div>
 
