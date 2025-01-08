@@ -73,7 +73,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const localServer = props.user.server;
     const learnWeights = props.learnWeights;
     const masto = props.api;
-    const status: Toot = props.status.reblog || props.status;  // If it's a retoot set 'status' to the toot that was retooted
+    const status: Toot = props.status.reblog || props.status;  // If it's a retoot set 'status' to the original toot
     console.debug(`localServer:`, localServer);
 
     const [error, _setError] = React.useState<string>("");
