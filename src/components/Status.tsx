@@ -74,6 +74,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const learnWeights = props.learnWeights;
     const masto = props.api;
     const status: Toot = props.status.reblog || props.status;  // If it's a retoot set 'status' to the original toot
+    const originalStatus: Toot = props.status.reblog ? props.status : null;
     console.debug(`localServer:`, localServer);
 
     const [error, _setError] = React.useState<string>("");
@@ -272,7 +273,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Show the score of a toot
     const showScore = async () => {
-        console.log(`showScore() called for toot: `, status);
+        console.log(`showScore() called for toot: `, status, `\noriginalStatus:`, originalStatus);
         setShowScoreModal(true);
     };
 
