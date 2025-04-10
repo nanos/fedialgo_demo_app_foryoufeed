@@ -9,7 +9,7 @@
         "@fortawesome/react-fontawesome": "^0.2.0",
         "bootstrap": "^5.2.3",
         "change-case": "^5.4.4",
-        "fedialgo": "github:michelcrypt4d4mus/fedialgo#3692359b9c4739eb59955655e01854764fc55d8b",
+        "fedialgo": "github:michelcrypt4d4mus/fedialgo#da3a2d9572ddf1e12239574173c61efa424a276e",
         "html-react-parser": "^3.0.15",
         "masto": "^6.0.0",
         "node-emoji": "^2.1.3",
