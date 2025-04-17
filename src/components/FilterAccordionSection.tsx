@@ -16,7 +16,7 @@ const JUNK_CLASS = "JUNKJUNKJUNK";
 interface AccordionProps {
     children: ReactNode,
     description: string,
-    invertCheckbox: React.ReactElement,
+    invertCheckbox?: React.ReactElement,
     isActive: boolean,
     sortKeysCheckbox?: React.ReactElement,
     sectionName: string;

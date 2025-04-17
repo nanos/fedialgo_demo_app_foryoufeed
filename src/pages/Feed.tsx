@@ -15,6 +15,7 @@ import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading, { DEFAULT_LOADING_MESSAGE } from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
 import useOnScreen from "../hooks/useOnScreen";
+import TrendingInfo from "../components/TrendingInfo";
 import WeightSetter from "../components/WeightSetter";
 import { useAuthContext } from "../hooks/useAuth";
 
@@ -146,6 +147,7 @@ export default function Feed() {
                         {algorithm && <WeightSetter algorithm={algorithm} />}
                         {algorithm && <FilterSetter algorithm={algorithm} />}
                         <FindFollowers api={api} user={user} />
+                        {algorithm && <TrendingInfo algorithm={algorithm} />}
                     </div>
                 </Col>
 
