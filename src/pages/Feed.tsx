@@ -129,12 +129,6 @@ export default function Feed() {
         setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
     };
 
-    // Learn weights based on user action    // TODO: does learning weights really work?
-    // const learnWeights = async (scores: Weights): Promise<void> => {
-    //     const newWeights = await algorithm.learnWeights(scores);
-    //     if (!newWeights) return;
-    // };
-
     return (
         <Container fluid style={{height: 'auto'}}>
             <Modal show={error !== ""} onHide={() => setError("")}>
@@ -171,7 +165,6 @@ export default function Feed() {
                             <StatusComponent
                                 api={api}
                                 key={toot.uri}
-                                // learnWeights={learnWeights}
                                 setError={setError}
                                 status={toot}
                                 user={user}

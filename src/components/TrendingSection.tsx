@@ -16,7 +16,8 @@ import { headerFont, roundedBox } from "./WeightSetter";
 
 interface TrendingProps {
     infoTxt: (obj: TrendingWithHistory | Toot) => string;
-    linkText?: (obj: TrendingWithHistory | Toot) => string;
+    linkText: (obj: TrendingWithHistory | Toot) => string;
+    linkUrl: (obj: TrendingWithHistory | Toot) => string;
     onClick: (obj: TrendingWithHistory | Toot, e: React.MouseEvent) => void;
     sectionName: string;
     trendingObjs: Toot[] | TrendingWithHistory[];
@@ -24,17 +25,14 @@ interface TrendingProps {
 
 
 export default function TrendingSection(props: TrendingProps) {
-    const { infoTxt, linkText, onClick, sectionName, trendingObjs } = props;
+    const { infoTxt, linkText, linkUrl, onClick, sectionName, trendingObjs } = props;
     const [open, setOpen] = useState<boolean>(false);  // TODO: is this necessary?
 
     return (
         <Accordion.Item eventKey={sectionName} >
             <Accordion.Header key={`${sectionName}_head`}>
                 <Form.Label style={subHeaderLabel} >
-                    <span
-                        key={`${sectionName}_label1`}
-                        style={headerFont}
-                    >
+                    <span key={`${sectionName}_label1`} style={headerFont}>
                         {capitalCase(sectionName)}
                     </span>
                 </Form.Label>
@@ -44,8 +42,8 @@ export default function TrendingSection(props: TrendingProps) {
                 <div style={roundedBox} key={`${sectionName}_div`}>
                     <ol style={listStyle}>
                         {trendingObjs.map((obj, i) => (
-                            <li key={`${linkText(obj)}_${i}`} style={listItemStyle}>
-                                <a onClick={e => onClick(obj, e)} style={tagLinkStyle} target="_blank">
+                            <li key={i} style={listItemStyle}>
+                                <a href={linkUrl(obj)} onClick={e => onClick(obj, e)} style={tagLinkStyle} target="_blank">
                                     {linkText(obj)}
                                 </a>
 

@@ -34,6 +34,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                             sectionName="Hashtags"
                             infoTxt={infoTxt}
                             linkText={(tag) => `#${(tag as TrendingTag).name}`}
+                            linkUrl={(tag) => algorithm.buildTagURL(tag as TrendingTag)}
                             onClick={(tag, e) => followUri(algorithm.buildTagURL(tag as TrendingTag), e)}
                             trendingObjs={algorithm.trendingTags}
                         />
@@ -42,6 +43,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                             sectionName="Links"
                             infoTxt={infoTxt}
                             linkText={(link) => `${(link as TrendingLink).title}`}
+                            linkUrl={linkMapper}
                             onClick={(link, e) => followUri(`${(link as TrendingLink).url}`, e)}
                             trendingObjs={algorithm.trendingLinks}
                         />
@@ -50,6 +52,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                             sectionName="Toots"
                             infoTxt={(t: Toot) => `${t.repliesCount} replies, ${t.reblogsCount} retoots`}
                             linkText={(toot) => `${(toot as Toot).contentShortened()}`}
+                            linkUrl={linkMapper}
                             onClick={async (toot, e) => followUri(`${await (toot as Toot).homeserverURL()}`, e)}
                             trendingObjs={algorithm.trendingToots}
                         />

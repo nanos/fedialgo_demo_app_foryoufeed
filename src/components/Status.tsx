@@ -14,7 +14,7 @@ import "../birdUI.css";
 import "../default.css";
 import AttachmentsModal from './AttachmentsModal';
 import ScoreModal from './ScoreModal';
-import { followUri, openToot } from "../helpers/react_helpers";
+import { openToot } from "../helpers/react_helpers";
 import { scoreString, timeString } from '../helpers/string_helpers';
 import { User } from '../types';
 
@@ -66,7 +66,6 @@ interface StatusComponentProps {
     setError: (error: string) => void,
     status: Toot,
     user: User,
-    // learnWeights: (statusWeight: Weights) => void,
 };
 
 
@@ -74,7 +73,6 @@ export default function StatusComponent(props: StatusComponentProps) {
     const localServer = props.user.server;
     const masto = props.api;
 
-    // const learnWeights = props.learnWeights;
     const status: Toot = props.status.reblog || props.status;  // If it's a retoot set 'status' to the original toot
     const originalStatus: Toot = props.status.reblog ? props.status : null;
     const browseToToot = async (e: React.MouseEvent) => await openToot(status, e);
@@ -234,7 +232,6 @@ export default function StatusComponent(props: StatusComponentProps) {
                         throw new Error(`Unknown actionName: ${actionName}`);
                     }
 
-                    // if (newState) learnWeights(status.scoreInfo?.rawScores);  // TODO: does learning weights really work?
                     console.log(`Successfully changed ${actionName} bool to ${newState}`);
                 } catch (error) {
                     const msg = `Failed to ${actionName} toot!`;
@@ -406,7 +403,6 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <a
                             className="status-card compact"
                             href={status.card.url}
-                            // onClick={() => learnWeights(status.scoreInfo?.rawScores)}
                             rel="noopener noreferrer"
                             target="_blank"
                         >
