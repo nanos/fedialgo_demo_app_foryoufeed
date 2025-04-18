@@ -47,7 +47,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
 
                         <TrendingSection
                             sectionName="Toots"
-                            infoTxtMapper={(toot: Toot) => `${toot.reblogsCount} retoots`}
+                            infoTxtMapper={(t: Toot) => `${t.repliesCount} replies, ${t.reblogsCount} retoots`}
                             trendingObjs={algorithm.trendingToots}
                             linkTextMapper={(toot) => `${(toot as Toot).contentShortened()}`}
                             linkUrlMapper={(toot) => `${(toot as Toot).url}`}

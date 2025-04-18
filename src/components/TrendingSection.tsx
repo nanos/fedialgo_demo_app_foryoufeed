@@ -62,21 +62,21 @@ export default function TrendingSection(props: TrendingProps) {
 };
 
 
-const subHeaderLabel: CSSProperties = {
-    marginBottom: "-5px",
-    marginTop: "-5px"
-};
-
 const listItemStyle: CSSProperties = {
     marginBottom: "5px",
     marginTop: "5px",
 };
 
 const listStyle: CSSProperties = {
-    fontSize: 17,
+    fontSize: 16,
     listStyle: "numeric",
     paddingBottom: "10px",
     paddingLeft: "20px",
+};
+
+const subHeaderLabel: CSSProperties = {
+    marginBottom: "-5px",
+    marginTop: "-5px"
 };
 
 const tagLinkStyle: CSSProperties = {
