@@ -26,6 +26,8 @@ const RELOAD_IF_OLDER_THAN_MS = 1000 * 60 * 15; // 15 minutes
 const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
 
+const NO_TOOTS_MSG = "No toots found! Maybe check your filter settings";
+
 
 export default function Feed() {
     // Contruct Feed on Page Load
@@ -168,7 +170,7 @@ export default function Feed() {
 
                     {(isLoading || feed.length == 0) &&
                         <FullPageIsLoading
-                            message={isLoading ? DEFAULT_LOADING_MESSAGE : "No toots found! Maybe check your filter settings"}
+                            message={isLoading ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
                         />}
 
                     <div ref={bottomRef} onClick={showMoreToots}>

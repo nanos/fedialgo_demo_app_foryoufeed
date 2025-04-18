@@ -41,8 +41,8 @@ export default function TrendingSection(props: TrendingProps) {
             <Accordion.Body key={`${sectionName}_accordionbody`} onEnter={() => setOpen(true)} style={accordionBody}>
                 <div style={roundedBox} key={`${sectionName}_div`}>
                     <ol style={listStyle}>
-                        {trendingObjs.map((obj) => (
-                            <li key={linkTextMapper(obj)} style={listItemStyle}>
+                        {trendingObjs.map((obj, i) => (
+                            <li key={`${linkTextMapper(obj)}_${i}`} style={listItemStyle}>
                                 <a href={linkUrlMapper(obj)} style={tagLinkStyle} target="_blank">
                                     {linkTextMapper(obj)}
                                 </a>
