@@ -7,14 +7,16 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import TrendingSection from "./TrendingSection";
 
 import { accordionBody } from "./FilterAccordionSection";
-import { TheAlgorithm } from "fedialgo";
+import { TheAlgorithm, Toot } from "fedialgo";
 import { titleStyle } from "./WeightSetter";
 import { TrendingLink, TrendingTag, TrendingWithHistory } from "fedialgo/dist/types";
 
 
 export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm }) {
     const [open, setOpen] = useState<boolean>(false);  // TODO: is this necessary?
-    const linkMapper = (link: TrendingWithHistory) => `${(link as TrendingLink).url}`
+
+    const linkMapper = (link: TrendingWithHistory) => `${(link as TrendingLink).url}`;
+    const infoTxt = (obj: TrendingWithHistory) => `${obj.numToots} toots by ${obj.numAccounts} accounts`;
 
     return (
         <Accordion>
@@ -29,6 +31,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                     <Accordion key="trendstuff">
                         <TrendingSection
                             sectionName="Hashtags"
+                            infoTxtMapper={infoTxt}
                             trendingObjs={algorithm.trendingTags}
                             linkTextMapper={(tag) => `#${(tag as TrendingTag).name}`}
                             linkUrlMapper={(tag) => algorithm.buildTagURL(tag as TrendingTag)}
@@ -36,9 +39,18 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
 
                         <TrendingSection
                             sectionName="Links"
+                            infoTxtMapper={infoTxt}
                             trendingObjs={algorithm.trendingLinks}
-                            linkTextMapper={(link: TrendingWithHistory) => `${(link as TrendingLink).title}`}
+                            linkTextMapper={(link) => `${(link as TrendingLink).title}`}
                             linkUrlMapper={linkMapper}
+                        />
+
+                        <TrendingSection
+                            sectionName="Toots"
+                            infoTxtMapper={(toot: Toot) => `${toot.reblogsCount} retoots`}
+                            trendingObjs={algorithm.trendingToots}
+                            linkTextMapper={(toot) => `${(toot as Toot).linkText()}`}
+                            linkUrlMapper={(toot) => `${(toot as Toot).url}`}
                         />
                     </Accordion>
                 </Accordion.Body>

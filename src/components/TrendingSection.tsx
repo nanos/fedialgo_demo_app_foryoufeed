@@ -8,21 +8,23 @@ import React, { CSSProperties, useState } from "react";
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
+import { Toot } from "fedialgo";
 import { TrendingWithHistory } from "fedialgo/dist/types";
 
 import { accordionBody } from "./FilterAccordionSection";
 import { headerFont, roundedBox } from "./WeightSetter";
 
 interface TrendingProps {
-    linkTextMapper?: (obj: TrendingWithHistory) => string;
-    linkUrlMapper?: (obj: TrendingWithHistory) => string;
+    infoTxtMapper: (obj: TrendingWithHistory | Toot) => string;
+    linkTextMapper?: (obj: TrendingWithHistory | Toot) => string;
+    linkUrlMapper?: (obj: TrendingWithHistory | Toot) => string;
     sectionName: string;
-    trendingObjs: TrendingWithHistory[];
+    trendingObjs: Toot[] | TrendingWithHistory[];
 };
 
 
 export default function TrendingSection(props: TrendingProps) {
-    const { linkTextMapper, linkUrlMapper, sectionName, trendingObjs } = props;
+    const { infoTxtMapper, linkTextMapper, linkUrlMapper, sectionName, trendingObjs } = props;
     const [open, setOpen] = useState<boolean>(false);  // TODO: is this necessary?
 
     return (
@@ -48,7 +50,7 @@ export default function TrendingSection(props: TrendingProps) {
                                 </a>
 
                                 <span style={{ marginLeft: "10px" }} >
-                                    ({obj.numToots} toots by {obj.numAccounts} accounts)
+                                    ({infoTxtMapper(obj)})
                                 </span>
                             </li>
                         ))}
