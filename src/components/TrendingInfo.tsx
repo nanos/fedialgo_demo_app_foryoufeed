@@ -23,7 +23,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
             <Accordion.Item eventKey="trendingInfoTags">
                 <Accordion.Header>
                     <p style={titleStyle}>
-                        What's Trending (WIP)
+                        What's Trending
                     </p>
                 </Accordion.Header>
 
