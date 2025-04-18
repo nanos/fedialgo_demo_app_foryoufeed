@@ -121,7 +121,7 @@ export default function Feed() {
     // Pull more toots to display from our local cached and sorted toot feed
     // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
     const showMoreToots = () => {
-        console.log(`Showing ${numDisplayedToots} toots, ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more (${feed.length} available to show)`);
+        console.log(`Showing ${numDisplayedToots} toots, ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more (${feed.length} available)`);
         setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
     };
 
