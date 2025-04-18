@@ -27,7 +27,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
 
     return (
         <Accordion.Item eventKey={sectionName} >
-            <Accordion.Header key={`${sectionName}_accordionhead`}>
+            <Accordion.Header key={`${sectionName}_head`}>
                 <Form.Label style={subHeaderLabel} >
                     <span
                         className={isActive ? "someFilterActive" : JUNK_CLASS}
@@ -43,7 +43,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
                 </Form.Label>
             </Accordion.Header>
 
-            <Accordion.Body key={`${sectionName}_accordionbody`} style={accordionBody}>
+            <Accordion.Body key={`${sectionName}_body`} style={accordionBody}>
                 <div style={invertTagSelectionStyle} key={"invertSelection"}>
                     {invertCheckbox}
                     {sortKeysCheckbox && <><div style={{width: "30px"}} />{sortKeysCheckbox}</>}
@@ -62,7 +62,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
 };
 
 
-export const accordionBody = {
+export const accordionBody: CSSProperties = {
     backgroundColor: '#b2bfd4',
 };
 

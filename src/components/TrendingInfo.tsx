@@ -4,15 +4,17 @@
 import React, { useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
+import TrendingSection from "./TrendingSection";
 
 import { accordionBody } from "./FilterAccordionSection";
-import { headerFont, roundedBox } from "./WeightSetter";
 import { TheAlgorithm } from "fedialgo";
 import { titleStyle } from "./WeightSetter";
+import { TrendingLink, TrendingTag, TrendingWithHistory } from "fedialgo/dist/types";
 
 
 export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm }) {
-    const [open, setOpen] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);  // TODO: is this necessary?
+    const linkMapper = (link: TrendingWithHistory) => `${(link as TrendingLink).url}`
 
     return (
         <Accordion>
@@ -24,53 +26,23 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                 </Accordion.Header>
 
                 <Accordion.Body onEnter={() => setOpen(true)} style={accordionBody}>
-                    <p style={subHeaderFont}>
-                        Trending Hashtags
-                    </p>
+                    <Accordion key="trendstuff">
+                        <TrendingSection
+                            sectionName="Hashtags"
+                            trendingObjs={algorithm.trendingTags}
+                            linkTextMapper={(tag) => `#${(tag as TrendingTag).name}`}
+                            linkUrlMapper={(tag) => algorithm.buildTagURL(tag as TrendingTag)}
+                        />
 
-                    <div style={roundedBox} key={"trendingTagsDiv"}>
-                        <ol style={listStyle}>
-                            {algorithm.trendingTags.map((tag) => (
-                                <li key={tag.name} style={listItemStyle}>
-                                    <a href={algorithm.buildTagURL(tag)} style={tagLinkStyle} target="_blank">
-                                        #{tag.name}
-                                    </a>
-
-                                    <span style={{ marginLeft: "10px" }} >
-                                        ({tag.numToots} toots by {tag.numAccounts} accounts)
-                                    </span>
-                                </li>
-                            ))}
-                        </ol>
-                    </div>
+                        <TrendingSection
+                            sectionName="Links"
+                            trendingObjs={algorithm.trendingLinks}
+                            linkTextMapper={(link: TrendingWithHistory) => `${(link as TrendingLink).title}`}
+                            linkUrlMapper={linkMapper}
+                        />
+                    </Accordion>
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
     );
-};
-
-
-const listStyle = {
-    fontSize: 17,
-    listStyle: "numeric",
-    paddingBottom: "10px",
-    paddingLeft: "20px",
-};
-
-const listItemStyle = {
-    marginBottom: 3,
-    marginTop: 3,
-};
-
-const subHeaderFont = {
-    ...headerFont,
-    fontSize: 17,
-    marginBottom: 10,
-    marginTop: 2,
-};
-
-const tagLinkStyle = {
-    color: "black",
-    fontFamily: "monospace",
-    fontWeight: "bold",
 };
