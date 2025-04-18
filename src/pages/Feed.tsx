@@ -6,6 +6,7 @@ import { Modal } from "react-bootstrap";
 
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
 import { TheAlgorithm, Toot, Weights } from "fedialgo";
@@ -14,8 +15,8 @@ import FilterSetter from "../components/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
 import FullPageIsLoading, { DEFAULT_LOADING_MESSAGE } from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
-import useOnScreen from "../hooks/useOnScreen";
 import TrendingInfo from "../components/TrendingInfo";
+import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
 import { useAuthContext } from "../hooks/useAuth";
 
@@ -38,6 +39,7 @@ export default function Feed() {
     const [error, setError] = useState<string>("");
     const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isSticky, setIsSticky] = useState<boolean>(true); // Left panel stickiness
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
 
     const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
@@ -145,13 +147,21 @@ export default function Feed() {
 
             <Row>
                 <Col xs={6}>
-                    {/* This will allow left panel to scroll:
-                    <div className="sticky-top" style={{position: "relative"}}> */}
-                    <div className="sticky-top">
+                    <div className="sticky-top" style={isSticky ? {} : {position: "relative"}} >
                         {algorithm && <WeightSetter algorithm={algorithm} />}
                         {algorithm && <FilterSetter algorithm={algorithm} />}
                         <FindFollowers api={api} user={user} />
                         {algorithm && <TrendingInfo algorithm={algorithm} />}
+
+                        <div style={{height: "50px"}}>
+                            <Form.Check
+                                type="checkbox"
+                                label="Stick To Top"
+                                checked={isSticky}
+                                onChange={(e) => setIsSticky(e.target.checked)}
+                                className="mb-3"
+                            />
+                        </div>
                     </div>
                 </Col>
 
