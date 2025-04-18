@@ -143,6 +143,8 @@ export default function Feed() {
 
             <Row>
                 <Col xs={6}>
+                    {/* This will allow left panel to scroll:
+                    <div className="sticky-top" style={{position: "relative"}}> */}
                     <div className="sticky-top">
                         {algorithm && <WeightSetter algorithm={algorithm} />}
                         {algorithm && <FilterSetter algorithm={algorithm} />}
