@@ -39,7 +39,9 @@ export default function Header() {
                         className='text-center align-middle p-2'
                         style={{ fontSize: 20, whiteSpace: "nowrap" }}
                     >
-                        Fedi-Feed
+                        <a href="https://github.com/michelcrypt4d4mus/fedialgo_demo_app_foryoufeed" style={{color: "white"}} target="_blank">
+                            Fedialgo Demo
+                        </a>
                     </span>
                 </Col>
 
