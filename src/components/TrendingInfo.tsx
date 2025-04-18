@@ -7,6 +7,7 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import TrendingSection from "./TrendingSection";
 
 import { accordionBody } from "./FilterAccordionSection";
+import { followUri } from "../helpers/react_helpers";
 import { TheAlgorithm, Toot } from "fedialgo";
 import { titleStyle } from "./WeightSetter";
 import { TrendingLink, TrendingTag, TrendingWithHistory } from "fedialgo/dist/types";
@@ -31,26 +32,26 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                     <Accordion key="trendstuff">
                         <TrendingSection
                             sectionName="Hashtags"
-                            infoTxtMapper={infoTxt}
+                            infoTxt={infoTxt}
+                            linkText={(tag) => `#${(tag as TrendingTag).name}`}
+                            onClick={(tag, e) => followUri(algorithm.buildTagURL(tag as TrendingTag), e)}
                             trendingObjs={algorithm.trendingTags}
-                            linkTextMapper={(tag) => `#${(tag as TrendingTag).name}`}
-                            linkUrlMapper={(tag) => algorithm.buildTagURL(tag as TrendingTag)}
                         />
 
                         <TrendingSection
                             sectionName="Links"
-                            infoTxtMapper={infoTxt}
+                            infoTxt={infoTxt}
+                            linkText={(link) => `${(link as TrendingLink).title}`}
+                            onClick={(link, e) => followUri(`${(link as TrendingLink).url}`, e)}
                             trendingObjs={algorithm.trendingLinks}
-                            linkTextMapper={(link) => `${(link as TrendingLink).title}`}
-                            linkUrlMapper={linkMapper}
                         />
 
                         <TrendingSection
                             sectionName="Toots"
-                            infoTxtMapper={(t: Toot) => `${t.repliesCount} replies, ${t.reblogsCount} retoots`}
+                            infoTxt={(t: Toot) => `${t.repliesCount} replies, ${t.reblogsCount} retoots`}
+                            linkText={(toot) => `${(toot as Toot).contentShortened()}`}
+                            onClick={async (toot, e) => followUri(`${await (toot as Toot).homeserverURL()}`, e)}
                             trendingObjs={algorithm.trendingToots}
-                            linkTextMapper={(toot) => `${(toot as Toot).contentShortened()}`}
-                            linkUrlMapper={(toot) => `${(toot as Toot).url}`}
                         />
                     </Accordion>
                 </Accordion.Body>

@@ -8,12 +8,13 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
 import { mastodon } from 'masto';
-import { Toot, WeightName, Weights, accountNameWithEmojis } from "fedialgo";
+import { Toot, WeightName, accountNameWithEmojis } from "fedialgo";
 
 import "../birdUI.css";
 import "../default.css";
 import AttachmentsModal from './AttachmentsModal';
 import ScoreModal from './ScoreModal';
+import { followUri, openToot } from "../helpers/react_helpers";
 import { scoreString, timeString } from '../helpers/string_helpers';
 import { User } from '../types';
 
@@ -65,24 +66,25 @@ interface StatusComponentProps {
     setError: (error: string) => void,
     status: Toot,
     user: User,
-    learnWeights: (statusWeight: Weights) => void,
+    // learnWeights: (statusWeight: Weights) => void,
 };
 
 
 export default function StatusComponent(props: StatusComponentProps) {
     const localServer = props.user.server;
-    const learnWeights = props.learnWeights;
     const masto = props.api;
+
+    // const learnWeights = props.learnWeights;
     const status: Toot = props.status.reblog || props.status;  // If it's a retoot set 'status' to the original toot
     const originalStatus: Toot = props.status.reblog ? props.status : null;
-    console.debug(`localServer:`, localServer);
+    const browseToToot = async (e: React.MouseEvent) => await openToot(status, e);
 
+    // State variables
     const [error, _setError] = React.useState<string>("");
     const [favourited, setFavourited] = React.useState<boolean>(status.favourited);
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
     const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); //index of the mediaAttachment to show
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
-    const [resolvedStatus, setResolvedStatus] = React.useState<Toot | null>(null);
 
     // TODO: I don't think we need a mastodon instance to display data? it's for retooting & favoriting
     if (!masto) throw new Error("No Mastodon API");
@@ -191,18 +193,6 @@ export default function StatusComponent(props: StatusComponentProps) {
         );
     };
 
-    // Resolve foreign server toot ID URL to one on the user's local server
-    const resolve = async (status: Toot): Promise<Toot> => {
-        if (resolvedStatus) return resolvedStatus;
-        if (status.uri.includes(localServer)) return status;
-
-        // v2 search docs: https://docs.joinmastodon.org/methods/search/
-        const lookupResult = await masto.v2.search.fetch({ q: status.uri, resolve: true });
-        const _resolvedStatus = lookupResult.statuses[0];
-        setResolvedStatus(_resolvedStatus);
-        return _resolvedStatus;
-    };
-
     // Returns a function that's called when state changes for faves and retoots
     const performAction = (actionName: string) => {
         return () => {
@@ -225,7 +215,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
             (async () => {
                 try {
-                    const status_ = await resolve(status);
+                    const status_ = await status.resolve();
                     const id = status_.id;
 
                     if (actionName == FAVORITE) {
@@ -244,7 +234,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         throw new Error(`Unknown actionName: ${actionName}`);
                     }
 
-                    if (newState) learnWeights(status.scoreInfo?.rawScores);  // TODO: does learning weights really work?
+                    // if (newState) learnWeights(status.scoreInfo?.rawScores);  // TODO: does learning weights really work?
                     console.log(`Successfully changed ${actionName} bool to ${newState}`);
                 } catch (error) {
                     const msg = `Failed to ${actionName} toot!`;
@@ -258,19 +248,6 @@ export default function StatusComponent(props: StatusComponentProps) {
         };
     };
 
-    // Open the Toot in a new tab, resolved to its URL on the user's home server
-    const followUri = async (e: React.MouseEvent) => {
-        e.preventDefault()
-        const _resolvedStatus = await resolve(status);
-        learnWeights(status.scoreInfo?.rawScores);  // TODO: does learning weights really work?
-        console.log(`followUri() _resolvedStatus: `, _resolvedStatus);
-        const statusURL = `${localServer}/@${_resolvedStatus.account.acct}/${_resolvedStatus.id}`;
-        // new tab:
-        window.open(statusURL, '_blank');
-        // same tab:
-        // window.location.href = statusURL;
-    };
-
     // Show the score of a toot
     const showScore = async () => {
         console.log(`showScore() called for toot: `, status, `\noriginalStatus:`, originalStatus);
@@ -278,7 +255,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     };
 
     const reblogger = (account: mastodon.v1.Account, i: number): React.ReactNode => (
-        <a className="status__display-name muted" href={`${localServer}/@${account.acct}`} key={i}>
+        <a className="status__display-name muted" href={status.homserverAccountURL()} key={i}>
             <bdi><strong>
                 {parse(accountNameWithEmojis(account))}
             </strong></bdi>
@@ -391,7 +368,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 <bdi>
                                     <strong key="internalBDI" className="display-name__html">
                                         <a
-                                            href={localServer + "/@" + status.account.acct}
+                                            href={status.homserverAccountURL()}
                                             rel="noopener noreferrer"
                                             style={{ color: "white", textDecoration: "none" }}
                                             target="_blank"
@@ -429,7 +406,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <a
                             className="status-card compact"
                             href={status.card.url}
-                            onClick={() => learnWeights(status.scoreInfo?.rawScores)}
+                            // onClick={() => learnWeights(status.scoreInfo?.rawScores)}
                             rel="noopener noreferrer"
                             target="_blank"
                         >
@@ -511,9 +488,9 @@ export default function StatusComponent(props: StatusComponentProps) {
                             })}
                         </div>)}
 
-                    {/* retoot, favorite, etc. icons at bottom */}
+                    {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">
-                        {makeButton(ACTION_ICON_BASE_CLASS, "Reply", followUri, status.repliesCount)}
+                        {makeButton(ACTION_ICON_BASE_CLASS, "Reply", browseToToot, status.repliesCount)}
 
                         {makeButton(
                             ACTION_ICON_BASE_CLASS + (reblogged ? " active activate" : " deactivate"),
@@ -530,7 +507,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         )}
 
                         {makeButton(ICON_BUTTON_CLASS, "Score", showScore, scoreString(status?.scoreInfo?.score))}
-                        {makeButton(ICON_BUTTON_CLASS, "Open", followUri)}
+                        {makeButton(ICON_BUTTON_CLASS, "Open", browseToToot)}
                     </div>
                 </div>
             </div>
