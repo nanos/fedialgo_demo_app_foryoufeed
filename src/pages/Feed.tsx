@@ -47,16 +47,16 @@ export default function Feed() {
     const isBottom = useOnScreen(bottomRef);
 
     const handleFocus = () => {
-        console.log(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
+        console.debug(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
 
         if (isLoading && feed.length == 0) {
-            console.log(`isLoading=True; not reloading feed...`);
+            console.debug(`isLoading=True; not reloading feed...`);
             return;
         } else if (!algorithm) {
             console.warn("Algorithm not set yet!");
             return;
         } else if (!shouldReloadFeed()) {
-            console.log(`shouldReloadFeed() returned false; not reloading feed...`);
+            console.debug(`shouldReloadFeed() returned false; not reloading feed...`);
             return;
         }
 
