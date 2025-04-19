@@ -13,7 +13,7 @@ import { TrendingObj } from "fedialgo/dist/types";
 import { accordionBody } from "./FilterAccordionSection";
 import { headerFont, roundedBox } from "./WeightSetter";
 
-const LINK_FONT_SIZE = 16;
+export const LINK_FONT_SIZE = 16;
 
 interface TrendingProps {
     hasCustomStyle?: boolean;
@@ -29,7 +29,6 @@ interface TrendingProps {
 export default function TrendingSection(props: TrendingProps) {
     const { hasCustomStyle, infoTxt, linkText, linkUrl, onClick, sectionName, trendingObjs } = props;
     const linkStyle = hasCustomStyle ? tagLinkStyle : boldTagLinkStyle;
-    const [open, setOpen] = useState<boolean>(false);  // TODO: is this necessary?
 
     return (
         <Accordion.Item eventKey={sectionName} >
@@ -41,8 +40,8 @@ export default function TrendingSection(props: TrendingProps) {
                 </Form.Label>
             </Accordion.Header>
 
-            <Accordion.Body key={`${sectionName}_body`} onEnter={() => setOpen(true)} style={accordionBody}>
-                <div style={roundedBox} key={`${sectionName}_div`}>
+            <Accordion.Body key={`${sectionName}_body`} style={accordionBody}>
+                <div style={roundedBox}>
                     <ol style={listStyle}>
                         {trendingObjs.map((obj, i) => (
                             <li key={i} style={listItemStyle}>

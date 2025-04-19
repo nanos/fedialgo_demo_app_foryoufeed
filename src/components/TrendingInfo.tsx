@@ -1,34 +1,40 @@
 /*
  * WIP: Component for displaying the trending hashtags in the Fediverse.
  */
-import React, { useState } from "react";
+import React, { CSSProperties, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import TrendingSection from "./TrendingSection";
+import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
 
 import { accordionBody } from "./FilterAccordionSection";
+import { extractDomain } from "fedialgo/dist/helpers";
 import { followUri, openToot } from "../helpers/react_helpers";
 import { TheAlgorithm, Toot } from "fedialgo";
 import { titleStyle } from "./WeightSetter";
 import { TrendingLink, TrendingTag, TrendingWithHistory, TrendingObj } from "fedialgo/dist/types";
+// import { prefix } from "@fortawesome/free-solid-svg-icons";  // TODO: remove this package?
 
 
 export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm }) {
-    const [open, setOpen] = useState<boolean>(false);  // TODO: is this necessary?
     const linkMapper = (link: TrendingObj) => `${(link as TrendingLink).url}`;
-    const infoTxt = (obj: TrendingWithHistory) => `${obj.numToots} toots by ${obj.numAccounts} accounts`;
+    const infoTxt = (obj: TrendingWithHistory) => `${obj.numToots} toots / ${obj.numAccounts} accounts`;
 
-    const tootLinkText = (obj: TrendingObj) => {
-        const toot = obj as Toot;
-
+    const prefixedText = (prefix: string, text: string): React.ReactElement => {
         return (<>
-            {toot.attachmentPrefix()}
-            <span style={{ fontWeight: "bold" }}>
-                {' '}{toot.contentShortened()}
-            </span>
+            {prefix.length ? <span style={monospace}>{prefix}</span> : ''}
+            <span style={bold}>{prefix.length ? ' ' : ''}{text}</span>
         </>);
-    }
+    };
 
+    const tootLinkText = (obj: TrendingObj): React.ReactElement => {
+        const toot = obj as Toot;
+        return prefixedText(toot.attachmentPrefix(), toot.contentShortened());
+    };
+
+    const linkText = (obj: TrendingObj): React.ReactElement => {
+        const link = obj as TrendingLink;
+        return prefixedText(`[${extractDomain(link.url)}]`, link.title);
+    };
 
     return (
         <Accordion>
@@ -39,7 +45,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                     </p>
                 </Accordion.Header>
 
-                <Accordion.Body onEnter={() => setOpen(true)} style={accordionBody}>
+                <Accordion.Body style={accordionBody}>
                     <Accordion key="trendstuff">
                         <TrendingSection
                             sectionName="Hashtags"
@@ -52,8 +58,9 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
 
                         <TrendingSection
                             sectionName="Links"
+                            hasCustomStyle={true}
                             infoTxt={infoTxt}
-                            linkText={(link) => `${(link as TrendingLink).title}`}
+                            linkText={linkText}
                             linkUrl={linkMapper}
                             onClick={(link, e) => followUri(`${(link as TrendingLink).url}`, e)}
                             trendingObjs={algorithm.trendingLinks}
@@ -73,4 +80,14 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
             </Accordion.Item>
         </Accordion>
     );
+};
+
+
+const bold: CSSProperties = {
+    fontWeight: "bold",
+};
+
+const monospace: CSSProperties = {
+    fontFamily: "monospace",
+    fontSize: LINK_FONT_SIZE - 3,
 };
