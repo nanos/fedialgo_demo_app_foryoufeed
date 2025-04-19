@@ -80,7 +80,8 @@ const labelContainer: CSSProperties = {
 };
 
 const monoFont: CSSProperties = {
-    fontFamily: "AnonymousPro, Courier New, monospace",
+    // fontFamily: "AnonymousPro, Courier New, monospace",
+    fontFamily: "Courier New, monospace",
     fontSize: "13px",
     fontWeight: 'bold',
 };
