@@ -7,7 +7,7 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import TrendingSection from "./TrendingSection";
 
 import { accordionBody } from "./FilterAccordionSection";
-import { followUri } from "../helpers/react_helpers";
+import { followUri, openToot } from "../helpers/react_helpers";
 import { TheAlgorithm, Toot } from "fedialgo";
 import { titleStyle } from "./WeightSetter";
 import { TrendingLink, TrendingTag, TrendingWithHistory } from "fedialgo/dist/types";
@@ -53,7 +53,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                             infoTxt={(t: Toot) => `${t.repliesCount} replies, ${t.reblogsCount} retoots`}
                             linkText={(toot) => `${(toot as Toot).contentShortened()}`}
                             linkUrl={linkMapper}
-                            onClick={async (toot, e) => followUri(`${await (toot as Toot).homeserverURL()}`, e)}
+                            onClick={openToot}
                             trendingObjs={algorithm.trendingToots}
                         />
                     </Accordion>
