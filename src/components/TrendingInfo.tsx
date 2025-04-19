@@ -10,14 +10,25 @@ import { accordionBody } from "./FilterAccordionSection";
 import { followUri, openToot } from "../helpers/react_helpers";
 import { TheAlgorithm, Toot } from "fedialgo";
 import { titleStyle } from "./WeightSetter";
-import { TrendingLink, TrendingTag, TrendingWithHistory } from "fedialgo/dist/types";
+import { TrendingLink, TrendingTag, TrendingWithHistory, TrendingObj } from "fedialgo/dist/types";
 
 
 export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm }) {
     const [open, setOpen] = useState<boolean>(false);  // TODO: is this necessary?
-
-    const linkMapper = (link: TrendingWithHistory) => `${(link as TrendingLink).url}`;
+    const linkMapper = (link: TrendingObj) => `${(link as TrendingLink).url}`;
     const infoTxt = (obj: TrendingWithHistory) => `${obj.numToots} toots by ${obj.numAccounts} accounts`;
+
+    const tootLinkText = (obj: TrendingObj) => {
+        const toot = obj as Toot;
+
+        return (<>
+            {toot.attachmentPrefix()}
+            <span style={{ fontWeight: "bold" }}>
+                {' '}{toot.contentShortened()}
+            </span>
+        </>);
+    }
+
 
     return (
         <Accordion>
@@ -50,8 +61,9 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
 
                         <TrendingSection
                             sectionName="Toots"
+                            hasCustomStyle={true}
                             infoTxt={(t: Toot) => `${t.repliesCount} replies, ${t.reblogsCount} retoots`}
-                            linkText={(toot) => `${(toot as Toot).contentShortened()}`}
+                            linkText={tootLinkText}
                             linkUrl={linkMapper}
                             onClick={openToot}
                             trendingObjs={algorithm.trendingToots}

@@ -8,24 +8,27 @@ import React, { CSSProperties, useState } from "react";
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
-import { Toot } from "fedialgo";
-import { TrendingWithHistory } from "fedialgo/dist/types";
+import { TrendingObj } from "fedialgo/dist/types";
 
 import { accordionBody } from "./FilterAccordionSection";
 import { headerFont, roundedBox } from "./WeightSetter";
 
+const LINK_FONT_SIZE = 16;
+
 interface TrendingProps {
-    infoTxt: (obj: TrendingWithHistory | Toot) => string;
-    linkText: (obj: TrendingWithHistory | Toot) => string;
-    linkUrl: (obj: TrendingWithHistory | Toot) => string;
-    onClick: (obj: TrendingWithHistory | Toot, e: React.MouseEvent) => void;
+    hasCustomStyle?: boolean;
+    infoTxt: (obj: TrendingObj) => string;
+    linkText: (obj: TrendingObj) => React.ReactElement | string;
+    linkUrl: (obj: TrendingObj) => string;
+    onClick: (obj: TrendingObj, e: React.MouseEvent) => void;
     sectionName: string;
-    trendingObjs: Toot[] | TrendingWithHistory[];
+    trendingObjs: TrendingObj[];
 };
 
 
 export default function TrendingSection(props: TrendingProps) {
-    const { infoTxt, linkText, linkUrl, onClick, sectionName, trendingObjs } = props;
+    const { hasCustomStyle, infoTxt, linkText, linkUrl, onClick, sectionName, trendingObjs } = props;
+    const linkStyle = hasCustomStyle ? tagLinkStyle : boldTagLinkStyle;
     const [open, setOpen] = useState<boolean>(false);  // TODO: is this necessary?
 
     return (
@@ -43,11 +46,11 @@ export default function TrendingSection(props: TrendingProps) {
                     <ol style={listStyle}>
                         {trendingObjs.map((obj, i) => (
                             <li key={i} style={listItemStyle}>
-                                <a href={linkUrl(obj)} onClick={e => onClick(obj, e)} style={tagLinkStyle} target="_blank">
+                                <a href={linkUrl(obj)} onClick={e => onClick(obj, e)} style={linkStyle} target="_blank">
                                     {linkText(obj)}
                                 </a>
 
-                                <span style={{ marginLeft: "10px" }} >
+                                <span style={infoTxtStyle}>
                                     ({infoTxt(obj)})
                                 </span>
                             </li>
@@ -66,7 +69,7 @@ const listItemStyle: CSSProperties = {
 };
 
 const listStyle: CSSProperties = {
-    fontSize: 16,
+    fontSize: LINK_FONT_SIZE,
     listStyle: "numeric",
     paddingBottom: "10px",
     paddingLeft: "20px",
@@ -79,7 +82,14 @@ const subHeaderLabel: CSSProperties = {
 
 const tagLinkStyle: CSSProperties = {
     color: "black",
-    cursor: "pointer",
-    fontFamily: "monospace",
+};
+
+const boldTagLinkStyle: CSSProperties = {
+    ...tagLinkStyle,
     fontWeight: "bold",
+};
+
+const infoTxtStyle: CSSProperties = {
+    fontSize: LINK_FONT_SIZE - 3,
+    marginLeft: "6px",
 };
