@@ -1,7 +1,7 @@
 /*
  * WIP: Component for displaying the trending hashtags in the Fediverse.
  */
-import React, { CSSProperties, useState } from "react";
+import React, { CSSProperties } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
@@ -14,26 +14,28 @@ import { titleStyle } from "./WeightSetter";
 import { TrendingLink, TrendingTag, TrendingWithHistory, TrendingObj } from "fedialgo/dist/types";
 // import { prefix } from "@fortawesome/free-solid-svg-icons";  // TODO: remove this package?
 
+const MAX_TRENDING_LINK_LEN = 130;
+
 
 export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm }) {
     const linkMapper = (link: TrendingObj) => `${(link as TrendingLink).url}`;
-    const infoTxt = (obj: TrendingWithHistory) => `${obj.numToots} toots / ${obj.numAccounts} accounts`;
-
-    const prefixedText = (prefix: string, text: string): React.ReactElement => {
-        return (<>
-            {prefix.length ? <span style={monospace}>{prefix}</span> : ''}
-            <span style={bold}>{prefix.length ? ' ' : ''}{text}</span>
-        </>);
-    };
+    const infoTxt = (obj: TrendingWithHistory) => `${obj.numToots} toots by ${obj.numAccounts} accounts`;
 
     const tootLinkText = (obj: TrendingObj): React.ReactElement => {
         const toot = obj as Toot;
-        return prefixedText(toot.attachmentPrefix(), toot.contentShortened());
+        return prefixedText(toot.attachmentPrefix(), toot.contentShortened(MAX_TRENDING_LINK_LEN));
     };
 
     const linkText = (obj: TrendingObj): React.ReactElement => {
         const link = obj as TrendingLink;
-        return prefixedText(`[${extractDomain(link.url)}]`, link.title);
+        return prefixedText(extractDomain(link.url), link.title);
+    };
+
+    const prefixedText = (prefix: string, text: string): React.ReactElement => {
+        return (<>
+            {prefix.length ? <span style={monospace}>{`[${prefix}]`}</span> : ''}
+            <span style={bold}>{prefix.length ? ' ' : ''}{text}</span>
+        </>);
     };
 
     return (
@@ -46,7 +48,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                 </Accordion.Header>
 
                 <Accordion.Body style={accordionBody}>
-                    <Accordion key="trendstuff">
+                    <Accordion>
                         <TrendingSection
                             sectionName="Hashtags"
                             infoTxt={infoTxt}

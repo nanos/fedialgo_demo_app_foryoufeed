@@ -1,9 +1,7 @@
 /*
- * Component for setting the user's preferred weightings of various post properties.
- * Things like how much to prefer people you favorite a lot or how much to posts that
- * are trending in the Fedivers.
+ * Component for displaying a list of trending links, toots, or hashtags.
  */
-import React, { CSSProperties, useState } from "react";
+import React, { CSSProperties } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
@@ -63,8 +61,8 @@ export default function TrendingSection(props: TrendingProps) {
 
 
 const listItemStyle: CSSProperties = {
-    marginBottom: "5px",
-    marginTop: "5px",
+    marginBottom: "7px",
+    marginTop: "7px",
 };
 
 const listStyle: CSSProperties = {
