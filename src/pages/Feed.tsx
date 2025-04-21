@@ -144,8 +144,8 @@ export default function Feed() {
                     <div className="sticky-top" style={isSticky ? {} : {position: "relative"}} >
                         {algorithm && <WeightSetter algorithm={algorithm} />}
                         {algorithm && <FilterSetter algorithm={algorithm} />}
-                        <FindFollowers api={api} user={user} />
                         {algorithm && <TrendingInfo algorithm={algorithm} />}
+                        <FindFollowers api={api} user={user} />
 
                         <div style={{height: "50px"}}>
                             <Form.Check
