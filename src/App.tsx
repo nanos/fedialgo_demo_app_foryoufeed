@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React, { CSSProperties } from "react";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-
 // import { inject } from '@vercel/analytics';
 
 import AuthProvider from './hooks/useAuth';
@@ -14,7 +14,7 @@ import LogoutPage from './pages/LogoutPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 
-const App: React.FC = () => {
+export default function App(): React.ReactElement {
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/service-worker.js');
@@ -26,16 +26,7 @@ const App: React.FC = () => {
     return (
         <BrowserRouter>
             <AuthProvider>
-                <div
-                    className='container-fluid min-vh-100'
-                    style={{
-                        alignItems: 'center',
-                        backgroundColor: 'black',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: 'auto',
-                    }}
-                >
+                <div className='container-fluid min-vh-100' style={containerStyle}>
                     <Header />
 
                     <Routes>
@@ -56,4 +47,11 @@ const App: React.FC = () => {
     );
 };
 
-export default App;
+
+const containerStyle: CSSProperties = {
+    alignItems: 'center',
+    backgroundColor: 'black',
+    display: 'flex',
+    flexDirection: 'column',
+    height: 'auto',
+};
