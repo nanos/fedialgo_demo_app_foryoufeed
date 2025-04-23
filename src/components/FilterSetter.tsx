@@ -166,7 +166,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
     return (
         <Accordion>
-            <Accordion.Item eventKey="0">
+            <Accordion.Item eventKey="filters">
                 <Accordion.Header style={{padding: "0px"}}>
                     <p style={titleStyle}>
                         Filters

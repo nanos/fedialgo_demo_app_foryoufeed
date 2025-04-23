@@ -147,7 +147,7 @@ export default function Feed() {
                         {algorithm && <TrendingInfo algorithm={algorithm} />}
                         <FindFollowers api={api} user={user} />
 
-                        <div style={{height: "50px"}}>
+                        <div style={{height: "20px"}}>
                             <Form.Check
                                 type="checkbox"
                                 label="Stick To Top"
