@@ -117,7 +117,7 @@ export const titleStyle: CSSProperties = {
 
 const presetButton: CSSProperties = {
     marginBottom: "7px",
-}
+};
 
 const weightingsStyle: CSSProperties = {
     ...titleStyle,

@@ -54,6 +54,10 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                 </Accordion.Header>
 
                 <Accordion.Body style={accordionBody}>
+                    <p style={subheader}>
+                        Trending data was scraped from {algorithm.mastodonServers.length} Mastodon servers.
+                    </p>
+
                     <Accordion>
                         <TrendingSection
                             sectionName="Hashtags"
@@ -83,6 +87,21 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                             onClick={openToot}
                             trendingObjs={algorithm.trendingToots}
                         />
+
+                        <TrendingSection
+                            sectionName="Servers That Were Scanned"
+                            // hasCustomStyle={true}
+                            infoTxt={(server) => undefined}
+                            linkText={(server) => server.title}
+                            linkUrl={linkMapper}
+                            onClick={(server, e) => followUri(`${(server as TrendingLink).url}`, e)}
+                            trendingObjs={algorithm.mastodonServers.map(
+                                (server) => ({
+                                    url: `https://${server}`,
+                                    title: server,
+                                } as TrendingObj)
+                            )}
+                        />
                     </Accordion>
                 </Accordion.Body>
             </Accordion.Item>
@@ -98,4 +117,8 @@ const bold: CSSProperties = {
 const monospace: CSSProperties = {
     fontFamily: "monospace",
     fontSize: LINK_FONT_SIZE - 3,
+};
+
+const subheader: CSSProperties = {
+    marginBottom: "7px",
 };

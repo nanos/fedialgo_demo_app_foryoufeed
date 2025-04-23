@@ -146,7 +146,7 @@ export default function Feed() {
                         <div style={{height: "20px"}}>
                             <Form.Check
                                 type="checkbox"
-                                label="Stick To Top"
+                                label="Stick Control Panel To Top"
                                 checked={isControlPanelSticky}
                                 onChange={(e) => setIsControlPanelSticky(e.target.checked)}
                                 className="mb-3"

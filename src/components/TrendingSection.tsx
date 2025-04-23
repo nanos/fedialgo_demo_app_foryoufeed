@@ -15,7 +15,7 @@ export const LINK_FONT_SIZE = 16;
 
 interface TrendingProps {
     hasCustomStyle?: boolean;
-    infoTxt: (obj: TrendingObj) => string;
+    infoTxt: (obj: TrendingObj) => string | undefined;
     linkText: (obj: TrendingObj) => React.ReactElement | string;
     linkUrl: (obj: TrendingObj) => string;
     onClick: (obj: TrendingObj, e: React.MouseEvent) => void;
@@ -47,9 +47,11 @@ export default function TrendingSection(props: TrendingProps) {
                                     {linkText(obj)}
                                 </a>
 
-                                <span style={infoTxtStyle}>
-                                    ({infoTxt(obj)})
-                                </span>
+                                {infoTxt(obj) && (
+                                    <span style={infoTxtStyle}>
+                                        ({infoTxt(obj)})
+                                    </span>
+                                )}
                             </li>
                         ))}
                     </ol>
