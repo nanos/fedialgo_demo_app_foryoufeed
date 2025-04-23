@@ -13,8 +13,13 @@ assert_repo_is_ready() {
 
 
 tag_repo() {
-    local version_number="v$1"
+    local version_number="$1"
     local repo_dir=`basename $PWD`
+
+    if [[ "$version_number" != v* ]]; then
+        version_number="v$version_number"
+    fi
+
     echo "Tagging repo $repo_dir with version: $version_number"
     git push origin "$MASTER_BRANCH"
     git tag "$version_number"
