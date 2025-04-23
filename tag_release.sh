@@ -42,3 +42,4 @@ tag_repo "$VERSION_NUMBER"
 popd
 ./bump_fedialgo_commit_hash.sh "$VERSION_NUMBER"  # This will execute a commit
 tag_repo "$VERSION_NUMBER"
+echo -e "\Finished tagging fedialgo $VERSION_NUMBER."

@@ -16,7 +16,6 @@ else
 fi
 
 echo -e "\n\nGot FEDIALGO_COMMIT_OR_TAG: $FEDIALGO_COMMIT_OR_TAG"
-npm link
 
 popd
 echo -e "\nRunning 'npm install github:michelcrypt4d4mus/fedialgo#${FEDIALGO_COMMIT_OR_TAG}'..."
@@ -24,6 +23,5 @@ npm install --save github:michelcrypt4d4mus/fedialgo#${FEDIALGO_COMMIT_OR_TAG}
 git commit -am "Bump fedialgo commit to $FEDIALGO_COMMIT_OR_TAG"
 git push origin master
 
-echo -e "\nRe-linking local fedialgo package..."
-npm link fedialgo
-echo -e "\nDone."
+./link_local_fedialgo.sh
+echo -e "\nFinished updating fedialgo demo app package.json."
