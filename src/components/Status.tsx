@@ -7,12 +7,13 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 // import * as emoji from 'node-emoji';
 import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
-import { mastodon } from 'masto';
 import { Toot, WeightName, accountNameWithEmojis } from "fedialgo";
+import { mastodon } from 'masto';
 
 import "../birdUI.css";
 import "../default.css";
 import AttachmentsModal from './AttachmentsModal';
+import MultimediaNode from "./MultimediaNode";
 import ScoreModal from './ScoreModal';
 import { openToot } from "../helpers/react_helpers";
 import { scoreString, timeString } from '../helpers/string_helpers';
@@ -20,8 +21,7 @@ import { User } from '../types';
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
-const IMAGES_HEIGHT = 314;
-const VIDEO_HEIGHT = IMAGES_HEIGHT * 2;
+
 
 const FAVORITE = 'favourite';
 const RETOOT = 'reblog';
@@ -52,13 +52,6 @@ const ACTION_ICONS = {
     Retoot: 'retweet',
     Score: 'balance-scale',
 };
-
-const VIDEO_STYLE = {
-    display: "block",
-    margin: "auto",
-    marginLeft: "auto",
-    marginRight: "auto",
-}
 
 
 interface StatusComponentProps {
@@ -152,35 +145,6 @@ export default function StatusComponent(props: StatusComponentProps) {
         );
     };
 
-    // Make an image element for display within a Toot.
-    const makeImage = (image: mastodon.v1.MediaAttachment, idx: number): React.ReactElement => {
-        return (
-            <div
-                className="media-gallery__item"
-                key={image.previewUrl}
-                style={{
-                    height: "100%",
-                    inset: "auto",
-                    width: 1 / status.mediaAttachments.length * 100 + "%"
-                }}
-            >
-                {/* TODO: what is this for? */}
-                <canvas
-                    className="media-gallery__preview media-gallery__preview--hidden"
-                    height="32"
-                    width="32"
-                />
-
-                <LazyLoadImage
-                    alt={image.description}
-                    onClick={() => setMediaInspectionModalIdx(idx)}
-                    src={image.previewUrl}
-                    style={{ objectPosition: "top", height: "100%", objectFit: "contain", width: "100%" }}
-                />
-            </div>
-        );
-    };
-
     // Returns a function that's called when state changes for faves and retoots
     const performAction = (actionName: string) => {
         return () => {
@@ -248,75 +212,6 @@ export default function StatusComponent(props: StatusComponentProps) {
             </strong></bdi>
         </a>
     );
-
-    const multimediaNode = (): React.ReactNode => {
-        const images = status.imageAttachments();
-        let imageHeight;
-
-        // If there's one image try to show it full size; If there's more than one use old image handler.
-        if (images.length == 1 ) {
-            imageHeight = images[0].meta?.small?.height || IMAGES_HEIGHT;
-        } else {
-            imageHeight = Math.min(IMAGES_HEIGHT, ...images.map(i => i.meta?.small?.height || IMAGES_HEIGHT));
-        }
-
-        if (status.audioAttachments().length > 0) {
-            return (
-                <div className="media-gallery" style={{ height: `${imageHeight / 4}px`, overflow: "hidden" }}>
-                    <audio controls style={{ width: "100%" }}>
-                        <source src={status.audioAttachments()[0].remoteUrl} type="audio/mpeg" />
-                    </audio>
-                </div>
-            );
-        } else if (status.imageAttachments().length > 0) {
-            return (
-                <div className="media-gallery" style={{ height: `${imageHeight}px`, overflow: "hidden" }}>
-                    {status.imageAttachments().map((image, i) => makeImage(image, i))}
-                </div>
-            );
-        } else if (status.videoAttachments().length > 0) {
-            return (
-                <div className="media-gallery" style={{ height: `${VIDEO_HEIGHT}px`, overflow: "hidden" }}>
-                    {status.videoAttachments().map((video, i) => {
-                        const sourceTag = <source src={video?.url} type="video/mp4" />;
-                        let videoTag = <></>;
-
-                        if (video.type == 'gifv') {
-                            videoTag = (
-                                <video autoPlay height={"100%"} loop playsInline style={VIDEO_STYLE}>
-                                    {sourceTag}
-                                </video>
-                            );
-                        } else {
-                            videoTag = (
-                                <video controls height={"100%"} playsInline style={VIDEO_STYLE}>
-                                    {sourceTag}
-                                </video>
-                            );
-                        }
-
-                        return (
-                            <div
-                                className="media-gallery__item"
-                                key={i}
-                                style={{ height: "100%", inset: "auto", width: "100%" }}
-                            >
-                                <canvas
-                                    className="media-gallery__preview media-gallery__preview--hidden"
-                                    height="32"
-                                    width="32"
-                                />
-
-                                {videoTag}
-                            </div>
-                        );
-                    })}
-                </div>
-            );
-        } else {
-            console.error(`Unknown media type for status: ${status.uri}`, status);
-        }
-    }
 
     return (
         <div>
@@ -492,7 +387,11 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </div>
                         </a>)}
 
-                    {status.mediaAttachments.length > 0 && multimediaNode()}
+                    {status.mediaAttachments.length > 0 &&
+                        <MultimediaNode
+                            setMediaInspectionModalIdx={setMediaInspectionModalIdx}
+                            status={status}
+                        />}
 
                     {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">
