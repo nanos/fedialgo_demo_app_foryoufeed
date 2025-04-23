@@ -37,9 +37,9 @@ export default function Feed() {
     // State variables
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
     const [error, setError] = useState<string>("");
-    const [feed, setFeed] = useState<Toot[]>([]); // timeline toots
+    const [feed, setFeed] = useState<Toot[]>([]);  // contains timeline Toots
+    const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(false);  // Left panel stickiness
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [isSticky, setIsSticky] = useState<boolean>(true); // Left panel stickiness
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
 
     const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
@@ -141,7 +141,7 @@ export default function Feed() {
 
             <Row>
                 <Col xs={6}>
-                    <div className="sticky-top" style={isSticky ? {} : {position: "relative"}} >
+                    <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
                         {algorithm && <WeightSetter algorithm={algorithm} />}
                         {algorithm && <FilterSetter algorithm={algorithm} />}
                         {algorithm && <TrendingInfo algorithm={algorithm} />}
@@ -151,8 +151,8 @@ export default function Feed() {
                             <Form.Check
                                 type="checkbox"
                                 label="Stick To Top"
-                                checked={isSticky}
-                                onChange={(e) => setIsSticky(e.target.checked)}
+                                checked={isControlPanelSticky}
+                                onChange={(e) => setIsControlPanelSticky(e.target.checked)}
                                 className="mb-3"
                             />
                         </div>
