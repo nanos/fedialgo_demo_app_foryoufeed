@@ -29,9 +29,8 @@ export default function Slider(props: SliderProps) {
 
     if (minValue > 0 && minValue < 0.01) {
         decimals = 3;
-    } else if (minValue % 1 == 0) {
-        decimals = 0;
-        step = 1;
+    } else if (value >= 10.0) {
+        decimals = 1;
     }
 
     return (
