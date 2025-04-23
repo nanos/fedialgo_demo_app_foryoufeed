@@ -5,7 +5,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 
 const IMAGES_HEIGHT = 314;
-const VIDEO_HEIGHT = IMAGES_HEIGHT * 2;
+const VIDEO_HEIGHT = Math.floor(IMAGES_HEIGHT * 1.7);
 
 interface MultimediaNodeProps {
     status: Toot;
