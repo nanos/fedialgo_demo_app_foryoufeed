@@ -6,7 +6,7 @@ import React, { CSSProperties } from "react";
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
-import { TrendingObj } from "fedialgo/dist/types";
+import { TrendingObj } from "fedialgo";
 
 import { accordionBody } from "./FilterAccordionSection";
 import { headerFont, roundedBox } from "./WeightSetter";

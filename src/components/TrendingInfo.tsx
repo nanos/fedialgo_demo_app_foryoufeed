@@ -4,14 +4,20 @@
 import React, { CSSProperties } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
+import {
+    extractDomain,
+    TheAlgorithm,
+    Toot,
+    TrendingLink,
+    TrendingTag,
+    TrendingWithHistory,
+    TrendingObj,
+} from "fedialgo";
 
+import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
 import { accordionBody } from "./FilterAccordionSection";
-import { extractDomain } from "fedialgo/dist/helpers";  // TODO: fix this import
 import { followUri, openToot } from "../helpers/react_helpers";
-import { TheAlgorithm, Toot } from "fedialgo";
 import { titleStyle } from "./WeightSetter";
-import { TrendingLink, TrendingTag, TrendingWithHistory, TrendingObj } from "fedialgo/dist/types";
 // import { prefix } from "@fortawesome/free-solid-svg-icons";  // TODO: remove this package?
 
 const MAX_TRENDING_LINK_LEN = 130;
