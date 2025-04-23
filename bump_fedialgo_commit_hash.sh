@@ -7,12 +7,12 @@ pushd ../fedialgo
 git push origin master
 
 # Check if there is an argument passed, if so use that for the git tag. Otherwise use latest commit.
-if [ "$#" -ne 1 ]; then
-    echo "Using version argument $1 for package.json update..."
-    FEDIALGO_COMMIT_OR_TAG="$1"
-else
+if [ -z "$1" ]; then
     echo "Using latest commit hash from fedialgo repo for package.json update..."
     FEDIALGO_COMMIT_OR_TAG=$(git log -1 --format=%H)
+else
+    echo "Using version argument $1 for package.json update..."
+    FEDIALGO_COMMIT_OR_TAG="$1"
 fi
 
 echo -e "\n\nGot FEDIALGO_COMMIT_OR_TAG: $FEDIALGO_COMMIT_OR_TAG"
