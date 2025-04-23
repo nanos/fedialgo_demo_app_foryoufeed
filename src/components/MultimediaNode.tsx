@@ -1,11 +1,8 @@
 import React, { CSSProperties} from "react";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import { GIFV, Toot } from "fedialgo";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
-
-import "../birdUI.css";
-import "../default.css";
 
 const IMAGES_HEIGHT = 314;
 const VIDEO_HEIGHT = IMAGES_HEIGHT * 2;
@@ -29,7 +26,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
         imageHeight = Math.min(IMAGES_HEIGHT, ...images.map(i => i.meta?.small?.height || IMAGES_HEIGHT));
     }
 
-    // Make an image element for display within a Toot.
+    // Make a LazyLoadImage element for displaying an image within a Toot.
     const makeImage = (image: mastodon.v1.MediaAttachment, idx: number): React.ReactElement => {
         return (
             <div
@@ -79,7 +76,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
                     const sourceTag = <source src={video?.url} type="video/mp4" />;
                     let videoTag: React.ReactElement;
 
-                    // GIFs play in a loop
+                    // GIFs autoplay play in a loop; mp4s are controlled by the user.
                     if (video.type == GIFV) {
                         videoTag = (
                             <video autoPlay height={"100%"} loop playsInline style={videoEmbedStyle}>
@@ -113,18 +110,20 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
     }
 };
 
-
-const imageStyle: CSSProperties = {
+const fullSize: CSSProperties = {
     height: "100%",
-    objectFit: "contain",
-    objectPosition: "top",
     width: "100%",
 };
 
+const imageStyle: CSSProperties = {
+    ...fullSize,
+    objectFit: "contain",
+    objectPosition: "top",
+};
+
 const videoStyle: CSSProperties = {
-    height: "100%",
+    ...fullSize,
     inset: "auto",
-    width: "100%"
 };
 
 const videoEmbedStyle: CSSProperties = {

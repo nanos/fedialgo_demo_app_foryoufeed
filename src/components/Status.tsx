@@ -2,13 +2,12 @@
  * Render a Status, also known as a Toot.
  */
 import React, { CSSProperties } from "react";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 
-// import * as emoji from 'node-emoji';
 import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
-import { Toot, WeightName, accountNameWithEmojis } from "fedialgo";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
+import { Toot, WeightName, accountNameWithEmojis } from "fedialgo";
 
 import "../birdUI.css";
 import "../default.css";
