@@ -2,19 +2,28 @@
 # Script to bump the commit hash of the fedialgo package.
 set -e
 
+
 pushd ../fedialgo
 git push origin master
-FEDIALGO_COMMIT_HASH=$(git log -1 --format=%H)
-echo -e "\n\nGot FEDIALGO_COMMIT_HASH: $FEDIALGO_COMMIT_HASH"
+
+# Check if there is an argument passed, if so use that for the git tag. Otherwise use latest commit.
+if [ "$#" -ne 1 ]; then
+    echo "Using version argument $1 for package.json update..."
+    FEDIALGO_COMMIT_OR_TAG="$1"
+else
+    echo "Using latest commit hash from fedialgo repo for package.json update..."
+    FEDIALGO_COMMIT_OR_TAG=$(git log -1 --format=%H)
+fi
+
+echo -e "\n\nGot FEDIALGO_COMMIT_OR_TAG: $FEDIALGO_COMMIT_OR_TAG"
 npm link
 
 popd
-echo -e "\nRunning 'npm install github:michelcrypt4d4mus/fedialgo#${FEDIALGO_COMMIT_HASH}'..."
-npm install github:michelcrypt4d4mus/fedialgo#${FEDIALGO_COMMIT_HASH}
-git commit -am "Bump fedialgo commit hash to $FEDIALGO_COMMIT_HASH"
+echo -e "\nRunning 'npm install github:michelcrypt4d4mus/fedialgo#${FEDIALGO_COMMIT_OR_TAG}'..."
+npm install --save github:michelcrypt4d4mus/fedialgo#${FEDIALGO_COMMIT_OR_TAG}
+git commit -am "Bump fedialgo commit to $FEDIALGO_COMMIT_OR_TAG"
 git push origin master
 
 echo -e "\nRe-linking local fedialgo package..."
 npm link fedialgo
-
 echo -e "\nDone."
