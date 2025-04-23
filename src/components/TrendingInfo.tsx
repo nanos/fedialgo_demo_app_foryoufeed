@@ -7,7 +7,7 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
 
 import { accordionBody } from "./FilterAccordionSection";
-import { extractDomain } from "fedialgo/dist/helpers";
+import { extractDomain } from "fedialgo/dist/helpers";  // TODO: fix this import
 import { followUri, openToot } from "../helpers/react_helpers";
 import { TheAlgorithm, Toot } from "fedialgo";
 import { titleStyle } from "./WeightSetter";

@@ -4,9 +4,8 @@
 import parse from 'html-react-parser';
 import React from 'react';
 
-import { IMAGE, VIDEO_TYPES } from 'fedialgo/dist/helpers';
+import { MediaCategory, Toot, VIDEO_TYPES } from "fedialgo";
 import { Modal } from 'react-bootstrap';
-import { Toot } from "fedialgo";
 
 
 export default function AttachmentsModal(
@@ -24,7 +23,7 @@ export default function AttachmentsModal(
     const shouldShowModal = mediaInspectionModalIdx >= 0;
     let element: JSX.Element = <></>;
 
-    if (media?.type == IMAGE) {
+    if (media?.type == MediaCategory.IMAGE) {
         element = (
             <img
                 alt={media?.description ?? ""}
