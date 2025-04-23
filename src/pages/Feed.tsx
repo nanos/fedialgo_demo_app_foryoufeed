@@ -1,7 +1,7 @@
 /*
  * Class for retrieving and sorting the user's feed based on their chosen weighting values.
  */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, CSSProperties } from "react";
 
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
@@ -14,7 +14,7 @@ import { TheAlgorithm, Toot } from "fedialgo";
 
 import FilterSetter from "../components/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
-import FullPageIsLoading, { DEFAULT_LOADING_MESSAGE } from "../components/FullPageIsLoading";
+import FullPageIsLoading from "../components/FullPageIsLoading";
 import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
@@ -27,8 +27,8 @@ const RELOAD_IF_OLDER_THAN_MS = 1000 * 60 * 15; // 15 minutes
 
 const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
-
-const NO_TOOTS_MSG = "No toots found! Maybe check your filter settings";
+const DEFAULT_LOADING_MESSAGE = "(this can take a while the first time)";
+const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
 
 
 export default function Feed() {
@@ -44,7 +44,6 @@ export default function Feed() {
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
 
     const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
-    const loadingMsg = algorithm?.loadingStatus ? `Loading ${algorithm.loadingStatus}...` : 'Done loading.'
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 
@@ -144,11 +143,6 @@ export default function Feed() {
             <Row>
                 <Col xs={6}>
                     <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
-                        {algorithm && <WeightSetter algorithm={algorithm} />}
-                        {algorithm && <FilterSetter algorithm={algorithm} />}
-                        {algorithm && <TrendingInfo algorithm={algorithm} />}
-                        <FindFollowers api={api} user={user} />
-
                         <div style={{height: "20px"}}>
                             <Form.Check
                                 type="checkbox"
@@ -159,10 +153,13 @@ export default function Feed() {
                             />
                         </div>
 
-                        <div style={{marginTop: "5px", height: "20px"}}>
-                            {algorithm?.loadingStatus && <Spinner animation="border" />}
-                            <p>{loadingMsg}</p>
-                        </div>
+                        {algorithm && <WeightSetter algorithm={algorithm} />}
+                        {algorithm && <FilterSetter algorithm={algorithm} />}
+                        {algorithm && <TrendingInfo algorithm={algorithm} />}
+                        <FindFollowers api={api} user={user} />
+
+                        {algorithm?.loadingStatus &&
+                            <FullPageIsLoading isFullPage={false} message={algorithm.loadingStatus} style={loadingMsgStyle} />}
                     </div>
                 </Col>
 
@@ -180,6 +177,7 @@ export default function Feed() {
 
                     {(isLoading || feed.length == 0) &&
                         <FullPageIsLoading
+                            isFullPage={true}
                             message={isLoading ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
                         />}
 
@@ -190,4 +188,10 @@ export default function Feed() {
             </Row>
         </Container>
     );
+};
+
+
+const loadingMsgStyle: CSSProperties = {
+    height: "20px",
+    marginTop: "5px",
 };
