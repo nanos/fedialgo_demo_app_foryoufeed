@@ -1,7 +1,7 @@
 /*
  * Modal that shows all the elements of a toot's final score.
  */
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 import { Modal } from 'react-bootstrap';
 import { Toot } from 'fedialgo';
@@ -54,7 +54,7 @@ export default function ScoreModal(props: ScoreModalProps) {
 };
 
 
-const headerFont = {
+const headerFont: CSSProperties = {
     ...globalFont,
     fontSize: "18px",
     fontWeight: 700,

@@ -110,6 +110,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
     }
 };
 
+
 const fullSize: CSSProperties = {
     height: "100%",
     width: "100%",

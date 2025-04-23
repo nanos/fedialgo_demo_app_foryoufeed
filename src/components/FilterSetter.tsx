@@ -167,13 +167,13 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
     return (
         <Accordion>
             <Accordion.Item eventKey="filters">
-                <Accordion.Header style={{padding: "0px"}}>
+                <Accordion.Header style={accordionPadding}>
                     <p style={titleStyle}>
                         Filters
                     </p>
                 </Accordion.Header>
 
-                <Accordion.Body style={{padding: "0px"}}>
+                <Accordion.Body style={accordionPadding}>
                     <Accordion key={"fiaccordion"}>
                         {/* property filters (language, type, etc) */}
                         {visibleSections.map((filterSection) => (
@@ -205,4 +205,9 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             </Accordion.Item>
         </Accordion>
     );
+};
+
+
+const accordionPadding: CSSProperties = {
+    padding: "0px",
 };

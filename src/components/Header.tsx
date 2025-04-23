@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
-import { Container } from 'react-bootstrap';
+import React, { CSSProperties } from 'react';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 
+import { CRYPTADAMUS_ICON_URL } from '../helpers/style_helpers';
 import { useAuthContext } from "../hooks/useAuth";
 
 const XS_VALUE = 4;  // React Bootstrap Grid System
@@ -21,7 +21,7 @@ export default function Header() {
                                     alt="Avatar"
                                     className="d-inline-block align-middle"
                                     src={user.profilePicture}
-                                    style={{ height: 30, width: 30, borderRadius: 5 }}
+                                    style={avatarStyle}
                                 />}
 
                             <span style={{ fontSize: 15, padding: 10 }}>{user.username}</span>
@@ -31,15 +31,19 @@ export default function Header() {
                 <Col xs={XS_VALUE} className='text-center p-0'>
                     <img
                         className="d-inline-block align-middle"
-                        src={"/assets/logo.png"}
-                        style={{ borderRadius: 5, height: 20, width: 20 }}
+                        src={CRYPTADAMUS_ICON_URL}
+                        style={avatarStyle}
                     />
 
                     <span
                         className='text-center align-middle p-2'
                         style={{ fontSize: 20, whiteSpace: "nowrap" }}
                     >
-                        <a href="https://github.com/michelcrypt4d4mus/fedialgo_demo_app_foryoufeed" style={{color: "white"}} target="_blank">
+                        <a
+                            href="https://github.com/michelcrypt4d4mus/fedialgo_demo_app_foryoufeed"
+                            style={{color: "white"}}
+                            target="_blank"
+                        >
                             Fedialgo Demo
                         </a>
                     </span>
@@ -54,4 +58,11 @@ export default function Header() {
             </Row>
         </Container>
     );
+};
+
+
+const avatarStyle: CSSProperties = {
+    borderRadius: 5,
+    height: 30,
+    width: 30,
 };
