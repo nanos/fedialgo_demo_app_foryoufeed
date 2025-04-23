@@ -1,7 +1,7 @@
 /*
  * Render a Status, also known as a Toot.
  */
-import React from "react";
+import React, { CSSProperties } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 // import * as emoji from 'node-emoji';
@@ -21,8 +21,6 @@ import { User } from '../types';
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
-
-
 const FAVORITE = 'favourite';
 const RETOOT = 'reblog';
 
@@ -35,13 +33,6 @@ const ACTION_NAMES = {
         booleanName: 'reblogged',
         countName: 'reblogsCount',
     }
-};
-
-const BUTTON_STYLE = {
-    fontSize: "18px",
-    height: "23.142857px",
-    lineHeight: "18px",
-    width: "auto",
 };
 
 // FontAwesome icons for the action buttons
@@ -63,11 +54,13 @@ interface StatusComponentProps {
 
 
 export default function StatusComponent(props: StatusComponentProps) {
-    const localServer = props.user.server;
+    const homeServer = props.user.server;
     const masto = props.api;
 
     const status: Toot = props.status.reblog || props.status;  // If it's a retoot set 'status' to the original toot
     const originalStatus: Toot = props.status.reblog ? props.status : null;
+    const numTrendingTags = status.trendingTags?.length || 0;
+    const hasTrendingTags = numTrendingTags > 0;
     const browseToToot = async (e: React.MouseEvent) => await openToot(status, e);
 
     // State variables
@@ -76,12 +69,6 @@ export default function StatusComponent(props: StatusComponentProps) {
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
     const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); //index of the mediaAttachment to show
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
-
-    // TODO: I don't think we need a mastodon instance to display data? it's for retooting & favoriting
-    if (!masto) throw new Error("No Mastodon API");
-    const numTrendingTags = status.trendingTags?.length || 0;
-    const hasTrendingTags = numTrendingTags > 0;
-    let imageHeight: number;
 
     let trendingTagMsg = (`Contains ${hasTrendingTags ? 'Trending' : 'Followed'} Hashtag${numTrendingTags > 1 ? 's' : ''}` +
         (hasTrendingTags ? `: ${status.trendingTags.map(t => `#${t.name}`).join(', ')}` : ''))
@@ -107,7 +94,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     }, [mediaInspectionModalIdx])
 
 
-    // Make a status button (reply, reblog, fav, etc)
+    // Make a status button (reply, reblog, favourite, etc)
     const makeButton = (
         className: string,
         label: string,
@@ -135,7 +122,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 aria-label={label}
                 className={className}
                 onClick={onClick}
-                style={BUTTON_STYLE}
+                style={buttonStyle}
                 title={label}
                 type="button"
             >
@@ -421,6 +408,13 @@ export default function StatusComponent(props: StatusComponentProps) {
 };
 
 
-const iconStyle = {
+const iconStyle: CSSProperties = {
     marginRight: "4px",
+};
+
+const buttonStyle: CSSProperties = {
+    fontSize: "18px",
+    height: "23.142857px",
+    lineHeight: "18px",
+    width: "auto",
 };

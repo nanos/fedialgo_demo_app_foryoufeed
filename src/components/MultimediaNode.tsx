@@ -19,6 +19,7 @@ interface MultimediaNodeProps {
 export default function MultimediaNode(props: MultimediaNodeProps): React.ReactElement {
     const { status, setMediaInspectionModalIdx } = props;
     const images = status.imageAttachments();
+    const style = {overflow: "hidden"};
     let imageHeight = IMAGES_HEIGHT;
 
     // If there's one image try to show it full size; If there's more than one use old image handler.
@@ -51,7 +52,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
                     alt={image.description}
                     onClick={() => setMediaInspectionModalIdx(idx)}
                     src={image.previewUrl}
-                    style={{ objectPosition: "top", height: "100%", objectFit: "contain", width: "100%" }}
+                    style={imageStyle}
                 />
             </div>
         );
@@ -59,7 +60,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
 
     if (status.audioAttachments().length > 0) {
         return (
-            <div className="media-gallery" style={{ height: `${imageHeight / 4}px`, overflow: "hidden" }}>
+            <div className="media-gallery" style={{ height: `${imageHeight / 4}px`, ...style }}>
                 <audio controls style={{ width: "100%" }}>
                     <source src={status.audioAttachments()[0].remoteUrl} type="audio/mpeg" />
                 </audio>
@@ -67,38 +68,34 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
         );
     } else if (status.imageAttachments().length > 0) {
         return (
-            <div className="media-gallery" style={{ height: `${imageHeight}px`, overflow: "hidden" }}>
+            <div className="media-gallery" style={{ height: `${imageHeight}px`, ...style }}>
                 {status.imageAttachments().map((image, i) => makeImage(image, i))}
             </div>
         );
     } else if (status.videoAttachments().length > 0) {
         return (
-            <div className="media-gallery" style={{ height: `${VIDEO_HEIGHT}px`, overflow: "hidden" }}>
+            <div className="media-gallery" style={{ height: `${VIDEO_HEIGHT}px`, ...style }}>
                 {status.videoAttachments().map((video, i) => {
                     const sourceTag = <source src={video?.url} type="video/mp4" />;
-                    let videoTag = <></>;
+                    let videoTag: React.ReactElement;
 
                     // GIFs play in a loop
                     if (video.type == GIFV) {
                         videoTag = (
-                            <video autoPlay height={"100%"} loop playsInline style={videoStyle}>
+                            <video autoPlay height={"100%"} loop playsInline style={videoEmbedStyle}>
                                 {sourceTag}
                             </video>
                         );
                     } else {
                         videoTag = (
-                            <video controls height={"100%"} playsInline style={videoStyle}>
+                            <video controls height={"100%"} playsInline style={videoEmbedStyle}>
                                 {sourceTag}
                             </video>
                         );
                     }
 
                     return (
-                        <div
-                            className="media-gallery__item"
-                            key={i}
-                            style={{ height: "100%", inset: "auto", width: "100%" }}
-                        >
+                        <div className="media-gallery__item" key={i} style={videoStyle}>
                             <canvas
                                 className="media-gallery__preview media-gallery__preview--hidden"
                                 height="32"
@@ -117,7 +114,20 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
 };
 
 
+const imageStyle: CSSProperties = {
+    height: "100%",
+    objectFit: "contain",
+    objectPosition: "top",
+    width: "100%",
+};
+
 const videoStyle: CSSProperties = {
+    height: "100%",
+    inset: "auto",
+    width: "100%"
+};
+
+const videoEmbedStyle: CSSProperties = {
     display: "block",
     margin: "auto",
     marginLeft: "auto",
