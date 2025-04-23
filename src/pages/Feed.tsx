@@ -2,14 +2,15 @@
  * Class for retrieving and sorting the user's feed based on their chosen weighting values.
  */
 import React, { useState, useEffect, useRef } from "react";
-import { Modal } from "react-bootstrap";
 
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import Spinner from 'react-bootstrap/esm/Spinner';
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
-import { TheAlgorithm, Toot, Weights } from "fedialgo";
+import { Modal } from "react-bootstrap";
+import { TheAlgorithm, Toot } from "fedialgo";
 
 import FilterSetter from "../components/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
@@ -43,6 +44,7 @@ export default function Feed() {
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
 
     const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
+    const loadingMsg = algorithm?.loadingStatus ? `Loading ${algorithm.loadingStatus}...` : 'Done loading.'
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 
@@ -155,6 +157,11 @@ export default function Feed() {
                                 onChange={(e) => setIsControlPanelSticky(e.target.checked)}
                                 className="mb-3"
                             />
+                        </div>
+
+                        <div style={{marginTop: "5px", height: "20px"}}>
+                            {algorithm?.loadingStatus && <Spinner animation="border" />}
+                            <p>{loadingMsg}</p>
                         </div>
                     </div>
                 </Col>
