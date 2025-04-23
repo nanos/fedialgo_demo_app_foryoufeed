@@ -252,7 +252,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     };
 
     const reblogger = (account: mastodon.v1.Account, i: number): React.ReactNode => (
-        <a className="status__display-name muted" href={status.homserverAccountURL()} key={i}>
+        <a className="status__display-name muted" href={account.url} key={i}>
             <bdi><strong>
                 {parse(accountNameWithEmojis(account))}
             </strong></bdi>
@@ -291,8 +291,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </div>
 
                         <span>
-                            {status.reblogsBy.map((r, i) => {
-                                const result = reblogger(r, i);
+                            {status.reblogsBy.map((booster, i) => {
+                                const result = reblogger(booster, i);
 
                                 if (i < status.reblogsBy.length - 1) {
                                     return [result, ', '];
