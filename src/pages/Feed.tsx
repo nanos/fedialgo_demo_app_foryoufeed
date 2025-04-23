@@ -1,13 +1,12 @@
 /*
  * Class for retrieving and sorting the user's feed based on their chosen weighting values.
  */
-import React, { useState, useEffect, useRef, CSSProperties } from "react";
+import React, { CSSProperties, useState, useEffect, useRef } from "react";
 
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import Spinner from 'react-bootstrap/esm/Spinner';
 import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
 import { Modal } from "react-bootstrap";
 import { TheAlgorithm, Toot } from "fedialgo";
@@ -21,10 +20,11 @@ import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/WeightSetter";
 import { useAuthContext } from "../hooks/useAuth";
 
+// Number constants
 const DEFAULT_NUM_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
 const RELOAD_IF_OLDER_THAN_MS = 1000 * 60 * 15; // 15 minutes
-
+// String constants
 const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
 const DEFAULT_LOADING_MESSAGE = "(this can take a while the first time)";
