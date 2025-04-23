@@ -86,22 +86,12 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // TODO: I don't think we need a mastodon instance to display data? it's for retooting & favoriting
     if (!masto) throw new Error("No Mastodon API");
-    const audios = status.audioAttachments();
-    const images = status.imageAttachments();
-    const videos = status.videoAttachments();
     const numTrendingTags = status.trendingTags?.length || 0;
     const hasTrendingTags = numTrendingTags > 0;
     let imageHeight: number;
 
     let trendingTagMsg = (`Contains ${hasTrendingTags ? 'Trending' : 'Followed'} Hashtag${numTrendingTags > 1 ? 's' : ''}` +
         (hasTrendingTags ? `: ${status.trendingTags.map(t => `#${t.name}`).join(', ')}` : ''))
-
-    // If there's one image try to show it full size; If there's more than one use old image handler.
-    if (images.length == 1 ) {
-        imageHeight = images[0].meta?.small?.height || IMAGES_HEIGHT;
-    } else {
-        imageHeight = Math.min(IMAGES_HEIGHT, ...images.map(i => i.meta?.small?.height || IMAGES_HEIGHT));
-    }
 
     // Increase mediaInspectionModalIdx on Right Arrow
     React.useEffect(() => {
@@ -259,6 +249,74 @@ export default function StatusComponent(props: StatusComponentProps) {
         </a>
     );
 
+    const multimediaNode = (): React.ReactNode => {
+        const images = status.imageAttachments();
+        let imageHeight;
+
+        // If there's one image try to show it full size; If there's more than one use old image handler.
+        if (images.length == 1 ) {
+            imageHeight = images[0].meta?.small?.height || IMAGES_HEIGHT;
+        } else {
+            imageHeight = Math.min(IMAGES_HEIGHT, ...images.map(i => i.meta?.small?.height || IMAGES_HEIGHT));
+        }
+
+        if (status.audioAttachments().length > 0) {
+            return (
+                <div className="media-gallery" style={{ height: `${imageHeight / 4}px`, overflow: "hidden" }}>
+                    <audio controls style={{ width: "100%" }}>
+                        <source src={status.audioAttachments()[0].remoteUrl} type="audio/mpeg" />
+                    </audio>
+                </div>
+            );
+        } else if (status.imageAttachments().length > 0) {
+            return (
+                <div className="media-gallery" style={{ height: `${imageHeight}px`, overflow: "hidden" }}>
+                    {status.imageAttachments().map((image, i) => makeImage(image, i))}
+                </div>
+            );
+        } else if (status.videoAttachments().length > 0) {
+            return (
+                <div className="media-gallery" style={{ height: `${VIDEO_HEIGHT}px`, overflow: "hidden" }}>
+                    {status.videoAttachments().map((video, i) => {
+                        const sourceTag = <source src={video?.url} type="video/mp4" />;
+                        let videoTag = <></>;
+
+                        if (video.type == 'gifv') {
+                            videoTag = (
+                                <video autoPlay height={"100%"} loop playsInline style={VIDEO_STYLE}>
+                                    {sourceTag}
+                                </video>
+                            );
+                        } else {
+                            videoTag = (
+                                <video controls height={"100%"} playsInline style={VIDEO_STYLE}>
+                                    {sourceTag}
+                                </video>
+                            );
+                        }
+
+                        return (
+                            <div
+                                className="media-gallery__item"
+                                key={i}
+                                style={{ height: "100%", inset: "auto", width: "100%" }}
+                            >
+                                <canvas
+                                    className="media-gallery__preview media-gallery__preview--hidden"
+                                    height="32"
+                                    width="32"
+                                />
+
+                                {videoTag}
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        } else {
+            console.error(`Unknown media type for status: ${status.uri}`, status);
+        }
+    }
 
     return (
         <div>
@@ -434,55 +492,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </div>
                         </a>)}
 
-                    {audios.length > 0 &&
-                        <div className="media-gallery" style={{ height: `${imageHeight / 4}px`, overflow: "hidden" }}>
-                            <audio controls style={{ width: "100%" }}>
-                                <source src={audios[0].remoteUrl} type="audio/mpeg" />
-                            </audio>
-                        </div>}
-
-                    {images.length > 0 &&
-                        <div className="media-gallery" style={{ height: `${imageHeight}px`, overflow: "hidden" }}>
-                            {images.map((image, i) => makeImage(image, i))}
-                        </div>}
-
-                    {videos.length > 0 && (
-                        <div className="media-gallery" style={{ height: `${VIDEO_HEIGHT}px`, overflow: "hidden" }}>
-                            {videos.map((video, i) => {
-                                const sourceTag = <source src={video?.url} type="video/mp4" />;
-                                let videoTag = <></>;
-
-                                if (video.type == 'gifv') {
-                                    videoTag = (
-                                        <video autoPlay height={"100%"} loop playsInline style={VIDEO_STYLE}>
-                                            {sourceTag}
-                                        </video>
-                                    );
-                                } else {
-                                    videoTag = (
-                                        <video controls height={"100%"} playsInline style={VIDEO_STYLE}>
-                                            {sourceTag}
-                                        </video>
-                                    );
-                                }
-
-                                return (
-                                    <div
-                                        className="media-gallery__item"
-                                        key={i}
-                                        style={{ height: "100%", inset: "auto", width: "100%" }}
-                                    >
-                                        <canvas
-                                            className="media-gallery__preview media-gallery__preview--hidden"
-                                            height="32"
-                                            width="32"
-                                        />
-
-                                        {videoTag}
-                                    </div>
-                                );
-                            })}
-                        </div>)}
+                    {status.mediaAttachments.length > 0 && multimediaNode()}
 
                     {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">
