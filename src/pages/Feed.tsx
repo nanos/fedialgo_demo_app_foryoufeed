@@ -14,7 +14,7 @@ import { TheAlgorithm, Toot } from "fedialgo";
 
 import FilterSetter from "../components/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
-import FullPageIsLoading from "../components/FullPageIsLoading";
+import LoadingSpinner from "../components/LoadingSpinner";
 import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
@@ -159,7 +159,7 @@ export default function Feed() {
                         <FindFollowers api={api} user={user} />
 
                         {algorithm?.loadingStatus &&
-                            <FullPageIsLoading isFullPage={false} message={algorithm.loadingStatus} style={loadingMsgStyle} />}
+                            <LoadingSpinner isFullPage={false} message={algorithm.loadingStatus} style={loadingMsgStyle} />}
                     </div>
                 </Col>
 
@@ -176,7 +176,7 @@ export default function Feed() {
                         ))}
 
                     {(isLoading || feed.length == 0) &&
-                        <FullPageIsLoading
+                        <LoadingSpinner
                             isFullPage={true}
                             message={isLoading ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
                         />}

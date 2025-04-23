@@ -11,7 +11,7 @@ interface LoadingSpinnerProps {
 };
 
 
-export default function FullPageIsLoading(props: LoadingSpinnerProps) {
+export default function LoadingSpinner(props: LoadingSpinnerProps) {
     let { isFullPage, message, style } = props;
     style ||= {};
 
