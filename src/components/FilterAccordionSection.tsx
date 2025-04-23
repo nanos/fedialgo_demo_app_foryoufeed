@@ -9,6 +9,7 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
 
+import { globalFont } from "../helpers/style_helpers";
 import { headerFont, roundedBox } from "./WeightSetter";
 
 const JUNK_CLASS = "JUNKJUNKJUNK";
@@ -20,7 +21,8 @@ interface AccordionProps {
     isActive: boolean,
     sortKeysCheckbox?: React.ReactElement,
     sectionName: string;
-}
+};
+
 
 export default function FilterAccordionSection(props: AccordionProps) {
     const { children, description, invertCheckbox, isActive, sectionName, sortKeysCheckbox } = props;
@@ -78,7 +80,7 @@ const invertTagSelectionStyle: CSSProperties = {
 };
 
 const subHeaderFont: CSSProperties = {
-    fontFamily: "Tahoma, Geneva, sans-serif",
+    ...globalFont,
     fontSize: 13,
     fontWeight: 500,
 };

@@ -2,20 +2,21 @@
  * Modal that shows all the elements of a toot's final score.
  */
 import React from 'react';
-import { Modal } from 'react-bootstrap';
 
+import { Modal } from 'react-bootstrap';
 import { Toot } from 'fedialgo';
 
+import { globalFont } from '../helpers/style_helpers';
 
-export default function ScoreModal({
-    setShowScoreModal,
-    showScoreModal,
-    toot
-}: {
+interface ScoreModalProps {
     setShowScoreModal: (showScoreModal: boolean) => void,
     showScoreModal: boolean,
-    toot: Toot
-}) {
+    toot: Toot,
+};
+
+
+export default function ScoreModal(props: ScoreModalProps) {
+    const { setShowScoreModal, showScoreModal, toot } = props;
     let computedScore: string;
 
     if (!toot.scoreInfo) {
@@ -54,7 +55,7 @@ export default function ScoreModal({
 
 
 const headerFont = {
-    fontFamily: "Tahoma, Geneva, sans-serif",
+    ...globalFont,
     fontSize: "18px",
     fontWeight: 700,
     marginBottom: "5px",

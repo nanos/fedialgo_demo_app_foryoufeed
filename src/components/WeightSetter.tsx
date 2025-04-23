@@ -12,6 +12,7 @@ import { PresetWeightLabel, PresetWeights, TIME_DECAY, TRENDING, TheAlgorithm, W
 
 import WeightSlider from './WeightSlider';
 import { accordionBody } from "./FilterAccordionSection";
+import { globalFont } from "../helpers/style_helpers";
 
 const PRESET_BUTTON_TITLE = "Preset Algorithm Configurations";
 
@@ -87,7 +88,7 @@ export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm })
 
 
 export const headerFont: CSSProperties = {
-    fontFamily: "Tahoma, Geneva, sans-serif",
+    ...globalFont,
     fontSize: 15,
     fontWeight: 800,
     marginLeft: "15px",
@@ -105,7 +106,7 @@ export const roundedBox: CSSProperties = {
 };
 
 export const titleStyle: CSSProperties = {
-    fontFamily: "Tahoma, Geneva, sans-serif",
+    ...globalFont,
     fontSize: 17,
     fontWeight: "bold",
     marginBottom: "5px",
