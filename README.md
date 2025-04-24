@@ -56,7 +56,7 @@ Once the initial load is complete you can adjust the way the algorithm weights v
 One thing that's kind of a gotcha is the way the `topPosts - Favor posts that are trending in the Fediverse` slider works. Because trending posts often have tons of engagement in the form of replies, favorites, and retoots they can easily drown out the toots from people you are actually following. As a result the impact of this slider gets increasingly drastic _but only if the value is below 1.0_. At 1.0 and above it behaves like all the other weighting sliders.
 
 ## Filtering
-You can filter based on hashtag, source (accounts you follow, hashtags you follow, various kinds of trending toots), language, and application.
+You can filter based on hashtag, source (accounts you follow, hashtags you follow, various kinds of trending toots), language, application, and various numerical metrics like minimum number of replies, minimum number of boosts, etc.
 
 <p align="center">
     <img src="doc/source_and_language_filters.png" hspace="20" width="300">
