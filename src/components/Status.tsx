@@ -302,7 +302,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 <bdi>
                                     <strong key="internalBDI" className="display-name__html">
                                         <a
-                                            href={status.homserverAccountURL()}
+                                            href={status.account.homserverURL()}
                                             rel="noopener noreferrer"
                                             style={{ color: "white", textDecoration: "none" }}
                                             target="_blank"
