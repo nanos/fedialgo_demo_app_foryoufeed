@@ -95,6 +95,12 @@ Here's an example of the elements that go into scoring a toot:
 Most (all?) browsers will allow you to clear all the "site data" (cookies and cache) for a single site. If you run into an issue try doing that and then reloading the app at `https://localhost:3000`.
 * [How to do that in Chrome](https://support.google.com/chrome/thread/16531954/clear-cache-for-specific-website-in-google-chrome?hl=en).
 
+There's also all kinds of information logged to your browser's developer console. If you run into a problem maybe take a look in there for any errors. Here's an example of what you might see:
+
+<p align="center">
+    <img src="doc/brower_console_debug_logs.png.png" alt="brower_console_debug_logs.png" width="800">
+</p>
+
 
 # Contributing
 You can install the local `fedialgo` package by running `npm link`  in the `fedialgo` project dir and then`npm link fedialgo` in this project's dir _or_ you can do that kind of thing manually by running `npm install path/to/local/fedialgo` in this repo's dir but either way in order to pick up any code changes from `fedialgo` you will have to run `npm run build` in the `fedialgo` package dir. (TODO: why?)
