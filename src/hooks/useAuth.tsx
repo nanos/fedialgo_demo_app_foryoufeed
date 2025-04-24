@@ -27,7 +27,6 @@ export default function AuthProvider(props: PropsWithChildren) {
     //     username: "cryptadamus"
     // }
     const loginUser = async (user: User) => {
-        console.log("Logged in!");
         setUser(user);
         navigate("/");
     };
