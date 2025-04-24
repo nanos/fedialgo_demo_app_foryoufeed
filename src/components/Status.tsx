@@ -7,7 +7,7 @@ import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
-import { Toot, WeightName, accountNameWithEmojis } from "fedialgo";
+import { Account, Toot, WeightName } from "fedialgo";
 
 import "../birdUI.css";
 import "../default.css";
@@ -191,10 +191,10 @@ export default function StatusComponent(props: StatusComponentProps) {
         setShowScoreModal(true);
     };
 
-    const reblogger = (account: mastodon.v1.Account, i: number): React.ReactNode => (
+    const reblogger = (account: Account, i: number): React.ReactNode => (
         <a className="status__display-name muted" href={account.url} key={i}>
             <bdi><strong>
-                {parse(accountNameWithEmojis(account))}
+                {parse(account.displayNameWithEmojis())}
             </strong></bdi>
         </a>
     );
@@ -309,7 +309,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                             style={{ color: "white", textDecoration: "none" }}
                                             target="_blank"
                                         >
-                                            {parse(accountNameWithEmojis(status.account))}
+                                            {parse(status.account.displayNameWithEmojis())}
                                         </a>
 
                                         {status.account.fields.filter(f => f.verifiedAt).map(f => (
