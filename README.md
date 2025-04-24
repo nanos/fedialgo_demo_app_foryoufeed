@@ -93,9 +93,17 @@ Here's an example of the elements that go into scoring a toot:
 
 ### Troubleshooting
 Most (all?) browsers will allow you to clear all the "site data" (cookies and cache) for a single site. If you run into an issue try doing that and then reloading the app at `https://localhost:3000`.
-* [How to do that in Chrome](https://support.google.com/chrome/thread/16531954/clear-cache-for-specific-website-in-google-chrome?hl=en).
 
-There's also all kinds of information logged to your browser's developer console. If you run into a problem maybe take a look in there for any errors. Here's an example of what you might see:
+* [How to clear site data for one site in Chrome](https://support.google.com/chrome/thread/16531954/clear-cache-for-specific-website-in-google-chrome?hl=en)
+* [How to clear site data for one site in Firefox](https://support.mozilla.org/en-US/kb/clear-cookies-and-site-data-firefox)
+
+
+There's also all kinds of information logged to your browser's developer console. If you run into a problem maybe take a look in there for any errors.
+* [Viewing logs in Chrome](https://developer.chrome.com/docs/devtools/console/log)
+* [Viewing logs in Firefox](https://firefox-source-docs.mozilla.org/devtools-user/browser_console/index.html)
+
+
+Here's an example of what you might see:
 
 <p align="center">
     <img src="doc/brower_console_debug_logs.png" alt="brower_console_debug_logs.png" width="800">
