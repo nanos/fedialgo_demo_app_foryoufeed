@@ -70,9 +70,9 @@ export default function CallbackPage() {
                 username: user.username,
             };
 
-            loginUser(userData).then(() => console.log("Logged in successfully!"));
+            loginUser(userData).then(() => console.log(`Logged in '${userData.username}' successfully!`));
         }).catch((error) => {
-            console.warn(error);
+            console.error(`Login error:`, error);
             setError(error.toString());
         });
     };

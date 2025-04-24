@@ -13,10 +13,9 @@ interface LoadingSpinnerProps {
 
 export default function LoadingSpinner(props: LoadingSpinnerProps) {
     let { isFullPage, message, style } = props;
-    style ||= {};
 
     return (
-        <div style={{...(isFullPage ? fullPageCenteredSpinner : inlineSpinner), ...style}}>
+        <div style={{...(isFullPage ? fullPageCenteredSpinner : inlineSpinner), ...(style || {})}}>
             <Spinner animation="border" />
 
             <div style={{marginLeft: "15px"}}>

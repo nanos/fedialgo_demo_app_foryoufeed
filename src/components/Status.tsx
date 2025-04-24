@@ -56,19 +56,14 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     const status: Toot = props.status.reblog || props.status;  // If it's a retoot set 'status' to the original toot
     const originalStatus: Toot = props.status.reblog ? props.status : null;
-    const numTrendingTags = status.trendingTags?.length || 0;
-    const hasTrendingTags = numTrendingTags > 0;
     const browseToToot = async (e: React.MouseEvent) => await openToot(status, e);
 
     // State variables
     const [error, _setError] = React.useState<string>("");
     const [favourited, setFavourited] = React.useState<boolean>(status.favourited);
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
-    const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); //index of the mediaAttachment to show
+    const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); // idx of the mediaAttachment to show
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
-
-    let trendingTagMsg = (`Contains ${hasTrendingTags ? 'Trending' : 'Followed'} Hashtag${numTrendingTags > 1 ? 's' : ''}` +
-        (hasTrendingTags ? `: ${status.trendingTags.map(t => `#${t.name}`).join(', ')}` : ''))
 
     // Increase mediaInspectionModalIdx on Right Arrow
     React.useEffect(() => {
@@ -251,38 +246,43 @@ export default function StatusComponent(props: StatusComponentProps) {
                         >
                             <span className="status__visibility-icon">
                                 {status.isDM()
-                                    ? <i className="fa fa-lock" title="Direct Message" style={{...iconStyle, color: "purple"}} />
-                                    : <i className="fa fa-globe" title="Public" style={iconStyle} />}
+                                    ? <i className="fa fa-lock" title="Direct Message" style={iconStyle("purple")} />
+                                    : <i className="fa fa-globe" title="Public" style={iconStyle()} />}
 
                                 {status.inReplyToAccountId &&
                                     <i
                                         className="fa fa-reply"
-                                        style={{color: "blue", ...iconStyle}}
+                                        style={iconStyle("blue")}
                                         title="Reply"
                                     />}
 
                                 {(status.followedTags?.length || status.trendingTags?.length || 0) > 0 &&
                                     <i
                                         className="fa fa-hashtag"
-                                        style={{color: hasTrendingTags ? 'orange' : 'yellow', ...iconStyle}}
-                                        title={trendingTagMsg}
+                                        style={iconStyle(status.trendingTags.length > 0 ? 'orange' : 'yellow')}
+                                        title={status.containsTagsMsg()}
                                     />}
 
                                 {status.trendingRank > 0 &&
                                     <i
                                         className="fa fa-fire"
-                                        style={{color: 'red', ...iconStyle}}
+                                        style={iconStyle("red")}
                                         title="Trending Toot"
                                     />}
 
                                 {(status.scoreInfo?.rawScores?.[WeightName.TRENDING_LINKS] || 0) > 0 &&
                                     <i
                                         className="fa fa-link"
-                                        style={{color: 'orange', ...iconStyle}}
+                                        style={iconStyle("orange")}
                                         title="Trending Link"
                                     />}
 
-                                {/* {status.trendingTags?.length > 0 && <i className="fa fa-bolt" title="Trending Tag"></i>} */}
+                                {status.containsUserMention() &&
+                                    <i
+                                        className="fa fa-bolt"
+                                        style={iconStyle("green")}
+                                        title="You're Mentioned"
+                                    />}
                             </span>
 
                             <time dateTime={status.createdAt} title={status.createdAt}>
@@ -407,7 +407,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 };
 
 
-const iconStyle: CSSProperties = {
+const baseIconStyle: CSSProperties = {
     marginRight: "4px",
 };
 
@@ -416,4 +416,8 @@ const buttonStyle: CSSProperties = {
     height: "23.142857px",
     lineHeight: "18px",
     width: "auto",
+};
+
+const iconStyle = (color?: string): CSSProperties => {
+    return color ? {...baseIconStyle, color: color} : baseIconStyle;
 };
