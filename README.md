@@ -98,7 +98,7 @@ Most (all?) browsers will allow you to clear all the "site data" (cookies and ca
 There's also all kinds of information logged to your browser's developer console. If you run into a problem maybe take a look in there for any errors. Here's an example of what you might see:
 
 <p align="center">
-    <img src="doc/brower_console_debug_logs.png.png" alt="brower_console_debug_logs.png" width="800">
+    <img src="doc/brower_console_debug_logs.png" alt="brower_console_debug_logs.png" width="800">
 </p>
 
 
