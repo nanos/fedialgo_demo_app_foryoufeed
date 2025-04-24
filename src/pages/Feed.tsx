@@ -143,7 +143,7 @@ export default function Feed() {
             <Row>
                 <Col xs={6}>
                     <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
-                        <div style={{height: "20px"}}>
+                        <div style={{height: "20px", marginBottom: "5px"}}>
                             <Form.Check
                                 type="checkbox"
                                 label="Stick Control Panel To Top"
@@ -158,8 +158,9 @@ export default function Feed() {
                         {algorithm && <TrendingInfo algorithm={algorithm} />}
                         <FindFollowers api={api} user={user} />
 
-                        {algorithm?.loadingStatus &&
-                            <LoadingSpinner isFullPage={false} message={algorithm.loadingStatus} style={loadingMsgStyle} />}
+                        {algorithm?.loadingStatus
+                            ? <LoadingSpinner isFullPage={false} message={algorithm.loadingStatus} style={loadingMsgStyle} />
+                            : <p style={loadingMsgStyle}>Finished loading {feed.length} toots for timeline.</p>}
                     </div>
                 </Col>
 
