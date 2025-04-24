@@ -7,37 +7,41 @@ import parse from 'html-react-parser';
 import { MediaCategory, Toot, VIDEO_TYPES } from "fedialgo";
 import { Modal } from 'react-bootstrap';
 
+interface AttachmentsModalProps {
+    mediaInspectionModalIdx: number;
+    setMediaInspectionModalIdx: (mediaInspectionModalIdx: number) => void;
+    toot: Toot;
+};
 
-export default function AttachmentsModal(
-    {
-        mediaInspectionModalIdx,
-        setMediaInspectionModalIdx,
-        toot
-    }: {
-        mediaInspectionModalIdx: number,
-        setMediaInspectionModalIdx: (mediaInspectionModalIdx: number) => void,
-        toot: Toot
-    }
-) {
-    const media = toot.mediaAttachments[mediaInspectionModalIdx];
+
+export default function AttachmentsModal(props: AttachmentsModalProps) {
+    const { mediaInspectionModalIdx, setMediaInspectionModalIdx, toot } = props;
     const shouldShowModal = mediaInspectionModalIdx >= 0;
     let element: JSX.Element = <></>;
 
-    if (media?.type == MediaCategory.IMAGE) {
-        element = (
-            <img
-                alt={media?.description ?? ""}
-                src={media?.url}
-                width={"100%"}
-            />
-        );
-    } else if (VIDEO_TYPES.includes(media?.type)) {
-        element = (
-            <video width={"100%"} controls>
-                <source src={media?.url} type="video/mp4" />
-                Your browser does not support the video tag.
-            </video>
-        );
+    if (shouldShowModal) {
+        const media = toot.mediaAttachments[mediaInspectionModalIdx];
+
+        if (!media?.url) {
+            console.warn(`[AttachmentsModal] Invalid media.url at idx ${mediaInspectionModalIdx}. toot:`, toot);
+        } else if (media.type == MediaCategory.IMAGE) {
+            element = (
+                <img
+                    alt={media.description ?? ""}
+                    src={media.url}
+                    width={"100%"}
+                />
+            );
+        } else if (VIDEO_TYPES.includes(media.type)) {
+            element = (
+                <video width={"100%"} controls>
+                    <source src={media.url} type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+            );
+        } else {
+            console.warn(`[AttachmentsModal] Unknown type at toot.mediaAttachments[${mediaInspectionModalIdx}]`, toot);
+        }
     }
 
     return (
