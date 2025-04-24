@@ -54,7 +54,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
 
                 <Accordion.Body style={accordionBody}>
                     <p style={subheader}>
-                        Trending data was scraped from {algorithm.mastodonServers.length} Mastodon servers.
+                        Trending data was scraped from {Object.keys(algorithm.mastodonServers).length} Mastodon servers.
                     </p>
 
                     <Accordion>
@@ -88,18 +88,15 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                         />
 
                         <TrendingSection
-                            sectionName="Servers That Were Scanned"
-                            // hasCustomStyle={true}
-                            infoTxt={(server) => undefined}
-                            linkText={(server) => server.title}
-                            linkUrl={linkMapper}
-                            onClick={(server, e) => followUri(`${(server as TrendingLink).url}`, e)}
-                            trendingObjs={algorithm.mastodonServers.map(
-                                (server) => ({
-                                    url: `https://${server}`,
-                                    title: server,
-                                } as TrendingObj)
-                            )}
+                            sectionName="Servers That Were Scraped"
+                            infoTxt={(server) => {
+                                const serverInfo = algorithm.mastodonServers[server as string];
+                                return `MAU: ${serverInfo.serverMAU.toLocaleString()}, follow ratio: ${serverInfo.followedPctOfMAU.toFixed(6)}`;
+                            }}
+                            linkText={(server) => server as string}
+                            linkUrl={(server) => `https://${server}`}
+                            onClick={(server, e) => followUri(`https://${server}`, e)}
+                            trendingObjs={Object.keys(algorithm.mastodonServers)}
                         />
                     </Accordion>
                 </Accordion.Body>

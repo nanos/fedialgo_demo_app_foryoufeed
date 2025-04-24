@@ -12,15 +12,16 @@ import { accordionBody } from "./FilterAccordionSection";
 import { headerFont, roundedBox } from "./WeightSetter";
 
 export const LINK_FONT_SIZE = 16;
+export type TrendingListObj = TrendingObj | string;
 
 interface TrendingProps {
     hasCustomStyle?: boolean;
-    infoTxt: (obj: TrendingObj) => string | undefined;
-    linkText: (obj: TrendingObj) => React.ReactElement | string;
-    linkUrl: (obj: TrendingObj) => string;
-    onClick: (obj: TrendingObj, e: React.MouseEvent) => void;
+    infoTxt: (obj: TrendingListObj) => string | undefined;
+    linkText: (obj: TrendingListObj) => React.ReactElement | string;
+    linkUrl: (obj: TrendingListObj) => string;
+    onClick: (obj: TrendingListObj, e: React.MouseEvent) => void;
     sectionName: string;
-    trendingObjs: TrendingObj[];
+    trendingObjs: TrendingListObj[];
 };
 
 
