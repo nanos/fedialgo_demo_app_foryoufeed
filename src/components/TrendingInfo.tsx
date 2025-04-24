@@ -19,7 +19,7 @@ import { accordionBody } from "./FilterAccordionSection";
 import { followUri, openToot } from "../helpers/react_helpers";
 import { titleStyle } from "./WeightSetter";
 
-const MAX_TRENDING_LINK_LEN = 130;
+const MAX_TRENDING_LINK_LEN = 170;
 
 
 export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm }) {
@@ -91,7 +91,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                             sectionName="Servers That Were Scraped"
                             infoTxt={(server) => {
                                 const serverInfo = algorithm.mastodonServers[server as string];
-                                return `MAU: ${serverInfo.serverMAU.toLocaleString()}, follow ratio: ${serverInfo.followedPctOfMAU.toFixed(6)}`;
+                                return `MAU: ${serverInfo.serverMAU.toLocaleString()}, followed pct of MAU: ${serverInfo.followedPctOfMAU.toFixed(3)}%`;
                             }}
                             linkText={(server) => server as string}
                             linkUrl={(server) => `https://${server}`}

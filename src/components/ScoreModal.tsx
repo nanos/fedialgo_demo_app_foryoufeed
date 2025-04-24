@@ -38,7 +38,7 @@ export default function ScoreModal(props: ScoreModalProps) {
                         Computed Score: <code>{computedScore}</code>
                     </p>
 
-                    <p>Posted by {toot.describeAccount()}</p>
+                    <p>Posted by {toot.account.describe()}</p>
                 </div>
 
                 <div style={{height: "15px"}} />
