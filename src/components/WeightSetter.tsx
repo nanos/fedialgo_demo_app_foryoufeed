@@ -8,7 +8,7 @@ import React, { CSSProperties, useState, useEffect } from "react";
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { PresetWeightLabel, PresetWeights, TIME_DECAY, TRENDING, TheAlgorithm, Weights } from "fedialgo";
+import { PresetWeightLabel, PresetWeights, TheAlgorithm, WeightName, Weights } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
 import { accordionBody } from "./FilterAccordionSection";
@@ -31,7 +31,7 @@ export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm })
         await algorithm.updateUserWeights(newWeights);
     };
 
-    const weightSlider = (scoreName: string) => {
+    const weightSlider = (scoreName: WeightName) => {
         return (
             <WeightSlider
                 info={algorithm.scorersDict[scoreName]}
@@ -48,7 +48,7 @@ export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm })
             <Accordion.Item eventKey="9">
                 <Accordion.Header>
                     <p style={titleStyle}>
-                        Feed Algorithm Settings
+                        Feed Algorithm Control Panel
                     </p>
                 </Accordion.Header>
 
@@ -69,8 +69,8 @@ export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm })
                         ))}
                     </DropdownButton>
 
-                    {weightSlider(TIME_DECAY)}
-                    {weightSlider(TRENDING)}
+                    {weightSlider(WeightName.TIME_DECAY)}
+                    {weightSlider(WeightName.TRENDING)}
                     <div style={{height: '12px'}} />
 
                     <div style={roundedBox}>
