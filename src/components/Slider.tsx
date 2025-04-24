@@ -27,7 +27,9 @@ export default function Slider(props: SliderProps) {
     let step = stepSize ?? (minValue >= 0 ? DEFAULT_STEP_SIZE : 1);
     let decimals = 2;
 
-    if (minValue > 0 && minValue < 0.01) {
+    if (stepSize == 1) {
+        decimals = 0;
+    } else if (minValue > 0 && minValue < 0.01) {
         decimals = 3;
     } else if (value >= 10.0) {
         decimals = 1;
