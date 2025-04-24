@@ -14,11 +14,11 @@ export default function Footer() {
     return (
         <Navbar expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark" style={{marginTop: '50px'}}>
             <Container>
-                <Navbar.Brand style={navLink}>FediFeed</Navbar.Brand>
+                <Navbar.Brand style={navLink}>FediAlgo</Navbar.Brand>
 
                 <Nav className="me-auto">
-                    <Nav.Link href="/" style={navLink}>Home</Nav.Link>
-
+                    {/* <Nav.Link href="/" style={navLink}>Home</Nav.Link>
+ */}
                     <Nav.Link href="https://github.com/michelcrypt4d4mus/fedialgo_demo_app_foryoufeed" style={navLink}>
                         <img
                             alt="Github Logo"
@@ -30,7 +30,7 @@ export default function Footer() {
                         <span className="p-2"> Code on Github</span>
                     </Nav.Link>
 
-                    <Nav.Link href="https://chaos.social/@pkreissel" style={navLink}>
+                    {/* <Nav.Link href="https://chaos.social/@pkreissel" style={navLink}>
                         <img
                             alt="Chaos.social Logo"
                             className="d-inline-block align-top"
@@ -39,7 +39,7 @@ export default function Footer() {
                         />
 
                         <span className="p-2"> Follow me on Mastodon</span>
-                    </Nav.Link>
+                    </Nav.Link> */}
 
                     <Nav.Link href="https://universeodon.com/@cryptadamist" style={navLink}>
                         <img

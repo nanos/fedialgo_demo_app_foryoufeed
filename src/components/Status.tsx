@@ -9,8 +9,6 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 import { Account, Toot, WeightName } from "fedialgo";
 
-import "../birdUI.css";
-import "../default.css";
 import AttachmentsModal from './AttachmentsModal';
 import MultimediaNode from "./MultimediaNode";
 import ScoreModal from './ScoreModal';

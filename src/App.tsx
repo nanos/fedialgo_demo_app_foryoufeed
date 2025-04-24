@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 // import { inject } from '@vercel/analytics';
 
+import "./birdUI.css";
+import "./default.css";
 import AuthProvider from './hooks/useAuth';
 import CallbackPage from './pages/CallbackPage';
 import Feed from './pages/Feed';

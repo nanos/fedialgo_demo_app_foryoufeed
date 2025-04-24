@@ -2,6 +2,7 @@
  * Handles the incoming call that is part of OAuth 2.0 authorization code flow.
  */
 import React, { useEffect } from 'react';
+
 import { createRestAPIClient as loginToMastodon } from "masto"
 import { useSearchParams } from 'react-router-dom';
 
