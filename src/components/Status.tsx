@@ -217,7 +217,7 @@ export default function StatusComponent(props: StatusComponentProps) {
             </Toast>
 
             <div
-                aria-label={`${status.account.displayName}, ${status.account.note} ${status.account.acct}`}
+                aria-label={`${status.account.displayName}, ${status.account.note} ${status.account.webfingerURI()}`}
                 className="status__wrapper status__wrapper-public focusable"
             >
                 {/* Name of account that reblogged the toot (if it exists) */}
@@ -291,10 +291,10 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </a>
 
                         {/* Account name + avatar */}
-                        <div title={status.account.acct} className="status__display-name">
+                        <div title={status.account.webfingerURI()} className="status__display-name">
                             <div className="status__avatar">
                                 <div className="account__avatar" style={{ width: "46px", height: "46px" }}>
-                                    <LazyLoadImage src={status.account.avatar} alt={`${status.account.acct}`} />
+                                    <LazyLoadImage src={status.account.avatar} alt={`${status.account.webfingerURI()}`} />
                                 </div>
                             </div>
 
@@ -323,7 +323,9 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     </strong>
                                 </bdi>
 
-                                <span key="acctdisplay" className="display-name__account">@{status.account.acct}</span>
+                                <span key="acctdisplay" className="display-name__account">
+                                    @{status.account.webfingerURI()}
+                                </span>
                             </span>
                         </div>
                     </div>
