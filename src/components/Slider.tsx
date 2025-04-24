@@ -54,7 +54,7 @@ export default function Slider(props: SliderProps) {
                     </span>
                 </div>
 
-                <div style={{display: 'flex', flexDirection: 'row', justifyContent: "end"}}>
+                <div style={sliderContainer}>
                     <Form.Range
                         className={"custom-slider"}
                         id={label}
@@ -81,10 +81,15 @@ const labelContainer: CSSProperties = {
 };
 
 const monoFont: CSSProperties = {
-    // fontFamily: "AnonymousPro, Courier New, monospace",
     fontFamily: "Courier New, monospace",
     fontSize: "13px",
     fontWeight: 'bold',
+};
+
+const sliderContainer: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'end',
 };
 
 const sliderValue: CSSProperties = {
