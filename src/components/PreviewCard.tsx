@@ -29,7 +29,7 @@ export default function PreviewCard({ card }: { card: mastodon.v1.PreviewCard })
                     alt=""
                     className="status-card__image-image"
                     src={card.image}
-                    style={{ maxHeight: "45vh", objectPosition: "top" }}
+                    style={{ maxHeight: "40vh", objectPosition: "top" }}
                 />
             </div>
 
