@@ -6,6 +6,7 @@ import React, { CSSProperties } from "react";
 import Accordion from 'react-bootstrap/esm/Accordion';
 import {
     extractDomain,
+    MediaCategory,
     TheAlgorithm,
     Toot,
     TrendingLink,
@@ -21,6 +22,12 @@ import { titleStyle } from "./WeightSetter";
 
 const MAX_TRENDING_LINK_LEN = 170;
 
+const ATTACHMENT_PREFIXES: Record<MediaCategory, string> = {
+    [MediaCategory.AUDIO]: "audio",
+    [MediaCategory.IMAGE]: "pic",
+    [MediaCategory.VIDEO]: "vid"
+};
+
 
 export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm }) {
     const linkMapper = (link: TrendingObj) => `${(link as TrendingLink).url}`;
@@ -28,18 +35,22 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
 
     const tootLinkText = (obj: TrendingObj): React.ReactElement => {
         const toot = obj as Toot;
-        return prefixedText(toot.attachmentPrefix(), toot.contentShortened(MAX_TRENDING_LINK_LEN));
+
+        return prefixedText(
+            toot.contentShortened(MAX_TRENDING_LINK_LEN),
+            ATTACHMENT_PREFIXES[toot.attachmentType()]
+        );
     };
 
     const linkText = (obj: TrendingObj): React.ReactElement => {
         const link = obj as TrendingLink;
-        return prefixedText(extractDomain(link.url), link.title);
+        return prefixedText(link.title, extractDomain(link.url));
     };
 
-    const prefixedText = (prefix: string, text: string): React.ReactElement => {
+    const prefixedText = (text: string, prefix?: string): React.ReactElement => {
         return (<>
-            {prefix.length ? <span style={monospace}>{`[${prefix}]`}</span> : ''}
-            <span style={bold}>{prefix.length ? ' ' : ''}{text}</span>
+            {prefix?.length ? <span style={monospace}>{`[${prefix}]`}</span> : ''}
+            <span style={bold}>{prefix?.length ? ' ' : ''}{text}</span>
         </>);
     };
 
