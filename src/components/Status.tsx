@@ -5,6 +5,7 @@ import React, { CSSProperties } from "react";
 
 import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
+import { capitalCase } from "change-case";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 import { Account, Toot, WeightName } from "fedialgo";
@@ -15,6 +16,7 @@ import ScoreModal from './ScoreModal';
 import { openToot } from "../helpers/react_helpers";
 import { scoreString, timeString } from '../helpers/string_helpers';
 import { User } from '../types';
+import { stat } from "fs";
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
@@ -192,6 +194,18 @@ export default function StatusComponent(props: StatusComponentProps) {
         </a>
     );
 
+    const buildIcon = (iconName: string, title?: string, color?: string): React.ReactNode => {
+        if (iconName == "hashtag") {
+            color ||= status.trendingTags.length ? 'orange' : 'yellow';
+        }
+
+        return <i
+            className={`fa fa-${iconName}`}
+            style={color ? {...baseIconStyle, color: color} : baseIconStyle}
+            title={title || capitalCase(iconName)}
+        />;
+    };
+
     return (
         <div>
             {status.mediaAttachments.length > 0 && (
@@ -246,43 +260,14 @@ export default function StatusComponent(props: StatusComponentProps) {
                         >
                             <span className="status__visibility-icon">
                                 {status.isDM()
-                                    ? <i className="fa fa-lock" title="Direct Message" style={iconStyle("purple")} />
-                                    : <i className="fa fa-globe" title="Public" style={iconStyle()} />}
+                                    ? buildIcon("lock", "Direct Message", "purple")
+                                    : buildIcon("globe", "Public")}
 
-                                {status.inReplyToAccountId &&
-                                    <i
-                                        className="fa fa-reply"
-                                        style={iconStyle("blue")}
-                                        title="Reply"
-                                    />}
-
-                                {(status.followedTags?.length || status.trendingTags?.length || 0) > 0 &&
-                                    <i
-                                        className="fa fa-hashtag"
-                                        style={iconStyle(status.trendingTags.length > 0 ? 'orange' : 'yellow')}
-                                        title={status.containsTagsMsg()}
-                                    />}
-
-                                {status.trendingRank > 0 &&
-                                    <i
-                                        className="fa fa-fire"
-                                        style={iconStyle("red")}
-                                        title="Trending Toot"
-                                    />}
-
-                                {(status.scoreInfo?.rawScores?.[WeightName.TRENDING_LINKS] || 0) > 0 &&
-                                    <i
-                                        className="fa fa-link"
-                                        style={iconStyle("orange")}
-                                        title="Trending Link"
-                                    />}
-
-                                {status.containsUserMention() &&
-                                    <i
-                                        className="fa fa-bolt"
-                                        style={iconStyle("green")}
-                                        title="You're Mentioned"
-                                    />}
+                                {status.inReplyToAccountId && buildIcon("reply", "Reply", "blue")}
+                                {status.containsTagsMsg() && buildIcon("hashtag", status.containsTagsMsg())}
+                                {status.trendingRank > 0 && buildIcon("fire", "Trending Toot", "red")}
+                                {status.trendingLinks.length > 0 && buildIcon("link", "Trending Link", "orange")}
+                                {status.containsUserMention() && buildIcon("bolt", "You're Mentioned", "green")}
                             </span>
 
                             <time dateTime={status.createdAt} title={status.createdAt}>
@@ -416,8 +401,4 @@ const buttonStyle: CSSProperties = {
     height: "23.142857px",
     lineHeight: "18px",
     width: "auto",
-};
-
-const iconStyle = (color?: string): CSSProperties => {
-    return color ? {...baseIconStyle, color: color} : baseIconStyle;
 };
