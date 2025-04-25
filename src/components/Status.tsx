@@ -8,16 +8,16 @@ import Toast from 'react-bootstrap/Toast';
 import { capitalCase } from "change-case";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
-import { Account, Toot, WeightName } from "fedialgo";
+import { Account, Toot } from "fedialgo";
 
 import AttachmentsModal from './AttachmentsModal';
 import MultimediaNode from "./MultimediaNode";
+import PreviewCard from "./PreviewCard";
 import ScoreModal from './ScoreModal';
 import { openToot } from "../helpers/react_helpers";
 import { scoreString, timeString } from '../helpers/string_helpers';
 import { User } from '../types';
 
-const MAX_STATUS_CARD_LEN = 350;
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
 const FAVORITE = 'favourite';
@@ -58,6 +58,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     const status: Toot = props.status.reblog || props.status;  // If it's a retoot set 'status' to the original toot
     const originalStatus: Toot = props.status.reblog ? props.status : null;
+    const hasAttachments = status.mediaAttachments.length > 0;
     const browseToToot = async (e: React.MouseEvent) => await openToot(status, e);
 
     // State variables
@@ -208,7 +209,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     return (
         <div>
-            {status.mediaAttachments.length > 0 && (
+            {hasAttachments && (
                 <AttachmentsModal
                     mediaInspectionModalIdx={mediaInspectionModalIdx}
                     setMediaInspectionModalIdx={setMediaInspectionModalIdx}
@@ -323,42 +324,9 @@ export default function StatusComponent(props: StatusComponentProps) {
                     </div>
 
                     {/* Preview card image and text handling */}
-                    {status.card && status.mediaAttachments.length == 0 && (
-                        <a
-                            className="status-card compact"
-                            href={status.card.url}
-                            rel="noopener noreferrer"
-                            target="_blank"
-                        >
-                            <div className="status-card__image">
-                                <canvas
-                                    className="status-card__image-preview status-card__image-preview--hidden"
-                                    height="32"
-                                    width="32"
-                                />
+                    {status.card && !hasAttachments && <PreviewCard card={status.card as mastodon.v1.PreviewCard} />}
 
-                                <LazyLoadImage
-                                    alt=""
-                                    className="status-card__image-image"
-                                    src={status.card.image}
-                                    style={{ maxHeight: "45vh", objectPosition: "top" }}
-                                />
-                            </div>
-
-                            <div className='status-card__content'>
-                                {/* <span className='status-card__host'>
-                                    [{status.card.providerName}]
-                                </span> */}
-
-                                [{status.card.providerName}] {parse(status.card.title)}
-
-                                <p className='status-card__description'>
-                                    {status.card.description.slice(0, MAX_STATUS_CARD_LEN)}
-                                </p>
-                            </div>
-                        </a>)}
-
-                    {status.mediaAttachments.length > 0 &&
+                    {hasAttachments &&
                         <MultimediaNode
                             setMediaInspectionModalIdx={setMediaInspectionModalIdx}
                             status={status}
