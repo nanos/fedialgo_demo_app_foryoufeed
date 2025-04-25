@@ -32,8 +32,10 @@ const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
 
 
 export default function Feed() {
-    // Contruct Feed on Page Load
     const { user, logout } = useAuthContext();
+    const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
+    const bottomRef = useRef<HTMLDivElement>(null);
+    const isBottom = useOnScreen(bottomRef);
 
     // State variables
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
@@ -42,10 +44,6 @@ export default function Feed() {
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(false);  // Left panel stickiness
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
-
-    const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
-    const bottomRef = useRef<HTMLDivElement>(null);
-    const isBottom = useOnScreen(bottomRef);
 
     const handleFocus = () => {
         console.debug(`window is ${document.hasFocus() ? "focused" : "not focused"}`);

@@ -5611,11 +5611,11 @@ button.icon-button.active i.fa-retweet {
 }
 
 a.status-card {
-    cursor:pointer
+    cursor: pointer;
 }
 
 a.status-card:hover {
-    background:#393f4f
+    background: #393f4f;
 }
 
 .status-card-photo {
@@ -5624,12 +5624,12 @@ a.status-card:hover {
     text-decoration: none;
     width: 100%;
     height: auto;
-    margin:0
+    margin: 0;
 }
 
 .status-card-video iframe {
     width: 100%;
-    height:100%
+    height: 100%;
 }
 
 .status-card__title {
@@ -5646,26 +5646,26 @@ a.status-card:hover {
 .status-card__content {
     flex: 1 1 auto;
     overflow: hidden;
-    padding:14px 14px 14px 8px
+    padding: 14px 14px 14px 8px;
 }
 
 .status-card__description {
-    color:#9baec8
+    color: #9baec8;
 }
 
 .status-card__host {
     display: block;
-    margin-top: 5px;
     font-size: 13px;
+    margin-top: 5px;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space:nowrap
+    white-space: nowrap;
 }
 
 .status-card__image {
     flex: 0 0 100px;
     background: #393f4f;
-    position:relative
+    position: relative;
 }
 
 .status-card__image > .fa {
@@ -5674,47 +5674,47 @@ a.status-card:hover {
     transform-origin: 50% 50%;
     top: 50%;
     left: 50%;
-    transform:translate(-50%, -50%)
+    transform: translate(-50%, -50%);
 }
 
 .status-card.horizontal {
-    display:block
+    display: block;
 }
 
 .status-card.horizontal .status-card__image {
-    width:100%
+    width: 100%;
 }
 
 .status-card.horizontal .status-card__image-image, .status-card.horizontal .status-card__image-preview {
-    border-radius:4px 4px 0 0
+    border-radius: 4px 4px 0 0;
 }
 
 .status-card.horizontal .status-card__title {
-    white-space:inherit
+    white-space: inherit;
 }
 
 .status-card.compact {
-    border-color:#313543
+    border-color: #313543;
 }
 
 .status-card.compact.interactive {
-    border:0
+    border: 0;
 }
 
 .status-card.compact .status-card__content {
-    padding:10px 8px 8px
+    padding: 10px 8px 8px;
 }
 
 .status-card.compact .status-card__title {
-    white-space:nowrap
+    white-space: nowrap;
 }
 
 .status-card.compact .status-card__image {
-    flex:0 0 60px
+    flex: 0 0 60px;
 }
 
 a.status-card.compact:hover {
-    background-color:#313543
+    background-color: #313543;
 }
 
 .status-card__image-image {
@@ -5727,9 +5727,9 @@ a.status-card.compact:hover {
 .status-card__image-image, .status-card__image-preview {
     border-radius: 4px 0 0 4px;
     display: block;
+    height: 100%;
     margin: 0;
     width: 100%;
-    height: 100%;
 }
 
 .status-card__image-preview {
@@ -5739,11 +5739,11 @@ a.status-card.compact:hover {
     top: 0;
     left: 0;
     z-index: 0;
-    background:#000
+    background: #000;
 }
 
 .status-card__image-preview--hidden {
-    display:none
+    display: none;
 }
 
 .load-more {
@@ -5759,89 +5759,89 @@ a.status-card.compact:hover {
     box-sizing: border-box;
     width: 100%;
     clear: both;
-    text-decoration:none
+    text-decoration: none;
 }
 
 .load-more:hover {
-    background:#2c313d
+    background: #2c313d;
 }
 
 .load-gap {
-    border-bottom:1px solid #393f4f
+    border-bottom:1px solid  #393f4f;
 }
 
 .timeline-hint {
-    text-align: center;
-    color: #9baec8;
-    padding: 15px;
     box-sizing: border-box;
+    color: #9baec8;
+    cursor: default;
+    padding: 15px;
+    text-align: center;
     width: 100%;
-    cursor:default
 }
 
 .timeline-hint strong {
-    font-weight:500
+    font-weight: 500;
 }
 
 .timeline-hint a {
     color: #8c8dff;
-    text-decoration:none
+    text-decoration: none;
 }
 
 .timeline-hint a:active, .timeline-hint a:focus, .timeline-hint a:hover {
     text-decoration: underline;
-    color:#a0a1ff
+    color: #a0a1ff;
 }
 
 .regeneration-indicator {
-    text-align: center;
-    font-size: 16px;
-    font-weight: 500;
-    color: #606984;
+    align-items: center;
     background: #282c37;
+    color: #606984;
     cursor: default;
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
     justify-content: center;
-    padding:20px
+    padding: 20px;
+    text-align: center;
 }
 
 .regeneration-indicator__figure, .regeneration-indicator__figure img {
     display: block;
-    width: auto;
     height: 160px;
-    margin:0
+    margin: 0;
+    width: auto;
 }
 
 .regeneration-indicator--without-header {
-    padding-top:68px
+    padding-top: 68px;
 }
 
 .regeneration-indicator__label {
-    margin-top:30px
+    margin-top: 30px;
 }
 
 .regeneration-indicator__label strong {
     display: block;
     margin-bottom: 10px;
-    color:#606984
+    color: #606984;
 }
 
 .regeneration-indicator__label span {
     font-size: 15px;
-    font-weight:400
+    font-weight: 400;
 }
 
 .column-header__wrapper {
     position: relative;
     flex: 0 0 auto;
-    z-index:1
+    z-index: 1;
 }
 
 .column-header__wrapper.active {
-    box-shadow:0 1px 0 rgba(140, 141, 255, .3)
+    box-shadow: 0 1px 0 rgba(140, 141, 255, .3);
 }
 
 .column-header__wrapper.active:before {
@@ -5856,12 +5856,12 @@ a.status-card.compact:hover {
     pointer-events: none;
     height: 28px;
     z-index: 1;
-    background:radial-gradient(ellipse, rgba(99, 100, 255, .23) 0, rgba(99, 100, 255, 0) 60%)
+    background: radial-gradient(ellipse, rgba(99, 100, 255, .23) 0, rgba(99, 100, 255, 0) 60%);
 }
 
 .column-header__wrapper .announcements {
     z-index: 1;
-    position:relative
+    position: relative;
 }
 
 .column-header {
@@ -5874,7 +5874,7 @@ a.status-card.compact:hover {
     position: relative;
     z-index: 2;
     outline: 0;
-    overflow:hidden
+    overflow: hidden;
 }
 
 .column-header > button {
@@ -5923,21 +5923,21 @@ a.status-card.compact:hover {
     color: #9baec8;
     cursor: pointer;
     font-size: 16px;
-    padding:0 15px
+    padding: 0 15px;
 }
 
 .column-header__button:hover {
-    color:#b2c1d5
+    color: #b2c1d5;
 }
 
 .column-header__button.active, .column-header__button.active:hover {
     color: #fff;
-    background:#393f4f
+    background: #393f4f;
 }
 
 .column-header__button:disabled {
     color: #606984;
-    cursor:default
+    cursor: default;
 }
 
 .column-header__collapsible {
@@ -5948,7 +5948,7 @@ a.status-card.compact:hover {
     transition: max-height .15s ease-in-out, opacity .3s linear;
     opacity: 1;
     z-index: 1;
-    position:relative
+    position: relative;
 }
 
 .column-header__collapsible.collapsed {

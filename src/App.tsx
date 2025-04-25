@@ -23,6 +23,7 @@ export default function App(): React.ReactElement {
         });
     }
 
+    console.log("Running app in NODE_ENV: ", process.env.NODE_ENV);
     // if (process.env.NODE_ENV === "production") inject();
 
     return (
