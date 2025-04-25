@@ -16,8 +16,8 @@ import ScoreModal from './ScoreModal';
 import { openToot } from "../helpers/react_helpers";
 import { scoreString, timeString } from '../helpers/string_helpers';
 import { User } from '../types';
-import { stat } from "fs";
 
+const MAX_STATUS_CARD_LEN = 350;
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
 const FAVORITE = 'favourite';
@@ -346,14 +346,14 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </div>
 
                             <div className='status-card__content'>
-                                <span className='status-card__host'>
-                                    {status.card.providerName}
-                                </span>
+                                {/* <span className='status-card__host'>
+                                    [{status.card.providerName}]
+                                </span> */}
 
-                                {status.card.title}
+                                [{status.card.providerName}] {parse(status.card.title)}
 
                                 <p className='status-card__description'>
-                                    {status.card.description.slice(0, 200)}
+                                    {status.card.description.slice(0, MAX_STATUS_CARD_LEN)}
                                 </p>
                             </div>
                         </a>)}
