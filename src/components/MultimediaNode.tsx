@@ -112,10 +112,14 @@ const fullSize: CSSProperties = {
     width: "100%",
 };
 
-const imageStyle: CSSProperties = {
-    ...fullSize,
+const mediaItem: CSSProperties = {
     backgroundColor: "black",
     borderRadius: "15px",
+};
+
+const imageStyle: CSSProperties = {
+    ...fullSize,
+    ...mediaItem,
     // failed attempt at fake border
     // filter: "drop-shadow(0 -5px 0 gray) drop-shadow(0 5px 0 gray) drop-shadow(-5px 0 0 gray) drop-shadow(5px 0 0 gray)",
     objectFit: "contain",
@@ -124,6 +128,7 @@ const imageStyle: CSSProperties = {
 
 const videoContainer: CSSProperties = {
     ...fullSize,
+    ...mediaItem,
     inset: "auto",
 };
 
