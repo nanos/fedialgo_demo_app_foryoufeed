@@ -8,6 +8,7 @@ import { stringifyQuery } from 'ufo'
 
 import { AppStorage, useLocalStorage } from "../hooks/useLocalStorage";
 
+// Mastodon OAuth scopes: https://docs.joinmastodon.org/api/oauth-scopes/
 const OAUTH_SCOPES = [
     "read",
     "write:favourites",
