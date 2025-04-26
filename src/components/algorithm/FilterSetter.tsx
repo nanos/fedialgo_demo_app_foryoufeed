@@ -14,7 +14,7 @@ import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm, TypeFilterNa
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import Slider from "./Slider";
-import { titleStyle } from "../helpers/style_helpers";
+import { titleStyle } from "../../helpers/style_helpers";
 
 const MAX_LABEL_LENGTH = 20;
 const INVERT_SELECTION = "invertSelection";

@@ -6,7 +6,7 @@ import React, { CSSProperties } from 'react';
 import { Modal } from 'react-bootstrap';
 import { Toot } from 'fedialgo';
 
-import { globalFont } from '../helpers/style_helpers';
+import { globalFont } from '../../helpers/style_helpers';
 
 interface ScoreModalProps {
     setShowScoreModal: (showScoreModal: boolean) => void,

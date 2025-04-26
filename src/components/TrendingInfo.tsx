@@ -16,7 +16,7 @@ import {
 } from "fedialgo";
 
 import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
-import { accordionBody } from "./FilterAccordionSection";
+import { accordionBody } from "./algorithm/FilterAccordionSection";
 import { followUri, openToot } from "../helpers/react_helpers";
 import { titleStyle } from "../helpers/style_helpers";
 

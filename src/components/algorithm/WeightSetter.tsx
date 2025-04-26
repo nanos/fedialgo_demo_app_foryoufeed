@@ -12,7 +12,7 @@ import { PresetWeightLabel, PresetWeights, TheAlgorithm, WeightName, Weights } f
 
 import WeightSlider from './WeightSlider';
 import { accordionBody } from "./FilterAccordionSection";
-import { roundedBox, titleStyle } from "../helpers/style_helpers";
+import { roundedBox, titleStyle } from "../../helpers/style_helpers";
 
 const PRESET_MENU_TITLE = "Preset Algorithm Configurations";
 

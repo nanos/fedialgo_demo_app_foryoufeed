@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
 import { TrendingObj } from "fedialgo";
 
-import { accordionBody } from "./FilterAccordionSection";
+import { accordionBody } from "./algorithm/FilterAccordionSection";
 import { headerFont, roundedBox } from "../helpers/style_helpers";
 
 export const LINK_FONT_SIZE = 16;

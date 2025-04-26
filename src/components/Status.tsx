@@ -11,10 +11,10 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 
 import ActionButton, { ButtonAction } from "./status/action_button";
-import AttachmentsModal from './AttachmentsModal';
-import MultimediaNode from "./MultimediaNode";
-import PreviewCard from "./PreviewCard";
-import ScoreModal from './ScoreModal';
+import AttachmentsModal from './status/AttachmentsModal';
+import MultimediaNode from "./status/MultimediaNode";
+import PreviewCard from "./status/PreviewCard";
+import ScoreModal from './status/ScoreModal';
 import { openToot } from "../helpers/react_helpers";
 import { timeString } from '../helpers/string_helpers';
 import { User } from '../types';

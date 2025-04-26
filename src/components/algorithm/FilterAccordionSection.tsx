@@ -9,7 +9,7 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
 
-import { globalFont, headerFont, roundedBox } from "../helpers/style_helpers";
+import { globalFont, headerFont, roundedBox } from "../../helpers/style_helpers";
 
 const JUNK_CLASS = "JUNKJUNKJUNK";
 

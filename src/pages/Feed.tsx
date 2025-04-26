@@ -11,13 +11,13 @@ import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
 import { Modal } from "react-bootstrap";
 import { TheAlgorithm, Toot } from "fedialgo";
 
-import FilterSetter from "../components/FilterSetter";
+import FilterSetter from "../components/algorithm/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
 import LoadingSpinner from "../components/LoadingSpinner";
 import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
-import WeightSetter from "../components/WeightSetter";
+import WeightSetter from "../components/algorithm/WeightSetter";
 import { useAuthContext } from "../hooks/useAuth";
 
 // Number constants
