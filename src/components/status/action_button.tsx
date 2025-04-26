@@ -43,6 +43,7 @@ const ACTION_INFO: Record<ButtonAction, ActionInfo> = {
         icon: 'retweet',
     },
     [ButtonAction.Reply]: {
+        countName: 'repliesCount',
         icon: ButtonAction.Reply,
     },
     [ButtonAction.Score]: {
@@ -93,7 +94,7 @@ export default function ActionButton(props: ActionButtonProps) {
             status[actionInfo.booleanName] = newState;
             setCurrentState(newState);
 
-            if (newState && actionInfo.countName) {
+            if (newState && actionInfo.countName && actionName != ButtonAction.Reply) {
                 status[actionInfo.countName] = startingCount + 1;
             } else {
                 status[actionInfo.countName] = startingCount ? (startingCount - 1) : 0;  // Avoid count going below 0
