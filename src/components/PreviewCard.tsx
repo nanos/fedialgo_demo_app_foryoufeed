@@ -4,6 +4,7 @@
 import React, { CSSProperties } from 'react';
 
 import parse from 'html-react-parser';
+import { extractDomain } from 'fedialgo';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 
@@ -29,7 +30,7 @@ export default function PreviewCard({ card }: { card: mastodon.v1.PreviewCard })
                     alt=""
                     className="status-card__image-image"
                     src={card.image}
-                    style={{ maxHeight: "40vh", objectPosition: "top" }}
+                    style={cardImage}
                 />
             </div>
 
@@ -38,7 +39,7 @@ export default function PreviewCard({ card }: { card: mastodon.v1.PreviewCard })
                     [{card.providerName}]
                 </span> */}
 
-                [{card.providerName}] {parse(card.title)}
+                [{card.providerName || extractDomain(card.url)}] {parse(card.title)}
 
                 <p className='status-card__description'>
                     {card.description.slice(0, MAX_STATUS_CARD_LEN)}
@@ -46,4 +47,10 @@ export default function PreviewCard({ card }: { card: mastodon.v1.PreviewCard })
             </div>
         </a>
     );
-}
+};
+
+
+const cardImage: CSSProperties = {
+    maxHeight: "40vh",
+    objectPosition: "top",
+};

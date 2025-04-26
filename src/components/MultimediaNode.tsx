@@ -1,5 +1,6 @@
 import React, { CSSProperties} from "react";
 
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import { GIFV, Toot } from "fedialgo";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
@@ -47,9 +48,11 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
 
                 <LazyLoadImage
                     alt={image.description}
+                    effect="blur"
                     onClick={() => setMediaInspectionModalIdx(idx)}
                     src={image.previewUrl}
                     style={imageStyle}
+                    wrapperProps={{style: {position: "static"}}}  // Required to center properly
                 />
             </div>
         );
@@ -118,6 +121,8 @@ const fullSize: CSSProperties = {
 
 const imageStyle: CSSProperties = {
     ...fullSize,
+    borderRadius: "5px",
+    // filter: "drop-shadow(0 -5px 0 gray) drop-shadow(0 5px 0 gray) drop-shadow(-5px 0 0 gray) drop-shadow(5px 0 0 gray)",
     objectFit: "contain",
     objectPosition: "top",
 };
