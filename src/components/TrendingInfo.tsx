@@ -18,7 +18,7 @@ import {
 import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
 import { accordionBody } from "./FilterAccordionSection";
 import { followUri, openToot } from "../helpers/react_helpers";
-import { titleStyle } from "./WeightSetter";
+import { titleStyle } from "../helpers/style_helpers";
 
 const MAX_TRENDING_LINK_LEN = 170;
 

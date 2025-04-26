@@ -10,11 +10,11 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
 import { capitalCase } from "change-case";
+import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm, TypeFilterName } from "fedialgo";
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import Slider from "./Slider";
-import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm, TypeFilterName } from "fedialgo";
-import { titleStyle } from "./WeightSetter";
+import { titleStyle } from "../helpers/style_helpers";
 
 const MAX_LABEL_LENGTH = 20;
 const INVERT_SELECTION = "invertSelection";

@@ -9,7 +9,7 @@ import { capitalCase } from "change-case";
 import { TrendingObj } from "fedialgo";
 
 import { accordionBody } from "./FilterAccordionSection";
-import { headerFont, roundedBox } from "./WeightSetter";
+import { headerFont, roundedBox } from "../helpers/style_helpers";
 
 export const LINK_FONT_SIZE = 16;
 export type TrendingListObj = TrendingObj | string;

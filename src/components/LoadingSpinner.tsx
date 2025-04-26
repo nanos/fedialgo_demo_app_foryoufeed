@@ -5,8 +5,8 @@ import React, { CSSProperties } from 'react';
 import Spinner from 'react-bootstrap/esm/Spinner';
 
 interface LoadingSpinnerProps {
-    message?: string,
     isFullPage?: boolean,
+    message?: string,
     style?: CSSProperties,
 };
 

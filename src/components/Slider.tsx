@@ -5,8 +5,6 @@ import React, { ChangeEvent, CSSProperties } from 'react';
 
 import Form from 'react-bootstrap/esm/Form';
 
-export type ChangeHandler = (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
-
 export const DEFAULT_STEP_SIZE = 0.02;
 
 interface SliderProps {
@@ -14,7 +12,7 @@ interface SliderProps {
     label: string;
     minValue: number;
     maxValue: number;
-    onChange: ChangeHandler;
+    onChange: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
     stepSize?: number;
     value: number;
 };
@@ -61,8 +59,8 @@ export default function Slider(props: SliderProps) {
                         min={minValue}
                         max={maxValue}
                         onChange={onChange}
-                        style={{width: '100%'}}
                         step={step}
+                        style={{width: '100%'}}
                         value={value}
                     />
                 </div>

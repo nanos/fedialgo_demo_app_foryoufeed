@@ -1,3 +1,6 @@
+/*
+ * Reusable CSS.
+ */
 import { CSSProperties } from "react";
 
 
@@ -6,4 +9,32 @@ export const CRYPTADAMUS_ICON_URL = "https://media.universeodon.com/accounts/ava
 export const globalFont: CSSProperties = {
     color: "black",
     fontFamily: "Tahoma, Geneva, sans-serif",
+};
+
+export const headerFont: CSSProperties = {
+    ...globalFont,
+    fontSize: 15,
+    fontWeight: 800,
+    marginLeft: "15px",
+    marginBottom: "0px",
+    marginTop: "0px",
+};
+
+export const roundedBox: CSSProperties = {
+    borderRadius: "25px",
+    background: "lightgrey",
+    paddingLeft: "30px",
+    paddingRight: "30px",
+    paddingBottom: "13px",
+    paddingTop: "20px",
+};
+
+export const titleStyle: CSSProperties = {
+    ...globalFont,
+    fontSize: 17,
+    fontWeight: "bold",
+    marginBottom: "5px",
+    marginLeft: "5px",
+    marginTop: "0px",
+    textDecoration: "underline",
 };

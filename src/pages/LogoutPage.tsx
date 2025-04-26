@@ -6,9 +6,7 @@ import { useAuthContext } from '../hooks/useAuth';
 export default function LogoutPage() {
     const { logout } = useAuthContext();
 
-    useEffect(() => {
-        logout();
-    }, [])
+    useEffect(() => logout(), [])
 
     return (
         <div>

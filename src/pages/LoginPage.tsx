@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { usePersistentState } from "react-persistent-state"
 
 import Button from 'react-bootstrap/esm/Button';
@@ -9,13 +9,6 @@ import { stringifyQuery } from 'ufo'
 import { useLocalStorage, AppStorage } from "../hooks/useLocalStorage";
 
 const DEFAULT_MASTODON_SERVER = "universeodon.com";  // Home of George Takei!
-
-const PREVIEW_IMAGE_STYLE = {
-    border: "5px solid #DDD",
-    borderRadius: "12px",
-    boxShadow: "3px 3px 5px black",
-    maxHeight: "550px",
-};
 
 
 export default function LoginPage() {
@@ -55,7 +48,7 @@ export default function LoginPage() {
             flexDirection: 'column',
             justifyContent: "center",
         }}>
-            <img src={"/assets/Showcase.png"} style={PREVIEW_IMAGE_STYLE}/>
+            <img src={"/assets/Showcase.png"} style={previewImage}/>
 
             <div>
                 <p style={{ lineHeight: 1.3, marginBottom: "10px", marginTop: "10px", textAlign: "center" }}>
@@ -86,4 +79,12 @@ export default function LoginPage() {
             </div>
         </div>
     );
+};
+
+
+const previewImage: CSSProperties = {
+    border: "5px solid #DDD",
+    borderRadius: "12px",
+    boxShadow: "3px 3px 5px black",
+    maxHeight: "550px",
 };

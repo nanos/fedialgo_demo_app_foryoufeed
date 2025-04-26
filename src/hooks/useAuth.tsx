@@ -1,3 +1,6 @@
+/*
+ * Authorization context for the app.
+ */
 import React, { PropsWithChildren } from "react";
 import { createContext, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";

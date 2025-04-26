@@ -43,7 +43,6 @@ const ACTION_ICONS = {
     Score: 'balance-scale',
 };
 
-
 interface StatusComponentProps {
     api: mastodon.rest.Client,
     setError: (error: string) => void,
