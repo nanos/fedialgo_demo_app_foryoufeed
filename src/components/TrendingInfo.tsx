@@ -102,7 +102,9 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                             sectionName="Servers That Were Scraped"
                             infoTxt={(server) => {
                                 const serverInfo = algorithm.mastodonServers[server as string];
-                                return `MAU: ${serverInfo.serverMAU.toLocaleString()}, followed pct of MAU: ${serverInfo.followedPctOfMAU.toFixed(3)}%`;
+                                const info = [`MAU: ${serverInfo.serverMAU.toLocaleString()}`];
+                                info.push(`followed pct of MAU: ${serverInfo.followedPctOfMAU.toFixed(3)}%`);
+                                return info.join(', ');
                             }}
                             linkText={(server) => server as string}
                             linkUrl={(server) => `https://${server}`}
