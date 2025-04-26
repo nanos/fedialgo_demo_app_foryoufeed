@@ -1,7 +1,7 @@
 /*
  * Render a Status, also known as a Toot.
  */
-import React, { CSSProperties } from "react";
+import React, { act, CSSProperties } from "react";
 
 import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
@@ -20,33 +20,34 @@ import { User } from '../types';
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
-const BOOKMARK = 'bookmark';
-const FAVORITE = 'favourite';
-const RETOOT = 'reblog';
+
+enum ButtonAction {
+    Bookmark = 'bookmark',
+    Favourite = 'favourite',
+    Reblog = 'reblog',
+    Reply = 'reply',
+    Score = 'score',
+};
 
 const ACTION_NAMES = {
-    [BOOKMARK]: {
-        booleanName: `${BOOKMARK}ed`,
-        countName: `${BOOKMARK}ed`,
+    [ButtonAction.Bookmark]: {
+        booleanName: `${ButtonAction.Bookmark}ed`,
     },
-    [FAVORITE]: {
-        booleanName: `${FAVORITE}d`,
-        countName: 'favouritesCount',
+    [ButtonAction.Favourite]: {
+        booleanName: `${ButtonAction.Favourite}d`,
+        countName: `${ButtonAction.Favourite}sCount`,
     },
-    [RETOOT]: {
+    [ButtonAction.Reblog]: {
         booleanName: 'reblogged',
         countName: 'reblogsCount',
     }
 };
 
-// FontAwesome icons for the action buttons
+// FontAwesome icons for the action buttons (defaults to the action name)
 const ACTION_ICONS = {
-    Bookmark: 'bookmark',
-    Favorite: 'star',
-    Open: 'link',
-    Reply: 'reply',
-    Retoot: 'retweet',
-    Score: 'balance-scale',
+    [ButtonAction.Favourite]: 'star',
+    [ButtonAction.Reblog]: 'retweet',
+    [ButtonAction.Score]: 'balance-scale',
 };
 
 interface StatusComponentProps {
@@ -65,14 +66,17 @@ export default function StatusComponent(props: StatusComponentProps) {
     const originalStatus: Toot = props.status.reblog ? props.status : null;
     const hasAttachments = status.mediaAttachments.length > 0;
     const browseToToot = async (e: React.MouseEvent) => await openToot(status, e);
-
     // State variables
-    const [error, _setError] = React.useState<string>("");
-    const [bookmarked, setBookmarked] = React.useState<boolean>(status.bookmarked);
-    const [favourited, setFavourited] = React.useState<boolean>(status.favourited);
-    const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
-    const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); // idx of the mediaAttachment to show
+    // idx of the mediaAttachment to show in the media inspection modal (-1 means no modal)
+    const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1);
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
+    const [error, _setError] = React.useState<string>("");
+
+    const actionFxns = {
+        [ButtonAction.Bookmark]: React.useState<boolean>(status.bookmarked),
+        [ButtonAction.Favourite]: React.useState<boolean>(status.favourited),
+        [ButtonAction.Reblog]: React.useState<boolean>(status.reblogged),
+    };
 
     // Increase mediaInspectionModalIdx on Right Arrow
     React.useEffect(() => {
@@ -97,13 +101,24 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Make a status button (reply, reblog, favourite, etc)
     const makeButton = (
-        className: string,
-        label: string,
-        onClick: (e?: React.MouseEvent) => void,
+        label: ButtonAction,
         buttonText: number | string | null = null,
     ): React.ReactElement => {
-        const fontAwesomeClassName = `fa fa-${ACTION_ICONS[label]} fa-fw`;
+        const fontAwesomeClassName = `fa fa-${ACTION_ICONS[label] || label} fa-fw`;
+        let className = ACTION_ICON_BASE_CLASS;
         let innerSpan = <></>;
+        let buttonAction;
+
+        if (label == ButtonAction.Score) {
+            className = ICON_BUTTON_CLASS;
+            buttonAction = showScore;
+        } else if (label == ButtonAction.Reply) {
+            buttonAction = browseToToot;
+        } else if (actionFxns[label]) {
+            // If the action is a boolean (fave, reblog, bookmark) then set the className to active or inactive
+            className += actionFxns[label][0] ? " active activate" : " deactivate";
+            buttonAction = performAction(label);
+        }
 
         if (buttonText || buttonText === 0) {
             innerSpan = (
@@ -122,7 +137,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 aria-hidden="false"
                 aria-label={label}
                 className={className}
-                onClick={onClick}
+                onClick={buttonAction}
                 style={buttonStyle}
                 title={label}
                 type="button"
@@ -134,31 +149,20 @@ export default function StatusComponent(props: StatusComponentProps) {
     };
 
     // Returns a function that's called when state changes for faves and retoots
-    const performAction = (actionName: string) => {
+    const performAction = (actionName: ButtonAction) => {
         return () => {
             const actionWords = ACTION_NAMES[actionName];
             const startingCount = status[actionWords.countName] == true ? 1 : (status[actionWords.countName] || 0);
             const startingState = !!status[actionWords.booleanName];
+            const updateStateFxn = actionFxns[actionName][1];
             const newState = !startingState;
-            let updateStateFxn;
-
-            if (actionName == BOOKMARK) {
-                updateStateFxn = setBookmarked;
-            } else if (actionName == FAVORITE) {
-                updateStateFxn = setFavourited;
-            } else if (actionName == RETOOT) {
-                updateStateFxn = setReblogged;
-            } else {
-                console.error(`Unknown actionName: ${actionName}`);
-                return;
-            }
 
             console.log(`${actionName}() toot (startingState: ${startingState}, count: ${startingCount}): `, status);
             // Optimistically update the GUI (we will reset to original state if the server call fails later)
-            updateStateFxn(newState);
             status[actionWords.booleanName] = newState;
+            updateStateFxn(newState);
 
-            if (newState) {
+            if (newState && actionWords.countName) {
                 status[actionWords.countName] = startingCount + 1;
             } else {
                 status[actionWords.countName] = startingCount ? (startingCount - 1) : 0;  // Avoid count going below 0
@@ -169,19 +173,19 @@ export default function StatusComponent(props: StatusComponentProps) {
                     const status_ = await status.resolve();
                     const id = status_.id;
 
-                    if (actionName == BOOKMARK) {
+                    if (actionName == ButtonAction.Bookmark) {
                         if (newState) {
                             await masto.v1.statuses.$select(id).bookmark();
                         } else {
                             await masto.v1.statuses.$select(id).unbookmark();
                         }
-                    } else if (actionName == FAVORITE) {
+                    } else if (actionName == ButtonAction.Favourite) {
                         if (newState) {
                             await masto.v1.statuses.$select(id).favourite();
                         } else {
                             await masto.v1.statuses.$select(id).unfavourite();
                         }
-                    } else if (actionName == RETOOT) {
+                    } else if (actionName == ButtonAction.Reblog) {
                         if (newState) {
                             await masto.v1.statuses.$select(id).reblog();
                         } else {
@@ -357,31 +361,11 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                     {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">
-                        {makeButton(ACTION_ICON_BASE_CLASS, "Reply", browseToToot, status.repliesCount)}
-
-                        {makeButton(
-                            ACTION_ICON_BASE_CLASS + (reblogged ? " active activate" : " deactivate"),
-                            "Retoot",
-                            performAction(RETOOT),
-                            status.reblogsCount,
-                        )}
-
-                        {makeButton(
-                            ACTION_ICON_BASE_CLASS + (favourited ? " active activate" : " deactivate"),
-                            "Favorite",
-                            performAction(FAVORITE),
-                            status.favouritesCount,
-                        )}
-
-                        {makeButton(
-                            ACTION_ICON_BASE_CLASS + (bookmarked ? " active activate" : " deactivate"),
-                            "Bookmark",
-                            performAction(BOOKMARK),
-                            status.bookmarked ? 1 : 0,
-                        )}
-
-                        {makeButton(ICON_BUTTON_CLASS, "Score", showScore, scoreString(status?.scoreInfo?.score))}
-                        {makeButton(ICON_BUTTON_CLASS, "Open", browseToToot)}
+                        {makeButton(ButtonAction.Reply, status.repliesCount)}
+                        {makeButton(ButtonAction.Reblog, status.reblogsCount)}
+                        {makeButton(ButtonAction.Favourite, status.favouritesCount)}
+                        {makeButton(ButtonAction.Bookmark)}
+                        {makeButton(ButtonAction.Score, scoreString(status.scoreInfo?.score))}
                     </div>
                 </div>
             </div>
