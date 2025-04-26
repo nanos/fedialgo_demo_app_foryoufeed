@@ -21,7 +21,7 @@ const DEFAULT_MASTODON_SERVER = "universeodon.com";  // Home of George Takei!
 
 export default function LoginPage() {
     const [server, setServer] = usePersistentState<string>(DEFAULT_MASTODON_SERVER, "server");
-    const [_app, setApp] = useLocalStorage({ keyName: "app", defaultValue: {} } as AppStorage);
+    const [_app, setApp] = useLocalStorage({keyName: "app", defaultValue: {}} as AppStorage);
 
     const loginRedirect = async (): Promise<void> => {
         const sanitizedServer = server.replace("https://", "").replace("http://", "");
@@ -48,13 +48,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className='vh-100' style={{
-            alignItems: 'center',
-            display: 'flex',
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: "center",
-        }}>
+        <div className='vh-100' style={loginContainer}>
             <img src={"/assets/Showcase.png"} style={previewImage}/>
 
             <div>
@@ -88,6 +82,14 @@ export default function LoginPage() {
     );
 };
 
+
+const loginContainer: CSSProperties = {
+    alignItems: 'center',
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: "center",
+};
 
 const previewImage: CSSProperties = {
     border: "5px solid #DDD",
