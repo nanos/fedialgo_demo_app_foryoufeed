@@ -10,7 +10,7 @@ import { capitalCase } from "change-case";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 
-import ActionButton, { ButtonAction } from "./status/action_button";
+import ActionButton, { ButtonAction } from "./status/ActionButton";
 import AttachmentsModal from './status/AttachmentsModal';
 import MultimediaNode from "./status/MultimediaNode";
 import PreviewCard from "./status/PreviewCard";
