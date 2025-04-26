@@ -97,8 +97,8 @@ export default function Feed() {
         try {
             if (!user) throw new Error(`User not set in constructFeed()!`);
             currentUser = await api.v1.accounts.verifyCredentials();
-        } catch (error) {
-            console.warn(`Failed to verifyCredentials() with error:`, error);
+        } catch (err) {
+            console.error(`Failed to verifyCredentials() with error:`, err);
             logout();
             return;
         }
@@ -130,7 +130,7 @@ export default function Feed() {
 
     return (
         <Container fluid style={{height: 'auto'}}>
-            <Modal show={error !== ""} onHide={() => setError("")}>
+            <Modal show={error !== ""} onHide={() => setError("")} style={{color: "black"}}>
                 <Modal.Header closeButton>
                     <Modal.Title>Error</Modal.Title>
                 </Modal.Header>

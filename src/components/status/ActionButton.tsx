@@ -55,12 +55,13 @@ interface ActionButtonProps {
     action: ButtonAction,
     api: mastodon.rest.Client,
     onClick?: (e: React.MouseEvent) => void,
+    setError: (error: string) => void,
     status: Toot,
 };
 
 
 export default function ActionButton(props: ActionButtonProps) {
-    const { action, api, onClick, status } = props;
+    const { action, api, onClick, setError, status } = props;
     const actionInfo = ACTION_INFO[action];
     const label = action == ButtonAction.Score ? "Show Score" : capitalCase(action)
 
@@ -129,12 +130,12 @@ export default function ActionButton(props: ActionButtonProps) {
 
                     console.log(`Successfully changed ${actionName} bool to ${newState}`);
                 } catch (error) {
-                    const msg = `Failed to ${actionName} toot!`;
+                    const msg = `Failed to ${actionName} toot! (${error.message})`;
                     console.error(`${msg} Resetting count to ${status[actionInfo.countName]}`, error);
                     setCurrentState(startingState);
                     status[actionInfo.booleanName] = startingState;
                     if (actionInfo.countName) status[actionInfo.countName] = startingCount;
-                    // _setError(msg);
+                    setError(msg);
                 }
             })();
         };

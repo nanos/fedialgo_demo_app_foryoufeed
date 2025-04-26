@@ -13,5 +13,5 @@ export type User = {
     id: string;
     profilePicture?: string;
     username: string;
-    server: string;
+    server: string;  // homeserver domain
 };

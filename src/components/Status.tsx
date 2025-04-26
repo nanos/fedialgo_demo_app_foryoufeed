@@ -28,17 +28,21 @@ interface StatusComponentProps {
 
 
 export default function StatusComponent(props: StatusComponentProps) {
-    const homeServer = props.user.server;
-    const masto = props.api;
+    const { api, setError } = props;
+    let status: Toot = props.status;
+    let reblogStatus: Toot | null = null;
 
-    const status: Toot = props.status.reblog || props.status;  // If it's a retoot set 'status' to the original toot
-    const originalStatus: Toot = props.status.reblog ? props.status : null;
+    // If it's a retoot set 'status' to the original toot
+    if (status.reblog) {
+        status = status.reblog;
+        reblogStatus = status;
+    }
+
     const hasAttachments = status.mediaAttachments.length > 0;
     const browseToToot = async (e: React.MouseEvent) => await openToot(status, e);
     // idx of the mediaAttachment to show in the media inspection modal (-1 means no modal)
     const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1);
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
-    const [error, _setError] = React.useState<string>("");
 
     // Increase mediaInspectionModalIdx on Right Arrow
     React.useEffect(() => {
@@ -62,7 +66,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Show the score of a toot
     const showScore = async () => {
-        console.log(`showScore() called for toot: `, status, `\noriginalStatus:`, originalStatus);
+        console.log(`showScore() called for toot: `, status, `\noriginalStatus:`, reblogStatus);
         setShowScoreModal(true);
     };
 
@@ -86,6 +90,18 @@ export default function StatusComponent(props: StatusComponentProps) {
         />;
     };
 
+    const buildActionButton = (action: ButtonAction, onClick?: (e: React.MouseEvent) => void) => {
+        return (
+            <ActionButton
+                action={action}
+                api={api}
+                onClick={onClick}
+                setError={setError}
+                status={status}
+            />
+        );
+    };
+
     return (
         <div>
             {hasAttachments && (
@@ -97,19 +113,11 @@ export default function StatusComponent(props: StatusComponentProps) {
 
             <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={status} />
 
-            <Toast autohide delay={3000} show={Boolean(error)}>
-                <Toast.Header>
-                    <strong className="me-auto">Error</strong>
-                </Toast.Header>
-
-                <Toast.Body>{error}</Toast.Body>
-            </Toast>
-
             <div
                 aria-label={`${status.account.displayName}, ${status.account.note} ${status.account.webfingerURI()}`}
                 className="status__wrapper status__wrapper-public focusable"
             >
-                {/* Name of account that reblogged the toot (if it exists) */}
+                {/* Names of accounts that reblogged the toot (if any) */}
                 {status.reblogsBy.length > 0 &&
                     <div className="status__prepend">
                         <div className="status__prepend-icon-wrapper">
@@ -118,13 +126,8 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                         <span>
                             {status.reblogsBy.map((booster, i) => {
-                                const result = reblogger(booster, i);
-
-                                if (i < status.reblogsBy.length - 1) {
-                                    return [result, ', '];
-                                } else {
-                                    return result;
-                                }
+                                const posterLink = reblogger(booster, i);
+                                return i < (status.reblogsBy.length - 1) ? [posterLink, ', '] : posterLink;
                             })} boosted
                         </span>
                     </div>}
@@ -213,11 +216,11 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                     {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">
-                        <ActionButton action={ButtonAction.Reply} api={masto} onClick={browseToToot} status={status}/>
-                        <ActionButton action={ButtonAction.Reblog} api={masto} status={status}/>
-                        <ActionButton action={ButtonAction.Favourite} api={masto} status={status}/>
-                        <ActionButton action={ButtonAction.Bookmark} api={masto} status={status}/>
-                        <ActionButton action={ButtonAction.Score} api={masto} onClick={showScore} status={status}/>
+                        {buildActionButton(ButtonAction.Reply, browseToToot)}
+                        {buildActionButton(ButtonAction.Reblog)}
+                        {buildActionButton(ButtonAction.Favourite)}
+                        {buildActionButton(ButtonAction.Bookmark)}
+                        {buildActionButton(ButtonAction.Reply, showScore)}
                     </div>
                 </div>
             </div>
