@@ -1,6 +1,6 @@
 import React, { CSSProperties} from "react";
 
-import 'react-lazy-load-image-component/src/effects/blur.css';
+import 'react-lazy-load-image-component/src/effects/blur.css';  // For blur effect
 import { GIFV, Toot } from "fedialgo";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
@@ -11,7 +11,7 @@ const VIDEO_HEIGHT = Math.floor(IMAGES_HEIGHT * 1.7);
 interface MultimediaNodeProps {
     status: Toot;
     setMediaInspectionModalIdx: (idx: number) => void;
-}
+};
 
 
 export default function MultimediaNode(props: MultimediaNodeProps): React.ReactElement {
@@ -27,6 +27,9 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
         imageHeight = Math.min(IMAGES_HEIGHT, ...images.map(i => i.meta?.small?.height || IMAGES_HEIGHT));
     }
 
+    // TODO: what is this for?
+    const hiddenCanvas = <canvas className="media-gallery__preview media-gallery__preview--hidden" height="32" width="32"/>
+
     // Make a LazyLoadImage element for displaying an image within a Toot.
     const makeImage = (image: mastodon.v1.MediaAttachment, idx: number): React.ReactElement => {
         return (
@@ -39,12 +42,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
                     width: 1 / status.mediaAttachments.length * 100 + "%"
                 }}
             >
-                {/* TODO: what is this for? */}
-                <canvas
-                    className="media-gallery__preview media-gallery__preview--hidden"
-                    height="32"
-                    width="32"
-                />
+                {hiddenCanvas}
 
                 <LazyLoadImage
                     alt={image.description}
@@ -52,7 +50,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
                     onClick={() => setMediaInspectionModalIdx(idx)}
                     src={image.previewUrl}
                     style={imageStyle}
-                    wrapperProps={{style: {position: "static"}}}  // Required to center properly
+                    wrapperProps={{style: {position: "static"}}}  // Required to center properly with blur
                 />
             </div>
         );
@@ -95,13 +93,8 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
                     }
 
                     return (
-                        <div className="media-gallery__item" key={i} style={videoStyle}>
-                            <canvas
-                                className="media-gallery__preview media-gallery__preview--hidden"
-                                height="32"
-                                width="32"
-                            />
-
+                        <div className="media-gallery__item" key={i} style={videoContainer}>
+                            {hiddenCanvas}
                             {videoTag}
                         </div>
                     );
@@ -127,7 +120,7 @@ const imageStyle: CSSProperties = {
     objectPosition: "top",
 };
 
-const videoStyle: CSSProperties = {
+const videoContainer: CSSProperties = {
     ...fullSize,
     inset: "auto",
 };
