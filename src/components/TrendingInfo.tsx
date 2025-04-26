@@ -38,7 +38,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
 
         return prefixedText(
             toot.contentShortened(MAX_TRENDING_LINK_LEN),
-            ATTACHMENT_PREFIXES[toot.attachmentType()]
+            ATTACHMENT_PREFIXES[toot.attachmentType()] || (toot.card?.url && 'link')
         );
     };
 
