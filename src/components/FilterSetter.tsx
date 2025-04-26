@@ -20,7 +20,7 @@ const MAX_LABEL_LENGTH = 20;
 const INVERT_SELECTION = "invertSelection";
 const SORT_KEYS = "sortByCount";
 const CAPITALIZED_LABELS = [INVERT_SELECTION, SORT_KEYS].concat(Object.values(TypeFilterName) as string[]);
-
+// Filtered filters are those that require a minimum number of toots to appear as filter options
 const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
 const MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
 const MIN_TOOT_MSG = ` with at least ${MIN_TOOTS_TO_APPEAR_IN_FILTER} toots`;

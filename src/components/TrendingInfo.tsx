@@ -10,9 +10,9 @@ import {
     TheAlgorithm,
     Toot,
     TrendingLink,
+    TrendingObj,
     TrendingTag,
     TrendingWithHistory,
-    TrendingObj,
 } from "fedialgo";
 
 import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";

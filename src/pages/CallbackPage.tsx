@@ -6,21 +6,10 @@ import React, { useEffect } from 'react';
 import { createRestAPIClient as loginToMastodon } from "masto"
 import { useSearchParams } from 'react-router-dom';
 
+import { OAUTH_SCOPE_STR } from './LoginPage';
 import { useAppStorage } from '../hooks/useLocalStorage';
 import { useAuthContext } from '../hooks/useAuth';
 import { User } from '../types';
-
-// Permissions this app will request from the user's mastodon account.
-const OAUTH_SCOPES = [
-    "read:accounts",
-    "read:favourites",
-    "read:follows",
-    "read:search",
-    "read:statuses",
-    "write:favourites",
-    "write:follows",
-    "write:statuses",
-];
 
 
 export default function CallbackPage() {
@@ -54,7 +43,7 @@ export default function CallbackPage() {
         body.append('client_secret', app.clientSecret)
         body.append('redirect_uri', app.redirectUri)
         body.append('code', code);
-        body.append('scope', OAUTH_SCOPES.join(" "));
+        body.append('scope', OAUTH_SCOPE_STR);
 
         const oAuthResult = await fetch(`${app.website}/oauth/token`, {method: 'POST', body});
         const json = await oAuthResult.json()

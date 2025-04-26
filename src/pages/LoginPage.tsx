@@ -6,8 +6,16 @@ import Form from 'react-bootstrap/esm/Form';
 import { createRestAPIClient } from 'masto';
 import { stringifyQuery } from 'ufo'
 
-import { useLocalStorage, AppStorage } from "../hooks/useLocalStorage";
+import { AppStorage, useLocalStorage } from "../hooks/useLocalStorage";
 
+const OAUTH_SCOPES = [
+    "read",
+    "write:favourites",
+    "write:statuses",
+    "write:follows",
+];
+
+export const OAUTH_SCOPE_STR = OAUTH_SCOPES.join(" ");
 const DEFAULT_MASTODON_SERVER = "universeodon.com";  // Home of George Takei!
 
 
@@ -18,13 +26,12 @@ export default function LoginPage() {
     const loginRedirect = async (): Promise<void> => {
         const sanitizedServer = server.replace("https://", "").replace("http://", "");
         const api = await createRestAPIClient({url: `https://${sanitizedServer}`});
-        const scope = "read write:favourites write:statuses write:follows";
         const redirectUri = window.location.origin + "/callback";
 
         const app = await api.v1.apps.create({
             clientName: "ForYouFeed",
             redirectUris: redirectUri,
-            scopes: scope,
+            scopes: OAUTH_SCOPE_STR,
             website: `https://${sanitizedServer}`,
         });
 
@@ -34,7 +41,7 @@ export default function LoginPage() {
             client_id: app.clientId,
             redirect_uri: redirectUri,
             response_type: 'code',
-            scope: scope,
+            scope: OAUTH_SCOPE_STR,
         });
 
         window.location.href = `https://${sanitizedServer}/oauth/authorize?${query}`;

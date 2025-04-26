@@ -5,10 +5,10 @@ import React, { CSSProperties } from "react";
 
 import parse from 'html-react-parser';
 import Toast from 'react-bootstrap/Toast';
+import { Account, Toot } from "fedialgo";
 import { capitalCase } from "change-case";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
-import { Account, Toot } from "fedialgo";
 
 import AttachmentsModal from './AttachmentsModal';
 import MultimediaNode from "./MultimediaNode";
