@@ -126,31 +126,27 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                         <span>
                             {status.reblogsBy.map((booster, i) => {
-                                const posterLink = reblogger(booster, i);
-                                return i < (status.reblogsBy.length - 1) ? [posterLink, ', '] : posterLink;
+                                const rebloggerLink = reblogger(booster, i);
+                                return i < (status.reblogsBy.length - 1) ? [rebloggerLink, ', '] : rebloggerLink;
                             })} boosted
                         </span>
                     </div>}
 
                 <div className="status">
-                    {/* Top right icons + timestamp that link to the toot */}
+                    {/* Top bar with account and info icons */}
                     <div className="status__info">
-                        <a
-                            className="status__relative-time"
-                            href={status.uri}
-                            rel="noopener noreferrer"
-                            target="_blank"
-                        >
+                        {/* Top right icons + timestamp that link to the toot */}
+                        <a className="status__relative-time" href={status.uri} rel="noreferrer" target="_blank">
                             <span className="status__visibility-icon">
-                                {status.isDM()
-                                    ? buildIcon("lock", "Direct Message", "purple")
-                                    : buildIcon("globe", "Public")}
-
                                 {status.inReplyToAccountId && buildIcon("reply", "Reply", "blue")}
                                 {status.containsTagsMsg() && buildIcon("hashtag", status.containsTagsMsg())}
                                 {status.trendingRank > 0 && buildIcon("fire", "Trending Toot", "red")}
                                 {status.trendingLinks.length > 0 && buildIcon("link", "Trending Link", "orange")}
                                 {status.containsUserMention() && buildIcon("bolt", "You're Mentioned", "green")}
+
+                                {status.isDM()
+                                    ? buildIcon("lock", "Direct Message", "purple")
+                                    : buildIcon("globe", "Public")}
                             </span>
 
                             <time dateTime={status.createdAt} title={status.createdAt}>
@@ -171,17 +167,17 @@ export default function StatusComponent(props: StatusComponentProps) {
                                     <strong key="internalBDI" className="display-name__html">
                                         <a
                                             href={status.account.homserverURL()}
-                                            rel="noopener noreferrer"
-                                            style={{ color: "white", textDecoration: "none" }}
+                                            rel="noreferrer"
+                                            style={accountLink}
                                             target="_blank"
                                         >
                                             {parse(status.account.displayNameWithEmojis())}
                                         </a>
 
-                                        {status.account.fields.filter(f => f.verifiedAt).map(f => (
+                                        {status.account.fields.filter(f => f.verifiedAt).map((f, i) => (
                                             <span
                                                 className="verified-badge"
-                                                key={f.name}
+                                                key={`${f.name}_${i}`}
                                                 style={{ color: "lightblue", padding: "0px 5px" }}
                                                 title={f.value.replace(/<[^>]*>?/gm, '')}
                                             >
@@ -231,4 +227,9 @@ export default function StatusComponent(props: StatusComponentProps) {
 
 const baseIconStyle: CSSProperties = {
     marginRight: "4px",
+};
+
+const accountLink: CSSProperties = {
+    color: "white",
+    textDecoration: "none"
 };
