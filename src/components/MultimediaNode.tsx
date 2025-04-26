@@ -114,7 +114,9 @@ const fullSize: CSSProperties = {
 
 const imageStyle: CSSProperties = {
     ...fullSize,
-    borderRadius: "5px",
+    backgroundColor: "black",
+    borderRadius: "15px",
+    // failed attempt at fake border
     // filter: "drop-shadow(0 -5px 0 gray) drop-shadow(0 5px 0 gray) drop-shadow(-5px 0 0 gray) drop-shadow(5px 0 0 gray)",
     objectFit: "contain",
     objectPosition: "top",
