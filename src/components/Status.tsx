@@ -20,12 +20,17 @@ import { User } from '../types';
 
 const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
 const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
+const BOOKMARK = 'bookmark';
 const FAVORITE = 'favourite';
 const RETOOT = 'reblog';
 
 const ACTION_NAMES = {
+    [BOOKMARK]: {
+        booleanName: `${BOOKMARK}ed`,
+        countName: `${BOOKMARK}ed`,
+    },
     [FAVORITE]: {
-        booleanName: 'favourited',
+        booleanName: `${FAVORITE}d`,
         countName: 'favouritesCount',
     },
     [RETOOT]: {
@@ -36,6 +41,7 @@ const ACTION_NAMES = {
 
 // FontAwesome icons for the action buttons
 const ACTION_ICONS = {
+    Bookmark: 'bookmark',
     Favorite: 'star',
     Open: 'link',
     Reply: 'reply',
@@ -62,6 +68,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // State variables
     const [error, _setError] = React.useState<string>("");
+    const [bookmarked, setBookmarked] = React.useState<boolean>(status.bookmarked);
     const [favourited, setFavourited] = React.useState<boolean>(status.favourited);
     const [reblogged, setReblogged] = React.useState<boolean>(status.reblogged);
     const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1); // idx of the mediaAttachment to show
@@ -130,12 +137,23 @@ export default function StatusComponent(props: StatusComponentProps) {
     const performAction = (actionName: string) => {
         return () => {
             const actionWords = ACTION_NAMES[actionName];
-            const startingCount = status[actionWords.countName] || 0;
+            const startingCount = status[actionWords.countName] == true ? 1 : (status[actionWords.countName] || 0);
             const startingState = !!status[actionWords.booleanName];
             const newState = !startingState;
-            const updateStateFxn = actionName == FAVORITE ? setFavourited : setReblogged;
-            console.log(`${actionName}() toot (startingState: ${startingState}, count: ${startingCount}): `, status);
+            let updateStateFxn;
 
+            if (actionName == BOOKMARK) {
+                updateStateFxn = setBookmarked;
+            } else if (actionName == FAVORITE) {
+                updateStateFxn = setFavourited;
+            } else if (actionName == RETOOT) {
+                updateStateFxn = setReblogged;
+            } else {
+                console.error(`Unknown actionName: ${actionName}`);
+                return;
+            }
+
+            console.log(`${actionName}() toot (startingState: ${startingState}, count: ${startingCount}): `, status);
             // Optimistically update the GUI (we will reset to original state if the server call fails later)
             updateStateFxn(newState);
             status[actionWords.booleanName] = newState;
@@ -151,7 +169,13 @@ export default function StatusComponent(props: StatusComponentProps) {
                     const status_ = await status.resolve();
                     const id = status_.id;
 
-                    if (actionName == FAVORITE) {
+                    if (actionName == BOOKMARK) {
+                        if (newState) {
+                            await masto.v1.statuses.$select(id).bookmark();
+                        } else {
+                            await masto.v1.statuses.$select(id).unbookmark();
+                        }
+                    } else if (actionName == FAVORITE) {
                         if (newState) {
                             await masto.v1.statuses.$select(id).favourite();
                         } else {
@@ -347,6 +371,13 @@ export default function StatusComponent(props: StatusComponentProps) {
                             "Favorite",
                             performAction(FAVORITE),
                             status.favouritesCount,
+                        )}
+
+                        {makeButton(
+                            ACTION_ICON_BASE_CLASS + (bookmarked ? " active activate" : " deactivate"),
+                            "Bookmark",
+                            performAction(BOOKMARK),
+                            status.bookmarked ? 1 : 0,
                         )}
 
                         {makeButton(ICON_BUTTON_CLASS, "Score", showScore, scoreString(status?.scoreInfo?.score))}
