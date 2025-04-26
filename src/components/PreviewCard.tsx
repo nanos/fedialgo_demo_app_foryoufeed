@@ -1,5 +1,6 @@
 /*
- * React component to display preview cards: https://docs.joinmastodon.org/entities/PreviewCard/
+ * React component to display preview cards for links.
+ * https://docs.joinmastodon.org/entities/PreviewCard/
  */
 import React, { CSSProperties } from 'react';
 
@@ -39,7 +40,7 @@ export default function PreviewCard({ card }: { card: mastodon.v1.PreviewCard })
                     [{card.providerName}]
                 </span> */}
 
-                [{card.providerName || extractDomain(card.url)}] {parse(card.title)}
+                {parse(card.title)} [{card.providerName || extractDomain(card.url)}]
 
                 <p className='status-card__description'>
                     {card.description.slice(0, MAX_STATUS_CARD_LEN)}
