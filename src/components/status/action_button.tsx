@@ -61,12 +61,11 @@ interface ActionButtonProps {
 export default function ActionButton(props: ActionButtonProps) {
     const { action, api, onClick, status } = props;
     const actionInfo = ACTION_INFO[action];
-    const fontAwesomeClassName = `fa fa-${actionInfo['icon']} fa-fw`;
-    const [currentState, setCurrentState] = React.useState<boolean>(status[actionInfo.booleanName]);
+    const label = action == ButtonAction.Score ? "Show Score" : capitalCase(action)
 
-    let buttonText;
+    const [currentState, setCurrentState] = React.useState<boolean>(status[actionInfo.booleanName]);
     let className = ACTION_ICON_BASE_CLASS;
-    let innerSpan = <></>;
+    let buttonText;
 
     if (actionInfo.countName) {
         buttonText = status[actionInfo.countName];
@@ -77,11 +76,12 @@ export default function ActionButton(props: ActionButtonProps) {
     // If the action is a boolean (fave, reblog, bookmark) set the className active/inactive
     if (actionInfo.booleanName) {
         className += currentState ? " active activate" : " deactivate";
-    } else if (action == ButtonAction.Score) {
-        className = ICON_BUTTON_CLASS;  // TODO: is this necessary?
     }
+    // else if (action == ButtonAction.Score) {
+    //     className = ICON_BUTTON_CLASS;  // TODO: is this necessary?
+    // }
 
-    // Returns a function that's called when state changes for faves and retoots
+    // Returns a function that's called when state changes for faves, bookmarks, retoots
     const performAction = (actionName: ButtonAction, actionInfo: ActionInfo) => {
         return () => {
             const startingCount = status[actionInfo.countName] == true ? 1 : (status[actionInfo.countName] || 0);
@@ -132,37 +132,33 @@ export default function ActionButton(props: ActionButtonProps) {
                     console.error(`${msg} Resetting count to ${status[actionInfo.countName]}`, error);
                     setCurrentState(startingState);
                     status[actionInfo.booleanName] = startingState;
-                    status[actionInfo.countName] = startingCount;
+                    if (actionInfo.countName) status[actionInfo.countName] = startingCount;
                     // _setError(msg);
                 }
             })();
         };
     };
 
-    if (buttonText || buttonText === 0) {
-        innerSpan = (
-            <span className="icon-button__counter">
-                <span className="animated-number">
-                    <span style={{position: "static"}}>
-                        <span>{buttonText}</span>
-                    </span>
-                </span>
-            </span>
-        );
-    }
-
     return (
         <button
             aria-hidden="false"
-            aria-label={action}
+            aria-label={label}
             className={className}
             onClick={onClick || performAction(action, actionInfo)}
             style={buttonStyle}
-            title={action}
+            title={label}
             type="button"
         >
-            <i aria-hidden="true" className={fontAwesomeClassName} />
-            {innerSpan}
+            <i aria-hidden="true" className={`fa fa-${actionInfo['icon']} fa-fw`} />
+
+            {(buttonText || buttonText === 0) && (
+                <span className="icon-button__counter">
+                    <span className="animated-number">
+                        <span style={{position: "static"}}>
+                            <span>{buttonText}</span>
+                        </span>
+                    </span>
+                </span>)}
         </button>
     );
 };
