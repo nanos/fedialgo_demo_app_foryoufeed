@@ -29,44 +29,38 @@ interface StatusComponentProps {
 
 export default function StatusComponent(props: StatusComponentProps) {
     const { api, setError } = props;
-    let status: Toot = props.status;
-    let reblogStatus: Toot | null = null;
+    // If it's a retoot set 'toot' to the original toot
+    let toot = props.status.reblog || props.status;
+    let retoot = props.status.reblog ? props.status : null;
+    const hasAttachments = toot.mediaAttachments.length > 0;
 
-    // If it's a retoot set 'status' to the original toot
-    if (status.reblog) {
-        status = status.reblog;
-        reblogStatus = status;
-    }
-
-    const hasAttachments = status.mediaAttachments.length > 0;
-    const browseToToot = async (e: React.MouseEvent) => await openToot(status, e);
     // idx of the mediaAttachment to show in the media inspection modal (-1 means no modal)
-    const [mediaInspectionModalIdx, setMediaInspectionModalIdx] = React.useState<number>(-1);
+    const [mediaInspectionIdx, setMediaInspectionIdx] = React.useState<number>(-1);
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
 
-    // Increase mediaInspectionModalIdx on Right Arrow
+    // Increase mediaInspectionIdx on Right Arrow
     React.useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent): void => {
-            if (mediaInspectionModalIdx === -1) return;
-            let newIndex = mediaInspectionModalIdx;
+            if (mediaInspectionIdx === -1) return;
+            let newIndex = mediaInspectionIdx;
 
             if (e.key === "ArrowRight") {
                 newIndex += 1;
             } else if (e.key === "ArrowLeft") {
                 newIndex -= 1;
-                if (newIndex < 0) newIndex = status.mediaAttachments.length - 1;
+                if (newIndex < 0) newIndex = toot.mediaAttachments.length - 1;
             }
 
-            setMediaInspectionModalIdx(newIndex % status.mediaAttachments.length);
+            setMediaInspectionIdx(newIndex % toot.mediaAttachments.length);
         };
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [mediaInspectionModalIdx])
+    }, [mediaInspectionIdx])
 
     // Show the score of a toot
     const showScore = async () => {
-        console.log(`showScore() called for toot: `, status, `\noriginalStatus:`, reblogStatus);
+        console.log(`showScore() called for toot: `, toot, `\noriginalStatus:`, retoot);
         setShowScoreModal(true);
     };
 
@@ -80,7 +74,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     const buildIcon = (iconName: string, title?: string, color?: string): React.ReactNode => {
         if (iconName == "hashtag") {
-            color ||= status.trendingTags.length ? 'orange' : 'yellow';
+            color ||= toot.trendingTags.length ? 'orange' : 'yellow';
         }
 
         return <i
@@ -97,7 +91,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 api={api}
                 onClick={onClick}
                 setError={setError}
-                status={status}
+                status={toot}
             />
         );
     };
@@ -106,28 +100,28 @@ export default function StatusComponent(props: StatusComponentProps) {
         <div>
             {hasAttachments && (
                 <AttachmentsModal
-                    mediaInspectionModalIdx={mediaInspectionModalIdx}
-                    setMediaInspectionModalIdx={setMediaInspectionModalIdx}
-                    toot={status}
+                    mediaInspectionIdx={mediaInspectionIdx}
+                    setMediaInspectionIdx={setMediaInspectionIdx}
+                    toot={toot}
                 />)}
 
-            <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={status} />
+            <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={toot} />
 
             <div
-                aria-label={`${status.account.displayName}, ${status.account.note} ${status.account.webfingerURI()}`}
+                aria-label={`${toot.account.displayName}, ${toot.account.note} ${toot.account.webfingerURI()}`}
                 className="status__wrapper status__wrapper-public focusable"
             >
                 {/* Names of accounts that reblogged the toot (if any) */}
-                {status.reblogsBy.length > 0 &&
+                {toot.reblogsBy.length > 0 &&
                     <div className="status__prepend">
                         <div className="status__prepend-icon-wrapper">
                             <i className="fa fa-retweet status__prepend-icon fa-fw" />
                         </div>
 
                         <span>
-                            {status.reblogsBy.map((booster, i) => {
+                            {toot.reblogsBy.map((booster, i) => {
                                 const rebloggerLink = reblogger(booster, i);
-                                return i < (status.reblogsBy.length - 1) ? [rebloggerLink, ', '] : rebloggerLink;
+                                return i < (toot.reblogsBy.length - 1) ? [rebloggerLink, ', '] : rebloggerLink;
                             })} boosted
                         </span>
                     </div>}
@@ -136,29 +130,29 @@ export default function StatusComponent(props: StatusComponentProps) {
                     {/* Top bar with account and info icons */}
                     <div className="status__info">
                         {/* Top right icons + timestamp that link to the toot */}
-                        <a className="status__relative-time" href={status.uri} rel="noreferrer" target="_blank">
+                        <a className="status__relative-time" href={toot.uri} rel="noreferrer" target="_blank">
                             <span className="status__visibility-icon">
-                                {status.inReplyToAccountId && buildIcon("reply", "Reply", "blue")}
-                                {status.containsTagsMsg() && buildIcon("hashtag", status.containsTagsMsg())}
-                                {status.trendingRank > 0 && buildIcon("fire", "Trending Toot", "red")}
-                                {status.trendingLinks.length > 0 && buildIcon("link", "Trending Link", "orange")}
-                                {status.containsUserMention() && buildIcon("bolt", "You're Mentioned", "green")}
+                                {toot.inReplyToAccountId && buildIcon("reply", "Reply", "blue")}
+                                {toot.containsTagsMsg() && buildIcon("hashtag", toot.containsTagsMsg())}
+                                {toot.trendingRank > 0 && buildIcon("fire", "Trending Toot", "red")}
+                                {toot.trendingLinks.length > 0 && buildIcon("link", "Trending Link", "orange")}
+                                {toot.containsUserMention() && buildIcon("bolt", "You're Mentioned", "green")}
 
-                                {status.isDM()
+                                {toot.isDM()
                                     ? buildIcon("lock", "Direct Message", "purple")
                                     : buildIcon("globe", "Public")}
                             </span>
 
-                            <time dateTime={status.createdAt} title={status.createdAt}>
-                                {timeString(status.createdAt)}
+                            <time dateTime={toot.createdAt} title={toot.createdAt}>
+                                {timeString(toot.createdAt)}
                             </time>
                         </a>
 
                         {/* Account name + avatar */}
-                        <div title={status.account.webfingerURI()} className="status__display-name">
+                        <div title={toot.account.webfingerURI()} className="status__display-name">
                             <div className="status__avatar">
                                 <div className="account__avatar" style={{ width: "46px", height: "46px" }}>
-                                    <LazyLoadImage src={status.account.avatar} alt={`${status.account.webfingerURI()}`} />
+                                    <LazyLoadImage src={toot.account.avatar} alt={`${toot.account.webfingerURI()}`} />
                                 </div>
                             </div>
 
@@ -166,15 +160,15 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 <bdi>
                                     <strong key="internalBDI" className="display-name__html">
                                         <a
-                                            href={status.account.homserverURL()}
+                                            href={toot.account.homserverURL()}
                                             rel="noreferrer"
                                             style={accountLink}
                                             target="_blank"
                                         >
-                                            {parse(status.account.displayNameWithEmojis())}
+                                            {parse(toot.account.displayNameWithEmojis())}
                                         </a>
 
-                                        {status.account.fields.filter(f => f.verifiedAt).map((f, i) => (
+                                        {toot.account.fields.filter(f => f.verifiedAt).map((f, i) => (
                                             <span
                                                 className="verified-badge"
                                                 key={`${f.name}_${i}`}
@@ -188,7 +182,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 </bdi>
 
                                 <span key="acctdisplay" className="display-name__account">
-                                    @{status.account.webfingerURI()}
+                                    @{toot.account.webfingerURI()}
                                 </span>
                             </span>
                         </div>
@@ -197,26 +191,21 @@ export default function StatusComponent(props: StatusComponentProps) {
                     {/* Text of the toot */}
                     <div className="status__content status__content--with-action" >
                         <div className="status__content__text status__content__text--visible translate" lang="en">
-                            {parse(status.contentWithEmojis())}
+                            {parse(toot.contentWithEmojis())}
                         </div>
                     </div>
 
-                    {/* Preview card image and text handling */}
-                    {status.card && !hasAttachments && <PreviewCard card={status.card as mastodon.v1.PreviewCard} />}
-
-                    {hasAttachments &&
-                        <MultimediaNode
-                            setMediaInspectionModalIdx={setMediaInspectionModalIdx}
-                            status={status}
-                        />}
+                    {/* Preview card and attachment display */}
+                    {toot.card && !hasAttachments && <PreviewCard card={toot.card as mastodon.v1.PreviewCard} />}
+                    {hasAttachments && <MultimediaNode setMediaInspectionIdx={setMediaInspectionIdx} status={toot}/>}
 
                     {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">
-                        {buildActionButton(ButtonAction.Reply, browseToToot)}
+                        {buildActionButton(ButtonAction.Reply, async (e: React.MouseEvent) => await openToot(toot, e))}
                         {buildActionButton(ButtonAction.Reblog)}
                         {buildActionButton(ButtonAction.Favourite)}
                         {buildActionButton(ButtonAction.Bookmark)}
-                        {buildActionButton(ButtonAction.Reply, showScore)}
+                        {buildActionButton(ButtonAction.Score, showScore)}
                     </div>
                 </div>
             </div>

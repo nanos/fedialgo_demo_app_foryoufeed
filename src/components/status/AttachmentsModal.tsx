@@ -8,30 +8,24 @@ import { MediaCategory, Toot, VIDEO_TYPES } from "fedialgo";
 import { Modal } from 'react-bootstrap';
 
 interface AttachmentsModalProps {
-    mediaInspectionModalIdx: number;
-    setMediaInspectionModalIdx: (mediaInspectionModalIdx: number) => void;
+    mediaInspectionIdx: number;
+    setMediaInspectionIdx: (mediaInspectionIdx: number) => void;
     toot: Toot;
 };
 
 
 export default function AttachmentsModal(props: AttachmentsModalProps) {
-    const { mediaInspectionModalIdx, setMediaInspectionModalIdx, toot } = props;
-    const shouldShowModal = mediaInspectionModalIdx >= 0;
+    const { mediaInspectionIdx, setMediaInspectionIdx, toot } = props;
+    const shouldShowModal = mediaInspectionIdx >= 0;
     let element: JSX.Element = <></>;
 
     if (shouldShowModal) {
-        const media = toot.mediaAttachments[mediaInspectionModalIdx];
+        const media = toot.mediaAttachments[mediaInspectionIdx];
 
         if (!media?.url) {
-            console.warn(`[AttachmentsModal] Invalid media.url at idx ${mediaInspectionModalIdx}. toot:`, toot);
+            console.warn(`[AttachmentsModal] Invalid media.url at idx ${mediaInspectionIdx}. toot:`, toot);
         } else if (media.type == MediaCategory.IMAGE) {
-            element = (
-                <img
-                    alt={media.description ?? ""}
-                    src={media.url}
-                    width={"100%"}
-                />
-            );
+            element = <img alt={media.description ?? ""} src={media.url} width={"100%"} />;
         } else if (VIDEO_TYPES.includes(media.type)) {
             element = (
                 <video width={"100%"} controls>
@@ -40,20 +34,20 @@ export default function AttachmentsModal(props: AttachmentsModalProps) {
                 </video>
             );
         } else {
-            console.warn(`[AttachmentsModal] Unknown type at toot.mediaAttachments[${mediaInspectionModalIdx}]`, toot);
+            console.warn(`[AttachmentsModal] Unknown type at toot.mediaAttachments[${mediaInspectionIdx}]`, toot);
         }
     }
 
     return (
         <Modal
             fullscreen={'xxl-down'}
-            onHide={() => setMediaInspectionModalIdx(-1)}
+            onHide={() => setMediaInspectionIdx(-1)}
             show={shouldShowModal}
             size={'lg'}
         >
             <Modal.Header closeButton>
-                <Modal.Title>
-                    {parse(toot.content)[100]}         {/* TODO: WTF? */}
+                <Modal.Title style={{color: "black"}}>
+                    {toot.contentShortened()}
                 </Modal.Title>
             </Modal.Header>
 

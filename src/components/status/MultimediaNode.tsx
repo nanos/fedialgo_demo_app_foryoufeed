@@ -10,12 +10,12 @@ const VIDEO_HEIGHT = Math.floor(IMAGES_HEIGHT * 1.7);
 
 interface MultimediaNodeProps {
     status: Toot;
-    setMediaInspectionModalIdx: (idx: number) => void;
+    setMediaInspectionIdx: (idx: number) => void;
 };
 
 
 export default function MultimediaNode(props: MultimediaNodeProps): React.ReactElement {
-    const { status, setMediaInspectionModalIdx } = props;
+    const { status, setMediaInspectionIdx } = props;
     const images = status.imageAttachments();
     const style = {overflow: "hidden"};
     let imageHeight = IMAGES_HEIGHT;
@@ -47,7 +47,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
                 <LazyLoadImage
                     alt={image.description}
                     effect="blur"
-                    onClick={() => setMediaInspectionModalIdx(idx)}
+                    onClick={() => setMediaInspectionIdx(idx)}
                     src={image.previewUrl}
                     style={imageStyle}
                     wrapperProps={{style: {position: "static"}}}  // Required to center properly with blur
