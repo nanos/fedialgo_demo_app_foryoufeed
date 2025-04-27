@@ -75,7 +75,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                             linkText={(tag) => `#${(tag as TrendingTag).name}`}
                             linkUrl={(tag) => algorithm.buildTagURL(tag as TrendingTag)}
                             onClick={(tag, e) => followUri(algorithm.buildTagURL(tag as TrendingTag), e)}
-                            trendingObjs={algorithm.trendingTags}
+                            trendingObjs={algorithm.trendingData.tags}
                         />
 
                         <TrendingSection
@@ -85,7 +85,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                             linkText={linkText}
                             linkUrl={linkMapper}
                             onClick={(link, e) => followUri(`${(link as TrendingLink).url}`, e)}
-                            trendingObjs={algorithm.trendingLinks}
+                            trendingObjs={algorithm.trendingData.links}
                         />
 
                         <TrendingSection
@@ -95,7 +95,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                             linkText={tootLinkText}
                             linkUrl={linkMapper}
                             onClick={openToot}
-                            trendingObjs={algorithm.trendingToots}
+                            trendingObjs={algorithm.trendingData.toots}
                         />
 
                         <TrendingSection
