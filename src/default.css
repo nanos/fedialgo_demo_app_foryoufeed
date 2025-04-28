@@ -2335,7 +2335,7 @@ a.button.logo-button {
 }
 
 .embed .status .media-gallery, .embed .status .video-player, .embed .status__action-bar {
-    margin-top:10px
+    margin-top: 10px;
 }
 
 .embed .status__action-bar-button {
@@ -3401,7 +3401,7 @@ body > [data-popper-placement] {
 }
 
 .status {
-    padding: 16px;
+    padding: 14px;
     min-height: 54px;
     border-bottom: 1px solid #393f4f;
     cursor: auto;
@@ -3566,7 +3566,7 @@ body > [data-popper-placement] {
     justify-content: space-between;
     align-items: center;
     gap: 18px;
-    margin-top:16px
+    margin-top: 10px;
 }
 
 .detailed-status__action-bar-dropdown {
