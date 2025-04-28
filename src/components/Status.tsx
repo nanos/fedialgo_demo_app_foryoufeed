@@ -133,6 +133,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                         {/* Top right icons + timestamp that link to the toot */}
                         <a className="status__relative-time" href={toot.uri} rel="noreferrer" target="_blank">
                             <span className="status__visibility-icon">
+                                {/* TODO: the pencil doesn't seem to show up */}
+                                {toot.editedAt && buildIcon("pencil", `Edited at ${toot.editedAt}`)}
                                 {toot.inReplyToAccountId && buildIcon("reply", "Reply", "blue")}
                                 {toot.containsTagsMsg() && buildIcon("hashtag", toot.containsTagsMsg())}
                                 {toot.trendingRank > 0 && buildIcon("fire", "Trending Toot", "red")}
