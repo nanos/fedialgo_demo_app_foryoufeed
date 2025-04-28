@@ -16,9 +16,11 @@ interface MultimediaNodeProps {
 
 export default function MultimediaNode(props: MultimediaNodeProps): React.ReactElement {
     const { status, setMediaInspectionIdx } = props;
-    const images = status.imageAttachments();
+    const images = status.imageAttachments;
     const style = {overflow: "hidden"};
     let imageHeight = IMAGES_HEIGHT;
+    // TODO: what is this for?
+    const hiddenCanvas = <canvas className="media-gallery__preview media-gallery__preview--hidden" height="32" width="32"/>
 
     // If there's one image try to show it full size; If there's more than one use old image handler.
     if (images.length == 1 ) {
@@ -26,9 +28,6 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
     } else {
         imageHeight = Math.min(IMAGES_HEIGHT, ...images.map(i => i.meta?.small?.height || IMAGES_HEIGHT));
     }
-
-    // TODO: what is this for?
-    const hiddenCanvas = <canvas className="media-gallery__preview media-gallery__preview--hidden" height="32" width="32"/>
 
     // Make a LazyLoadImage element for displaying an image within a Toot.
     const makeImage = (image: mastodon.v1.MediaAttachment, idx: number): React.ReactElement => {
@@ -56,24 +55,16 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
         );
     };
 
-    if (status.audioAttachments().length > 0) {
+    if (status.imageAttachments.length > 0) {
         return (
-            <div className="media-gallery" style={{ height: `${imageHeight / 4}px`, ...style }}>
-                <audio controls style={{ width: "100%" }}>
-                    <source src={status.audioAttachments()[0].remoteUrl} type="audio/mpeg" />
-                </audio>
+            <div className="media-gallery" style={{ height: images.length > 1 ? '100%' : `${imageHeight}px`, ...style }}>
+                {status.imageAttachments.map((image, i) => makeImage(image, i))}
             </div>
         );
-    } else if (status.imageAttachments().length > 0) {
-        return (
-            <div className="media-gallery" style={{ height: `${imageHeight}px`, ...style }}>
-                {status.imageAttachments().map((image, i) => makeImage(image, i))}
-            </div>
-        );
-    } else if (status.videoAttachments().length > 0) {
+    } else if (status.videoAttachments.length > 0) {
         return (
             <div className="media-gallery" style={{ height: `${VIDEO_HEIGHT}px`, ...style }}>
-                {status.videoAttachments().map((video, i) => {
+                {status.videoAttachments.map((video, i) => {
                     const sourceTag = <source src={video?.url} type="video/mp4" />;
                     let videoTag: React.ReactElement;
 
@@ -99,6 +90,14 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
                         </div>
                     );
                 })}
+            </div>
+        );
+    } else if (status.audioAttachments.length > 0) {
+        return (
+            <div className="media-gallery" style={{ height: `${imageHeight / 4}px`, ...style }}>
+                <audio controls style={{ width: "100%" }}>
+                    <source src={status.audioAttachments[0].remoteUrl} type="audio/mpeg" />
+                </audio>
             </div>
         );
     } else {
