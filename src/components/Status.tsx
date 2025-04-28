@@ -215,11 +215,11 @@ export default function StatusComponent(props: StatusComponentProps) {
 };
 
 
-const baseIconStyle: CSSProperties = {
-    marginRight: "4px",
-};
-
 const accountLink: CSSProperties = {
     color: "white",
     textDecoration: "none"
+};
+
+const baseIconStyle: CSSProperties = {
+    marginRight: "4px",
 };
