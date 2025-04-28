@@ -33,6 +33,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     let toot = props.status.reblog || props.status;
     let retoot = props.status.reblog ? props.status : null;
     const hasAttachments = toot.mediaAttachments.length > 0;
+    const isReblog = toot.reblogsBy.length > 0;
 
     // idx of the mediaAttachment to show in the media inspection modal (-1 means no modal)
     const [mediaInspectionIdx, setMediaInspectionIdx] = React.useState<number>(-1);
@@ -112,7 +113,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 className="status__wrapper status__wrapper-public focusable"
             >
                 {/* Names of accounts that reblogged the toot (if any) */}
-                {toot.reblogsBy.length > 0 &&
+                {isReblog &&
                     <div className="status__prepend">
                         <div className="status__prepend-icon-wrapper">
                             <i className="fa fa-retweet status__prepend-icon fa-fw" />
@@ -126,7 +127,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </span>
                     </div>}
 
-                <div className="status">
+                <div className="status" style={isReblog ? { paddingTop: "10px" } : {}}>
                     {/* Top bar with account and info icons */}
                     <div className="status__info">
                         {/* Top right icons + timestamp that link to the toot */}
