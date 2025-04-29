@@ -59,6 +59,7 @@ export default function Feed() {
             return;
         }
 
+        console.log(`Reloading feed because of focus...`);
         algorithm.getFeed();
     };
 
