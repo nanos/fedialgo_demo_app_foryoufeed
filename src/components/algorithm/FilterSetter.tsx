@@ -169,7 +169,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             <Accordion.Item eventKey="filters">
                 <Accordion.Header style={accordionPadding}>
                     <p style={titleStyle}>
-                        Filters
+                        Feed Filters
                     </p>
                 </Accordion.Header>
 
