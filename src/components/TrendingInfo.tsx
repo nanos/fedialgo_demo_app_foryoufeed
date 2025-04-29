@@ -31,7 +31,7 @@ const ATTACHMENT_PREFIXES: Record<MediaCategory, string> = {
 
 export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm }) {
     const linkMapper = (link: TrendingObj) => `${(link as TrendingLink).url}`;
-    const infoTxt = (obj: TrendingWithHistory) => `${obj.numToots} toots by ${obj.numAccounts} accounts`;
+    const infoTxt = (obj: TrendingWithHistory) => `${obj.numToots?.toLocaleString()} toots by ${obj.numAccounts?.toLocaleString()} accounts`;
 
     const tootLinkText = (obj: TrendingObj): React.ReactElement => {
         const toot = obj as Toot;
@@ -91,7 +91,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                         <TrendingSection
                             sectionName="Toots"
                             hasCustomStyle={true}
-                            infoTxt={(t: Toot) => `${t.repliesCount} replies, ${t.reblogsCount} retoots`}
+                            infoTxt={(t: Toot) => `${t.repliesCount?.toLocaleString()} replies, ${t.reblogsCount?.toLocaleString()} retoots`}
                             linkText={tootLinkText}
                             linkUrl={linkMapper}
                             onClick={openToot}
