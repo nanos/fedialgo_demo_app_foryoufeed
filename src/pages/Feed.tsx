@@ -23,7 +23,7 @@ import { useAuthContext } from "../hooks/useAuth";
 // Number constants
 const DEFAULT_NUM_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
-const RELOAD_IF_OLDER_THAN_MS = 1000 * 60 * 15; // 15 minutes
+const RELOAD_IF_OLDER_THAN_MS = 1000 * 60 * 10; // 10 minutes
 // String constants
 const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
