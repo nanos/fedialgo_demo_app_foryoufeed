@@ -66,7 +66,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     };
 
     const reblogger = (account: Account, i: number): React.ReactNode => (
-        <a className="status__display-name muted" href={account.url} key={i}>
+        <a className="status__display-name muted" href={account.homserverURL()} key={i} target="_blank" rel="noreferrer">
             <bdi><strong>
                 {parse(account.displayNameWithEmojis())}
             </strong></bdi>
@@ -109,7 +109,7 @@ export default function StatusComponent(props: StatusComponentProps) {
             <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={toot} />
 
             <div
-                aria-label={`${toot.account.displayName}, ${toot.account.note} ${toot.account.webfingerURI()}`}
+                aria-label={`${toot.account.displayName}, ${toot.account.note} ${toot.account.webfingerURI}`}
                 className="status__wrapper status__wrapper-public focusable"
             >
                 {/* Names of accounts that reblogged the toot (if any) */}
@@ -152,10 +152,10 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </a>
 
                         {/* Account name + avatar */}
-                        <div title={toot.account.webfingerURI()} className="status__display-name">
+                        <div title={toot.account.webfingerURI} className="status__display-name">
                             <div className="status__avatar">
                                 <div className="account__avatar" style={{ width: "46px", height: "46px" }}>
-                                    <LazyLoadImage src={toot.account.avatar} alt={`${toot.account.webfingerURI()}`} />
+                                    <LazyLoadImage src={toot.account.avatar} alt={`${toot.account.webfingerURI}`} />
                                 </div>
                             </div>
 
@@ -185,7 +185,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 </bdi>
 
                                 <span key="acctdisplay" className="display-name__account">
-                                    @{toot.account.webfingerURI()}
+                                    @{toot.account.webfingerURI}
                                 </span>
                             </span>
                         </div>
