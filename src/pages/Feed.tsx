@@ -42,91 +42,98 @@ export default function Feed() {
     const [error, setError] = useState<string>("");
     const [feed, setFeed] = useState<Toot[]>([]);  // contains timeline Toots
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(false);  // Left panel stickiness
-    const [isLoading, setIsLoading] = useState<boolean>(true);  // TODO: this doesn't seem to get set correctly
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
+    const isLoadingInitialFeed = !feed?.length;
 
-    const handleFocus = () => {
-        console.debug(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
-
-        // TODO: somehow this almost always was returning true
-        // if (isLoading && feed.length == 0) {
-        //     console.debug(`isLoading=True; not reloading feed...`);
-        //     return;
-        // }
-        if (!algorithm) {
-            console.warn("Algorithm not set yet!");
-            return;
-        } else if (algorithm.loadingStatus) {
-            console.debug(`Algorithm loadingStatus is not empty so we are still loading...`);
-            return;
-        } else if (!shouldReloadFeed()) {
-            console.debug(`shouldReloadFeed() returned false; not reloading feed...`);
-            return;
-        }
-
-        console.log(`Reloading feed because of focus...`);
-        algorithm.getFeed();
-    };
-
-    // Load the posts in the feed either from mastodon server or from the cache
+    // Initial load of the feed
     useEffect(() => {
         if (!user) {
             console.warn("User not set yet!");
             return;
         }
 
-        constructFeed();
-        const handleVisibility = () => console.log(`Tab is ${document.visibilityState}`);
-        window.addEventListener(VISIBILITY_CHANGE, handleVisibility);
-        window.addEventListener(FOCUS, handleFocus);
+        // Check that we have valid user credentials and load timeline toots, otherwise force a logout.
+        const constructFeed = async (): Promise<void> => {
+            console.log(`constructFeed() called with user ID ${user?.id} (feed already has ${feed.length} toots)`);
+            let currentUser: mastodon.v1.Account;
 
-        return () => {
-            window.removeEventListener(VISIBILITY_CHANGE, handleVisibility);
-            window.removeEventListener(FOCUS, handleFocus);
-        }
-    }, [user]);
+            try {
+                if (!user) throw new Error(`User not set in constructFeed()!`);
+                currentUser = await api.v1.accounts.verifyCredentials();
+            } catch (err) {
+                console.error(`Failed to verifyCredentials() with error:`, err);
+                logout();
+                return;
+            }
+
+            const algo = await TheAlgorithm.create({api: api, user: currentUser, setFeedInApp: setFeed});
+            setAlgorithm(algo);
+            await algo.getFeed();
+            console.log(`constructFeed() finished; feed has ${algo.feed.length} toots`);
+        };
+
+        constructFeed();
+    }, [setAlgorithm, user]);
 
     // Show more toots when the user scrolls to bottom of the page
     // TODO: This doesn't actually trigger any API calls, it just shows more of the preloaded toots
     useEffect(() => {
         if (isBottom) {
-            console.log("hit bottom of page; should load more toots...");
+            console.debug("Hit bottom of page; showing more toots (hopefully)...");
             showMoreToots();
         }
     }, [isBottom]);
 
-    // Check that we have valid user credentials and load timeline toots, otherwise force a logout.
-    const constructFeed = async (): Promise<void> => {
-        console.log(`constructFeed() called with user ID ${user?.id} (feed already has ${feed.length} toots)`);
-        let currentUser: mastodon.v1.Account;
-
-        try {
-            if (!user) throw new Error(`User not set in constructFeed()!`);
-            currentUser = await api.v1.accounts.verifyCredentials();
-        } catch (err) {
-            console.error(`Failed to verifyCredentials() with error:`, err);
-            logout();
+    // useEffect to set up feed reloader (on focus after 10 minutes)
+    useEffect(() => {
+        if (!user || !algorithm || !feed) {
+            console.warn(`useEffect() called with user: ${!!user}, algorithm: ${!!algorithm}, algorithm.loadingStatus: '${algorithm?.loadingStatus}', feed.length: ${feed?.length}`);
             return;
+        };
+
+        const shouldReloadFeed = (): boolean => {
+            if (!feed?.length) {
+                console.info(`Feed has 0 length; not reloading...`);
+                return false;
+            }
+
+            const mostRecentAt = algorithm.mostRecentTootAt();
+            const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
+            const should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_MS;
+            console.log(`shouldReloadFeed(): ${should} (mostRecentAt is '${mostRecentAt}' so feed is ${feedAgeInSeconds} seconds old)`);
+            return should;
+        };
+
+        const handleFocus = () => {
+            // TODO: for some reason "not focused" never happens?
+            console.info(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
+            if (!document.hasFocus()) return;
+
+            if (algorithm?.loadingStatus) {
+                console.info(`algorithm.loadingStatus is not empty so some kind of loading is in progress...`);
+                return;
+            } else if (!shouldReloadFeed()) {
+                return;
+            }
+
+            console.info(`Reloading feed because of focus...`);
+            algorithm.getFeed();
+        };
+
+        const handleVisibility = () => {
+            console.debug(`Tab visibilityState is ${document.visibilityState}`);
+        };
+
+        console.info(`Adding event listeners...`)
+        window.addEventListener(FOCUS, handleFocus);
+        window.addEventListener(VISIBILITY_CHANGE, handleVisibility);
+
+        return () => {
+            console.info(`Removing event listeners...`)
+            window.removeEventListener(FOCUS, handleFocus);
+            window.removeEventListener(VISIBILITY_CHANGE, handleVisibility);
         }
-
-        const algo = await TheAlgorithm.create({api: api, user: currentUser, setFeedInApp: setFeed});
-        setAlgorithm(algo);
-
-        // If there are toots in the cache set isLoading to false early so something is displayed
-        if (algo.feed.length > 0) setIsLoading(false);
-        await algo.getFeed();
-        console.log(`constructFeed() finished; feed has ${algo.feed.length} toots, setting isLoading=false`);
-        setIsLoading(false);
-    };
-
-    const shouldReloadFeed = (): boolean => {
-        if (!algorithm || !feed || feed.length == 0) return false;
-        const mostRecentAt = algorithm.mostRecentTootAt();
-        const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
-        const should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_MS;
-        console.log(`shouldReloadFeed() mostRecentAt: ${mostRecentAt}, should: ${should} (${feedAgeInSeconds} seconds old)`);
-        return should;
-    }
+    }, [algorithm, feed, user]);
 
     // Pull more toots to display from our local cached and sorted toot feed
     // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
@@ -170,7 +177,7 @@ export default function Feed() {
                 </Col>
 
                 <Col style={{backgroundColor: '#15202b', height: 'auto'}} xs={6}>
-                    {!isLoading && api && (feed.length >= 1) &&
+                    {api && !isLoadingInitialFeed &&
                         feed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot) => (
                             <StatusComponent
                                 api={api}
@@ -181,10 +188,11 @@ export default function Feed() {
                             />
                         ))}
 
-                    {(isLoading || feed.length == 0) &&
+                    {isLoadingInitialFeed &&
                         <LoadingSpinner
                             isFullPage={true}
-                            message={isLoading ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
+                            // TODO: the NO_TOOTS_MSG will never show bc now isLoading is based on feed state variable
+                            message={isLoadingInitialFeed ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
                         />}
 
                     <div ref={bottomRef} onClick={showMoreToots}>

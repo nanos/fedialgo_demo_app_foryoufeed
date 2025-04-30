@@ -75,7 +75,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     const buildIcon = (iconName: string, title?: string, color?: string): React.ReactNode => {
         if (iconName == "hashtag") {
-            color ||= toot.trendingTags.length ? 'orange' : 'yellow';
+            color ||= toot.trendingTags?.length ? 'orange' : 'yellow';
         }
 
         return <i
