@@ -95,7 +95,7 @@ export default function Feed() {
                 return false;
             }
 
-            const mostRecentAt = algorithm.mostRecentTootAt();
+            const mostRecentAt = algorithm.mostRecentHomeTootAt();
             const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
             const should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
             console.log(`shouldReloadFeed() = ${should} (feed is ${feedAgeInSeconds}s old, mostRecentAt is '${mostRecentAt}')`);
