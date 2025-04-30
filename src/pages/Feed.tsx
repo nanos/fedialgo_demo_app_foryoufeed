@@ -48,6 +48,7 @@ export default function Feed() {
     const isLoadingInitialFeed = !feed?.length;
 
     const reset = async () => {
+        if (!window.confirm("Are you sure?")) return;
         setError("");
         await algorithm.reset();
         setNumDisplayedToots(DEFAULT_NUM_TOOTS);
@@ -62,7 +63,7 @@ export default function Feed() {
         setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
     };
 
-    // Initial load of the feed
+    // Initial load of the feed (can be re-triggered by changing the value of triggerReload)
     useEffect(() => {
         if (!user) return;
 

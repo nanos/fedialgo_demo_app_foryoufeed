@@ -30,8 +30,8 @@ interface StatusComponentProps {
 export default function StatusComponent(props: StatusComponentProps) {
     const { api, setError } = props;
     // If it's a retoot set 'toot' to the original toot
-    let toot = props.status.reblog || props.status;
-    let retoot = props.status.reblog ? props.status : null;
+    let toot = props.status.realToot();
+    let retoot = toot.reblog ? props.status : null;
     const hasAttachments = toot.mediaAttachments.length > 0;
     const isReblog = toot.reblogsBy.length > 0;
 
