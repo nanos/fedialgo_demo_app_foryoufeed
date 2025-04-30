@@ -45,12 +45,17 @@ export default function Feed() {
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
     const isLoadingInitialFeed = !feed?.length;
 
+    // Pull more toots to display from our local cached and sorted toot feed
+    // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
+    const showMoreToots = () => {
+        const msg = `Showing ${numDisplayedToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
+        console.log(`${msg} (${feed.length} available in feed)`);
+        setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
+    };
+
     // Initial load of the feed
     useEffect(() => {
-        if (!user) {
-            console.warn("User not set yet!");
-            return;
-        }
+        if (!user) return;
 
         // Check that we have valid user credentials and load timeline toots, otherwise force a logout.
         const constructFeed = async (): Promise<void> => {
@@ -58,7 +63,6 @@ export default function Feed() {
             let currentUser: mastodon.v1.Account;
 
             try {
-                if (!user) throw new Error(`User not set in constructFeed()!`);
                 currentUser = await api.v1.accounts.verifyCredentials();
             } catch (err) {
                 console.error(`Failed to verifyCredentials() with error:`, err);
@@ -79,57 +83,35 @@ export default function Feed() {
     // TODO: This doesn't actually trigger any API calls, it just shows more of the preloaded toots
     useEffect(() => {
         if (isBottom) showMoreToots();
-    }, [isBottom]);
+    }, [feed, isBottom, numDisplayedToots, setNumDisplayedToots, showMoreToots]);
 
-    // useEffect to set up feed reloader (should reload on focus after 10 minutes)
+    // Set up feed reloader to call algorithm.getFeed() on focus after RELOAD_IF_OLDER_THAN_SECONDS
     useEffect(() => {
-        if (!user || !algorithm || !feed) return;
+        if (!user || !algorithm || isLoadingInitialFeed) return;
 
         const shouldReloadFeed = (): boolean => {
-            if (!feed.length) {
-                console.info(`Feed has 0 length; not reloading...`);
+            if (algorithm?.loadingStatus) {
+                console.info(`shouldReloadFeed() = false (algorithm.loadingStatus is not empty so load in progress)`);
                 return false;
             }
 
             const mostRecentAt = algorithm.mostRecentTootAt();
             const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
             const should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
-            console.log(`shouldReloadFeed(): ${should} (feed is ${feedAgeInSeconds}s old, mostRecentAt is '${mostRecentAt}')`);
+            console.log(`shouldReloadFeed() = ${should} (feed is ${feedAgeInSeconds}s old, mostRecentAt is '${mostRecentAt}')`);
             return should;
         };
 
         const handleFocus = () => {
-            // for some reason "not focused" never happens?
-            // https://developer.mozilla.org/en-US/docs/Web/API/Document/hasFocus
+            // for some reason "not focused" never happens? https://developer.mozilla.org/en-US/docs/Web/API/Document/hasFocus
             console.info(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
             if (!document.hasFocus()) return;
-
-            if (algorithm?.loadingStatus) {
-                console.info(`algorithm.loadingStatus is not empty so loading is already in progress...`);
-                return;
-            } else if (!shouldReloadFeed()) {
-                return;
-            }
-
-            console.info(`Reloading feed because of focus...`);
-            algorithm.getFeed();
+            if (shouldReloadFeed()) algorithm.getFeed();
         };
 
-        console.info(`Adding event listeners...`)
         window.addEventListener(FOCUS, handleFocus);
-
-        return () => {
-            console.info(`Removing event listeners...`)
-            window.removeEventListener(FOCUS, handleFocus);
-        }
-    }, [algorithm, feed, user]);
-
-    // Pull more toots to display from our local cached and sorted toot feed
-    // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
-    const showMoreToots = () => {
-        console.log(`Showing ${numDisplayedToots} toots, ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more (${feed.length} available)`);
-        setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
-    };
+        return () => window.removeEventListener(FOCUS, handleFocus);
+    }, [algorithm, feed, isLoadingInitialFeed, user]);
 
     return (
         <Container fluid style={{height: 'auto'}}>
