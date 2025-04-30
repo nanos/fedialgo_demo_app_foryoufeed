@@ -42,17 +42,22 @@ export default function Feed() {
     const [error, setError] = useState<string>("");
     const [feed, setFeed] = useState<Toot[]>([]);  // contains timeline Toots
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(false);  // Left panel stickiness
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(true);  // TODO: this doesn't seem to get set correctly
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
 
     const handleFocus = () => {
         console.debug(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
 
-        if (isLoading && feed.length == 0) {
-            console.debug(`isLoading=True; not reloading feed...`);
-            return;
-        } else if (!algorithm) {
+        // TODO: somehow this almost always was returning true
+        // if (isLoading && feed.length == 0) {
+        //     console.debug(`isLoading=True; not reloading feed...`);
+        //     return;
+        // }
+        if (!algorithm) {
             console.warn("Algorithm not set yet!");
+            return;
+        } else if (algorithm.loadingStatus) {
+            console.debug(`Algorithm loadingStatus is not empty so we are still loading...`);
             return;
         } else if (!shouldReloadFeed()) {
             console.debug(`shouldReloadFeed() returned false; not reloading feed...`);
@@ -117,8 +122,9 @@ export default function Feed() {
     const shouldReloadFeed = (): boolean => {
         if (!algorithm || !feed || feed.length == 0) return false;
         const mostRecentAt = algorithm.mostRecentTootAt();
-        const should = ((Date.now() - mostRecentAt.getTime()) > RELOAD_IF_OLDER_THAN_MS);
-        console.log(`shouldReloadFeed() mostRecentAt: ${mostRecentAt}, should: ${should}`);
+        const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
+        const should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_MS;
+        console.log(`shouldReloadFeed() mostRecentAt: ${mostRecentAt}, should: ${should} (${feedAgeInSeconds} seconds old)`);
         return should;
     }
 
