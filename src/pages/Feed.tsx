@@ -18,6 +18,7 @@ import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
+import { logMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "../hooks/useAuth";
 
 // Number constants
@@ -43,13 +44,21 @@ export default function Feed() {
     const [feed, setFeed] = useState<Toot[]>([]);  // contains timeline Toots
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(false);  // Left panel stickiness
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
+    const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
     const isLoadingInitialFeed = !feed?.length;
+
+    const reset = async () => {
+        setError("");
+        await algorithm.reset();
+        setNumDisplayedToots(DEFAULT_NUM_TOOTS);
+        setTriggerReload(triggerReload + 1);
+    }
 
     // Pull more toots to display from our local cached and sorted toot feed
     // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
     const showMoreToots = () => {
         const msg = `Showing ${numDisplayedToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
-        console.log(`${msg} (${feed.length} available in feed)`);
+        logMsg(`${msg} (${feed.length} available in feed)`);
         setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
     };
 
@@ -59,7 +68,7 @@ export default function Feed() {
 
         // Check that we have valid user credentials and load timeline toots, otherwise force a logout.
         const constructFeed = async (): Promise<void> => {
-            console.log(`constructFeed() called with user ID ${user?.id} (feed already has ${feed.length} toots)`);
+            logMsg(`constructFeed() called with user ID ${user?.id} (feed already has ${feed.length} toots)`);
             let currentUser: mastodon.v1.Account;
 
             try {
@@ -73,11 +82,11 @@ export default function Feed() {
             const algo = await TheAlgorithm.create({api: api, user: currentUser, setFeedInApp: setFeed});
             setAlgorithm(algo);
             await algo.getFeed();
-            console.log(`constructFeed() finished; feed has ${algo.feed.length} toots`);
+            logMsg(`constructFeed() finished; feed has ${algo.feed.length} toots`);
         };
 
         constructFeed();
-    }, [setAlgorithm, user]);
+    }, [setAlgorithm, triggerReload, user]);
 
     // Show more toots when the user scrolls to bottom of the page
     // TODO: This doesn't actually trigger any API calls, it just shows more of the preloaded toots
@@ -91,20 +100,20 @@ export default function Feed() {
 
         const shouldReloadFeed = (): boolean => {
             if (algorithm?.loadingStatus) {
-                console.info(`shouldReloadFeed() = false (algorithm.loadingStatus is not empty so load in progress)`);
+                logMsg(`shouldReloadFeed() = false (algorithm.loadingStatus is not empty so load in progress)`);
                 return false;
             }
 
             const mostRecentAt = algorithm.mostRecentHomeTootAt();
             const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
             const should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
-            console.log(`shouldReloadFeed() = ${should} (feed is ${feedAgeInSeconds}s old, mostRecentAt is '${mostRecentAt}')`);
+            logMsg(`shouldReloadFeed() = ${should} (feed is ${feedAgeInSeconds}s old, mostRecentAt is '${mostRecentAt}')`);
             return should;
         };
 
         const handleFocus = () => {
             // for some reason "not focused" never happens? https://developer.mozilla.org/en-US/docs/Web/API/Document/hasFocus
-            console.info(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
+            logMsg(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
             if (!document.hasFocus()) return;
             if (shouldReloadFeed()) algorithm.getFeed();
         };
@@ -143,7 +152,14 @@ export default function Feed() {
 
                         {algorithm?.loadingStatus
                             ? <LoadingSpinner isFullPage={false} message={algorithm.loadingStatus} style={loadingMsgStyle} />
-                            : <p style={loadingMsgStyle}>Finished loading {feed.length} toots for timeline.</p>}
+                            : <p style={loadingMsgStyle}>Found {feed.length} toots for timeline.</p>}
+
+                        {algorithm &&
+                            <p style={resetLinkStyle}>
+                                <a onClick={reset}>
+                                    Clear all data and reload
+                                </a>
+                            </p>}
                     </div>
                 </Col>
 
@@ -178,7 +194,15 @@ export default function Feed() {
 
 const loadingMsgStyle: CSSProperties = {
     height: "20px",
-    marginTop: "5px",
+    marginTop: "7px",
+};
+
+const resetLinkStyle: CSSProperties = {
+    color: "red",
+    cursor: "pointer",
+    fontSize: "12px",
+    marginTop: "4px",
+    textDecoration: "underline",
 };
 
 const statusesColStyle: CSSProperties = {

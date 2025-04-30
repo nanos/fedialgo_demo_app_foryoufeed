@@ -5,6 +5,7 @@
 import React, { CSSProperties } from "react";
 
 import { capitalCase } from "change-case";
+import { logMsg } from "../../helpers/string_helpers";
 import { mastodon } from 'masto';
 import { Toot } from "fedialgo";
 
@@ -91,7 +92,7 @@ export default function ActionButton(props: ActionButtonProps) {
             const newState = !startingState;
 
             // Optimistically update the GUI (we will reset to original state if the server call fails later)
-            console.log(`${actionName}() toot (startingState: ${startingState}, count: ${startingCount}): `, status);
+            logMsg(`${actionName}() toot (startingState: ${startingState}, count: ${startingCount}): `, status);
             status[actionInfo.booleanName] = newState;
             setCurrentState(newState);
 
@@ -128,7 +129,7 @@ export default function ActionButton(props: ActionButtonProps) {
                         throw new Error(`Unknown actionName: ${actionName}`);
                     }
 
-                    console.log(`Successfully changed ${actionName} bool to ${newState}`);
+                    logMsg(`Successfully changed ${actionName} bool to ${newState}`);
                 } catch (error) {
                     const msg = `Failed to ${actionName} toot! (${error.message})`;
                     console.error(`${msg} Resetting count to ${status[actionInfo.countName]}`, error);

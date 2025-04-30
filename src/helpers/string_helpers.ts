@@ -1,19 +1,7 @@
 /*
  * String manipulation helpers.
  */
-const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-
-// Generate a string representing a timestamp.
-export const timeString = (tootedAt: Date | string): string => {
-    tootedAt = typeof tootedAt == 'string' ? new Date(tootedAt) : tootedAt;
-
-    if (tootedAt.getDate() === new Date().getDate()) {
-        return `Today ${tootedAt.toLocaleTimeString()}`;
-    } else {
-        return `${DAY_NAMES[tootedAt.getDay()]} ${tootedAt.toLocaleTimeString()}`;
-    }
-};
+const DEMO_APP = "DEMO APP";
 
 
 // Converts a number to a string with the number of decimal places dependent on the value.
@@ -37,4 +25,11 @@ export const scoreString = (score: number | null): string => {
     }
 
     return `${score.toFixed(decimalPlaces)}`;
+};
+
+
+export const logMsg = (message: string, ...args: unknown[]): void => {
+    if (process.env.NODE_ENV !== 'production') {
+        console.log(`[${DEMO_APP}] ${message}`, ...args);
+    }
 };

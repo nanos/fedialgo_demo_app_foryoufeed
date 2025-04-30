@@ -4,8 +4,8 @@
 import React, { CSSProperties } from "react";
 
 import parse from 'html-react-parser';
-import Toast from 'react-bootstrap/Toast';
-import { Account, Toot } from "fedialgo";
+// import Toast from 'react-bootstrap/Toast';
+import { Account, Toot, timeString } from "fedialgo";
 import { capitalCase } from "change-case";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
@@ -15,8 +15,8 @@ import AttachmentsModal from './status/AttachmentsModal';
 import MultimediaNode from "./status/MultimediaNode";
 import PreviewCard from "./status/PreviewCard";
 import ScoreModal from './status/ScoreModal';
+import { logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
-import { timeString } from '../helpers/string_helpers';
 import { User } from '../types';
 
 interface StatusComponentProps {
@@ -61,7 +61,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Show the score of a toot
     const showScore = async () => {
-        console.log(`showScore() called for toot: `, toot, `\noriginalStatus:`, retoot);
+        logMsg(`showScore() called for toot: `, toot, `\noriginalStatus:`, retoot);
         setShowScoreModal(true);
     };
 

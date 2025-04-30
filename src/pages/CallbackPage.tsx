@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 import { createRestAPIClient as loginToMastodon } from "masto"
 import { useSearchParams } from 'react-router-dom';
 
+import { logMsg } from '../helpers/string_helpers';
 import { OAUTH_SCOPE_STR } from './LoginPage';
 import { useAppStorage } from '../hooks/useLocalStorage';
 import { useAuthContext } from '../hooks/useAuth';
@@ -59,7 +60,7 @@ export default function CallbackPage() {
                 username: user.username,
             };
 
-            loginUser(userData).then(() => console.log(`Logged in '${userData.username}' successfully!`));
+            loginUser(userData).then(() => logMsg(`Logged in '${userData.username}' successfully!`));
         }).catch((error) => {
             console.error(`Login error:`, error);
             setError(error.toString());

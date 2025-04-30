@@ -14,6 +14,7 @@ import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm, TypeFilterNa
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import Slider from "./Slider";
+import { logMsg } from "../../helpers/string_helpers";
 import { titleStyle } from "../../helpers/style_helpers";
 
 const MAX_LABEL_LENGTH = 20;
@@ -80,11 +81,11 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
             sortByValue[filter.title],
             SORT_KEYS,
             (e) => {
-                console.log(`sortKeysCheckbox: ${filter.title} called with ${e.target.checked}:`, e);
+                logMsg(`sortKeysCheckbox: ${filter.title} called with ${e.target.checked}:`, e);
                 const newSortByValue = {...sortByValue};
                 newSortByValue[filter.title] = e.target.checked;
                 setSortByValue(newSortByValue);
-                console.log(`sortByValue:`, newSortByValue);
+                logMsg(`sortByValue:`, newSortByValue);
             }
         );
     };

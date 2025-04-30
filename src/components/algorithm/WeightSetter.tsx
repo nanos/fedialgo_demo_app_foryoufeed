@@ -12,6 +12,7 @@ import { PresetWeightLabel, PresetWeights, TheAlgorithm, WeightName, Weights } f
 
 import WeightSlider from './WeightSlider';
 import { accordionBody } from "./FilterAccordionSection";
+import { logMsg } from "../../helpers/string_helpers";
 import { roundedBox, titleStyle } from "../../helpers/style_helpers";
 
 const PRESET_MENU_TITLE = "Preset Algorithm Configurations";
@@ -26,7 +27,7 @@ export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm })
 
     // Update the user weightings stored in TheAlgorithm when a user moves a weight slider
     const updateWeights = async (newWeights: Weights): Promise<void> => {
-        console.debug(`updateWeights() called with:`, newWeights);
+        logMsg(`updateWeights() called with:`, newWeights);
         setUserWeights(newWeights);
         await algorithm.updateUserWeights(newWeights);
     };

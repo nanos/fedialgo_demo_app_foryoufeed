@@ -1,3 +1,8 @@
+/*
+ * Navigation helpers for React components.
+ */
+
+import { logMsg } from "./string_helpers";
 import { Toot } from "fedialgo";
 
 
@@ -12,7 +17,7 @@ export function followUri(uri: string, e: React.MouseEvent): boolean {
 // Open the Toot in a new tab, resolved to its URL on the user's home server
 export async function openToot(toot: Toot, e: React.MouseEvent): Promise<boolean> {
     e.preventDefault();
-    console.log("openToot() called with:", toot);
+    logMsg("openToot() called with:", toot);
     const resolvedURL = await toot.homeserverURL();
     return followUri(resolvedURL, e);
 };
