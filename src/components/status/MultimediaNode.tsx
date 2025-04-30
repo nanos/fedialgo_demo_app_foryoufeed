@@ -119,6 +119,7 @@ const mediaItem: CSSProperties = {
 const imageStyle: CSSProperties = {
     ...fullSize,
     ...mediaItem,
+    cursor: "pointer",
     // failed attempt at fake border
     // filter: "drop-shadow(0 -5px 0 gray) drop-shadow(0 5px 0 gray) drop-shadow(-5px 0 0 gray) drop-shadow(5px 0 0 gray)",
     objectFit: "contain",

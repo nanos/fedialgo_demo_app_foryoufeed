@@ -192,7 +192,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                     </div>
 
                     {/* Text of the toot */}
-                    <div className="status__content status__content--with-action" >
+                    <div className="status__content" >
                         <div className="status__content__text status__content__text--visible translate" lang="en">
                             {parse(toot.contentWithEmojis())}
                         </div>
