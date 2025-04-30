@@ -78,18 +78,15 @@ export default function Feed() {
     // Show more toots when the user scrolls to bottom of the page
     // TODO: This doesn't actually trigger any API calls, it just shows more of the preloaded toots
     useEffect(() => {
-        if (isBottom) {
-            console.debug("Hit bottom of page; showing more toots (hopefully)...");
-            showMoreToots();
-        }
+        if (isBottom) showMoreToots();
     }, [isBottom]);
 
-    // useEffect to set up feed reloader (on focus after 10 minutes)
+    // useEffect to set up feed reloader (should reload on focus after 10 minutes)
     useEffect(() => {
         if (!user || !algorithm || !feed) return;
 
         const shouldReloadFeed = (): boolean => {
-            if (!feed?.length) {
+            if (!feed.length) {
                 console.info(`Feed has 0 length; not reloading...`);
                 return false;
             }
@@ -173,7 +170,7 @@ export default function Feed() {
                     </div>
                 </Col>
 
-                <Col style={{backgroundColor: '#15202b', height: 'auto'}} xs={6}>
+                <Col style={statusesColStyle} xs={6}>
                     {api && !isLoadingInitialFeed &&
                         feed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot) => (
                             <StatusComponent
@@ -205,4 +202,9 @@ export default function Feed() {
 const loadingMsgStyle: CSSProperties = {
     height: "20px",
     marginTop: "5px",
+};
+
+const statusesColStyle: CSSProperties = {
+    backgroundColor: '#15202b',
+    height: 'auto',
 };
