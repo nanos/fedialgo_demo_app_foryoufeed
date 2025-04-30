@@ -100,15 +100,19 @@ export default function Feed() {
         if (!user || !algorithm || isLoadingInitialFeed) return;
 
         const shouldReloadFeed = (): boolean => {
+            let should = false;
+            let msg: string;
+
             if (algorithm?.loadingStatus) {
-                logMsg(`shouldReloadFeed() = false (algorithm.loadingStatus is not empty so load in progress)`);
-                return false;
+                msg = `algorithm.loadingStatus is not empty so load in progress`;
+            } else {
+                const mostRecentAt = algorithm.mostRecentHomeTootAt();
+                const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
+                msg = `feed is ${feedAgeInSeconds}s old, mostRecentAt is '${mostRecentAt}'`;
+                should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
             }
 
-            const mostRecentAt = algorithm.mostRecentHomeTootAt();
-            const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
-            const should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
-            logMsg(`shouldReloadFeed() = ${should} (feed is ${feedAgeInSeconds}s old, mostRecentAt is '${mostRecentAt}')`);
+            logMsg(`shouldReloadFeed() returning ${should} (${msg})`);
             return should;
         };
 
