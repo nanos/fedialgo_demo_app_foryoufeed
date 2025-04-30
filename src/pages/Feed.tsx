@@ -99,7 +99,8 @@ export default function Feed() {
         };
 
         const handleFocus = () => {
-            // TODO: for some reason "not focused" never happens?
+            // for some reason "not focused" never happens?
+            // https://developer.mozilla.org/en-US/docs/Web/API/Document/hasFocus
             console.info(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
             if (!document.hasFocus()) return;
 
@@ -114,18 +115,12 @@ export default function Feed() {
             algorithm.getFeed();
         };
 
-        const handleVisibility = () => {
-            console.debug(`Tab visibilityState is ${document.visibilityState}`);
-        };
-
         console.info(`Adding event listeners...`)
         window.addEventListener(FOCUS, handleFocus);
-        window.addEventListener(VISIBILITY_CHANGE, handleVisibility);
 
         return () => {
             console.info(`Removing event listeners...`)
             window.removeEventListener(FOCUS, handleFocus);
-            window.removeEventListener(VISIBILITY_CHANGE, handleVisibility);
         }
     }, [algorithm, feed, user]);
 
