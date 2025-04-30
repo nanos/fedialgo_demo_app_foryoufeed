@@ -23,7 +23,7 @@ import { useAuthContext } from "../hooks/useAuth";
 // Number constants
 const DEFAULT_NUM_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
-const RELOAD_IF_OLDER_THAN_MS = 1000 * 60 * 10; // 10 minutes
+const RELOAD_IF_OLDER_THAN_SECONDS = 60 * 10; // 10 minutes
 // String constants
 const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
@@ -96,7 +96,7 @@ export default function Feed() {
 
             const mostRecentAt = algorithm.mostRecentTootAt();
             const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
-            const should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_MS;
+            const should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
             console.log(`shouldReloadFeed(): ${should} (feed is ${feedAgeInSeconds}s old, mostRecentAt is '${mostRecentAt}')`);
             return should;
         };
