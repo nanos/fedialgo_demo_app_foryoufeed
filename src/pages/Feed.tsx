@@ -86,10 +86,7 @@ export default function Feed() {
 
     // useEffect to set up feed reloader (on focus after 10 minutes)
     useEffect(() => {
-        if (!user || !algorithm || !feed) {
-            console.warn(`useEffect() called with user: ${!!user}, algorithm: ${!!algorithm}, algorithm.loadingStatus: '${algorithm?.loadingStatus}', feed.length: ${feed?.length}`);
-            return;
-        };
+        if (!user || !algorithm || !feed) return;
 
         const shouldReloadFeed = (): boolean => {
             if (!feed?.length) {
@@ -110,7 +107,7 @@ export default function Feed() {
             if (!document.hasFocus()) return;
 
             if (algorithm?.loadingStatus) {
-                console.info(`algorithm.loadingStatus is not empty so some kind of loading is in progress...`);
+                console.info(`algorithm.loadingStatus is not empty so loading is already in progress...`);
                 return;
             } else if (!shouldReloadFeed()) {
                 return;
