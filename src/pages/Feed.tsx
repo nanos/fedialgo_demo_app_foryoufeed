@@ -28,7 +28,7 @@ const RELOAD_IF_OLDER_THAN_SECONDS = 60 * 10; // 10 minutes
 // String constants
 const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
-const DEFAULT_LOADING_MESSAGE = "(this can take a while the first time)";
+const DEFAULT_LOADING_MESSAGE = "(first time can take up to a minute or so)";
 const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
 
 
