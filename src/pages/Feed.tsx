@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { mastodon, createRestAPIClient as loginToMastodon } from "masto";
+import { mastodon, createRestAPIClient } from "masto";
 import { Modal } from "react-bootstrap";
 import { TheAlgorithm, Toot } from "fedialgo";
 
@@ -34,7 +34,7 @@ const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
 
 export default function Feed() {
     const { user, logout } = useAuthContext();
-    const api: mastodon.rest.Client = loginToMastodon({url: user.server, accessToken: user.access_token});
+    const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 

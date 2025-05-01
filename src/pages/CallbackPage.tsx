@@ -3,7 +3,7 @@
  */
 import React, { useEffect } from 'react';
 
-import { createRestAPIClient as loginToMastodon } from "masto"
+import { createRestAPIClient } from "masto"
 import { useSearchParams } from 'react-router-dom';
 
 import { logMsg } from '../helpers/string_helpers';
@@ -49,7 +49,7 @@ export default function CallbackPage() {
         const oAuthResult = await fetch(`${app.website}/oauth/token`, {method: 'POST', body});
         const json = await oAuthResult.json()
         const accessToken = json["access_token"];
-        const api = await loginToMastodon({accessToken: accessToken, url: app.website});
+        const api = await createRestAPIClient({accessToken: accessToken, url: app.website});
 
         api.v1.accounts.verifyCredentials().then((user) => {
             const userData: User = {
