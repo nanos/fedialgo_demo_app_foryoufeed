@@ -29,6 +29,7 @@ export default function LoadingSpinner(props: LoadingSpinnerProps) {
 const centeredSpinner: CSSProperties = {
     alignItems: "center",
     display: 'flex',
+    flexDirection: "row",
     justifyContent: "center",
     verticalAlign: "center",
 };
@@ -36,6 +37,8 @@ const centeredSpinner: CSSProperties = {
 const inlineSpinner: CSSProperties = {
     ...centeredSpinner,
     height: "20px",
+    // justifyContent: "flex-start",
+    justifyContent: "start",
     marginTop: "5px",
 };
 

@@ -1,3 +1,5 @@
+import { log } from "console";
+
 /*
  * String manipulation helpers.
  */
@@ -28,8 +30,30 @@ export const scoreString = (score: number | null): string => {
 };
 
 
-export const logMsg = (message: string, ...args: unknown[]): void => {
-    if (process.env.NODE_ENV !== 'production') {
+export function logMsg (message: string, ...args: unknown[]): void {
+    // if (process.env.NODE_ENV !== 'production') {
         console.log(`[${DEMO_APP}] ${message}`, ...args);
-    }
+    // }
+};
+
+
+export const logLocaleInfo = (): void => {
+    // if (process.env.NODE_ENV === "production") inject();
+    const locale = navigator?.language;
+    const localeParts = locale.split('-');
+    const language = localeParts[0];
+    const region = localeParts[1] || '';
+    let msg = [];
+
+    // if (process.env.NODE_ENV) {
+    //     msg.push(`NODE_ENV="${process?.env?.NODE_ENV}"`);
+    // }
+
+    msg = msg.concat([
+        `locale="${locale}"`,
+        `language="${language}"`,
+        `region="${region}"`,
+    ]);
+
+    logMsg(`${msg.join(", ")}`);
 };

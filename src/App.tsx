@@ -14,7 +14,7 @@ import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
 import LogoutPage from './pages/LogoutPage';
 import ProtectedRoute from './components/ProtectedRoute';
-import { logMsg } from "./helpers/string_helpers";
+import { logLocaleInfo, logMsg } from "./helpers/string_helpers";
 
 
 export default function App(): React.ReactElement {
@@ -24,8 +24,8 @@ export default function App(): React.ReactElement {
         });
     }
 
-    logMsg("Running app in NODE_ENV: ", process.env.NODE_ENV);
-    // if (process.env.NODE_ENV === "production") inject();
+    logMsg("process.env.NODE_ENV:", process.env.NODE_ENV);
+    logLocaleInfo();
 
     return (
         <BrowserRouter>

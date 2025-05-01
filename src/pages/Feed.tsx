@@ -47,10 +47,12 @@ export default function Feed() {
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
     const isLoadingInitialFeed = !feed?.length;
 
+    // Reset all state except for the user and server
     const reset = async () => {
         if (!window.confirm("Are you sure?")) return;
-        setError("");
+        if (!algorithm) return;
         await algorithm.reset();
+        setError("");
         setNumDisplayedToots(DEFAULT_NUM_TOOTS);
         setTriggerReload(triggerReload + 1);
     }
@@ -156,15 +158,19 @@ export default function Feed() {
                         <FindFollowers api={api} user={user} />
 
                         {algorithm?.loadingStatus
-                            ? <LoadingSpinner isFullPage={false} message={algorithm.loadingStatus} style={loadingMsgStyle} />
-                            : <p style={loadingMsgStyle}>Found {feed.length} toots for timeline.</p>}
-
-                        {algorithm &&
-                            <p style={resetLinkStyle}>
-                                <a onClick={reset}>
-                                    Clear all data and reload
-                                </a>
-                            </p>}
+                            ? <LoadingSpinner
+                                  isFullPage={false}
+                                  message={algorithm.loadingStatus}
+                                  style={loadingMsgStyle}
+                              />
+                            : algorithm && (
+                                <p style={loadingMsgStyle}>
+                                    Found {feed.length} toots for timeline ({
+                                        <a onClick={reset} style={resetLinkStyle}>
+                                            clear all data and reload
+                                        </a>
+                                    })
+                                </p>)}
                     </div>
                 </Col>
 
@@ -198,6 +204,7 @@ export default function Feed() {
 
 
 const loadingMsgStyle: CSSProperties = {
+    fontSize: "16px",
     height: "20px",
     marginTop: "7px",
 };
@@ -205,8 +212,7 @@ const loadingMsgStyle: CSSProperties = {
 const resetLinkStyle: CSSProperties = {
     color: "red",
     cursor: "pointer",
-    fontSize: "12px",
-    marginTop: "4px",
+    fontWeight: "700",
     textDecoration: "underline",
 };
 
