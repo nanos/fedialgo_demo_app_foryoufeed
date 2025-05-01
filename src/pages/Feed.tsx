@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { mastodon, createRestAPIClient } from "masto";
 import { Modal } from "react-bootstrap";
-import { TheAlgorithm, Toot } from "fedialgo";
+import { TheAlgorithm, Toot, timeString } from "fedialgo";
 
 import FilterSetter from "../components/algorithm/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
@@ -100,6 +100,8 @@ export default function Feed() {
 
     // Show more toots when the user scrolls to bottom of the page
     // TODO: This doesn't actually trigger any API calls, it just shows more of the preloaded toots
+    // TODO: this triggers twice: once when isbottom changes to true and again because numDisplayedToots
+    //       is increased, triggerng a second evaluation of the block
     useEffect(() => {
         // Pull more toots to display from our local cached and sorted toot feed
         // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
@@ -125,7 +127,7 @@ export default function Feed() {
             } else {
                 const mostRecentAt = algorithm.mostRecentHomeTootAt();
                 const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
-                msg = `feed is ${feedAgeInSeconds}s old, mostRecentAt is '${mostRecentAt}'`;
+                msg = `feed is ${feedAgeInSeconds}s old, mostRecentAt is '${timeString(mostRecentAt)}'`;
                 should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
             }
 
@@ -135,7 +137,7 @@ export default function Feed() {
 
         const handleFocus = () => {
             // for some reason "not focused" never happens? https://developer.mozilla.org/en-US/docs/Web/API/Document/hasFocus
-            logMsg(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
+            // logMsg(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
             if (!document.hasFocus()) return;
             if (shouldReloadFeed()) algorithm.getFeed();
         };
