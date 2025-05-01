@@ -28,20 +28,20 @@ export default function LoginPage() {
     // TODO: why is this not using useAppStorage?
     const [_app, setApp] = useLocalStorage({keyName: "app", defaultValue: {}} as AppStorage);
     const logThis = (msg: string, ...args: any[]) => logMsg(`<LoginPage> ${msg}`, ...args);
-    logThis("LoginPage constructor, current value of 'app':", _app);
 
     const loginRedirect = async (): Promise<void> => {
         const sanitizedServer = sanitizeServerUrl(server);
-        logThis(`loginRedirect sanitizedServer="${sanitizedServer}"`);
+        const logFxn = (msg: string, ...args: any[]) => logThis(`loginRedirect(): ${msg}`, ...args);
+        logFxn(`sanitizedServer="${sanitizedServer}"`);
         const api = createRestAPIClient({url: sanitizedServer});
         const redirectUri = window.location.origin + "/callback";
         let appTouse;
 
         if (_app?.clientId) {
-            logThis("loginRedirect() found existing app, using it:", _app);
+            logFxn(`found existing app creds to use connecting to '${sanitizedServer}':`, _app);
             appTouse = _app;
         } else {
-            logThis("loginRedirect() no existing app found, creating a new one...");
+            logFxn(`no existing app found, creating a new app for '${sanitizedServer}':`, _app);
 
             appTouse = await api.v1.apps.create({
                 clientName: APP_NAME,
@@ -50,10 +50,11 @@ export default function LoginPage() {
                 website: sanitizedServer,
             });
 
-            logThis("Created app with api.v1.apps.create(), response var 'appTouse':", appTouse);
+            logFxn("Created app with api.v1.apps.create(), response var 'appTouse':", appTouse);
         }
 
         const newApp = { ...appTouse, redirectUri };
+        logFxn("Saving app creds with redirect URI to local storage:", newApp);
         setApp(newApp);
 
         const query = stringifyQuery({
@@ -64,7 +65,7 @@ export default function LoginPage() {
         });
 
         const newUrl = `${sanitizedServer}/oauth/authorize?${query}`;
-        logThis(`loginRedirect() redirecting to "${newUrl}"...`);
+        logFxn(`redirecting to "${newUrl}"...`);
         window.location.href = newUrl;
     };
 

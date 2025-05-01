@@ -34,7 +34,7 @@ const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
 
 export default function Feed() {
     const { user, logout } = useAuthContext();
-    const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token, requestInit: { logLevel: 'debug'}});
+    const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 
@@ -50,11 +50,11 @@ export default function Feed() {
     // Reset all state except for the user and server
     const reset = async () => {
         if (!window.confirm("Are you sure?")) return;
-        if (!algorithm) return;
-        await algorithm.reset();
         setError("");
         setNumDisplayedToots(DEFAULT_NUM_TOOTS);
         setTriggerReload(triggerReload + 1);
+        if (!algorithm) return;
+        await algorithm.reset();
     };
 
     const finishedLoadingMsg = (

@@ -43,7 +43,6 @@ export default function CallbackPage() {
     }, [paramsCode]);
 
     // Get an OAuth token for our app using the code we received from the server
-    // TODO: this is done manually via fetch() instead of using the mastodon library
     const oAuth = async (code: string) => {
         const body = new FormData();
 
@@ -54,6 +53,7 @@ export default function CallbackPage() {
         body.append('code', code);
         body.append('scope', OAUTH_SCOPE_STR);
 
+        // TODO: access_token is retrieved manually via fetch() instead of using the masto.js library
         const oauthTokenURI = `${app.website}/oauth/token`;
         logThis(`oAuth() oauthTokenURI: "${oauthTokenURI}"\napp:`, app, `\nuser:`, user, `\ncode: "${code}`);
         const oAuthResult = await fetch(oauthTokenURI, {method: 'POST', body});
