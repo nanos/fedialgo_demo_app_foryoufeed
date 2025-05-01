@@ -8,7 +8,7 @@ const XS_VALUE = 4;  // React Bootstrap Grid System
 
 
 export default function Header() {
-    const { user } = useAuthContext();
+    const { logout, user } = useAuthContext();
 
     return (
         <Container className='w-100 m-1'>
@@ -51,7 +51,7 @@ export default function Header() {
 
                 <Col xs={XS_VALUE} className='text-end p-0'>
                     {user &&
-                        <Button className='p-2 text-center' variant="outline-primary" href="/logout">
+                        <Button className='p-2 text-center' variant="outline-primary" onClick={logout}>
                             Logout
                         </Button>}
                 </Col>

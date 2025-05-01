@@ -30,6 +30,9 @@ export default function CallbackPage() {
     const [app] = useAppStorage({ keyName: "app", defaultValue: null })
     const { user, loginUser } = useAuthContext();
     const code = searchParams.get('code');
+    const logThis = (msg: string, ...args: any[]) => logMsg(`<CallbackPage> ${msg}`, ...args);
+    logThis(`constructor, current value of 'app':`, app);
+    logThis(`constructor, current value of 'user':`, user);
 
     useEffect(() => {
         if (code !== null && !user) {
@@ -39,6 +42,7 @@ export default function CallbackPage() {
 
     const oAuth = async (code: string) => {
         const body = new FormData();
+        logThis(`oAuth() called with code: ${code}\nCurrent value of 'app':`, app);
         body.append('grant_type', 'authorization_code');
         body.append('client_id', app.clientId)
         body.append('client_secret', app.clientSecret)
@@ -52,6 +56,8 @@ export default function CallbackPage() {
         const api = createRestAPIClient({accessToken: accessToken, url: app.website});
 
         api.v1.accounts.verifyCredentials().then((user) => {
+            logThis(`oAuth() api.v1.accounts.verifyCredentials() succeeded, user:`, user);
+
             const userData: User = {
                 access_token: accessToken,
                 id: user.id,
@@ -60,9 +66,9 @@ export default function CallbackPage() {
                 username: user.username,
             };
 
-            loginUser(userData).then(() => logMsg(`Logged in '${userData.username}' successfully!`));
+            loginUser(userData).then(() => logThis(`Logged in '${userData.username}' successfully!`));
         }).catch((error) => {
-            console.error(`Login error:`, error);
+            console.error(`[DEMO APP] <CallbackPage> Login verifyCredentials() error:`, error);
             setError(error.toString());
         });
     };

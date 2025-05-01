@@ -34,7 +34,7 @@ const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
 
 export default function Feed() {
     const { user, logout } = useAuthContext();
-    const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token});
+    const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token, requestInit: { logLevel: 'debug'}});
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 
@@ -78,7 +78,7 @@ export default function Feed() {
                 currentUser = await api.v1.accounts.verifyCredentials();
             } catch (err) {
                 console.error(`Failed to verifyCredentials() with error:`, err);
-                logout();
+                // logout();
                 return;
             }
 

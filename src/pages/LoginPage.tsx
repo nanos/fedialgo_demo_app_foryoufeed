@@ -3,10 +3,11 @@ import { usePersistentState } from "react-persistent-state"
 
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
-import { createRestAPIClient } from 'masto';
+import { createRestAPIClient, createOAuthAPIClient, mastodon } from 'masto';
 import { stringifyQuery } from 'ufo'
 
 import { AppStorage, useLocalStorage } from "../hooks/useLocalStorage";
+import { logMsg, sanitizeServerUrl } from '../helpers/string_helpers';
 
 // Mastodon OAuth scopes: https://docs.joinmastodon.org/api/oauth-scopes/
 const OAUTH_SCOPES = [
@@ -24,21 +25,82 @@ const APP_NAME = "FediAlgo Demo";  // Name of the app that will be created on th
 
 export default function LoginPage() {
     const [server, setServer] = usePersistentState<string>(DEFAULT_MASTODON_SERVER, "server");
+    // TODO: why is this not using useAppStorage?
     const [_app, setApp] = useLocalStorage({keyName: "app", defaultValue: {}} as AppStorage);
+    const logThis = (msg: string, ...args: any[]) => logMsg(`<LoginPage> ${msg}`, ...args);
+    logThis("LoginPage constructor, current value of 'app':", _app);
+
+    // From token.spec.ts in masto.js project
+    // TODO: this doesn't work. won't accept the url: arg
+    const tryOauthApp = async (appsApp: mastodon.v1.Client): Promise<void> => {
+        try {
+            const sanitizedServer = sanitizeServerUrl(server);
+            logThis(`tryOauthApp() called, sanitizedServer="${sanitizedServer}"`);
+            const oauth = createOAuthAPIClient({url: sanitizedServer});
+            logThis(`tryOauthApp() SUCCESS created oauth:`, oauth);
+            const redirectUri = window.location.origin + "/callback";
+
+            // const oAuthResult = await fetch(`${app.website}/oauth/token`, {method: 'POST', body});
+            const tokenArgs = {
+                clientId: appsApp.clientId,
+                clientSecret: appsApp.clientSecret,
+                username: "admin@localhost",
+                password: "mastodonadmin",
+                scope: "read",
+                redirectUri: redirectUri,
+            };
+
+            // TODO: can also try "code" and "client_credentials" grant types
+            // https://github.com/neet/masto.js/commit/1f6b3caed3e892c7d30bf6280f6c847e8aad6f4d
+            logThis("tryOauthApp() oauth.token.create() args:", {...tokenArgs, grantType: "password"});
+
+            const token = await oauth.token.create({
+                grantType: "password",
+                ...tokenArgs,
+                // redirectUri: "urn:ietf:wg:oauth:2.0:oob",  // From masto.js token.spec.ts
+            });
+
+            logThis("tryOauthApp() oauth.token.create() SUCCESS, token:", token);
+        } catch (error) {
+            console.error(`[DEMO APP] <LoginPage> tryOauthApp(), oauth.token.create() failed, error:`, error);
+        }
+    }
 
     const loginRedirect = async (): Promise<void> => {
-        const sanitizedServer = server.replace("https://", "").replace("http://", "").split("/")[0];
-        const api = createRestAPIClient({url: `https://${sanitizedServer}`});
+        const sanitizedServer = sanitizeServerUrl(server);
+        logThis(`loginRedirect sanitizedServer="${sanitizedServer}"`);
+        const api = createRestAPIClient({url: sanitizedServer});
         const redirectUri = window.location.origin + "/callback";
 
         const app = await api.v1.apps.create({
             clientName: APP_NAME,
             redirectUris: redirectUri,
             scopes: OAUTH_SCOPE_STR,
-            website: `https://${sanitizedServer}`,
+            website: sanitizedServer,
         });
 
-        setApp({ ...app, redirectUri });
+        logThis("loginRedirect() api.v1.apps.create() response obj 'app':", app);
+        const newApp = { ...app, redirectUri };
+        setApp(newApp);
+        await tryOauthApp(app);
+
+        try {
+            // TODO: this isn't sending the Authorization="Bearer <TOKEN>" header correctly
+            // TODO: See https://docs.joinmastodon.org/methods/apps/#headers
+            // TODO: try it with the user access token instead?
+            const response = await api.v1.apps.verifyCredentials(
+                {
+                    requestInit: {
+                        // headers: {Authorization: `Bearer ${app.clientSecret}`}  // NOPE,
+                        headers: {Authorization: `Bearer ${app.clientId}`},
+                    }
+                }
+            );
+
+            logThis(`loginRedirect(), verifyCredentials() succeeded, response`, response);
+        } catch (error) {
+            console.error(`[DEMO APP] <LoginPage> loginRedirect() api.v1.apps.verifyCredentials() failed, error:`, error);
+        }
 
         const query = stringifyQuery({
             client_id: app.clientId,
@@ -47,7 +109,9 @@ export default function LoginPage() {
             scope: OAUTH_SCOPE_STR,
         });
 
-        window.location.href = `https://${sanitizedServer}/oauth/authorize?${query}`;
+        const newUrl = `${sanitizedServer}/oauth/authorize?${query}`;
+        logThis(`loginRedirect() redirecting to ${newUrl}`);
+        window.location.href = newUrl;
     };
 
     return (

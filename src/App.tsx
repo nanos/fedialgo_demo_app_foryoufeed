@@ -24,7 +24,7 @@ export default function App(): React.ReactElement {
         });
     }
 
-    logMsg("process.env.NODE_ENV:", process.env.NODE_ENV);
+    // logMsg("process.env.NODE_ENV:", process.env.NODE_ENV);
     logLocaleInfo();
 
     return (
@@ -41,7 +41,6 @@ export default function App(): React.ReactElement {
                         } />
                         <Route path="/callback" element={<CallbackPage />} />
                         <Route path="/login" element={<LoginPage />} />
-                        <Route path="/logout" element={<LogoutPage />} />
                     </Routes>
 
                     <Footer />

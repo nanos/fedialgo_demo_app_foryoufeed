@@ -5,6 +5,7 @@ import React, { PropsWithChildren } from "react";
 import { createContext, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { logMsg } from "../helpers/string_helpers";
 import { useAppStorage, useUserStorage } from "./useLocalStorage";
 import { User } from "../types";
 
@@ -20,6 +21,9 @@ export default function AuthProvider(props: PropsWithChildren) {
     const [user, setUser] = useUserStorage({ keyName: "user", defaultValue: null })
     const [app, _setApp] = useAppStorage({ keyName: "app", defaultValue: null })
     const navigate = useNavigate();
+    const logThis = (msg: string, ...args: any[]) => logMsg(`<AuthProvider> ${msg}`, ...args);
+    logThis("constructor current value of 'app':", app);
+    logThis("constructor current value of 'user':", user);
 
     // call this function when you want to authenticate the user. User object looks like this:
     // {
@@ -30,18 +34,21 @@ export default function AuthProvider(props: PropsWithChildren) {
     //     username: "cryptadamus"
     // }
     const loginUser = async (user: User) => {
+        logThis("loginUser() called with user:", user);
         setUser(user);
         navigate("/");
     };
 
     // call this function to sign out logged in user
-    const logout = async () => {
-        console.log("logout() called...")
+    const logout = async (): Promise<void> => {
+        logThis("logout() called...")
         const body = new FormData();
         body.append("token", user.access_token);
         body.append("client_id", app.clientId)
         body.append("client_secret", app.clientSecret);
 
+        // TODO: this seems to always fail with error
+        // Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://universeodon.com/oauth/revoke. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200.
         try {
             await fetch(user.server + '/oauth/revoke',
                 {
@@ -50,7 +57,7 @@ export default function AuthProvider(props: PropsWithChildren) {
                 }
             );
         } catch (error) {
-            console.warn("Error while trying to logout:", error);
+            console.error("Error while trying to logout:", error);
         }
 
         setUser(null);
