@@ -13,6 +13,7 @@ interface LoadingSpinnerProps {
 
 export default function LoadingSpinner(props: LoadingSpinnerProps) {
     let { isFullPage, message, style } = props;
+    console.log("LoadingSpinner props:", props);
 
     return (
         <div style={{...(isFullPage ? fullPageCenteredSpinner : inlineSpinner), ...(style || {})}}>

@@ -46,11 +46,8 @@ export default function Feed() {
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
     const isLoadingInitialFeed = !!(algorithm?.loadingStatus && !feed?.length);
-    let finishedLoadingStr = `Loaded ${(feed?.length || 0).toLocaleString()} toots for timeline`;
+    // console.log("[DEMO APP] <Feed> constructor isLoadingInitialFeed:", isLoadingInitialFeed, `\nalgo.loadingStatus: `, algorithm?.loadingStatus, `\nfeed.length: ${feed?.length}`);
 
-    if (algorithm?.lastLoadTimeInSeconds) {
-        finishedLoadingStr += ` in ${algorithm.lastLoadTimeInSeconds.toFixed(1)} seconds`;
-    }
 
     // Reset all state except for the user and server
     const reset = async () => {
@@ -62,15 +59,20 @@ export default function Feed() {
         await algorithm.reset();
     };
 
-    const finishedLoadingMsg = (
-        <p style={loadingMsgStyle}>
-            {finishedLoadingStr} ({
-                <a onClick={reset} style={resetLinkStyle}>
-                    clear all data and reload
-                </a>
-            })
-        </p>
-    );
+    const finishedLoadingMsg = (lastLoadTimeInSeconds: number | null) => {
+        let msg = `Loaded ${(feed?.length || 0).toLocaleString()} toots for timeline`;
+        // console.log("[DEMO APP] <Feed> finishedLoadingStr:", msg);
+
+        if (lastLoadTimeInSeconds) {
+            msg += ` in ${lastLoadTimeInSeconds.toFixed(1)} seconds`;
+        }
+
+        return (
+            <p style={loadingMsgStyle}>
+                {msg} ({<a onClick={reset} style={resetLinkStyle}>clear all data and reload</a>})
+            </p>
+        );
+    };
 
     // Initial load of the feed (can be re-triggered by changing the value of triggerReload)
     useEffect(() => {
@@ -176,7 +178,7 @@ export default function Feed() {
 
                         {algorithm?.loadingStatus
                             ? <LoadingSpinner message={algorithm.loadingStatus} style={loadingMsgStyle} />
-                            : finishedLoadingMsg}
+                            : (algorithm && finishedLoadingMsg(algorithm.lastLoadTimeInSeconds))}
                     </div>
                 </Col>
 
