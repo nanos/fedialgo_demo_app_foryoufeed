@@ -212,7 +212,8 @@ const loadingMsgStyle: CSSProperties = {
 const resetLinkStyle: CSSProperties = {
     color: "red",
     cursor: "pointer",
-    fontWeight: "700",
+    fontSize: "14px",
+    fontWeight: "bold",
     textDecoration: "underline",
 };
 

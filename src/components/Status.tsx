@@ -147,7 +147,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </span>
 
                             <time dateTime={toot.createdAt} title={toot.createdAt}>
-                                {timeString(toot.createdAt).replace("today", "Today")}
+                                {timeString(toot.createdAt, navigator?.language || "en-US").replace("today", "Today")}
                             </time>
                         </a>
 
