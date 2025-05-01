@@ -46,6 +46,11 @@ export default function Feed() {
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
     const isLoadingInitialFeed = !!(algorithm?.loadingStatus && !feed?.length);
+    let finishedLoadingStr = `Loaded ${(feed?.length || 0).toLocaleString()} toots for timeline`;
+
+    if (algorithm?.lastLoadTimeInSeconds) {
+        finishedLoadingStr += ` in ${algorithm.lastLoadTimeInSeconds.toFixed(1)} seconds`;
+    }
 
     // Reset all state except for the user and server
     const reset = async () => {
@@ -59,7 +64,7 @@ export default function Feed() {
 
     const finishedLoadingMsg = (
         <p style={loadingMsgStyle}>
-            Found {feed?.length} toots for timeline ({
+            {finishedLoadingStr} ({
                 <a onClick={reset} style={resetLinkStyle}>
                     clear all data and reload
                 </a>
