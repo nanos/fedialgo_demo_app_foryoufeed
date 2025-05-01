@@ -9,7 +9,8 @@ import { stringifyQuery } from 'ufo'
 import { AppStorage, useLocalStorage } from "../hooks/useLocalStorage";
 import { logMsg, sanitizeServerUrl } from '../helpers/string_helpers';
 
-// Mastodon OAuth scopes: https://docs.joinmastodon.org/api/oauth-scopes/
+// Mastodon OAuth scopes required for this app to work.
+// Details: https://docs.joinmastodon.org/api/oauth-scopes/
 const OAUTH_SCOPES = [
     "read",
     "write:bookmarks",
