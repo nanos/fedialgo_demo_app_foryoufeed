@@ -45,7 +45,7 @@ export default function Feed() {
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(false);  // Left panel stickiness
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
-    const isLoadingInitialFeed = !feed?.length;
+    const isLoadingInitialFeed = !!(algorithm?.loadingStatus && !feed?.length);
 
     // Reset all state except for the user and server
     const reset = async () => {
@@ -55,15 +55,17 @@ export default function Feed() {
         setError("");
         setNumDisplayedToots(DEFAULT_NUM_TOOTS);
         setTriggerReload(triggerReload + 1);
-    }
-
-    // Pull more toots to display from our local cached and sorted toot feed
-    // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
-    const showMoreToots = () => {
-        const msg = `Showing ${numDisplayedToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
-        logMsg(`${msg} (${feed.length} available in feed)`);
-        setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
     };
+
+    const finishedLoadingMsg = (
+        <p style={loadingMsgStyle}>
+            Found {feed?.length} toots for timeline ({
+                <a onClick={reset} style={resetLinkStyle}>
+                    clear all data and reload
+                </a>
+            })
+        </p>
+    );
 
     // Initial load of the feed (can be re-triggered by changing the value of triggerReload)
     useEffect(() => {
@@ -78,7 +80,7 @@ export default function Feed() {
                 currentUser = await api.v1.accounts.verifyCredentials();
             } catch (err) {
                 console.error(`Failed to verifyCredentials() with error:`, err);
-                // logout();
+                logout();
                 return;
             }
 
@@ -94,8 +96,16 @@ export default function Feed() {
     // Show more toots when the user scrolls to bottom of the page
     // TODO: This doesn't actually trigger any API calls, it just shows more of the preloaded toots
     useEffect(() => {
-        if (isBottom) showMoreToots();
-    }, [feed, isBottom, numDisplayedToots, setNumDisplayedToots, showMoreToots]);
+        // Pull more toots to display from our local cached and sorted toot feed
+        // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
+        const showMoreToots = () => {
+            const msg = `Showing ${numDisplayedToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
+            logMsg(`${msg} (${feed.length} available in feed)`);
+            setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
+        };
+
+        if (isBottom && feed.length) showMoreToots();
+    }, [feed, isBottom, numDisplayedToots, setNumDisplayedToots]);
 
     // Set up feed reloader to call algorithm.getFeed() on focus after RELOAD_IF_OLDER_THAN_SECONDS
     useEffect(() => {
@@ -158,19 +168,8 @@ export default function Feed() {
                         <FindFollowers api={api} user={user} />
 
                         {algorithm?.loadingStatus
-                            ? <LoadingSpinner
-                                  isFullPage={false}
-                                  message={algorithm.loadingStatus}
-                                  style={loadingMsgStyle}
-                              />
-                            : algorithm && (
-                                <p style={loadingMsgStyle}>
-                                    Found {feed.length} toots for timeline ({
-                                        <a onClick={reset} style={resetLinkStyle}>
-                                            clear all data and reload
-                                        </a>
-                                    })
-                                </p>)}
+                            ? <LoadingSpinner message={algorithm.loadingStatus} style={loadingMsgStyle} />
+                            : finishedLoadingMsg}
                     </div>
                 </Col>
 
@@ -189,11 +188,10 @@ export default function Feed() {
                     {isLoadingInitialFeed &&
                         <LoadingSpinner
                             isFullPage={true}
-                            // TODO: the NO_TOOTS_MSG will never show bc now isLoading is based on feed state variable
                             message={isLoadingInitialFeed ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
                         />}
 
-                    <div ref={bottomRef} onClick={showMoreToots}>
+                    <div ref={bottomRef}>
                         <p>Load More</p>
                     </div>
                 </Col>
