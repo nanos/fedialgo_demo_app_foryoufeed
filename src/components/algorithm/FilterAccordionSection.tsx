@@ -31,9 +31,8 @@ export default function FilterAccordionSection(props: AccordionProps) {
             <Accordion.Header key={`${sectionName}_head`}>
                 <Form.Label style={subHeaderLabel} >
                     <span
-                        className={isActive ? "someFilterActive" : JUNK_CLASS}
+                        className={`filterHeader ${isActive ? "filterHeader--active" : ""}`}
                         key={`${sectionName}_label1`}
-                        style={headerFont}
                     >
                         {capitalCase(sectionName)}
                     </span>
