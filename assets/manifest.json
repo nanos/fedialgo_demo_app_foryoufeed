@@ -1,6 +1,6 @@
 {
-    "short_name": "ForYouFeed",
-    "name": "ForYouFeed for Mastodon",
+    "short_name": "FediAlgo Demo",
+    "name": "FediAlgo Demo for Mastodon",
     "icons": [
         {
             "src": "logo.png",
