@@ -3,7 +3,7 @@ import { usePersistentState } from "react-persistent-state"
 
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
-import { createRestAPIClient, createOAuthAPIClient, mastodon } from 'masto';
+import { createRestAPIClient } from 'masto';
 import { stringifyQuery } from 'ufo'
 
 import { AppStorage, useLocalStorage } from "../hooks/useLocalStorage";
@@ -35,43 +35,29 @@ export default function LoginPage() {
         logThis(`loginRedirect sanitizedServer="${sanitizedServer}"`);
         const api = createRestAPIClient({url: sanitizedServer});
         const redirectUri = window.location.origin + "/callback";
+        let appTouse;
 
-        const app = await api.v1.apps.create({
-            clientName: APP_NAME,
-            redirectUris: redirectUri,
-            scopes: OAUTH_SCOPE_STR,
-            website: sanitizedServer,
-        });
+        if (_app?.clientId) {
+            logThis("loginRedirect() found existing app, using it:", _app);
+            appTouse = _app;
+        } else {
+            logThis("loginRedirect() no existing app found, creating a new one...");
 
-        logThis("loginRedirect() api.v1.apps.create() response obj 'app':", app);
-        const newApp = { ...app, redirectUri };
+            appTouse = await api.v1.apps.create({
+                clientName: APP_NAME,
+                redirectUris: redirectUri,
+                scopes: OAUTH_SCOPE_STR,
+                website: sanitizedServer,
+            });
+
+            logThis("Created app with api.v1.apps.create(), response var 'appTouse':", appTouse);
+        }
+
+        const newApp = { ...appTouse, redirectUri };
         setApp(newApp);
-        // await tryOauthApp(app);
-
-        // TODO: this gets closer to working the 2nd time you run the app, when the OAuth token
-        // TODO: After mastodon versino 4.3.0 you can use a URL like this to find the Oauth config:
-        //       https://defcon.social/.well-known/oauth-authorization-server
-        // is already authorized.
-        // try {
-        //     // TODO: this isn't sending the Authorization="Bearer <TOKEN>" header correctly
-        //     // TODO: See https://docs.joinmastodon.org/methods/apps/#headers
-        //     // TODO: try it with the user access token instead?
-        //     const response = await api.v1.apps.verifyCredentials(
-        //         // {
-        //         //     requestInit: {
-        //         //         // headers: {Authorization: `Bearer ${app.clientSecret}`}  // NOPE,
-        //         //         headers: {Authorization: `Bearer ${app.clientId}`},
-        //         //     }
-        //         // }
-        //     );
-
-        //     logThis(`loginRedirect(), verifyCredentials() succeeded, response`, response);
-        // } catch (error) {
-        //     console.error(`[DEMO APP] <LoginPage> loginRedirect() api.v1.apps.verifyCredentials() failed, error:`, error);
-        // }
 
         const query = stringifyQuery({
-            client_id: app.clientId,
+            client_id: appTouse.clientId,
             redirect_uri: redirectUri,
             response_type: 'code',
             scope: OAUTH_SCOPE_STR,

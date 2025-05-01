@@ -23,8 +23,8 @@ export default function AuthProvider(props: PropsWithChildren) {
     const navigate = useNavigate();
     const logThis = (msg: string, ...args: any[]) => logMsg(`<AuthProvider> ${msg}`, ...args);
     logThis("constructor current value of 'app':", app);
-    logThis("constructor current value of 'user':", user);
 
+    // TODO: this doesn't actually authenticate the user, it just sets the user object in local storage
     // call this function when you want to authenticate the user. User object looks like this:
     // {
     //     access_token: "xyssdsfdnffdwf"
@@ -34,7 +34,7 @@ export default function AuthProvider(props: PropsWithChildren) {
     //     username: "cryptadamus"
     // }
     const loginUser = async (user: User) => {
-        logThis("loginUser() called with user:", user);
+        logThis("loginUser() called while 'app' state var is:", app, `\nuser:`, user);
         setUser(user);
         navigate("/");
     };
