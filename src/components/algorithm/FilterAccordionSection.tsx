@@ -9,9 +9,7 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
 
-import { globalFont, headerFont, roundedBox } from "../../helpers/style_helpers";
-
-const JUNK_CLASS = "JUNKJUNKJUNK";
+import { globalFont, roundedBox } from "../../helpers/style_helpers";
 
 interface AccordionProps {
     children: ReactNode,
