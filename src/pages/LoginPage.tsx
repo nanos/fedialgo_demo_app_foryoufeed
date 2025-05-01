@@ -19,6 +19,7 @@ const OAUTH_SCOPES = [
 
 export const OAUTH_SCOPE_STR = OAUTH_SCOPES.join(" ");
 const DEFAULT_MASTODON_SERVER = "universeodon.com";  // Home of George Takei!
+const APP_NAME = "FediAlgo Demo";  // Name of the app that will be created on the server
 
 
 export default function LoginPage() {
@@ -26,12 +27,12 @@ export default function LoginPage() {
     const [_app, setApp] = useLocalStorage({keyName: "app", defaultValue: {}} as AppStorage);
 
     const loginRedirect = async (): Promise<void> => {
-        const sanitizedServer = server.replace("https://", "").replace("http://", "");
+        const sanitizedServer = server.replace("https://", "").replace("http://", "").split("/")[0];
         const api = createRestAPIClient({url: `https://${sanitizedServer}`});
         const redirectUri = window.location.origin + "/callback";
 
         const app = await api.v1.apps.create({
-            clientName: "ForYouFeed",
+            clientName: APP_NAME,
             redirectUris: redirectUri,
             scopes: OAUTH_SCOPE_STR,
             website: `https://${sanitizedServer}`,
@@ -58,9 +59,10 @@ export default function LoginPage() {
                     Fedi-Feed features a customizable algorithm for sorting your feed.<br />
                     You can choose which factors influence the sorting of your timeline.<br />
 
-                    <p style={privacyText}>
+                    <span style={privacyText}>
                         All calculations are done in your browser. None of your data leaves your machine.
-                    </p>
+                    </span>
+                    <br /><br />
 
                     To get started enter your Mastodon server in the form: <code>{DEFAULT_MASTODON_SERVER}</code>
                 </p>
@@ -103,7 +105,7 @@ const previewImage: CSSProperties = {
 
 const privacyText: CSSProperties = {
     color: "magenta",
-    fontSize: 20,
-    marginTop: "10px",
+    fontSize: 17,
+    marginTop: "3px",
     marginBottom: "20px",
 };
