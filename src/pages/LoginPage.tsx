@@ -27,7 +27,7 @@ export default function LoginPage() {
 
     const loginRedirect = async (): Promise<void> => {
         const sanitizedServer = server.replace("https://", "").replace("http://", "");
-        const api = await createRestAPIClient({url: `https://${sanitizedServer}`});
+        const api = createRestAPIClient({url: `https://${sanitizedServer}`});
         const redirectUri = window.location.origin + "/callback";
 
         const app = await api.v1.apps.create({
@@ -54,13 +54,14 @@ export default function LoginPage() {
             <img src={"/assets/Showcase.png"} style={previewImage}/>
 
             <div>
-                <p style={{ lineHeight: 1.3, marginBottom: "10px", marginTop: "10px", textAlign: "center" }}>
+                <p style={{ lineHeight: 1.3, marginBottom: "10px", marginTop: "13px", textAlign: "center" }}>
                     Fedi-Feed features a customizable algorithm for sorting your feed.<br />
                     You can choose which factors influence the sorting of your timeline.<br />
-                    <span style={{color: "magenta"}}>
+
+                    <p style={privacyText}>
                         All calculations are done in your browser. None of your data leaves your machine.
-                    </span>
-                    <br /><br />
+                    </p>
+
                     To get started enter your Mastodon server in the form: <code>{DEFAULT_MASTODON_SERVER}</code>
                 </p>
             </div>
@@ -98,4 +99,11 @@ const previewImage: CSSProperties = {
     borderRadius: "12px",
     boxShadow: "3px 3px 5px black",
     maxHeight: "550px",
+};
+
+const privacyText: CSSProperties = {
+    color: "magenta",
+    fontSize: 20,
+    marginTop: "10px",
+    marginBottom: "20px",
 };

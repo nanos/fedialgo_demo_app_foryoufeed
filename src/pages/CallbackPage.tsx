@@ -49,7 +49,7 @@ export default function CallbackPage() {
         const oAuthResult = await fetch(`${app.website}/oauth/token`, {method: 'POST', body});
         const json = await oAuthResult.json()
         const accessToken = json["access_token"];
-        const api = await createRestAPIClient({accessToken: accessToken, url: app.website});
+        const api = createRestAPIClient({accessToken: accessToken, url: app.website});
 
         api.v1.accounts.verifyCredentials().then((user) => {
             const userData: User = {
