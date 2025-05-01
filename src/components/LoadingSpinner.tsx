@@ -18,7 +18,7 @@ export default function LoadingSpinner(props: LoadingSpinnerProps) {
         <div style={{...(isFullPage ? fullPageCenteredSpinner : inlineSpinner), ...(style || {})}}>
             <Spinner animation="border" />
 
-            <div style={{marginLeft: "15px"}}>
+            <div style={{marginLeft: "12px"}}>
                 <p>{`Loading ${message}...`}</p>
             </div>
         </div>

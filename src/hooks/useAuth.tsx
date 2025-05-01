@@ -22,7 +22,6 @@ export default function AuthProvider(props: PropsWithChildren) {
     const [app, _setApp] = useAppStorage({ keyName: "app", defaultValue: null })
     const navigate = useNavigate();
     const logThis = (msg: string, ...args: any[]) => logMsg(`<AuthProvider> ${msg}`, ...args);
-    logThis("constructor current value of 'app':", app);
 
     // TODO: this doesn't actually authenticate the user, it just sets the user object in local storage
     // call this function when you want to authenticate the user. User object looks like this:

@@ -12,7 +12,6 @@ import Feed from './pages/Feed';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
-import LogoutPage from './pages/LogoutPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { logLocaleInfo, logMsg } from "./helpers/string_helpers";
 
