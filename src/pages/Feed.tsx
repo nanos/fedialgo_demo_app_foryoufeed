@@ -22,7 +22,7 @@ import { logMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "../hooks/useAuth";
 
 // Number constants
-const DEFAULT_NUM_TOOTS = 20;
+const DEFAULT_NUM_DISPLAYED_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
 const RELOAD_IF_OLDER_THAN_SECONDS = 60 * 10; // 10 minutes
 // String constants
@@ -43,7 +43,7 @@ export default function Feed() {
     const [error, setError] = useState<string>("");
     const [feed, setFeed] = useState<Toot[]>([]);  // contains timeline Toots
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(false);  // Left panel stickiness
-    const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_TOOTS);
+    const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
     const isLoadingInitialFeed = !!(algorithm?.loadingStatus && !feed?.length);
     let finishedLoadingStr = `Loaded ${(feed?.length || 0).toLocaleString()} toots for timeline`;
@@ -56,7 +56,7 @@ export default function Feed() {
     const reset = async () => {
         if (!window.confirm("Are you sure?")) return;
         setError("");
-        setNumDisplayedToots(DEFAULT_NUM_TOOTS);
+        setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
         setTriggerReload(triggerReload + 1);
         if (!algorithm) return;
         await algorithm.reset();
@@ -180,7 +180,7 @@ export default function Feed() {
 
                 <Col style={statusesColStyle} xs={6}>
                     {api && !isLoadingInitialFeed &&
-                        feed.slice(0, Math.max(DEFAULT_NUM_TOOTS, numDisplayedToots)).map((toot) => (
+                        feed.slice(0, Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots)).map((toot) => (
                             <StatusComponent
                                 api={api}
                                 key={toot.uri}

@@ -21,7 +21,7 @@ const OAUTH_SCOPES = [
 
 export const OAUTH_SCOPE_STR = OAUTH_SCOPES.join(" ");
 const DEFAULT_MASTODON_SERVER = "universeodon.com";  // Home of George Takei!
-const APP_NAME = "FediAlgo Demo";  // Name of the app that will be created on the server
+const APP_NAME = "FedialgoDemo";  // Name of the app that will be created on the server
 
 
 export default function LoginPage() {
