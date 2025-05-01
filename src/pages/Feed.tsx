@@ -127,7 +127,7 @@ export default function Feed() {
             } else {
                 const mostRecentAt = algorithm.mostRecentHomeTootAt();
                 const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
-                msg = `feed is ${feedAgeInSeconds}s old, mostRecentAt is '${timeString(mostRecentAt)}'`;
+                msg = `feed is ${feedAgeInSeconds.toFixed(0)}s old, most recent from followed: ${timeString(mostRecentAt)}`;
                 should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
             }
 
