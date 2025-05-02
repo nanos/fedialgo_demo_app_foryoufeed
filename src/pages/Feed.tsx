@@ -93,8 +93,14 @@ export default function Feed() {
 
             const algo = await TheAlgorithm.create({api: api, user: currentUser, setFeedInApp: setFeed});
             setAlgorithm(algo);
-            await algo.getFeed();
-            logMsg(`constructFeed() finished; feed has ${algo.feed.length} toots`);
+
+            try {
+                await algo.getFeed();
+                logMsg(`constructFeed() finished; feed has ${algo.feed.length} toots`);
+            } catch (err) {
+                console.error(`Failed to getFeed() with error:`, err);
+                setError(`Failed to get feed: ${err}`);
+            }
         };
 
         constructFeed();
@@ -141,7 +147,14 @@ export default function Feed() {
             // for some reason "not focused" never happens? https://developer.mozilla.org/en-US/docs/Web/API/Document/hasFocus
             // logMsg(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
             if (!document.hasFocus()) return;
-            if (shouldReloadFeed()) algorithm.getFeed();
+            if (!shouldReloadFeed()) return;
+
+            algorithm.getFeed().then(() => {
+                logMsg(`finished calling getFeed with ${feed.length} toots`);
+            }).catch((err) => {
+                console.error(`error calling getFeed():`, err);
+                setError(`error calling getFeed: ${err}`);
+            })
         };
 
         window.addEventListener(FOCUS, handleFocus);
