@@ -1,7 +1,7 @@
 const path = require("path");
 
 const CopyPlugin = require('copy-webpack-plugin');
-const webpack = require("webpack");
+const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshTypeScript = require('react-refresh-typescript');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
@@ -25,6 +25,7 @@ module.exports = {
     },
     devtool: "inline-source-map",
     mode: isDevelopment ? 'development' : 'production',
+
     module: {
         rules: [
             {
@@ -48,6 +49,7 @@ module.exports = {
             },
         ],
     },
+
     plugins: [
         isDevelopment && new ReactRefreshWebpackPlugin(),
         new CopyPlugin({
@@ -56,6 +58,7 @@ module.exports = {
                 { from: 'public', to: '' }, // copies all files from public to dist/
             ],
         }),
+        new Dotenv(),
         new HtmlWebpackPlugin({
             template: "./src/index.html",
         }),
@@ -65,14 +68,8 @@ module.exports = {
             maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
             skipWaiting: true,
         }),
-        // new webpack.EnvironmentPlugin({
-        //     NODE_ENV: "development",
-        // }),
-        // new webpack.DefinePlugin({
-        //     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        //     // 'process.env.DEBUG': JSON.stringify(process.env.DEBUG)
-        // }),
     ].filter(Boolean),
+
     devServer: {
         compress: true,
         historyApiFallback: true,
