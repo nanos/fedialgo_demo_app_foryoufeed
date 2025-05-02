@@ -55,14 +55,14 @@ export default function CallbackPage() {
 
         // TODO: access_token is retrieved manually via fetch() instead of using the masto.js library
         const oauthTokenURI = `${app.website}/oauth/token`;
-        logThis(`oAuth() oauthTokenURI: "${oauthTokenURI}"\napp:`, app, `\nuser:`, user, `\ncode: "${code}`);
+        // logThis(`oAuth() oauthTokenURI: "${oauthTokenURI}"\napp:`, app, `\nuser:`, user, `\ncode: "${code}`);
         const oAuthResult = await fetch(oauthTokenURI, {method: 'POST', body});
         const json = await oAuthResult.json()
         const accessToken = json["access_token"];
         const api = createRestAPIClient({accessToken: accessToken, url: app.website});
 
         api.v1.accounts.verifyCredentials().then((verifiedUser) => {
-            logThis(`oAuth() api.v1.accounts.verifyCredentials() succeeded, user:`, verifiedUser);
+            // logThis(`oAuth() api.v1.accounts.verifyCredentials() succeeded, user:`, verifiedUser);
 
             const userData: User = {
                 access_token: accessToken,
@@ -79,7 +79,7 @@ export default function CallbackPage() {
         });
 
         api.v1.apps.verifyCredentials().then((verifyResponse) => {
-            logThis(`oAuth() api.v1.apps.verifyCredentials() succeeded, verifyResponse:`, verifyResponse);
+            // logThis(`oAuth() api.v1.apps.verifyCredentials() succeeded, verifyResponse:`, verifyResponse);
         }).catch((error) => {
             console.error(`[DEMO APP] <CallbackPage> oAuth() api.v1.apps.verifyCredentials() failure:`, error);
         })
