@@ -111,6 +111,15 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                             onClick={(server, e) => followUri(`https://${server}`, e)}
                             trendingObjs={Object.keys(algorithm.mastodonServers)}
                         />
+
+                        <TrendingSection
+                            sectionName="Your Most Participated Hashtags"
+                            infoTxt={(tag) => `${(tag as TrendingTag).numToots?.toLocaleString()} toots`}
+                            linkText={(tag) => `#${(tag as TrendingTag).name}`}
+                            linkUrl={(tag) => algorithm.buildTagURL(tag as TrendingTag)}
+                            onClick={(tag, e) => followUri(algorithm.buildTagURL(tag as TrendingTag), e)}
+                            trendingObjs={algorithm.trendingData.hashtagParticipation}
+                        />
                     </Accordion>
                 </Accordion.Body>
             </Accordion.Item>

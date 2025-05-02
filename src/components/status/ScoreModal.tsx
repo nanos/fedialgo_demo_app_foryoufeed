@@ -45,7 +45,7 @@ export default function ScoreModal(props: ScoreModalProps) {
 
                 <p>
                     <code style={{whiteSpace: 'pre'}}>
-                        {JSON.stringify(toot.scoreInfo, null, 4)}
+                        {JSON.stringify(toot.simplifiedScoreInfo(), null, 4)}
                     </code>
                 </p>
             </Modal.Body>
@@ -56,7 +56,7 @@ export default function ScoreModal(props: ScoreModalProps) {
 
 const headerFont: CSSProperties = {
     ...globalFont,
-    fontSize: "18px",
+    fontSize: "14px",
     fontWeight: 700,
     marginBottom: "5px",
 };
