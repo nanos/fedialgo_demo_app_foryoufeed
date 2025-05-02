@@ -31,9 +31,7 @@ export const scoreString = (score: number | null): string => {
 
 
 export function logMsg (message: string, ...args: unknown[]): void {
-    // if (process.env.NODE_ENV !== 'production') {
-        console.log(`[${DEMO_APP}] ${message}`, ...args);
-    // }
+    console.log(`[${DEMO_APP}] ${message}`, ...args);
 };
 
 

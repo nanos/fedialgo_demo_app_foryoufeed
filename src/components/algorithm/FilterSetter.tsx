@@ -10,7 +10,9 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
 import { capitalCase } from "change-case";
-import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm, TypeFilterName } from "fedialgo";
+import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm, TypeFilterName, keyByProperty } from "fedialgo";
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css'
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import Slider from "./Slider";
@@ -43,28 +45,33 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         label: string,
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
         labelExtra?: number | string,
+        isHighlighted?: boolean
     ) => {
         labelExtra = (typeof labelExtra == "number") ? labelExtra.toLocaleString() : labelExtra;
-        const style: CSSProperties = {fontWeight: "bold"};
+        const labelStyle: CSSProperties = {fontWeight: "bold"};
+        const style = isHighlighted ? highlightedCheckboxStyle : {};
 
         if (CAPITALIZED_LABELS.includes(label)) {
             label = capitalCase(label);
-            style.fontSize = "14px";
+            labelStyle.fontSize = "14px";
         } else {
             label = (label.length > (MAX_LABEL_LENGTH - 2)) ? `${label.slice(0, MAX_LABEL_LENGTH)}...` : label;
         }
 
         return (
-            <Form.Switch
-                checked={isChecked}
-                id={label}
-                key={label}
-                label={<><span style={style}>{label}</span>{labelExtra && ` (${labelExtra})`}</>}
-                onChange={(e) => {
-                    onChange(e);
-                    algorithm.updateFilters(algorithm.filters)
-                }}
-            />
+            <a className={`tooted-hashtag-${isHighlighted ? "highlighted" : "normal"}`} style={{color: "black"}}>
+                <Form.Switch
+                    checked={isChecked}
+                    id={label}
+                    key={label}
+                    label={<><span style={labelStyle}>{label}</span>{labelExtra && ` (${labelExtra})`}</>}
+                    onChange={(e) => {
+                        onChange(e);
+                        algorithm.updateFilters(algorithm.filters)
+                    }}
+                    style={style}
+                />
+            </a>
         );
     };
 
@@ -99,11 +106,14 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
     };
 
     const propertyCheckbox = (element: string, filterSection: PropertyFilter) => {
+        const isHighlighted = (filterSection.title == PropertyName.HASHTAG) && element in algorithm.userData.participatedHashtags;
+
         return makeCheckbox(
             filterSection.validValues.includes(element),
             element,
             (e) => filterSection.updateValidOptions(element, e.target.checked),
-            filterSection.optionInfo[element]
+            filterSection.optionInfo[element],
+            isHighlighted
         );
     };
 
@@ -175,6 +185,10 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                 </Accordion.Header>
 
                 <Accordion.Body style={accordionPadding}>
+                    <Tooltip anchorSelect=".tooted-hashtag-highlighted" place="top">
+                        You've tooted this hashtag
+                    </Tooltip>
+
                     <Accordion key={"fiaccordion"}>
                         {/* property filters (language, type, etc) */}
                         {visibleSections.map((filterSection) => (
@@ -211,4 +225,9 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
 
 const accordionPadding: CSSProperties = {
     padding: "0px",
+};
+
+const highlightedCheckboxStyle: CSSProperties = {
+    backgroundColor: "cyan",
+    borderRadius: "5px"
 };
