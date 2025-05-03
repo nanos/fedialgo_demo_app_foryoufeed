@@ -101,9 +101,9 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
 
                         <TrendingSection
                             name="Servers That Were Scraped"
-                            infoTxt={(server) => {
-                                const serverInfo = algorithm.mastodonServers[server as string];
-                                const info = [`MAU: ${serverInfo.serverMAU.toLocaleString()}`];
+                            infoTxt={(domain) => {
+                                const serverInfo = algorithm.mastodonServers[domain as string];
+                                const info = [`MAU: ${serverInfo.MAU.toLocaleString()}`];
                                 info.push(`followed pct of MAU: ${serverInfo.followedPctOfMAU.toFixed(3)}%`);
                                 return info.join(', ');
                             }}
