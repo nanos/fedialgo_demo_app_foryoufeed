@@ -42,6 +42,9 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         }, {} as Record<PropertyName, boolean>)
     );
 
+    // TODO: this maybe should be refactored to its own Component with a state variable?
+    // Throwing errors (though rarely) as it is. React's suggestion is here:
+    // https://react.dev/reference/react-dom/components/input#controlling-an-input-with-a-state-variable
     const makeCheckbox = (
         isChecked: boolean,
         label: string,

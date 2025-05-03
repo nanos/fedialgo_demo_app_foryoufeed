@@ -33,16 +33,15 @@ export default function LoginPage() {
     const loginRedirect = async (): Promise<void> => {
         const sanitizedServer = sanitizeServerUrl(server);
         const logFxn = (msg: string, ...args: any[]) => logThis(`loginRedirect(): ${msg}`, ...args);
-        logFxn(`sanitizedServer="${sanitizedServer}"`);
         const api = createRestAPIClient({url: sanitizedServer});
         const redirectUri = window.location.origin + "/callback";
         let appTouse;
 
         if (_app?.clientId) {
-            logFxn(`found existing app creds to use connecting to '${sanitizedServer}':`, _app);
+            // logFxn(`found existing app creds to use connecting to '${sanitizedServer}':`, _app);
             appTouse = _app;
         } else {
-            logFxn(`no existing app found, creating a new app for '${sanitizedServer}':`, _app);
+            // logFxn(`no existing app found, creating a new app for '${sanitizedServer}':`, _app);
 
             appTouse = await api.v1.apps.create({
                 clientName: APP_NAME,
@@ -51,11 +50,11 @@ export default function LoginPage() {
                 website: sanitizedServer,
             });
 
-            logFxn("Created app with api.v1.apps.create(), response var 'appTouse':", appTouse);
+            // logFxn("Created app with api.v1.apps.create(), response var 'appTouse':", appTouse);
         }
 
         const newApp = { ...appTouse, redirectUri };
-        logFxn("Saving app creds with redirect URI to local storage:", newApp);
+        // logFxn("Saving app creds with redirect URI to local storage:", newApp);
         setApp(newApp);
 
         const query = stringifyQuery({
