@@ -20,26 +20,26 @@ interface TrendingProps {
     linkText: (obj: TrendingListObj) => React.ReactElement | string;
     linkUrl: (obj: TrendingListObj) => string;
     onClick: (obj: TrendingListObj, e: React.MouseEvent) => void;
-    sectionName: string;
+    name: string;
     trendingObjs: TrendingListObj[];
 };
 
 
 export default function TrendingSection(props: TrendingProps) {
-    const { hasCustomStyle, infoTxt, linkText, linkUrl, onClick, sectionName, trendingObjs } = props;
+    const { hasCustomStyle, infoTxt, linkText, linkUrl, onClick, name, trendingObjs } = props;
     const linkStyle = hasCustomStyle ? tagLinkStyle : boldTagLinkStyle;
 
     return (
-        <Accordion.Item eventKey={sectionName} >
-            <Accordion.Header key={`${sectionName}_head`}>
+        <Accordion.Item eventKey={name}>
+            <Accordion.Header key={`${name}_head`}>
                 <Form.Label style={subHeaderLabel} >
-                    <span key={`${sectionName}_label1`} style={headerFont}>
-                        {capitalCase(sectionName)}
+                    <span style={headerFont}>
+                        {capitalCase(name)}
                     </span>
                 </Form.Label>
             </Accordion.Header>
 
-            <Accordion.Body key={`${sectionName}_body`} style={accordionBody}>
+            <Accordion.Body key={`${name}_body`} style={accordionBody}>
                 <div style={roundedBox}>
                     <ol style={listStyle}>
                         {trendingObjs.map((obj, i) => (

@@ -21,6 +21,7 @@ import { followUri, openToot } from "../helpers/react_helpers";
 import { titleStyle } from "../helpers/style_helpers";
 
 const MAX_TRENDING_LINK_LEN = 170;
+const MAX_HASHTAGS_TO_SHOW = 100;
 
 const ATTACHMENT_PREFIXES: Record<MediaCategory, string> = {
     [MediaCategory.AUDIO]: "audio",
@@ -70,7 +71,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
 
                     <Accordion>
                         <TrendingSection
-                            sectionName="Hashtags"
+                            name="Hashtags"
                             infoTxt={infoTxt}
                             linkText={(tag) => `#${(tag as TrendingTag).name}`}
                             linkUrl={(tag) => (tag as TrendingTag).url}
@@ -79,7 +80,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                         />
 
                         <TrendingSection
-                            sectionName="Links"
+                            name="Links"
                             hasCustomStyle={true}
                             infoTxt={infoTxt}
                             linkText={linkText}
@@ -89,7 +90,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                         />
 
                         <TrendingSection
-                            sectionName="Toots"
+                            name="Toots"
                             hasCustomStyle={true}
                             infoTxt={(t: Toot) => `${t.repliesCount?.toLocaleString()} replies, ${t.reblogsCount?.toLocaleString()} retoots`}
                             linkText={tootLinkText}
@@ -99,7 +100,7 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                         />
 
                         <TrendingSection
-                            sectionName="Servers That Were Scraped"
+                            name="Servers That Were Scraped"
                             infoTxt={(server) => {
                                 const serverInfo = algorithm.mastodonServers[server as string];
                                 const info = [`MAU: ${serverInfo.serverMAU.toLocaleString()}`];
@@ -113,12 +114,12 @@ export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm })
                         />
 
                         <TrendingSection
-                            sectionName="Your Most Participated Hashtags"
-                            infoTxt={(tag) => `${(tag as TrendingTag).numToots?.toLocaleString()} toots`}
+                            name="Your Most Participated Hashtags"
+                            infoTxt={(tag) => `${(tag as TrendingTag).numToots?.toLocaleString()} of your recent toots`}
                             linkText={(tag) => `#${(tag as TrendingTag).name}`}
                             linkUrl={(tag) => (tag as TrendingTag).url}
                             onClick={(tag, e) => followUri((tag as TrendingTag).url, e)}
-                            trendingObjs={algorithm.userData.popularUserTags()}
+                            trendingObjs={algorithm.userData.popularUserTags().slice(0, MAX_HASHTAGS_TO_SHOW)}
                         />
                     </Accordion>
                 </Accordion.Body>

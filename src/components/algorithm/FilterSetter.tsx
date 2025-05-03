@@ -20,6 +20,8 @@ import { logMsg } from "../../helpers/string_helpers";
 import { titleStyle } from "../../helpers/style_helpers";
 
 const MAX_LABEL_LENGTH = 20;
+const HASHTAG_ANCHOR = "user-hashtag-anchor";
+const HIGHLIGHT = "highlighted";
 const INVERT_SELECTION = "invertSelection";
 const SORT_KEYS = "sortByCount";
 const CAPITALIZED_LABELS = [INVERT_SELECTION, SORT_KEYS].concat(Object.values(TypeFilterName) as string[]);
@@ -45,11 +47,11 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         label: string,
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
         labelExtra?: number | string,
-        isHighlighted?: boolean
+        tooltipText?: string,
     ) => {
         labelExtra = (typeof labelExtra == "number") ? labelExtra.toLocaleString() : labelExtra;
         const labelStyle: CSSProperties = {fontWeight: "bold"};
-        const style = isHighlighted ? highlightedCheckboxStyle : {};
+        const style = tooltipText ? highlightedCheckboxStyle : {};
 
         if (CAPITALIZED_LABELS.includes(label)) {
             label = capitalCase(label);
@@ -59,7 +61,12 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         }
 
         return (
-            <a className={`tooted-hashtag-${isHighlighted ? "highlighted" : "normal"}`} style={{color: "black"}}>
+            <a
+                data-tooltip-id={HASHTAG_ANCHOR + (tooltipText ? HIGHLIGHT : "")}
+                data-tooltip-content={tooltipText}
+                key={label}
+                style={{color: "black"}}
+            >
                 <Form.Switch
                     checked={isChecked}
                     id={label}
@@ -105,15 +112,21 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
         );
     };
 
-    const propertyCheckbox = (element: string, filterSection: PropertyFilter) => {
-        const isHighlighted = (filterSection.title == PropertyName.HASHTAG) && element in algorithm.userData.participatedHashtags;
+    // Build a checkbox for a property filter. The 'name' is also the element of the filter array.
+    const propertyCheckbox = (name: string, filterSection: PropertyFilter) => {
+        let tooltipText: string | undefined;
+
+        if ((filterSection.title == PropertyName.HASHTAG) && (name in algorithm.userData.participatedHashtags)) {
+            const tag = algorithm.userData.participatedHashtags[name];
+            tooltipText = `You've posted this hashtag ${tag.numToots} times recently.`;
+        }
 
         return makeCheckbox(
-            filterSection.validValues.includes(element),
-            element,
-            (e) => filterSection.updateValidOptions(element, e.target.checked),
-            filterSection.optionInfo[element],
-            isHighlighted
+            filterSection.validValues.includes(name),
+            name,
+            (e) => filterSection.updateValidOptions(name, e.target.checked),
+            filterSection.optionInfo[name],
+            tooltipText
         );
     };
 
@@ -185,9 +198,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                 </Accordion.Header>
 
                 <Accordion.Body style={accordionPadding}>
-                    <Tooltip anchorSelect=".tooted-hashtag-highlighted" place="top">
-                        You've tooted this hashtag
-                    </Tooltip>
+                    <Tooltip id={HASHTAG_ANCHOR + HIGHLIGHT} place="top" />
 
                     <Accordion key={"fiaccordion"}>
                         {/* property filters (language, type, etc) */}
