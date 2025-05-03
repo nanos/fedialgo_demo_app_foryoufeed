@@ -48,12 +48,13 @@ export default function Feed() {
     const isLoadingInitialFeed = !!(algorithm?.loadingStatus && !feed?.length);
     // console.log("[DEMO APP] <Feed> constructor isLoadingInitialFeed:", isLoadingInitialFeed, `\nalgo.loadingStatus: `, algorithm?.loadingStatus, `\nfeed.length: ${feed?.length}`);
 
+    const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
 
     // Reset all state except for the user and server
     const reset = async () => {
         if (!window.confirm("Are you sure?")) return;
         setError("");
-        setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
+        resetNumDisplayedToots();
         setTriggerReload(triggerReload + 1);
         if (!algorithm) return;
         await algorithm.reset();
@@ -185,7 +186,7 @@ export default function Feed() {
                         </div>
 
                         {algorithm && <WeightSetter algorithm={algorithm} />}
-                        {algorithm && <FilterSetter algorithm={algorithm} />}
+                        {algorithm && <FilterSetter algorithm={algorithm} resetNumDisplayedToots={resetNumDisplayedToots}/>}
                         {algorithm && <TrendingInfo algorithm={algorithm} />}
                         <FindFollowers api={api} user={user} />
 

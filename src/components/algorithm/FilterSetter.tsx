@@ -10,7 +10,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
 import { capitalCase } from "change-case";
-import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm, TypeFilterName, keyByProperty } from "fedialgo";
+import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm, TypeFilterName } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css'
 
@@ -30,8 +30,14 @@ const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
 const MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
 const MIN_TOOT_MSG = ` with at least ${MIN_TOOTS_TO_APPEAR_IN_FILTER} toots`;
 
+interface FilterSetterProps {
+    algorithm: TheAlgorithm,
+    resetNumDisplayedToots: () => void,
+};
 
-export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm }) {
+
+export default function FilterSetter(props: FilterSetterProps) {
+    const {algorithm, resetNumDisplayedToots} = props;
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
     const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
 
@@ -77,7 +83,8 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                     label={<><span style={labelStyle}>{label}</span>{labelExtra && ` (${labelExtra})`}</>}
                     onChange={(e) => {
                         onChange(e);
-                        algorithm.updateFilters(algorithm.filters)
+                        algorithm.updateFilters(algorithm.filters);
+                        resetNumDisplayedToots();
                     }}
                     style={style}
                 />
@@ -179,6 +186,7 @@ export default function FilterSetter({ algorithm }: { algorithm: TheAlgorithm })
                     onChange={async (e) => {
                         numericFilter.value = Number(e.target.value);
                         algorithm.updateFilters(algorithm.filters);
+                        resetNumDisplayedToots();
                     }}
                     stepSize={1}
                     value={numericFilter.value}

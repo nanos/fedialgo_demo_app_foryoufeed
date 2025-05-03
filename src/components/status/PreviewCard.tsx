@@ -36,15 +36,13 @@ export default function PreviewCard({ card }: { card: mastodon.v1.PreviewCard })
             </div>
 
             <div className='status-card__content'>
-                {/* <span className='status-card__host'>
-                    [{card.providerName}]
-                </span> */}
-
                 <span style={providerName}>
                     [{card.providerName || extractDomain(card.url)}]
-                </span> {parse(card.title)}
+                </span> <span style={headline}>
+                    {parse(card.title)}
+                </span>
 
-                <p className='status-card__description'>
+                <p className='status-card__description' style={{marginTop: "2px"}}>
                     {card.description.slice(0, MAX_STATUS_CARD_LEN)}
                 </p>
             </div>
@@ -60,4 +58,9 @@ const cardImage: CSSProperties = {
 
 const providerName: CSSProperties = {
     color: "#4b427a",
+};
+
+const headline: CSSProperties = {
+    // fontSize: "16px",
+    // fontWeight: "bold",
 };
