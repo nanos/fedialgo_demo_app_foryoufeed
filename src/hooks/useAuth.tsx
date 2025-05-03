@@ -33,7 +33,8 @@ export default function AuthProvider(props: PropsWithChildren) {
     //     username: "cryptadamus"
     // }
     const loginUser = async (user: User) => {
-        logThis("loginUser() called while 'app' state var is:", app, `\nuser:`, user);
+        // TODO: this contains secret keys, don't log it unsanitized
+        // logThis("loginUser() called while 'app' state var is:", app, `\nuser:`, user);
         setUser(user);
         navigate("/");
     };
