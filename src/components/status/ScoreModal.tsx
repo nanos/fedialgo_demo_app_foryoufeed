@@ -45,7 +45,7 @@ export default function ScoreModal(props: ScoreModalProps) {
 
                 <p>
                     <code style={{whiteSpace: 'pre'}}>
-                        {JSON.stringify(toot.simplifiedScoreInfo(), null, 4)}
+                        {JSON.stringify(toot.alternateScoreInfo(), null, 4)}
                     </code>
                 </p>
             </Modal.Body>
