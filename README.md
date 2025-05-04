@@ -46,6 +46,11 @@ There's [a script](./quick_install.sh) in this repo that will do all the steps f
 1. Have fun.
 1. Profit.
 
+### Upgrading
+```bash
+git pull
+npm install
+```
 
 # Usage
 ## Setting Weights
