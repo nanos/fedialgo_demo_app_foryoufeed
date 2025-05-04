@@ -41,11 +41,11 @@ export default function Feed() {
     // State variables
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
     const [error, setError] = useState<string>("");
-    const [feed, setFeed] = useState<Toot[]>([]);  // contains timeline Toots
+    const [timeline, setTimeline] = useState<Toot[]>([]);  // contains timeline Toots
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(false);  // Left panel stickiness
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
-    const isLoadingInitialFeed = !!(algorithm?.loadingStatus && !feed?.length);
+    const isLoadingInitialFeed = !!(algorithm?.loadingStatus && !timeline?.length);
     // console.log("[DEMO APP] <Feed> constructor isLoadingInitialFeed:", isLoadingInitialFeed, `\nalgo.loadingStatus: `, algorithm?.loadingStatus, `\nfeed.length: ${feed?.length}`);
 
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
@@ -61,7 +61,7 @@ export default function Feed() {
     };
 
     const finishedLoadingMsg = (lastLoadTimeInSeconds: number | null) => {
-        let msg = `Loaded ${(feed?.length || 0).toLocaleString()} toots for timeline`;
+        let msg = `Loaded ${(timeline?.length || 0).toLocaleString()} toots for timeline`;
         // console.log("[DEMO APP] <Feed> finishedLoadingStr:", msg);
 
         if (lastLoadTimeInSeconds) {
@@ -81,7 +81,7 @@ export default function Feed() {
 
         // Check that we have valid user credentials and load timeline toots, otherwise force a logout.
         const constructFeed = async (): Promise<void> => {
-            logMsg(`constructFeed() called with user ID ${user?.id} (feed already has ${feed.length} toots)`);
+            logMsg(`constructFeed() called with user ID ${user?.id} (feed already has ${timeline.length} toots)`);
             let currentUser: mastodon.v1.Account;
 
             try {
@@ -92,15 +92,15 @@ export default function Feed() {
                 return;
             }
 
-            const algo = await TheAlgorithm.create({api: api, user: currentUser, setFeedInApp: setFeed});
+            const algo = await TheAlgorithm.create({api: api, user: currentUser, setTimelineInApp: setTimeline});
             setAlgorithm(algo);
 
             try {
-                await algo.getFeed();
+                algo.triggerFeedUpdate();
                 logMsg(`constructFeed() finished; feed has ${algo.feed.length} toots`);
             } catch (err) {
-                console.error(`Failed to getFeed() with error:`, err);
-                setError(`Failed to get feed: ${err}`);
+                console.error(`Failed to triggerFeedUpdate() with error:`, err);
+                setError(`Failed to triggerFeedUpdate: ${err}`);
             }
         };
 
@@ -116,14 +116,14 @@ export default function Feed() {
         // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
         const showMoreToots = () => {
             const msg = `Showing ${numDisplayedToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
-            logMsg(`${msg} (${feed.length} available in feed)`);
+            logMsg(`${msg} (${timeline.length} available in feed)`);
             setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
         };
 
-        if (isBottom && feed.length) showMoreToots();
-    }, [feed, isBottom, numDisplayedToots, setNumDisplayedToots]);
+        if (isBottom && timeline.length) showMoreToots();
+    }, [timeline, isBottom, numDisplayedToots, setNumDisplayedToots]);
 
-    // Set up feed reloader to call algorithm.getFeed() on focus after RELOAD_IF_OLDER_THAN_SECONDS
+    // Set up feed reloader to call algorithm.triggerFeedUpdate() on focus after RELOAD_IF_OLDER_THAN_SECONDS
     useEffect(() => {
         if (!user || !algorithm || isLoadingInitialFeed) return;
 
@@ -150,17 +150,17 @@ export default function Feed() {
             if (!document.hasFocus()) return;
             if (!shouldReloadFeed()) return;
 
-            algorithm.getFeed().then(() => {
-                logMsg(`finished calling getFeed with ${feed.length} toots`);
+            algorithm.triggerFeedUpdate().then(() => {
+                logMsg(`finished calling getFeed with ${timeline.length} toots`);
             }).catch((err) => {
-                console.error(`error calling getFeed():`, err);
-                setError(`error calling getFeed: ${err}`);
+                console.error(`error calling triggerFeedUpdate():`, err);
+                setError(`error calling triggerFeedUpdate(): ${err}`);
             })
         };
 
         window.addEventListener(FOCUS, handleFocus);
         return () => window.removeEventListener(FOCUS, handleFocus);
-    }, [algorithm, feed, isLoadingInitialFeed, user]);
+    }, [algorithm, timeline, isLoadingInitialFeed, user]);
 
     return (
         <Container fluid style={{height: 'auto'}}>
@@ -198,7 +198,7 @@ export default function Feed() {
 
                 <Col style={statusesColStyle} xs={6}>
                     {api && !isLoadingInitialFeed &&
-                        feed.slice(0, Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots)).map((toot) => (
+                        timeline.slice(0, Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots)).map((toot) => (
                             <StatusComponent
                                 api={api}
                                 key={toot.uri}
