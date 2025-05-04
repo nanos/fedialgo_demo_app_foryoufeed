@@ -45,7 +45,7 @@ export default function Feed() {
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(false);  // Left panel stickiness
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
-    const isLoadingInitialFeed = !!(algorithm?.loadingStatus && !timeline?.length);
+    const isLoadingInitialFeed = !!(algorithm?.isLoading() && !timeline?.length);
     // console.log("[DEMO APP] <Feed> constructor isLoadingInitialFeed:", isLoadingInitialFeed, `\nalgo.loadingStatus: `, algorithm?.loadingStatus, `\nfeed.length: ${feed?.length}`);
 
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
@@ -131,8 +131,8 @@ export default function Feed() {
             let should = false;
             let msg: string;
 
-            if (algorithm?.loadingStatus) {
-                msg = `algorithm.loadingStatus is not empty so load in progress`;
+            if (algorithm?.isLoading()) {
+                msg = `algorithm.isLoading() says load in progress`;
             } else {
                 const mostRecentAt = algorithm.mostRecentHomeTootAt();
                 const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
@@ -190,7 +190,7 @@ export default function Feed() {
                         {algorithm && <TrendingInfo algorithm={algorithm} />}
                         <FindFollowers api={api} user={user} />
 
-                        {algorithm?.loadingStatus
+                        {algorithm?.isLoading()
                             ? <LoadingSpinner message={algorithm.loadingStatus} style={loadingMsgStyle} />
                             : (algorithm && finishedLoadingMsg(algorithm.lastLoadTimeInSeconds))}
                     </div>
