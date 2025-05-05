@@ -112,9 +112,13 @@ export default function Feed() {
         // Pull more toots to display from our local cached and sorted toot feed
         // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
         const showMoreToots = () => {
-            const msg = `Showing ${numDisplayedToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
-            logMsg(`${msg} (${timeline.length} available in feed)`);
-            setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
+            if (numDisplayedToots < timeline.length) {
+                const msg = `Showing ${numDisplayedToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
+                logMsg(`${msg} (${timeline.length} available in feed)`);
+                setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
+            } else {
+                logMsg(`Already showing ${numDisplayedToots} toots, no more toots available`);
+            }
         };
 
         if (isBottom && timeline.length) {
@@ -142,7 +146,7 @@ export default function Feed() {
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [timeline, isBottom, numDisplayedToots, setNumDisplayedToots, timeline]);
+    }, [isBottom, numDisplayedToots, setNumDisplayedToots, timeline]);
 
     // Set up feed reloader to call algorithm.triggerFeedUpdate() on focus after RELOAD_IF_OLDER_THAN_SECONDS
     useEffect(() => {
