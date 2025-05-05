@@ -160,6 +160,12 @@ export default function Feed() {
                 msg = `algorithm.isLoading() says load in progress`;
             } else {
                 const mostRecentAt = algorithm.mostRecentHomeTootAt();
+
+                if (!mostRecentAt) {
+                    console.warn(`${timeline.length} toots in feed, but no most recent toot found!`);
+                    return false;
+                }
+
                 const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
                 msg = `feed is ${feedAgeInSeconds.toFixed(0)}s old, most recent from followed: ${timeString(mostRecentAt)}`;
                 should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
