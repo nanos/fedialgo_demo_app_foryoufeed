@@ -19,7 +19,7 @@ import Slider from "./Slider";
 import { logMsg } from "../../helpers/string_helpers";
 import { titleStyle } from "../../helpers/style_helpers";
 
-const MAX_LABEL_LENGTH = 20;
+const MAX_LABEL_LENGTH = 18;
 const HASHTAG_ANCHOR = "user-hashtag-anchor";
 const HIGHLIGHT = "highlighted";
 const INVERT_SELECTION = "invertSelection";
