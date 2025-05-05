@@ -4,6 +4,8 @@
 import React, { CSSProperties } from 'react';
 import Spinner from 'react-bootstrap/esm/Spinner';
 
+const ANIMATION = "grow";  // "border" is the other option
+
 interface LoadingSpinnerProps {
     isFullPage?: boolean,
     message?: string,
@@ -13,11 +15,12 @@ interface LoadingSpinnerProps {
 
 export default function LoadingSpinner(props: LoadingSpinnerProps) {
     let { isFullPage, message, style } = props;
-    // console.log("LoadingSpinner props:", props);
 
     return (
         <div style={{...(isFullPage ? fullPageCenteredSpinner : inlineSpinner), ...(style || {})}}>
-            <Spinner animation="border" />
+            {isFullPage
+                ? <Spinner animation={ANIMATION} />
+                : <Spinner animation={ANIMATION} size="sm" />}
 
             <div style={{marginLeft: "12px"}}>
                 <p>{`Loading ${message}...`}</p>

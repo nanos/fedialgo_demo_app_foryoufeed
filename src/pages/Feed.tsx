@@ -41,13 +41,14 @@ export default function Feed() {
     // State variables
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
     const [error, setError] = useState<string>("");
-    const [timeline, setTimeline] = useState<Toot[]>([]);  // contains timeline Toots
-    const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(false);  // Left panel stickiness
+    const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(true);  // Left panel stickiness
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [scrollPercentage, setScrollPercentage] = useState(0);
+    const [timeline, setTimeline] = useState<Toot[]>([]);  // contains timeline Toots
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
+    // Other variables
     const isLoadingInitialFeed = !!(algorithm?.isLoading() && !timeline?.length);
-    // console.log("[DEMO APP] <Feed> constructor isLoadingInitialFeed:", isLoadingInitialFeed, `\nalgo.loadingStatus: `, algorithm?.loadingStatus, `\nfeed.length: ${feed?.length}`);
+    const scrollMsg = `Scroll: ${scrollPercentage.toFixed(2)}%, Displaying ${numDisplayedToots} Toots`;
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
 
     // Reset all state except for the user and server
@@ -62,11 +63,7 @@ export default function Feed() {
 
     const finishedLoadingMsg = (lastLoadTimeInSeconds: number | null) => {
         let msg = `Loaded ${(timeline?.length || 0).toLocaleString()} toots for timeline`;
-        // logMsg("<Feed> finishedLoadingStr:", msg);
-
-        if (lastLoadTimeInSeconds) {
-            msg += ` in ${lastLoadTimeInSeconds.toFixed(1)} seconds`;
-        }
+        if (lastLoadTimeInSeconds) msg += ` in ${lastLoadTimeInSeconds.toFixed(1)} seconds`;
 
         return (
             <p style={loadingMsgStyle}>
@@ -199,14 +196,16 @@ export default function Feed() {
             <Row>
                 <Col xs={6}>
                     <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
-                        <div style={{height: "20px", marginBottom: "5px"}}>
+                        <div style={stickySwitchContainer}>
                             <Form.Check
                                 type="checkbox"
-                                label="Stick Control Panel To Top"
+                                label={`Stick Control Panel To Top`}
                                 checked={isControlPanelSticky}
                                 onChange={(e) => setIsControlPanelSticky(e.target.checked)}
                                 className="mb-3"
                             />
+
+                            <p>{scrollMsg}</p>
                         </div>
 
                         {algorithm && <WeightSetter algorithm={algorithm} />}
@@ -218,9 +217,9 @@ export default function Feed() {
                             ? <LoadingSpinner message={algorithm.loadingStatus} style={loadingMsgStyle} />
                             : (algorithm && finishedLoadingMsg(algorithm.lastLoadTimeInSeconds))}
 
-                        <p style={loadingMsgStyle}>
+                        {/* <p style={loadingMsgStyle}>
                             Scroll percentage: {scrollPercentage.toFixed(2)}%, displaying {numDisplayedToots} toots.
-                        </p>
+                        </p> */}
                     </div>
                 </Col>
 
@@ -255,7 +254,7 @@ export default function Feed() {
 const loadingMsgStyle: CSSProperties = {
     fontSize: "16px",
     height: "20px",
-    marginTop: "10px",
+    marginTop: "6px",
 };
 
 const resetLinkStyle: CSSProperties = {
@@ -269,4 +268,11 @@ const resetLinkStyle: CSSProperties = {
 const statusesColStyle: CSSProperties = {
     backgroundColor: '#15202b',
     height: 'auto',
+};
+
+const stickySwitchContainer: CSSProperties = {
+    display: "flex",
+    height: "20px",
+    justifyContent: "space-between",
+    marginBottom: "5px",
 };
