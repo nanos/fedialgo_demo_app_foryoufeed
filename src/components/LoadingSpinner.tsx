@@ -41,7 +41,6 @@ const centeredSpinner: CSSProperties = {
 const inlineSpinner: CSSProperties = {
     ...centeredSpinner,
     height: "20px",
-    // justifyContent: "flex-start",
     justifyContent: "start",
     marginTop: "5px",
 };

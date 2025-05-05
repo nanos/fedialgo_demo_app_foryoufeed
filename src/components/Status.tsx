@@ -34,6 +34,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     let retoot = toot.reblog ? props.status : null;
     const hasAttachments = toot.mediaAttachments.length > 0;
     const isReblog = toot.reblogsBy.length > 0;
+    const ariaLabel = `${toot.account.displayName}, ${toot.account.note} ${toot.account.webfingerURI}`;
 
     // idx of the mediaAttachment to show in the media inspection modal (-1 means no modal)
     const [mediaInspectionIdx, setMediaInspectionIdx] = React.useState<number>(-1);
@@ -99,19 +100,16 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     return (
         <div>
-            {hasAttachments && (
+            {hasAttachments &&
                 <AttachmentsModal
                     mediaInspectionIdx={mediaInspectionIdx}
                     setMediaInspectionIdx={setMediaInspectionIdx}
                     toot={toot}
-                />)}
+                />}
 
             <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={toot} />
 
-            <div
-                aria-label={`${toot.account.displayName}, ${toot.account.note} ${toot.account.webfingerURI}`}
-                className="status__wrapper status__wrapper-public focusable"
-            >
+            <div aria-label={ariaLabel} className="status__wrapper status__wrapper-public focusable">
                 {/* Names of accounts that reblogged the toot (if any) */}
                 {isReblog &&
                     <div className="status__prepend">
