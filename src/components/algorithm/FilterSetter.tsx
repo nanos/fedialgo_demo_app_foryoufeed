@@ -84,7 +84,8 @@ export default function FilterSetter(props: FilterSetterProps) {
                     onChange={(e) => {
                         onChange(e);
                         algorithm.updateFilters(algorithm.filters);
-                        resetNumDisplayedToots();
+                        // TODO: should we reset the displayed toots here?
+                        //resetNumDisplayedToots();
                     }}
                     style={style}
                 />
@@ -186,7 +187,6 @@ export default function FilterSetter(props: FilterSetterProps) {
                     onChange={async (e) => {
                         numericFilter.value = Number(e.target.value);
                         algorithm.updateFilters(algorithm.filters);
-                        resetNumDisplayedToots();
                     }}
                     stepSize={1}
                     value={numericFilter.value}
