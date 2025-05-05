@@ -44,14 +44,11 @@ export default function Feed() {
     const [timeline, setTimeline] = useState<Toot[]>([]);  // contains timeline Toots
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(false);  // Left panel stickiness
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
+    const [scrollPercentage, setScrollPercentage] = useState(0);
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
     const isLoadingInitialFeed = !!(algorithm?.isLoading() && !timeline?.length);
     // console.log("[DEMO APP] <Feed> constructor isLoadingInitialFeed:", isLoadingInitialFeed, `\nalgo.loadingStatus: `, algorithm?.loadingStatus, `\nfeed.length: ${feed?.length}`);
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
-
-    if (timeline?.length && timeline.length > numDisplayedToots) {
-        setNumDisplayedToots(timeline.length);
-    }
 
     // Reset all state except for the user and server
     const reset = async () => {
@@ -65,7 +62,7 @@ export default function Feed() {
 
     const finishedLoadingMsg = (lastLoadTimeInSeconds: number | null) => {
         let msg = `Loaded ${(timeline?.length || 0).toLocaleString()} toots for timeline`;
-        // console.log("[DEMO APP] <Feed> finishedLoadingStr:", msg);
+        // logMsg("<Feed> finishedLoadingStr:", msg);
 
         if (lastLoadTimeInSeconds) {
             msg += ` in ${lastLoadTimeInSeconds.toFixed(1)} seconds`;
@@ -100,7 +97,7 @@ export default function Feed() {
 
             try {
                 algo.triggerFeedUpdate();
-                logMsg(`constructFeed() finished; feed has ${algo.feed.length} toots`);
+                logMsg(`constructFeed() finished; feed has ${timeline?.length} toots`);
             } catch (err) {
                 console.error(`Failed to triggerFeedUpdate() with error:`, err);
                 setError(`Failed to triggerFeedUpdate: ${err}`);
@@ -108,7 +105,7 @@ export default function Feed() {
         };
 
         constructFeed();
-    }, [setAlgorithm, triggerReload, user]);
+    }, [setAlgorithm, triggerReload, timeline, user]);
 
     // Show more toots when the user scrolls to bottom of the page
     // TODO: This doesn't actually trigger any API calls, it just shows more of the preloaded toots
@@ -123,8 +120,32 @@ export default function Feed() {
             setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
         };
 
-        if (isBottom && timeline.length) showMoreToots();
-    }, [timeline, isBottom, numDisplayedToots, setNumDisplayedToots]);
+        if (isBottom && timeline.length) {
+            showMoreToots();
+        }
+
+        if (timeline?.length && timeline.length < numDisplayedToots) {
+            setNumDisplayedToots(timeline.length);
+        }
+
+        const handleScroll = () => {
+            const scrollHeight = document.documentElement.scrollHeight; // Total height
+            const scrollPosition = document.documentElement.scrollTop || window.scrollY; // Current scroll position
+            const viewportHeight = document.documentElement.clientHeight; // Visible viewport height
+            const totalScrollableHeight = scrollHeight - viewportHeight; // Scrollable distance
+            const percentage = (scrollPosition / totalScrollableHeight) * 100;
+            setScrollPercentage(percentage);
+
+            if (percentage <= 50 && numDisplayedToots > (DEFAULT_NUM_DISPLAYED_TOOTS * 2)) {
+                const newNumDisplayedToots = Math.floor(numDisplayedToots * 0.7);
+                logMsg(`Scroll percentage is less than 50%, lowering numDisplayedToots to ${newNumDisplayedToots}`);
+                setNumDisplayedToots(newNumDisplayedToots);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [timeline, isBottom, numDisplayedToots, setNumDisplayedToots, timeline]);
 
     // Set up feed reloader to call algorithm.triggerFeedUpdate() on focus after RELOAD_IF_OLDER_THAN_SECONDS
     useEffect(() => {
@@ -196,6 +217,10 @@ export default function Feed() {
                         {algorithm?.isLoading()
                             ? <LoadingSpinner message={algorithm.loadingStatus} style={loadingMsgStyle} />
                             : (algorithm && finishedLoadingMsg(algorithm.lastLoadTimeInSeconds))}
+
+                        <p style={loadingMsgStyle}>
+                            Scroll percentage: {scrollPercentage.toFixed(2)}%, displaying {numDisplayedToots} toots.
+                        </p>
                     </div>
                 </Col>
 
