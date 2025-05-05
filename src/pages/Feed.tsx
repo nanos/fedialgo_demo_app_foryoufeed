@@ -47,8 +47,11 @@ export default function Feed() {
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
     const isLoadingInitialFeed = !!(algorithm?.isLoading() && !timeline?.length);
     // console.log("[DEMO APP] <Feed> constructor isLoadingInitialFeed:", isLoadingInitialFeed, `\nalgo.loadingStatus: `, algorithm?.loadingStatus, `\nfeed.length: ${feed?.length}`);
-
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
+
+    if (timeline?.length && timeline.length > numDisplayedToots) {
+        setNumDisplayedToots(timeline.length);
+    }
 
     // Reset all state except for the user and server
     const reset = async () => {
