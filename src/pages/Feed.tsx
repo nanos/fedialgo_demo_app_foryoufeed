@@ -97,7 +97,7 @@ export default function Feed() {
 
             try {
                 algo.triggerFeedUpdate();
-                logMsg(`constructFeed() finished; feed has ${timeline?.length} toots`);
+                logMsg(`constructFeed() finished`);
             } catch (err) {
                 console.error(`Failed to triggerFeedUpdate() with error:`, err);
                 setError(`Failed to triggerFeedUpdate: ${err}`);
@@ -105,7 +105,7 @@ export default function Feed() {
         };
 
         constructFeed();
-    }, [setAlgorithm, triggerReload, timeline, user]);
+    }, [setAlgorithm, triggerReload, user]);
 
     // Show more toots when the user scrolls to bottom of the page
     // TODO: This doesn't actually trigger any API calls, it just shows more of the preloaded toots
@@ -255,7 +255,7 @@ export default function Feed() {
 const loadingMsgStyle: CSSProperties = {
     fontSize: "16px",
     height: "20px",
-    marginTop: "7px",
+    marginTop: "10px",
 };
 
 const resetLinkStyle: CSSProperties = {
