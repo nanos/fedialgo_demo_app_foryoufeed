@@ -130,6 +130,8 @@ export default function FilterSetter(props: FilterSetterProps) {
         if ((filterSection.title == PropertyName.HASHTAG) && (name in algorithm.userData.participatedHashtags)) {
             const tag = algorithm.userData.participatedHashtags[name];
             tooltipText = `You've posted this hashtag ${tag.numToots} times recently.`;
+        } else if (filterSection.title == PropertyName.USER && name in algorithm.userData.followedAccounts) {
+            tooltipText = `You follow this account`;
         }
 
         return makeCheckbox(
