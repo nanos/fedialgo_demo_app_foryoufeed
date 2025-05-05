@@ -122,8 +122,10 @@ You can install the local `fedialgo` package by running `npm link`  in the `fedi
 
 Assuming you check both `fedialgo` and this repo out to the same directory there's a helper script to link the local repo in [`link_local_fedialgo.sh`](./link_local_fedialgo.sh).
 
+
 #### Code Notes
 * There's tons of info on how the scoring and weighting of toots is being done in your browser's javascript debug console logs.
 * The interesting stuff that actually handles the feed is in the [`Feed.tsx`](src/pages/Feed.tsx) file.
 * The bird UI of this app is based on the following repo: https://github.com/ronilaukkarinen/mastodon-bird-ui
 * If you click on the score icon for a toot the `Toot` object will be logged to the javascript console.
+* Deploying to GitHub pages: https://gist.github.com/promto-c/e46ca197f324a2148af919e18c18b5e6
