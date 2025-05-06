@@ -132,6 +132,8 @@ export default function FilterSetter(props: FilterSetterProps) {
             tooltipText = `You've posted this hashtag ${tag.numToots} times recently.`;
         } else if (filterSection.title == PropertyName.USER && name in algorithm.userData.followedAccounts) {
             tooltipText = `You follow this account`;
+        } else if (filterSection.title == PropertyName.LANGUAGE && name == algorithm.userData.preferredLanguage) {
+            tooltipText = `You post most in this language`;
         }
 
         return makeCheckbox(
