@@ -8,6 +8,7 @@ import { stringifyQuery } from 'ufo'
 
 import { AppStorage, useLocalStorage } from "../hooks/useLocalStorage";
 import { logMsg, sanitizeServerUrl } from '../helpers/string_helpers';
+// const showcase = require("../../public/assets/Showcase.jpg");
 
 // Mastodon OAuth scopes required for this app to work.
 // Details: https://docs.joinmastodon.org/api/oauth-scopes/
@@ -71,7 +72,7 @@ export default function LoginPage() {
 
     return (
         <div className='vh-100' style={loginContainer}>
-            <img src={"/assets/Showcase.png"} style={previewImage}/>
+            <img src={"/assets/Showcase.jpg"} style={previewImage}/>
 
             <div>
                 <p style={{ lineHeight: 1.3, marginBottom: "10px", marginTop: "13px", textAlign: "center" }}>

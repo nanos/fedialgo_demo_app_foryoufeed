@@ -1,8 +1,7 @@
-import { log } from "console";
-
 /*
  * String manipulation helpers.
  */
+const DEFAULT_LOCALE = "en-US";
 const DEMO_APP = "DEMO APP";
 
 
@@ -32,6 +31,12 @@ export const scoreString = (score: number | null): string => {
 
 export function logMsg (message: string, ...args: unknown[]): void {
     console.log(`[${DEMO_APP}] ${message}`, ...args);
+};
+
+
+export function browserLanguage(): string {
+    const locale = navigator?.language || DEFAULT_LOCALE;
+    return locale.split('-')[0];
 };
 
 

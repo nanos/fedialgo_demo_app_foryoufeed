@@ -18,7 +18,7 @@ import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
-import { logMsg } from "../helpers/string_helpers";
+import { browserLanguage, logMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "../hooks/useAuth";
 
 // Number constants
@@ -89,7 +89,13 @@ export default function Feed() {
                 return;
             }
 
-            const algo = await TheAlgorithm.create({api: api, user: currentUser, setTimelineInApp: setTimeline});
+            const algo = await TheAlgorithm.create({
+                api: api, user:
+                currentUser,
+                setTimelineInApp: setTimeline,
+                language: browserLanguage()}
+            );
+
             setAlgorithm(algo);
 
             try {
