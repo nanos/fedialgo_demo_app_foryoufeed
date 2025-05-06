@@ -66,6 +66,7 @@ export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm })
 
                     {weightSlider(WeightName.TIME_DECAY)}
                     {weightSlider(WeightName.TRENDING)}
+                    {weightSlider(WeightName.OUTLIER_DAMPENER)}
                     <div style={{height: '12px'}} />
 
                     <div style={roundedBox}>
