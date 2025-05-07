@@ -94,7 +94,7 @@ export default function FilterSetter(props: FilterSetterProps) {
                         // TODO: should we reset the displayed toots here?
                         //resetNumDisplayedToots();
                     }}
-                    style={style}
+                    style={{...style}}
                 />
             </a>
         );
