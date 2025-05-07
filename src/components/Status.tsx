@@ -5,7 +5,7 @@ import React, { CSSProperties } from "react";
 
 import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
-import { Account, Toot, timeString } from "fedialgo";
+import { Account, TheAlgorithm, Toot, timeString } from "fedialgo";
 import { capitalCase } from "change-case";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
@@ -82,8 +82,8 @@ export default function StatusComponent(props: StatusComponentProps) {
             } else if (toot.followedTags?.length) {
                 color = "yellow";
             } else if (toot.participatedTags?.length) {
-                // color = "#92a14a";
-                color = highlightedCheckboxStyle.backgroundColor;
+                color = "#92a14a";
+                // color = highlightedCheckboxStyle.backgroundColor;
             }
         }
 

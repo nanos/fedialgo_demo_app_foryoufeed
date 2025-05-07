@@ -37,9 +37,10 @@ interface FilterSetterProps {
 
 
 export default function FilterSetter(props: FilterSetterProps) {
-    const {algorithm, resetNumDisplayedToots} = props;
+    const { algorithm, resetNumDisplayedToots } = props;
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
     const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
+    const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
 
     const [sortByValue, setSortByValue] = useState<Record<PropertyName, boolean>>(
         visibleSections.reduce((acc, section) => {
@@ -139,6 +140,9 @@ export default function FilterSetter(props: FilterSetterProps) {
                 const tag = algorithm.userData.followedTags[name];
                 tooltipText = `You follow this hashtag.`;
                 tooltipColor = "yellow";
+            } else if (trendingTagNames.includes(name)) {
+                tooltipText = `This hashtag is trending.`;
+                tooltipColor = "#FAD5A5";
             } else if (name in algorithm.userData.participatedHashtags) {
                 const tag = algorithm.userData.participatedHashtags[name];
                 tooltipText = `You've posted this hashtag ${tag.numToots} times recently.`;
