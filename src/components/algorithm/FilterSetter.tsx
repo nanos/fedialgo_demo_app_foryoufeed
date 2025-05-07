@@ -17,7 +17,7 @@ import 'react-tooltip/dist/react-tooltip.css'
 import FilterAccordionSection from "./FilterAccordionSection";
 import Slider from "./Slider";
 import { logMsg } from "../../helpers/string_helpers";
-import { PARTICIPATED_TAG_COLOR, PARTICIPATED_TAG_COLOR_FADED, titleStyle } from "../../helpers/style_helpers";
+import { PARTICIPATED_TAG_COLOR_FADED, titleStyle } from "../../helpers/style_helpers";
 
 const MAX_LABEL_LENGTH = 18;
 const HASHTAG_ANCHOR = "user-hashtag-anchor";
@@ -179,8 +179,11 @@ export default function FilterSetter(props: FilterSetterProps) {
 
         if (FILTERED_FILTERS.includes(filter.title)) {
             optionInfo = Object.fromEntries(Object.entries(filter.optionInfo).filter(
-                ([_k, v]) => v >= MIN_TOOTS_TO_APPEAR_IN_FILTER)
-            );
+                ([k, v]) => {
+                    const tooltip = filter.title == PropertyName.HASHTAG ? hashtagTooltip(k) : undefined;
+                    return !!tooltip || (v >= MIN_TOOTS_TO_APPEAR_IN_FILTER);
+                }
+            ));
         }
 
         let optionKeys = Object.keys(optionInfo);
@@ -194,6 +197,7 @@ export default function FilterSetter(props: FilterSetterProps) {
         return gridify(optionKeys.map((e) => propertyCheckbox(e, filter)));
     }
 
+    // Generate color and tooltip text for a hashtag checkbox
     const hashtagTooltip = (name: string): HashtagTooltip => {
         if (name in algorithm.userData.followedTags) {
             return {
@@ -213,6 +217,20 @@ export default function FilterSetter(props: FilterSetterProps) {
                 color: PARTICIPATED_TAG_COLOR_FADED,
             }
         }
+    };
+
+    const filterSectionDescription = (filterSection: PropertyFilter) => {
+        let description = filterSection.description;
+
+        if (FILTERED_FILTERS.includes(filterSection.title)) {
+            description += MIN_TOOT_MSG;
+
+            if (filterSection.title == PropertyName.HASHTAG) {
+                description += ` or that you engage with`;
+            }
+        }
+
+        return description;
     }
 
     const numericSliders = Object.entries(algorithm.filters.numericFilters).reduce(
@@ -255,10 +273,7 @@ export default function FilterSetter(props: FilterSetterProps) {
                         {/* property filters (language, type, etc) */}
                         {visibleSections.map((filterSection) => (
                             <FilterAccordionSection
-                                description={
-                                    filterSection.description +
-                                    (FILTERED_FILTERS.includes(filterSection.title) ? MIN_TOOT_MSG : "")
-                                }
+                                description={filterSectionDescription(filterSection)}
                                 invertCheckbox={invertSelectionCheckbox(filterSection)}
                                 key={filterSection.title}
                                 isActive={filterSection.validValues.length > 0}
