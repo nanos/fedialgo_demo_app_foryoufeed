@@ -17,7 +17,7 @@ import 'react-tooltip/dist/react-tooltip.css'
 import FilterAccordionSection from "./FilterAccordionSection";
 import Slider from "./Slider";
 import { logMsg } from "../../helpers/string_helpers";
-import { titleStyle } from "../../helpers/style_helpers";
+import { PARTICIPATED_TAG_COLOR, PARTICIPATED_TAG_COLOR_FADED, titleStyle } from "../../helpers/style_helpers";
 
 const MAX_LABEL_LENGTH = 18;
 const HASHTAG_ANCHOR = "user-hashtag-anchor";
@@ -146,6 +146,7 @@ export default function FilterSetter(props: FilterSetterProps) {
             } else if (name in algorithm.userData.participatedHashtags) {
                 const tag = algorithm.userData.participatedHashtags[name];
                 tooltipText = `You've posted this hashtag ${tag.numToots} times recently.`;
+                tooltipColor = PARTICIPATED_TAG_COLOR_FADED;
             }
         } else if (filterSection.title == PropertyName.USER && name in algorithm.userData.followedAccounts) {
             tooltipText = `You follow this account`;
@@ -271,7 +272,7 @@ const accordionPadding: CSSProperties = {
     padding: "0px",
 };
 
-export const highlightedCheckboxStyle: CSSProperties = {
+const highlightedCheckboxStyle: CSSProperties = {
     backgroundColor: "cyan",
     borderRadius: "5px"
 };
