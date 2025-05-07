@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { mastodon, createRestAPIClient } from "masto";
 import { Modal } from "react-bootstrap";
-import { TheAlgorithm, Toot, timeString } from "fedialgo";
+import { READY_TO_LOAD_MSG, TheAlgorithm, Toot, timeString } from "fedialgo";
 
 import FilterSetter from "../components/algorithm/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
@@ -42,12 +42,15 @@ export default function Feed() {
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
     const [error, setError] = useState<string>("");
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(true);  // Left panel stickiness
+    const [isLoading, setIsLoading] = useState<boolean>(true);  // Loading spinner
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [scrollPercentage, setScrollPercentage] = useState(0);
     const [timeline, setTimeline] = useState<Toot[]>([]);  // contains timeline Toots
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
+
     // Other variables
-    const isLoadingInitialFeed = !!(algorithm?.isLoading() && !timeline?.length);
+    // const isLoadingInitialFeed = (!algorithm || (isLoading && !timeline?.length));
+    const isInitialLoad = timeline.length === 0;  // TODO: this is not really correct, it should be based on the algorithm loading status
     const scrollMsg = `Scroll: ${scrollPercentage.toFixed(2)}%, Displaying ${numDisplayedToots} Toots`;
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
 
@@ -99,7 +102,7 @@ export default function Feed() {
             setAlgorithm(algo);
 
             try {
-                algo.triggerFeedUpdate();
+                algo.triggerFeedUpdate().then(() => setIsLoading(false));;
                 logMsg(`constructFeed() finished`);
             } catch (err) {
                 console.error(`Failed to triggerFeedUpdate() with error:`, err);
@@ -131,6 +134,7 @@ export default function Feed() {
             showMoreToots();
         }
 
+        // If there's less than numDisplayedToots in the feed set numDisplayedToots to the number of toots in the feed
         if (timeline?.length && timeline.length < numDisplayedToots) {
             setNumDisplayedToots(timeline.length);
         }
@@ -156,13 +160,13 @@ export default function Feed() {
 
     // Set up feed reloader to call algorithm.triggerFeedUpdate() on focus after RELOAD_IF_OLDER_THAN_SECONDS
     useEffect(() => {
-        if (!user || !algorithm || isLoadingInitialFeed) return;
+        if (!user || !algorithm || isInitialLoad) return;
 
         const shouldReloadFeed = (): boolean => {
             let should = false;
             let msg: string;
 
-            if (algorithm?.isLoading()) {
+            if (algorithm.isLoading()) {
                 msg = `algorithm.isLoading() says load in progress`;
             } else {
                 const mostRecentAt = algorithm.mostRecentHomeTootAt();
@@ -182,22 +186,23 @@ export default function Feed() {
         };
 
         const handleFocus = () => {
-            // for some reason "not focused" never happens? https://developer.mozilla.org/en-US/docs/Web/API/Document/hasFocus
-            // logMsg(`window is ${document.hasFocus() ? "focused" : "not focused"}`);
             if (!document.hasFocus()) return;
             if (!shouldReloadFeed()) return;
+            setIsLoading(true);
 
             algorithm.triggerFeedUpdate().then(() => {
+                setIsLoading(false);
                 logMsg(`finished calling getFeed with ${timeline.length} toots`);
             }).catch((err) => {
                 console.error(`error calling triggerFeedUpdate():`, err);
                 setError(`error calling triggerFeedUpdate(): ${err}`);
+                setIsLoading(false);
             })
         };
 
         window.addEventListener(FOCUS, handleFocus);
         return () => window.removeEventListener(FOCUS, handleFocus);
-    }, [algorithm, timeline, isLoadingInitialFeed, user]);
+    }, [algorithm, timeline, isInitialLoad, user]);
 
     return (
         <Container fluid style={{height: 'auto'}}>
@@ -229,18 +234,22 @@ export default function Feed() {
                         {algorithm && <TrendingInfo algorithm={algorithm} />}
                         <FindFollowers api={api} user={user} />
 
-                        {algorithm?.isLoading()
-                            ? <LoadingSpinner message={algorithm.loadingStatus} style={loadingMsgStyle} />
-                            : (algorithm && finishedLoadingMsg(algorithm.lastLoadTimeInSeconds))}
+                        {/* Checking algorith.loadingStatus here DOES NOT trigger a render when the value changes */}
+                        {/* {(isInitialLoad || isLoading || algorithm?.loadingStatus) */}
+                        {(isInitialLoad || isLoading)
+                            ? <LoadingSpinner message={algorithm?.loadingStatus || READY_TO_LOAD_MSG} style={loadingMsgStyle} />
+                            : (algorithm && finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds))}
 
-                        {/* <p style={loadingMsgStyle}>
-                            Scroll percentage: {scrollPercentage.toFixed(2)}%, displaying {numDisplayedToots} toots.
-                        </p> */}
+                        <p style={loadingMsgStyle}>
+                            <a onClick={() => algorithm.logWithState("DEMO APP", `State (isLoading=${isLoading}, isInitialLoad=${isInitialLoad}, algorithm.isLoading()=${algorithm.isLoading()})`)} >
+                                Dump current algorithm state to console
+                            </a>
+                        </p>
                     </div>
                 </Col>
 
                 <Col style={statusesColStyle} xs={6}>
-                    {api && !isLoadingInitialFeed &&
+                    {api && !isInitialLoad &&
                         timeline.slice(0, Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots)).map((toot) => (
                             <StatusComponent
                                 api={api}
@@ -251,10 +260,11 @@ export default function Feed() {
                             />
                         ))}
 
-                    {isLoadingInitialFeed &&
+                    {/* TODO: the NO_TOOTS_MSG will never happen */}
+                    {isInitialLoad &&
                         <LoadingSpinner
                             isFullPage={true}
-                            message={isLoadingInitialFeed ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
+                            message={isInitialLoad ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
                         />}
 
                     <div ref={bottomRef}>
