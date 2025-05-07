@@ -267,7 +267,7 @@ const accordionPadding: CSSProperties = {
     padding: "0px",
 };
 
-const highlightedCheckboxStyle: CSSProperties = {
+export const highlightedCheckboxStyle: CSSProperties = {
     backgroundColor: "cyan",
     borderRadius: "5px"
 };

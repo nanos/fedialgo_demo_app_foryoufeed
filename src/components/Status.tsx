@@ -15,6 +15,7 @@ import AttachmentsModal from './status/AttachmentsModal';
 import MultimediaNode from "./status/MultimediaNode";
 import PreviewCard from "./status/PreviewCard";
 import ScoreModal from './status/ScoreModal';
+import { highlightedCheckboxStyle } from "./algorithm/FilterSetter";
 import { logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
 import { User } from '../types';
@@ -81,7 +82,8 @@ export default function StatusComponent(props: StatusComponentProps) {
             } else if (toot.followedTags?.length) {
                 color = "yellow";
             } else if (toot.participatedTags?.length) {
-                color = "#92a14a";
+                // color = "#92a14a";
+                color = highlightedCheckboxStyle.backgroundColor;
             }
         }
 
