@@ -30,6 +30,11 @@ const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
 const MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
 const MIN_TOOT_MSG = ` with at least ${MIN_TOOTS_TO_APPEAR_IN_FILTER} toots`;
 
+type HashtagTooltip = {
+    text: string;
+    color: string;
+}
+
 interface FilterSetterProps {
     algorithm: TheAlgorithm,
     resetNumDisplayedToots: () => void,
@@ -136,18 +141,9 @@ export default function FilterSetter(props: FilterSetterProps) {
         let tooltipColor: string | undefined;
 
         if (filterSection.title == PropertyName.HASHTAG) {
-            if (name in algorithm.userData.followedTags) {
-                const tag = algorithm.userData.followedTags[name];
-                tooltipText = `You follow this hashtag.`;
-                tooltipColor = "yellow";
-            } else if (trendingTagNames.includes(name)) {
-                tooltipText = `This hashtag is trending.`;
-                tooltipColor = "#FAD5A5";
-            } else if (name in algorithm.userData.participatedHashtags) {
-                const tag = algorithm.userData.participatedHashtags[name];
-                tooltipText = `You've posted this hashtag ${tag.numToots} times recently.`;
-                tooltipColor = PARTICIPATED_TAG_COLOR_FADED;
-            }
+            const tooltip = hashtagTooltip(name);
+            tooltipText = tooltip?.text;
+            tooltipColor = tooltip?.color;
         } else if (filterSection.title == PropertyName.USER && name in algorithm.userData.followedAccounts) {
             tooltipText = `You follow this account`;
         } else if (filterSection.title == PropertyName.LANGUAGE && name == algorithm.userData.preferredLanguage) {
@@ -196,6 +192,27 @@ export default function FilterSetter(props: FilterSetterProps) {
         }
 
         return gridify(optionKeys.map((e) => propertyCheckbox(e, filter)));
+    }
+
+    const hashtagTooltip = (name: string): HashtagTooltip => {
+        if (name in algorithm.userData.followedTags) {
+            return {
+                text: `You follow this hashtag.`,
+                color: "yellow",
+            }
+        } else if (trendingTagNames.includes(name)) {
+            return {
+                text: `This hashtag is trending.`,
+                color: "#FAD5A5",
+            }
+        } else if (name in algorithm.userData.participatedHashtags) {
+            const tag = algorithm.userData.participatedHashtags[name];
+
+            return {
+                text: `You've posted this hashtag ${tag.numToots} times recently.`,
+                color: PARTICIPATED_TAG_COLOR_FADED,
+            }
+        }
     }
 
     const numericSliders = Object.entries(algorithm.filters.numericFilters).reduce(
