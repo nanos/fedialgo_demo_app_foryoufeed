@@ -8,7 +8,7 @@ import React, { CSSProperties, useState, useEffect } from "react";
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { PresetWeightLabel, PresetWeights, TheAlgorithm, WeightName, Weights } from "fedialgo";
+import { NON_SCORE_WEIGHTS, PresetWeightLabel, PresetWeights, TheAlgorithm, WeightName, Weights } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
 import { accordionBody } from "./FilterAccordionSection";
@@ -64,9 +64,7 @@ export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm })
                         ))}
                     </DropdownButton>
 
-                    {weightSlider(WeightName.TIME_DECAY)}
-                    {weightSlider(WeightName.TRENDING)}
-                    {weightSlider(WeightName.OUTLIER_DAMPENER)}
+                    {NON_SCORE_WEIGHTS.map((weight) => weightSlider(weight))}
                     <div style={{height: '12px'}} />
 
                     <div style={roundedBox}>
