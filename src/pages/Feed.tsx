@@ -36,6 +36,7 @@ export default function Feed() {
     const { user, logout } = useAuthContext();
     const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
+    // const scrollableRef = useRef<typeof Row>(null);
     const isBottom = useOnScreen(bottomRef);
 
     // State variables
@@ -45,13 +46,14 @@ export default function Feed() {
     const [isLoading, setIsLoading] = useState<boolean>(true);  // Loading spinner
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [scrollPercentage, setScrollPercentage] = useState(0);
+    const [prevScrollY, setPrevScrollY] = useState(0);
     const [timeline, setTimeline] = useState<Toot[]>([]);  // contains timeline Toots
     const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
 
     // Other variables
     // const isLoadingInitialFeed = (!algorithm || (isLoading && !timeline?.length));
     const isInitialLoad = timeline.length === 0;  // TODO: this is not really correct, it should be based on the algorithm loading status
-    const scrollMsg = `Scroll: ${scrollPercentage.toFixed(2)}%, Displaying ${numDisplayedToots} Toots`;
+    const scrollMsg = `Scroll: ${scrollPercentage.toFixed(2)}% (${window.scrollY}), Displaying ${numDisplayedToots} Toots`;
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
 
     // Reset all state except for the user and server
@@ -154,9 +156,32 @@ export default function Feed() {
             }
         };
 
+        // const handleOverscroll = () => {
+        //     console.log("handleOverscroll() called");
+
+        //     // Check for overscroll at the top of the page
+        //     if (scrollableRef.current) { // Ensure ref is valid
+        //         const currentScrollY = scrollableRef.current.scrollTop;
+
+        //         if (currentScrollY < prevScrollY && currentScrollY === 0) {
+        //             console.log("Overscroll detected! Trigger action here.");
+        //             // Add your action here, such as fetching new data or refreshing the page.
+        //         }
+
+        //         setPrevScrollY(currentScrollY);
+        //     }
+        // }
+
+        // const scrollableElement = scrollableRef.current;
+        // if (scrollableElement) scrollableElement.addEventListener('scroll', handleOverscroll);
+
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [isBottom, numDisplayedToots, setNumDisplayedToots, timeline]);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            // if (scrollableElement) scrollableElement.removeEventListener('scroll', handleOverscroll);
+        };
+    }, [isBottom, numDisplayedToots, prevScrollY, setNumDisplayedToots, setPrevScrollY, timeline]);
 
     // Set up feed reloader to call algorithm.triggerFeedUpdate() on focus after RELOAD_IF_OLDER_THAN_SECONDS
     useEffect(() => {
@@ -240,11 +265,11 @@ export default function Feed() {
                             ? <LoadingSpinner message={algorithm?.loadingStatus || READY_TO_LOAD_MSG} style={loadingMsgStyle} />
                             : (algorithm && finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds))}
 
-                        <p style={loadingMsgStyle}>
+                        {/* <p style={loadingMsgStyle}>
                             <a onClick={() => algorithm.logWithState("DEMO APP", `State (isLoading=${isLoading}, isInitialLoad=${isInitialLoad}, algorithm.isLoading()=${algorithm.isLoading()})`)} >
                                 Dump current algorithm state to console
                             </a>
-                        </p>
+                        </p> */}
                     </div>
                 </Col>
 
