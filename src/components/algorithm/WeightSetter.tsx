@@ -21,8 +21,8 @@ const PRESET_MENU_TITLE = "Preset Algorithm Configurations";
 export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm }) {
     const [userWeights, setUserWeights] = useState<Weights>({} as Weights);
     const sortedScorers = algorithm.weightedScorers.sort((a, b) => a.name.localeCompare(b.name));
-
     const initWeights = async () => setUserWeights(await algorithm.getUserWeights());
+
     useEffect(() => {initWeights()}, []);
 
     // Update the user weightings stored in TheAlgorithm when a user moves a weight slider
