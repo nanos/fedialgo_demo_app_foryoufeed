@@ -25,10 +25,13 @@ const HIGHLIGHT = "highlighted";
 const INVERT_SELECTION = "invertSelection";
 const SORT_KEYS = "sortByCount";
 const CAPITALIZED_LABELS = [INVERT_SELECTION, SORT_KEYS].concat(Object.values(TypeFilterName) as string[]);
+
 // Filtered filters are those that require a minimum number of toots to appear as filter options
 const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
 const MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
 const MIN_TOOT_MSG = ` with at least ${MIN_TOOTS_TO_APPEAR_IN_FILTER} toots`;
+const FOLLOWED_TAG_MSG = `You follow this hashtag.`;
+const PARTICIPATED_TAG_MSG = `You've posted this hashtag`
 
 type HashtagTooltip = {
     text: string;
@@ -180,8 +183,16 @@ export default function FilterSetter(props: FilterSetterProps) {
         if (FILTERED_FILTERS.includes(filter.title)) {
             optionInfo = Object.fromEntries(Object.entries(filter.optionInfo).filter(
                 ([k, v]) => {
+                    if (v >= MIN_TOOTS_TO_APPEAR_IN_FILTER) return true;
                     const tooltip = filter.title == PropertyName.HASHTAG ? hashtagTooltip(k) : undefined;
-                    return !!tooltip || (v >= MIN_TOOTS_TO_APPEAR_IN_FILTER);
+
+                    if (!tooltip) {
+                        return false;
+                    } else if (tooltip.text == FOLLOWED_TAG_MSG) {
+                        return true;
+                    } else {
+                        return v >= (MIN_TOOTS_TO_APPEAR_IN_FILTER - 2);
+                    }
                 }
             ));
         }
@@ -201,7 +212,7 @@ export default function FilterSetter(props: FilterSetterProps) {
     const hashtagTooltip = (name: string): HashtagTooltip => {
         if (name in algorithm.userData.followedTags) {
             return {
-                text: `You follow this hashtag.`,
+                text: FOLLOWED_TAG_MSG,
                 color: "yellow",
             }
         } else if (trendingTagNames.includes(name)) {
@@ -213,7 +224,7 @@ export default function FilterSetter(props: FilterSetterProps) {
             const tag = algorithm.userData.participatedHashtags[name];
 
             return {
-                text: `You've posted this hashtag ${tag.numToots} times recently.`,
+                text: `${PARTICIPATED_TAG_MSG} ${tag.numToots} times recently.`,
                 color: PARTICIPATED_TAG_COLOR_FADED,
             }
         }
