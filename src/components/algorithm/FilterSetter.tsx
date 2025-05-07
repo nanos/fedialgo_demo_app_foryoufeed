@@ -57,10 +57,16 @@ export default function FilterSetter(props: FilterSetterProps) {
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
         labelExtra?: number | string,
         tooltipText?: string,
+        tooltipColor?: string,
     ) => {
         labelExtra = (typeof labelExtra == "number") ? labelExtra.toLocaleString() : labelExtra;
         const labelStyle: CSSProperties = {fontWeight: "bold"};
-        const style = tooltipText ? highlightedCheckboxStyle : {};
+        let style: CSSProperties = {};
+
+        if (tooltipText) {
+            style = highlightedCheckboxStyle;
+            if (tooltipColor) style = { ...highlightedCheckboxStyle, backgroundColor: tooltipColor };
+        }
 
         if (CAPITALIZED_LABELS.includes(label)) {
             label = capitalCase(label);
@@ -126,10 +132,17 @@ export default function FilterSetter(props: FilterSetterProps) {
     // Build a checkbox for a property filter. The 'name' is also the element of the filter array.
     const propertyCheckbox = (name: string, filterSection: PropertyFilter) => {
         let tooltipText: string | undefined;
+        let tooltipColor: string | undefined;
 
-        if ((filterSection.title == PropertyName.HASHTAG) && (name in algorithm.userData.participatedHashtags)) {
-            const tag = algorithm.userData.participatedHashtags[name];
-            tooltipText = `You've posted this hashtag ${tag.numToots} times recently.`;
+        if (filterSection.title == PropertyName.HASHTAG) {
+            if (name in algorithm.userData.followedTags) {
+                const tag = algorithm.userData.followedTags[name];
+                tooltipText = `You follow this hashtag.`;
+                tooltipColor = "yellow";
+            } else if (name in algorithm.userData.participatedHashtags) {
+                const tag = algorithm.userData.participatedHashtags[name];
+                tooltipText = `You've posted this hashtag ${tag.numToots} times recently.`;
+            }
         } else if (filterSection.title == PropertyName.USER && name in algorithm.userData.followedAccounts) {
             tooltipText = `You follow this account`;
         } else if (filterSection.title == PropertyName.LANGUAGE && name == algorithm.userData.preferredLanguage) {
@@ -141,7 +154,8 @@ export default function FilterSetter(props: FilterSetterProps) {
             name,
             (e) => filterSection.updateValidOptions(name, e.target.checked),
             filterSection.optionInfo[name],
-            tooltipText
+            tooltipText,
+            tooltipColor
         );
     };
 
@@ -256,4 +270,9 @@ const accordionPadding: CSSProperties = {
 const highlightedCheckboxStyle: CSSProperties = {
     backgroundColor: "cyan",
     borderRadius: "5px"
+};
+
+const followedCheckboxStyle: CSSProperties = {
+    ...highlightedCheckboxStyle,
+    backgroundColor: "yellow",
 };
