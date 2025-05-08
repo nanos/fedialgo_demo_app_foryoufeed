@@ -8,6 +8,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 
 import "./birdUI.css";
 import "./default.css";
+import AlgorithmProvider from "./hooks/useAlgorithm";
 import AuthProvider from './hooks/useAuth';
 import CallbackPage from './pages/CallbackPage';
 import Feed from './pages/Feed';
@@ -37,9 +38,12 @@ export default function App(): React.ReactElement {
                     <Routes>
                         <Route path="/" element={
                             <ProtectedRoute>
-                                <Feed />
+                                <AlgorithmProvider>
+                                    <Feed />
+                                </AlgorithmProvider>
                             </ProtectedRoute>
                         } />
+
                         <Route path="/callback" element={<CallbackPage />} />
                         <Route path="/login" element={<LoginPage />} />
                     </Routes>

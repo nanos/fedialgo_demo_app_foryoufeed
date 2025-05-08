@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { GET_FEED_BUSY_MSG, READY_TO_LOAD_MSG, TheAlgorithm, Toot, timeString } from "fedialgo";
+import { READY_TO_LOAD_MSG, TheAlgorithm, Toot, timeString } from "fedialgo";
 import { mastodon, createRestAPIClient } from "masto";
 import { Modal } from "react-bootstrap";
 import { Tooltip } from 'react-tooltip';
@@ -19,9 +19,10 @@ import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
-import { AlgorithmProvider, triggerAlgoLoad } from "../hooks/useAlgorithm";
+import { triggerAlgoLoad } from "../hooks/useAlgorithm";
 import { browserLanguage, logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "../hooks/useAuth";
+import { useAlgorithmContext } from "../hooks/useAlgorithm";
 
 // Number constants
 const DEFAULT_NUM_DISPLAYED_TOOTS = 20;
@@ -38,13 +39,12 @@ const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
 
 
 export default function Feed() {
+    const { algorithm, api, timeline } = useAlgorithmContext();
     const { user, logout } = useAuthContext();
-    const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 
     // State variables
-    const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
     const [error, setError] = useState<string>("");
     const [shouldAutoLoadNewToots, setShouldAutoLoadNewToots] = useState<boolean>(false);  // Auto load new toots
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(true);  // Left panel stickiness
@@ -52,23 +52,22 @@ export default function Feed() {
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [scrollPercentage, setScrollPercentage] = useState(0);
     const [prevScrollY, setPrevScrollY] = useState(0);
-    const [timeline, setTimeline] = useState<Toot[]>([]);  // contains timeline Toots
-    const [triggerReload, setTriggerReload] = useState<number>(0);  // Used to trigger reload of feed via useEffect watcher
 
     // Other variables
     // const isLoadingInitialFeed = (!algorithm || (isLoading && !timeline?.length));
     const isInitialLoad = !algorithm || (timeline.length === 0);  // TODO: this is not really correct, it should be based on the algorithm loading status
     const scrollMsg = `Scroll: ${scrollPercentage.toFixed(2)}% (${window.scrollY}), Displaying ${numDisplayedToots} Toots`;
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
+    const triggerLoad = () => triggerAlgoLoad(algorithm, setError, setIsLoading);
 
     // Reset all state except for the user and server
     const reset = async () => {
         if (!window.confirm("Are you sure?")) return;
         setError("");
         resetNumDisplayedToots();
-        setTriggerReload(triggerReload + 1);
         if (!algorithm) return;
         await algorithm.reset();
+        triggerLoad();
     };
 
     const finishedLoadingMsg = (lastLoadTimeInSeconds: number | null) => {
@@ -82,46 +81,7 @@ export default function Feed() {
         );
     };
 
-    const triggerLoad = () => {
-        triggerAlgoLoad(algorithm, setError, setIsLoading);
-    };
-
-    // Initial load of the feed (can be re-triggered by changing the value of triggerReload)
-    useEffect(() => {
-        if (!user) {
-            console.warn(`constructFeed() useEffect called without user, skipping initial load`);
-            return;
-        }
-
-        // Check that we have valid user credentials and load timeline toots, otherwise force a logout.
-        const constructFeed = async (): Promise<void> => {
-            logMsg(`constructFeed() called with user ID ${user?.id} (feed already has ${timeline.length} toots)`);
-            let currentUser: mastodon.v1.Account;
-
-            try {
-                currentUser = await api.v1.accounts.verifyCredentials();
-            } catch (err) {
-                console.error(`Failed to verifyCredentials() with error:`, err);
-                logout();
-                return;
-            }
-
-            const algo = await TheAlgorithm.create({
-                api: api, user:
-                currentUser,
-                setTimelineInApp: setTimeline,
-                language: browserLanguage()
-            });
-
-            setAlgorithm(algo);
-            triggerAlgoLoad(algo, setError, setIsLoading);
-        };
-
-        constructFeed();
-    }, [setAlgorithm, triggerReload, user]);  // TODO: add setError and setIsLoading to this list of dependencies?
-
     // Show more toots when the user scrolls to bottom of the page
-    // TODO: This doesn't actually trigger any API calls, it just shows more of the preloaded toots
     // TODO: this triggers twice: once when isbottom changes to true and again because numDisplayedToots
     //       is increased, triggerng a second evaluation of the block
     useEffect(() => {
@@ -218,55 +178,53 @@ export default function Feed() {
 
             <Row>
                 <Col xs={6}>
-                    <AlgorithmProvider algorithm={algorithm}>
-                        <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
-                            <div style={stickySwitchContainer}>
-                                <Form.Check
-                                    checked={isControlPanelSticky}
-                                    className="mb-3"
-                                    key={"stickPanel"}
-                                    label={`Stick Control Panel To Top`}
-                                    onChange={(e) => setIsControlPanelSticky(e.target.checked)}
-                                    type="checkbox"
-                                />
+                    <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
+                        <div style={stickySwitchContainer}>
+                            <Form.Check
+                                checked={isControlPanelSticky}
+                                className="mb-3"
+                                key={"stickPanel"}
+                                label={`Stick Control Panel To Top`}
+                                onChange={(e) => setIsControlPanelSticky(e.target.checked)}
+                                type="checkbox"
+                            />
 
-                                {(!algorithm || algorithm.isDebug)
-                                    ? <p>{scrollMsg}</p>
-                                    : <a
-                                        data-tooltip-id={TOOLTIP_ANCHOR}
-                                        data-tooltip-content={AUTO_UPDATE_TOOLTIP_MSG}
-                                        key={"tooltipautoload"}
-                                        style={{color: "white"}}
-                                    >
-                                        <Form.Check
-                                            checked={shouldAutoLoadNewToots}
-                                            className="mb-3"
-                                            key={"autoLoadNewToots"}
-                                            label={`Auto Load New Toots`}
-                                            onChange={(e) => setShouldAutoLoadNewToots(e.target.checked)}
-                                            type="checkbox"
-                                        />
-                                    </a>}
-                            </div>
-
-                            {algorithm && <WeightSetter />}
-                            {algorithm && <FilterSetter />}
-                            {algorithm && <TrendingInfo />}
-                            <FindFollowers api={api} user={user} />
-
-                            {/* Checking algorith.loadingStatus here DOES NOT trigger a render when the value changes */}
-                            {/* {(isInitialLoad || isLoading || algorithm?.loadingStatus) */}
-                            {(isInitialLoad || isLoading)
-                                ? <LoadingSpinner message={algorithm?.loadingStatus || READY_TO_LOAD_MSG} style={loadingMsgStyle} />
-                                : (algorithm && finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds))}
-
-                            {/* <p style={loadingMsgStyle}>
-                                <a onClick={() => algorithm.logWithState("DEMO APP", `State (isLoading=${isLoading}, isInitialLoad=${isInitialLoad}, algorithm.isLoading()=${algorithm.isLoading()})`)} >
-                                    Dump current algorithm state to console
-                                </a>
-                            </p> */}
+                            {(!algorithm || algorithm.isDebug)
+                                ? <p>{scrollMsg}</p>
+                                : <a
+                                    data-tooltip-id={TOOLTIP_ANCHOR}
+                                    data-tooltip-content={AUTO_UPDATE_TOOLTIP_MSG}
+                                    key={"tooltipautoload"}
+                                    style={{color: "white"}}
+                                >
+                                    <Form.Check
+                                        checked={shouldAutoLoadNewToots}
+                                        className="mb-3"
+                                        key={"autoLoadNewToots"}
+                                        label={`Auto Load New Toots`}
+                                        onChange={(e) => setShouldAutoLoadNewToots(e.target.checked)}
+                                        type="checkbox"
+                                    />
+                                </a>}
                         </div>
-                    </AlgorithmProvider>
+
+                        {algorithm && <WeightSetter />}
+                        {algorithm && <FilterSetter />}
+                        {algorithm && <TrendingInfo />}
+                        <FindFollowers api={api} user={user} />
+
+                        {/* Checking algorith.loadingStatus here DOES NOT trigger a render when the value changes */}
+                        {/* {(isInitialLoad || isLoading || algorithm?.loadingStatus) */}
+                        {(isInitialLoad || isLoading)
+                            ? <LoadingSpinner message={algorithm?.loadingStatus || READY_TO_LOAD_MSG} style={loadingMsgStyle} />
+                            : (algorithm && finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds))}
+
+                        {/* <p style={loadingMsgStyle}>
+                            <a onClick={() => algorithm.logWithState("DEMO APP", `State (isLoading=${isLoading}, isInitialLoad=${isInitialLoad}, algorithm.isLoading()=${algorithm.isLoading()})`)} >
+                                Dump current algorithm state to console
+                            </a>
+                        </p> */}
+                    </div>
                 </Col>
 
                 {/* <Col style={statusesColStyle} xs={6}> */}
