@@ -8,6 +8,7 @@ import React, { CSSProperties, ReactNode } from "react";
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
+import { PropertyName } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
 import Slider from "./Slider";
@@ -31,6 +32,9 @@ export default function FilterAccordionSection(props: AccordionProps) {
     const { children, description, invertCheckbox, isActive, minToots, sectionName, setMinToots, sortKeysCheckbox } = props;
     const headerClass = `filterHeader ${isActive ? "filterHeader--active" : ""}`;
     const spacer = <div style={{width: "20px"}} />
+
+    let tooltipText = `Hide ${sectionName}s with less than ${minToots} toots`;
+    if (sectionName == PropertyName.HASHTAG.toString()) tooltipText += ` (followed hashtags will always appear)`;
 
     return (
         <Accordion.Item eventKey={sectionName} >
@@ -56,7 +60,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
                     {sortKeysCheckbox && !minToots && spacer}
 
                     {minToots && (
-                        <a data-tooltip-id={TOOLTIP_ANCHOR} data-tooltip-content={`Hide options with less than ${minToots} toots`}>
+                        <a data-tooltip-id={TOOLTIP_ANCHOR} data-tooltip-content={tooltipText}>
                             <Slider
                                 hideValueBox={true}
                                 label="Minimum"

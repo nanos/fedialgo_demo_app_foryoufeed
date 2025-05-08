@@ -316,8 +316,8 @@ export default function Feed() {
                                 message={isLoading ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
                             />}
 
-                        <div ref={bottomRef}>
-                            <p>Load More</p>
+                        <div ref={bottomRef} style={{textAlign: "center", marginTop: "10px"}}>
+                            <p>Loading More...</p>
                         </div>
                     </div>
                 </Col>
