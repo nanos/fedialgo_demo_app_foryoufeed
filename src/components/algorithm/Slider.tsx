@@ -36,7 +36,7 @@ export default function Slider(props: SliderProps) {
     }
 
     let divs = [
-        <div style={labelContainer} id="innter_doop">
+        <div key={`${label}_label`} style={labelContainer}>
             {!hideValueBox &&
                 <div style={sliderValue} id="innerest_doop">
                     <span style={monoFont}>
@@ -53,7 +53,7 @@ export default function Slider(props: SliderProps) {
             </span>
         </div>,
 
-        <div style={sliderContainer}>
+        <div key={`${label}_slider`} style={sliderContainer}>
             <Form.Range
                 className={"custom-slider"}
                 id={label}

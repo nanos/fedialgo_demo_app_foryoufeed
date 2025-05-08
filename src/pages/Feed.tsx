@@ -266,7 +266,7 @@ export default function Feed() {
                         </div>
 
                         {algorithm && <WeightSetter algorithm={algorithm} />}
-                        {algorithm && <FilterSetter algorithm={algorithm} resetNumDisplayedToots={resetNumDisplayedToots}/>}
+                        {algorithm && <FilterSetter algorithm={algorithm} />}
                         {algorithm && <TrendingInfo algorithm={algorithm} />}
                         <FindFollowers api={api} user={user} />
 

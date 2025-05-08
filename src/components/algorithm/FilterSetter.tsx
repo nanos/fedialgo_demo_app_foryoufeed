@@ -42,12 +42,11 @@ const DEFAULT_MIN_TOOTS_TO_APPEAR: MinTootsFilter = {
 
 interface FilterSetterProps {
     algorithm: TheAlgorithm,
-    resetNumDisplayedToots: () => void,
 };
 
 
 export default function FilterSetter(props: FilterSetterProps) {
-    const { algorithm, resetNumDisplayedToots } = props;
+    const { algorithm } = props;
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
     const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
@@ -103,8 +102,6 @@ export default function FilterSetter(props: FilterSetterProps) {
                     onChange={(e) => {
                         onChange(e);
                         algorithm.updateFilters(algorithm.filters);
-                        // TODO: should we reset the displayed toots here?
-                        //resetNumDisplayedToots();
                     }}
                     style={{...style}}
                 />
@@ -181,12 +178,19 @@ export default function FilterSetter(props: FilterSetterProps) {
         return <Row>{columns.map((col, i: number) => <Col key={i}>{col}</Col>)}</Row>;
     };
 
-    const makeCheckboxList = (filter: PropertyFilter) => {
+    // Turn all the available options for a filter into a grid of checkboxes
+    const makeCheckboxList = (filter: PropertyFilter): ReactNode => {
         let optionInfo = filter.optionInfo;
 
+        // If the filter is a "filtered" filter then only allow options with a minimum number of toots.
+        // Also always include any followed hashtags.
         if (FILTERED_FILTERS.includes(filter.title)) {
             optionInfo = Object.fromEntries(Object.entries(filter.optionInfo).filter(
-                ([_k, v]) => v >= minTootsCutoffs[filter.title]
+                ([option, numToots]) => {
+                    if (numToots >= minTootsCutoffs[filter.title]) return true;
+                    if (filter.title != PropertyName.HASHTAG) return false;
+                    return hashtagTooltip(option)?.text == FOLLOWED_TAG_MSG;
+                }
             ));
         }
 
