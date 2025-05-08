@@ -3,19 +3,18 @@
  */
 import React, { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
-import { GET_FEED_BUSY_MSG, TheAlgorithm, Toot, timeString } from "fedialgo";
+import { GET_FEED_BUSY_MSG, TheAlgorithm, Toot, isAccessTokenRevokedError } from "fedialgo";
 import { createRestAPIClient, mastodon } from "masto";
 
-import { browserLanguage } from "../helpers/string_helpers";
-import { errorMsg, logMsg, warnMsg } from "../helpers/string_helpers";
+import { browserLanguage, errorMsg, logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "./useAuth";
 
 interface AlgoContext {
     algorithm?: TheAlgorithm,
     api?: mastodon.rest.Client,
     isLoading?: boolean,
-    shouldAutoLoadNewToots?: boolean,
-    setShouldAutoLoadNewToots?: (shouldAutoLoadNewToots: boolean) => void,
+    shouldAutoUpdate?: boolean,
+    setShouldAutoUpdate?: (should: boolean) => void,
     timeline: Toot[],
     triggerLoad?: () => void,
 };
@@ -26,7 +25,7 @@ interface AlgorithmContextProps {
 };
 
 const AlgorithmContext = createContext<AlgoContext>({timeline: []});
-export const useAlgorithmContext = () => useContext(AlgorithmContext);
+export const useAlgorithm = () => useContext(AlgorithmContext);
 
 const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
@@ -40,7 +39,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
 
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [shouldAutoLoadNewToots, setShouldAutoLoadNewToots] = useState<boolean>(false);  // Load new toots on refocus
+    const [shouldAutoUpdate, setShouldAutoUpdate] = useState<boolean>(false);  // Load new toots on refocus
     const [timeline, setTimeline] = useState<Toot[]>([]);  // contains timeline Toots
 
     // TODO: this doesn't make any API calls yet, right?
@@ -62,7 +61,12 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
             try {
                 currentUser = await api.v1.accounts.verifyCredentials();
             } catch (err) {
-                console.error(`Failed to verifyCredentials() with error:`, err);
+                if (isAccessTokenRevokedError(err)) {
+                    warnMsg(`Access token has been revoked, logging out...`);
+                } else {
+                    errorMsg(`Logging out, failed to verifyCredentials() with error:`, err);
+                }
+
                 logout();
                 return;
             }
@@ -86,7 +90,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
         if (!user || !algorithm) return;
 
         const shouldReloadFeed = (): boolean => {
-            if (isLoading || !shouldAutoLoadNewToots) return false;
+            if (isLoading || !shouldAutoUpdate) return false;
             let should = false;
             let msg: string;
 
@@ -118,8 +122,8 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
         algorithm,
         api,
         isLoading,
-        setShouldAutoLoadNewToots,
-        shouldAutoLoadNewToots,
+        setShouldAutoUpdate,
+        shouldAutoUpdate,
         timeline,
         triggerLoad
     };
@@ -133,7 +137,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
 
 
 // Trigger the algorithm to load new data
-export const triggerAlgoLoad = (
+const triggerAlgoLoad = (
     algorithm: TheAlgorithm,
     setError?: (error: string) => void,
     setIsLoading?: (isLoading: boolean) => void,

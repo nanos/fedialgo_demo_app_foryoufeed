@@ -11,7 +11,7 @@ import Row from 'react-bootstrap/Row';
 import { PropertyName, PropertyFilter } from "fedialgo";
 
 import { PARTICIPATED_TAG_COLOR_FADED } from "../../helpers/style_helpers";
-import { useAlgorithmContext } from "../../hooks/useAlgorithm";
+import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 type HashtagTooltip = {text: string; color: string;};
 
@@ -29,7 +29,7 @@ interface FilterCheckboxGridProps {
 
 export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     const { filterSection, minToots, sortByValue } = props;
-    const { algorithm } = useAlgorithmContext();
+    const { algorithm } = useAlgorithm();
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
     let optionInfo = filterSection.optionInfo;
 

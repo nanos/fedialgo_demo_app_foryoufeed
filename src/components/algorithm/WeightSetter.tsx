@@ -13,13 +13,13 @@ import { NON_SCORE_WEIGHTS, PresetWeightLabel, PresetWeights, WeightName, Weight
 import WeightSlider from './WeightSlider';
 import { accordionBody, roundedBox, titleStyle } from "../../helpers/style_helpers";
 import { logMsg } from "../../helpers/string_helpers";
-import { useAlgorithmContext } from "../../hooks/useAlgorithm";
+import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 const PRESET_MENU_TITLE = "Preset Algorithm Configurations";
 
 
 export default function WeightSetter() {
-    const { algorithm } = useAlgorithmContext();
+    const { algorithm } = useAlgorithm();
     const [userWeights, setUserWeights] = useState<Weights>({} as Weights);
     const sortedScorers = algorithm.weightedScorers.sort((a, b) => a.name.localeCompare(b.name));
     const initWeights = async () => setUserWeights(await algorithm.getUserWeights());

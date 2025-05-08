@@ -10,6 +10,7 @@ import Row from 'react-bootstrap/Row';
 import { Modal } from "react-bootstrap";
 import { READY_TO_LOAD_MSG } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
+// import 'react-tooltip/dist/react-tooltip.css'
 
 import FilterSetter from "../components/algorithm/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
@@ -18,9 +19,10 @@ import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
+import { linkesque } from "../helpers/style_helpers";
 import { logMsg, warnMsg } from "../helpers/string_helpers";
+import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
-import { useAlgorithmContext } from "../hooks/useAlgorithm";
 
 // Number constants
 const DEFAULT_NUM_DISPLAYED_TOOTS = 20;
@@ -34,7 +36,7 @@ const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
 
 
 export default function Feed() {
-    const { algorithm, api, isLoading, setShouldAutoLoadNewToots, shouldAutoLoadNewToots, timeline, triggerLoad } = useAlgorithmContext();
+    const { algorithm, api, isLoading, setShouldAutoUpdate, shouldAutoUpdate, timeline, triggerLoad } = useAlgorithm();
     const { user } = useAuthContext();
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
@@ -137,19 +139,19 @@ export default function Feed() {
                             {(!algorithm || algorithm.isDebug)
                                 ? <p>{scrollMsg}</p>
                                 : <a
-                                    data-tooltip-id={TOOLTIP_ANCHOR}
-                                    data-tooltip-content={AUTO_UPDATE_TOOLTIP_MSG}
-                                    key={"tooltipautoload"}
-                                    style={{color: "white"}}
-                                >
-                                    <Form.Check
-                                        checked={shouldAutoLoadNewToots}
-                                        className="mb-3"
-                                        key={"autoLoadNewToots"}
-                                        label={`Auto Load New Toots`}
-                                        onChange={(e) => setShouldAutoLoadNewToots(e.target.checked)}
-                                        type="checkbox"
-                                    />
+                                      data-tooltip-id={TOOLTIP_ANCHOR}
+                                      data-tooltip-content={AUTO_UPDATE_TOOLTIP_MSG}
+                                      key={"tooltipautoload"}
+                                      style={{color: "white"}}
+                                  >
+                                      <Form.Check
+                                          checked={shouldAutoUpdate}
+                                          className="mb-3"
+                                          key={"autoLoadNewToots"}
+                                          label={`Auto Load New Toots`}
+                                          onChange={(e) => setShouldAutoUpdate(e.target.checked)}
+                                          type="checkbox"
+                                      />
                                 </a>}
                         </div>
 
@@ -172,12 +174,12 @@ export default function Feed() {
                 </Col>
 
                 <Col xs={6}>
-                    {algorithm && !isLoading && <>
-                        <p style={{...loadingMsgStyle, marginTop: "8px", textAlign: "center", fontSize: "13px"}}>
-                            <a onClick={triggerLoad} style={{cursor: "pointer", textDecoration: "underline"}} >
+                    {algorithm && !isLoading &&
+                        <p style={loadNewTootsText}>
+                            <a onClick={triggerLoad}>
                                 (load new toots)
                             </a>
-                        </p></>}
+                        </p>}
 
                     <div style={statusesColStyle}>
                         {timeline.slice(0, Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots)).map((toot) => (
@@ -188,7 +190,6 @@ export default function Feed() {
                             />
                         ))}
 
-                        {/* TODO: the NO_TOOTS_MSG will never happen */}
                         {timeline.length == 0 && (
                             isLoading
                                 ? <LoadingSpinner isFullPage={true} message={DEFAULT_LOADING_MESSAGE} />
@@ -197,7 +198,7 @@ export default function Feed() {
                                   </div>
                             )}
 
-                        <div ref={bottomRef} style={{textAlign: "center", marginTop: "10px"}} />
+                        <div ref={bottomRef} style={{marginTop: "10px"}} />
                     </div>
                 </Col>
             </Row>
@@ -210,6 +211,14 @@ const loadingMsgStyle: CSSProperties = {
     fontSize: "16px",
     height: "20px",
     marginTop: "6px",
+};
+
+const loadNewTootsText: CSSProperties = {
+    ...loadingMsgStyle,
+    ...linkesque,
+    fontSize: "13px",
+    marginTop: "8px",
+    textAlign: "center",
 };
 
 const resetLinkStyle: CSSProperties = {

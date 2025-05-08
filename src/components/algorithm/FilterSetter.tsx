@@ -9,14 +9,13 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import FilterCheckbox, { HASHTAG_ANCHOR, HIGHLIGHT, INVERT_SELECTION, SORT_KEYS } from "./FilterCheckbox";
 import { NumericFilter, PropertyName, PropertyFilter } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
-import 'react-tooltip/dist/react-tooltip.css'
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import FilterCheckboxGrid from "./FilterCheckboxGrid";
 import Slider from "./Slider";
 import { logMsg } from "../../helpers/string_helpers";
 import { titleStyle } from "../../helpers/style_helpers";
-import { useAlgorithmContext } from "../../hooks/useAlgorithm";
+import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 type MinTootsFilter = {[key in PropertyName]?: number};
 
@@ -29,7 +28,7 @@ const DEFAULT_MIN_TOOTS_TO_APPEAR: MinTootsFilter = {
 
 
 export default function FilterSetter() {
-    const { algorithm } = useAlgorithmContext();
+    const { algorithm } = useAlgorithm();
 
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
     const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);

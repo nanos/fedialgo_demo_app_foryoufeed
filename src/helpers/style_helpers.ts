@@ -26,6 +26,11 @@ export const headerFont: CSSProperties = {
     marginTop: "0px",
 };
 
+export const linkesque: CSSProperties = {
+    cursor: "pointer",
+    textDecoration: "underline",
+}
+
 export const roundedBox: CSSProperties = {
     borderRadius: "25px",
     background: "lightgrey",
