@@ -36,7 +36,6 @@ export default function Feed() {
     const { user, logout } = useAuthContext();
     const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token});
     const bottomRef = useRef<HTMLDivElement>(null);
-    // const scrollableRef = useRef<typeof Row>(null);
     const isBottom = useOnScreen(bottomRef);
 
     // State variables
@@ -75,6 +74,20 @@ export default function Feed() {
                 {msg} ({<a onClick={reset} style={resetLinkStyle}>clear all data and reload</a>})
             </p>
         );
+    };
+
+    const triggerLoad = () => {
+        if (!algorithm) return;
+        setIsLoading(true);
+
+        algorithm.triggerFeedUpdate().then(() => {
+            logMsg(`triggerLoad() finished`);
+        }).catch((err) => {
+            console.error(`Failed to triggerLoad() with error:`, err);
+            setError(`Failed to triggerLoad: ${err}`);
+        }).finally(() => {
+            setIsLoading(false);
+        });
     };
 
     // Initial load of the feed (can be re-triggered by changing the value of triggerReload)
@@ -156,31 +169,8 @@ export default function Feed() {
             }
         };
 
-        // const handleOverscroll = () => {
-        //     console.log("handleOverscroll() called");
-
-        //     // Check for overscroll at the top of the page
-        //     if (scrollableRef.current) { // Ensure ref is valid
-        //         const currentScrollY = scrollableRef.current.scrollTop;
-
-        //         if (currentScrollY < prevScrollY && currentScrollY === 0) {
-        //             console.log("Overscroll detected! Trigger action here.");
-        //             // Add your action here, such as fetching new data or refreshing the page.
-        //         }
-
-        //         setPrevScrollY(currentScrollY);
-        //     }
-        // }
-
-        // const scrollableElement = scrollableRef.current;
-        // if (scrollableElement) scrollableElement.addEventListener('scroll', handleOverscroll);
-
         window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-            // if (scrollableElement) scrollableElement.removeEventListener('scroll', handleOverscroll);
-        };
+        return () => window.removeEventListener('scroll', handleScroll);
     }, [isBottom, numDisplayedToots, prevScrollY, setNumDisplayedToots, setPrevScrollY, timeline]);
 
     // Set up feed reloader to call algorithm.triggerFeedUpdate() on focus after RELOAD_IF_OLDER_THAN_SECONDS
@@ -274,8 +264,14 @@ export default function Feed() {
                 </Col>
 
                 <Col style={statusesColStyle} xs={6}>
-                    {api && !isInitialLoad &&
-                        timeline.slice(0, Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots)).map((toot) => (
+                    {api && !isInitialLoad && <>
+                        <p style={{...loadingMsgStyle, marginTop: "8px", textAlign: "center", fontSize: "13px"}}>
+                            <a onClick={triggerLoad} style={{cursor: "pointer", textDecoration: "underline"}} >
+                                (load new toots)
+                            </a>
+                        </p>
+
+                        {timeline.slice(0, Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots)).map((toot) => (
                             <StatusComponent
                                 api={api}
                                 key={toot.uri}
@@ -283,7 +279,7 @@ export default function Feed() {
                                 status={toot}
                                 user={user}
                             />
-                        ))}
+                        ))}</>}
 
                     {/* TODO: the NO_TOOTS_MSG will never happen */}
                     {isInitialLoad &&
