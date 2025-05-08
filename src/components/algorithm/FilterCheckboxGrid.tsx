@@ -8,7 +8,7 @@ import React, { CSSProperties, ReactNode } from "react";
 import Col from 'react-bootstrap/Col';
 import FilterCheckbox from "./FilterCheckbox";
 import Row from 'react-bootstrap/Row';
-import { PropertyName, PropertyFilter, TheAlgorithm } from "fedialgo";
+import { PropertyName, PropertyFilter } from "fedialgo";
 
 import { PARTICIPATED_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithmContext } from "../../hooks/useAlgorithm";
@@ -21,7 +21,6 @@ const FOLLOWED_TAG_MSG = `You follow this hashtag.`;
 const PARTICIPATED_TAG_MSG = `You've posted this hashtag`
 
 interface FilterCheckboxGridProps {
-    algorithm: TheAlgorithm,
     filterSection: PropertyFilter,  // TODO: maybe rename propertyFilter
     minToots?: number,
     sortByValue?: boolean,

@@ -11,7 +11,7 @@ import { capitalCase } from "change-case";
 import { Tooltip } from 'react-tooltip';
 
 import Slider from "./Slider";
-import { globalFont, roundedBox } from "../../helpers/style_helpers";
+import { accordionBody, globalFont, roundedBox } from "../../helpers/style_helpers";
 
 const TOOLTIP_ANCHOR = "ToolTipAnchor";
 
@@ -82,11 +82,6 @@ export default function FilterAccordionSection(props: AccordionProps) {
     );
 };
 
-
-// TODO: refactor to style_helpers
-export const accordionBody: CSSProperties = {
-    backgroundColor: '#b2bfd4',
-};
 
 const invertTagSelectionStyle: CSSProperties = {
     alignItems: 'center',

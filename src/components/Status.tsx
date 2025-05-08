@@ -5,7 +5,7 @@ import React, { CSSProperties } from "react";
 
 import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
-import { Account, TheAlgorithm, Toot, timeString } from "fedialgo";
+import { Account, Toot, timeString } from "fedialgo";
 import { capitalCase } from "change-case";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';

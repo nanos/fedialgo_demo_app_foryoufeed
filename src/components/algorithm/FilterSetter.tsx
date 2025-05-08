@@ -7,7 +7,7 @@ import React, { CSSProperties, ReactNode, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import FilterCheckbox, { HASHTAG_ANCHOR, HIGHLIGHT, INVERT_SELECTION, SORT_KEYS } from "./FilterCheckbox";
-import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm } from "fedialgo";
+import { NumericFilter, PropertyName, PropertyFilter } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css'
 
