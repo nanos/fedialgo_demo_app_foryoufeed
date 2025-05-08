@@ -83,6 +83,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
 };
 
 
+// TODO: refactor to style_helpers
 export const accordionBody: CSSProperties = {
     backgroundColor: '#b2bfd4',
 };

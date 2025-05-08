@@ -6,28 +6,21 @@
 import React, { CSSProperties, ReactNode, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import Col from 'react-bootstrap/Col';
 import FilterCheckbox, { HASHTAG_ANCHOR, HIGHLIGHT, INVERT_SELECTION, SORT_KEYS } from "./FilterCheckbox";
-import Form from 'react-bootstrap/esm/Form';
-import Row from 'react-bootstrap/Row';
-import { capitalCase } from "change-case";
-import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm, TypeFilterName } from "fedialgo";
+import { NumericFilter, PropertyName, PropertyFilter, TheAlgorithm } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css'
 
 import FilterAccordionSection from "./FilterAccordionSection";
+import FilterCheckboxGrid from "./FilterCheckboxGrid";
+
 import Slider from "./Slider";
 import { logMsg } from "../../helpers/string_helpers";
-import { PARTICIPATED_TAG_COLOR_FADED, titleStyle } from "../../helpers/style_helpers";
+import { titleStyle } from "../../helpers/style_helpers";
 
-type HashtagTooltip = {text: string; color: string;};
 type MinTootsFilter = {[key in PropertyName]?: number};
 
-// Filtered filters are those that require a minimum number of toots to appear as filter options
-const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
 const DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
-const FOLLOWED_TAG_MSG = `You follow this hashtag.`;
-const PARTICIPATED_TAG_MSG = `You've posted this hashtag`
 
 const DEFAULT_MIN_TOOTS_TO_APPEAR: MinTootsFilter = {
     [PropertyName.HASHTAG]: DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER,
@@ -41,10 +34,9 @@ interface FilterSetterProps {
 
 export default function FilterSetter(props: FilterSetterProps) {
     const { algorithm } = props;
+
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
     const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
-    const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
-
     const [minTootsCutoffs, setMinTootsCutoffs] = useState<MinTootsFilter>({...DEFAULT_MIN_TOOTS_TO_APPEAR});
 
     const [sortByValue, setSortByValue] = useState<Record<PropertyName, boolean>>(
@@ -73,11 +65,9 @@ export default function FilterSetter(props: FilterSetterProps) {
                 isChecked={sortByValue[filter.title]}
                 label={SORT_KEYS}
                 onChange={(e) => {
-                    logMsg(`sortKeysCheckbox: ${filter.title} called with ${e.target.checked}:`, e);
                     const newSortByValue = {...sortByValue};
                     newSortByValue[filter.title] = e.target.checked;
                     setSortByValue(newSortByValue);
-                    logMsg(`sortByValue:`, newSortByValue);
                     algorithm.updateFilters(algorithm.filters);
                 }}
             />
@@ -96,104 +86,6 @@ export default function FilterSetter(props: FilterSetterProps) {
             />
         );
     };
-
-    // Build a checkbox for a property filter. The 'name' is also the element of the filter array.
-    const propertyCheckbox = (name: string, filterSection: PropertyFilter) => {
-        let tooltipText: string | undefined;
-        let tooltipColor: string | undefined;
-
-        if (filterSection.title == PropertyName.HASHTAG) {
-            const tooltip = hashtagTooltip(name);
-            tooltipText = tooltip?.text;
-            tooltipColor = tooltip?.color;
-        } else if (filterSection.title == PropertyName.USER && name in algorithm.userData.followedAccounts) {
-            tooltipText = `You follow this account`;
-        } else if (filterSection.title == PropertyName.LANGUAGE && name == algorithm.userData.preferredLanguage) {
-            tooltipText = `You post most in this language`;
-        }
-
-        return (
-            <FilterCheckbox
-                isChecked={filterSection.validValues.includes(name)}
-                label={name}
-                labelExtra={filterSection.optionInfo[name]}
-                onChange={(e) => {
-                    filterSection.updateValidOptions(name, e.target.checked);
-                    algorithm.updateFilters(algorithm.filters);
-                }}
-                tooltipText={tooltipText}
-                tooltipColor={tooltipColor}
-            />
-        );
-    };
-
-    const gridify = (list: ReactNode[]): ReactNode => {
-        if (!list || list.length === 0) return <></>;
-        const numCols = list.length > 10 ? 3 : 2;
-
-        const columns = list.reduce((cols, element, index) => {
-            const colIndex = index % numCols;
-            cols[colIndex] ??= [];
-            cols[colIndex].push(element);
-            return cols;
-        }, [] as ReactNode[][]);
-
-        return <Row>{columns.map((col, i: number) => <Col key={i}>{col}</Col>)}</Row>;
-    };
-
-    // Turn all the available options for a filter into a grid of checkboxes
-    const makeCheckboxList = (filter: PropertyFilter): ReactNode => {
-        let optionInfo = filter.optionInfo;
-
-        // If the filter is a "filtered" filter then only allow options with a minimum number of toots.
-        // Also always include any followed hashtags.
-        if (FILTERED_FILTERS.includes(filter.title)) {
-            optionInfo = Object.fromEntries(Object.entries(filter.optionInfo).filter(
-                ([option, numToots]) => {
-                    if (numToots >= minTootsCutoffs[filter.title]) return true;
-                    if (filter.title != PropertyName.HASHTAG) return false;
-                    return hashtagTooltip(option)?.text == FOLLOWED_TAG_MSG;
-                }
-            ));
-        }
-
-        let optionKeys = Object.keys(optionInfo);
-
-        if (sortByValue[filter.title]) {
-            optionKeys = optionKeys.sort((a, b) => (optionInfo[b] || 0) - (optionInfo[a] || 0));
-        } else {
-            optionKeys = optionKeys.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
-        }
-
-        return gridify(optionKeys.map((e) => propertyCheckbox(e, filter)));
-    }
-
-    // Generate color and tooltip text for a hashtag checkbox
-    const hashtagTooltip = (name: string): HashtagTooltip => {
-        if (name in algorithm.userData.followedTags) {
-            return {
-                text: FOLLOWED_TAG_MSG,
-                color: "yellow",
-            }
-        } else if (trendingTagNames.includes(name)) {
-            return {
-                text: `This hashtag is trending.`,
-                color: "#FAD5A5",
-            }
-        } else if (name in algorithm.userData.participatedHashtags) {
-            const tag = algorithm.userData.participatedHashtags[name];
-
-            return {
-                text: `${PARTICIPATED_TAG_MSG} ${tag.numToots} times recently.`,
-                color: PARTICIPATED_TAG_COLOR_FADED,
-            }
-        }
-    };
-
-    const filterSectionDescription = (filterSection: PropertyFilter) => {
-        let description = filterSection.description;
-        return description;
-    }
 
     const numericSliders = Object.entries(algorithm.filters.numericFilters).reduce(
         (sliders, [name, numericFilter]) => {
@@ -247,7 +139,12 @@ export default function FilterSetter(props: FilterSetterProps) {
                                 }}
                                 sortKeysCheckbox={sortKeysCheckbox(filterSection)}
                             >
-                                {makeCheckboxList(filterSection)}
+                                <FilterCheckboxGrid
+                                    algorithm={algorithm}
+                                    filterSection={filterSection}
+                                    minToots={minTootsCutoffs[filterSection.title]}
+                                    sortByValue={sortByValue[filterSection.title]}
+                                />
                             </FilterAccordionSection>))}
 
                         <FilterAccordionSection
