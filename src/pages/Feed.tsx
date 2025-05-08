@@ -85,7 +85,6 @@ export default function Feed() {
                 logMsg(`triggerLoad() finished`);
             }).catch((err) => {
                 if (err.message.includes(GET_FEED_BUSY_MSG)) {
-                    // setError(`Load already in progress...`);
                     warnMsg(`triggerLoad() Load already in progress, please wait a moment and try again`);
                 } else {
                     console.error(`Failed to triggerLoad() with error:`, err);
@@ -122,13 +121,15 @@ export default function Feed() {
 
             setAlgorithm(algo);
 
-            try {
-                algo.triggerFeedUpdate().then(() => setIsLoading(false));;
-                logMsg(`constructFeed() finished`);
-            } catch (err) {
-                console.error(`Failed to triggerFeedUpdate() with error:`, err);
-                setError(`Failed to triggerFeedUpdate: ${err}`);
-            }
+            algo.triggerFeedUpdate()
+                .catch((err) => {
+                    console.error(`Failed to triggerFeedUpdate() with error:`, err);
+                    setError(`Failed to triggerFeedUpdate: ${err}`);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                    logMsg(`Finished loading feed with ${timeline.length} toots`);
+                });
         };
 
         constructFeed();
@@ -271,7 +272,7 @@ export default function Feed() {
 
                 {/* <Col style={statusesColStyle} xs={6}> */}
                 <Col xs={6}>
-                    {api && !isInitialLoad && <>
+                    {algorithm && !isLoading && !isInitialLoad && <>
                         <p style={{...loadingMsgStyle, marginTop: "8px", textAlign: "center", fontSize: "13px"}}>
                             <a onClick={triggerLoad} style={{cursor: "pointer", textDecoration: "underline"}} >
                                 (load new toots)
