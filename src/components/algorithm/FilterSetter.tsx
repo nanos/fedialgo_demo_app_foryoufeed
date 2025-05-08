@@ -13,10 +13,10 @@ import 'react-tooltip/dist/react-tooltip.css'
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import FilterCheckboxGrid from "./FilterCheckboxGrid";
-
 import Slider from "./Slider";
 import { logMsg } from "../../helpers/string_helpers";
 import { titleStyle } from "../../helpers/style_helpers";
+import { useAlgorithmContext } from "../../hooks/useAlgorithm";
 
 type MinTootsFilter = {[key in PropertyName]?: number};
 
@@ -27,13 +27,9 @@ const DEFAULT_MIN_TOOTS_TO_APPEAR: MinTootsFilter = {
     [PropertyName.USER]: DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER,
 };
 
-interface FilterSetterProps {
-    algorithm: TheAlgorithm,
-};
 
-
-export default function FilterSetter(props: FilterSetterProps) {
-    const { algorithm } = props;
+export default function FilterSetter() {
+    const algorithm = useAlgorithmContext();
 
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
     const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
@@ -54,7 +50,6 @@ export default function FilterSetter(props: FilterSetterProps) {
                 label={INVERT_SELECTION}
                 onChange={(e) => {
                     filter.invertSelection = e.target.checked;
-                    algorithm.updateFilters(algorithm.filters);
                 }}
             />
         );
@@ -70,7 +65,6 @@ export default function FilterSetter(props: FilterSetterProps) {
                     const newSortByValue = {...sortByValue};
                     newSortByValue[filter.title] = e.target.checked;
                     setSortByValue(newSortByValue);
-                    algorithm.updateFilters(algorithm.filters);
                 }}
             />
         );
@@ -143,7 +137,6 @@ export default function FilterSetter(props: FilterSetterProps) {
                                 sortKeysCheckbox={sortKeysCheckbox(filterSection)}
                             >
                                 <FilterCheckboxGrid
-                                    algorithm={algorithm}
                                     filterSection={filterSection}
                                     minToots={minTootsCutoffs[filterSection.title]}
                                     sortByValue={sortByValue[filterSection.title]}

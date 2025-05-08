@@ -7,6 +7,8 @@ import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
 import 'react-tooltip/dist/react-tooltip.css'
 
+import { useAlgorithmContext } from "../../hooks/useAlgorithm";
+
 export const HASHTAG_ANCHOR = "user-hashtag-anchor";
 export const HIGHLIGHT = "highlighted";
 export const INVERT_SELECTION = "invertSelection";
@@ -28,6 +30,7 @@ interface FilterCheckboxProps {
 export default function FilterCheckbox(props: FilterCheckboxProps) {
     let { capitalize, isChecked, label, labelExtra, onChange, tooltipColor, tooltipText } = props;
     const [isCheckedState, setIsCheckedState] = useState(isChecked);
+    const algorithm = useAlgorithmContext();
 
     labelExtra = (typeof labelExtra == "number") ? labelExtra.toLocaleString() : labelExtra;
     const labelStyle: CSSProperties = {fontWeight: "bold"};
@@ -60,6 +63,7 @@ export default function FilterCheckbox(props: FilterCheckboxProps) {
                 onChange={(e) => {
                     setIsCheckedState(e.target.checked);
                     onChange(e);
+                    algorithm?.updateFilters(algorithm.filters);
                 }}
                 style={{...style}}
             />

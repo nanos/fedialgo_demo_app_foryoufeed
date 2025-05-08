@@ -19,6 +19,7 @@ import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
 import { accordionBody } from "./algorithm/FilterAccordionSection";
 import { followUri, openToot } from "../helpers/react_helpers";
 import { titleStyle } from "../helpers/style_helpers";
+import { useAlgorithmContext } from "../hooks/useAlgorithm";
 
 const MAX_TRENDING_LINK_LEN = 170;
 const MAX_HASHTAGS_TO_SHOW = 100;
@@ -30,7 +31,8 @@ const ATTACHMENT_PREFIXES: Record<MediaCategory, string> = {
 };
 
 
-export default function TrendingInfo({ algorithm }: { algorithm: TheAlgorithm }) {
+export default function TrendingInfo() {
+    const algorithm = useAlgorithmContext();
     const linkMapper = (link: TrendingObj) => `${(link as TrendingLink).url}`;
     const infoTxt = (obj: TrendingWithHistory) => `${obj.numToots?.toLocaleString()} toots by ${obj.numAccounts?.toLocaleString()} accounts`;
 

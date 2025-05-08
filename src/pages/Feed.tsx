@@ -19,6 +19,7 @@ import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
+import { AlgorithmProvider } from "../hooks/useAlgorithm";
 import { browserLanguage, logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "../hooks/useAuth";
 
@@ -29,9 +30,11 @@ const RELOAD_IF_OLDER_THAN_SECONDS = 60 * 10; // 10 minutes
 // String constants
 const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
+const TOOLTIP_ANCHOR = "tooltip-anchor";
+// Messaging constants
+const AUTO_UPDATE_TOOLTIP_MSG = "If this box is checked new toots will be automatically loaded when you focus this browser tab.";
 const DEFAULT_LOADING_MESSAGE = "(first time can take up to a minute or so)";
 const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
-const TOOLTIP_ANCHOR = "tooltip-anchor";
 
 
 export default function Feed() {
@@ -235,53 +238,55 @@ export default function Feed() {
 
             <Row>
                 <Col xs={6}>
-                    <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
-                        <div style={stickySwitchContainer}>
-                            <Form.Check
-                                checked={isControlPanelSticky}
-                                className="mb-3"
-                                key={"stickPanel"}
-                                label={`Stick Control Panel To Top`}
-                                onChange={(e) => setIsControlPanelSticky(e.target.checked)}
-                                type="checkbox"
-                            />
+                    <AlgorithmProvider algorithm={algorithm}>
+                        <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
+                            <div style={stickySwitchContainer}>
+                                <Form.Check
+                                    checked={isControlPanelSticky}
+                                    className="mb-3"
+                                    key={"stickPanel"}
+                                    label={`Stick Control Panel To Top`}
+                                    onChange={(e) => setIsControlPanelSticky(e.target.checked)}
+                                    type="checkbox"
+                                />
 
-                            {(!algorithm || algorithm.isDebug)
-                                ? <p>{scrollMsg}</p>
-                                : <a
-                                      data-tooltip-id={TOOLTIP_ANCHOR}
-                                      data-tooltip-content={"Update the feed automatically when you refocus this tab"}
-                                      key={"tooltipautoload"}
-                                      style={{color: "white"}}
-                                  >
-                                      <Form.Check
-                                          checked={shouldAutoLoadNewToots}
-                                          className="mb-3"
-                                          key={"autoLoadNewToots"}
-                                          label={`Auto Load New Toots`}
-                                          onChange={(e) => setShouldAutoLoadNewToots(e.target.checked)}
-                                          type="checkbox"
-                                      />
-                                  </a>}
+                                {(!algorithm || algorithm.isDebug)
+                                    ? <p>{scrollMsg}</p>
+                                    : <a
+                                        data-tooltip-id={TOOLTIP_ANCHOR}
+                                        data-tooltip-content={AUTO_UPDATE_TOOLTIP_MSG}
+                                        key={"tooltipautoload"}
+                                        style={{color: "white"}}
+                                    >
+                                        <Form.Check
+                                            checked={shouldAutoLoadNewToots}
+                                            className="mb-3"
+                                            key={"autoLoadNewToots"}
+                                            label={`Auto Load New Toots`}
+                                            onChange={(e) => setShouldAutoLoadNewToots(e.target.checked)}
+                                            type="checkbox"
+                                        />
+                                    </a>}
+                            </div>
+
+                            {algorithm && <WeightSetter />}
+                            {algorithm && <FilterSetter />}
+                            {algorithm && <TrendingInfo />}
+                            <FindFollowers api={api} user={user} />
+
+                            {/* Checking algorith.loadingStatus here DOES NOT trigger a render when the value changes */}
+                            {/* {(isInitialLoad || isLoading || algorithm?.loadingStatus) */}
+                            {(isInitialLoad || isLoading)
+                                ? <LoadingSpinner message={algorithm?.loadingStatus || READY_TO_LOAD_MSG} style={loadingMsgStyle} />
+                                : (algorithm && finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds))}
+
+                            {/* <p style={loadingMsgStyle}>
+                                <a onClick={() => algorithm.logWithState("DEMO APP", `State (isLoading=${isLoading}, isInitialLoad=${isInitialLoad}, algorithm.isLoading()=${algorithm.isLoading()})`)} >
+                                    Dump current algorithm state to console
+                                </a>
+                            </p> */}
                         </div>
-
-                        {algorithm && <WeightSetter algorithm={algorithm} />}
-                        {algorithm && <FilterSetter algorithm={algorithm} />}
-                        {algorithm && <TrendingInfo algorithm={algorithm} />}
-                        <FindFollowers api={api} user={user} />
-
-                        {/* Checking algorith.loadingStatus here DOES NOT trigger a render when the value changes */}
-                        {/* {(isInitialLoad || isLoading || algorithm?.loadingStatus) */}
-                        {(isInitialLoad || isLoading)
-                            ? <LoadingSpinner message={algorithm?.loadingStatus || READY_TO_LOAD_MSG} style={loadingMsgStyle} />
-                            : (algorithm && finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds))}
-
-                        {/* <p style={loadingMsgStyle}>
-                            <a onClick={() => algorithm.logWithState("DEMO APP", `State (isLoading=${isLoading}, isInitialLoad=${isInitialLoad}, algorithm.isLoading()=${algorithm.isLoading()})`)} >
-                                Dump current algorithm state to console
-                            </a>
-                        </p> */}
-                    </div>
+                    </AlgorithmProvider>
                 </Col>
 
                 {/* <Col style={statusesColStyle} xs={6}> */}

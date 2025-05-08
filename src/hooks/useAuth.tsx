@@ -23,7 +23,6 @@ export default function AuthProvider(props: PropsWithChildren) {
     const navigate = useNavigate();
     const logThis = (msg: string, ...args: any[]) => logMsg(`<AuthProvider> ${msg}`, ...args);
 
-    // TODO: this doesn't actually authenticate the user, it just sets the user object in local storage
     // call this function when you want to authenticate the user. User object looks like this:
     // {
     //     access_token: "xyssdsfdnffdwf"
@@ -32,6 +31,7 @@ export default function AuthProvider(props: PropsWithChildren) {
     //     server: "https://universeodon.com"
     //     username: "cryptadamus"
     // }
+    // TODO: this doesn't actually authenticate the user, it just sets the user object in local storage
     const loginUser = async (user: User) => {
         // TODO: this contains secret keys, don't log it unsanitized
         // logThis("loginUser() called while 'app' state var is:", app, `\nuser:`, user);

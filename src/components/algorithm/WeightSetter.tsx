@@ -14,11 +14,13 @@ import WeightSlider from './WeightSlider';
 import { accordionBody } from "./FilterAccordionSection";
 import { logMsg } from "../../helpers/string_helpers";
 import { roundedBox, titleStyle } from "../../helpers/style_helpers";
+import { useAlgorithmContext } from "../../hooks/useAlgorithm";
 
 const PRESET_MENU_TITLE = "Preset Algorithm Configurations";
 
 
-export default function WeightSetter({ algorithm }: { algorithm: TheAlgorithm }) {
+export default function WeightSetter() {
+    const algorithm = useAlgorithmContext();
     const [userWeights, setUserWeights] = useState<Weights>({} as Weights);
     const sortedScorers = algorithm.weightedScorers.sort((a, b) => a.name.localeCompare(b.name));
     const initWeights = async () => setUserWeights(await algorithm.getUserWeights());
