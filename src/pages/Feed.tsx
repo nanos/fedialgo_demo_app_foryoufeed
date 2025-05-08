@@ -41,6 +41,7 @@ export default function Feed() {
     // State variables
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
     const [error, setError] = useState<string>("");
+    const [shouldAutoLoadNewToots, setShouldAutoLoadNewToots] = useState<boolean>(false);  // Auto load new toots
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(true);  // Left panel stickiness
     const [isLoading, setIsLoading] = useState<boolean>(true);  // Loading spinner
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
@@ -184,6 +185,7 @@ export default function Feed() {
         if (!user || !algorithm || isInitialLoad) return;
 
         const shouldReloadFeed = (): boolean => {
+            if (!shouldAutoLoadNewToots) return false;
             let should = false;
             let msg: string;
 
@@ -232,6 +234,7 @@ export default function Feed() {
                     <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
                         <div style={stickySwitchContainer}>
                             <Form.Check
+                                key={"stickPanel"}
                                 type="checkbox"
                                 label={`Stick Control Panel To Top`}
                                 checked={isControlPanelSticky}
@@ -239,7 +242,16 @@ export default function Feed() {
                                 className="mb-3"
                             />
 
-                            <p>{scrollMsg}</p>
+                            {(!algorithm || algorithm.isDebug)
+                                ? <p>{scrollMsg}</p>
+                                : <Form.Check
+                                      key={"autoLoadNewToots"}
+                                      type="checkbox"
+                                      label={`Auto Load New Toots`}
+                                      checked={shouldAutoLoadNewToots}
+                                      onChange={(e) => setShouldAutoLoadNewToots(e.target.checked)}
+                                      className="mb-3"
+                                  />}
                         </div>
 
                         {algorithm && <WeightSetter algorithm={algorithm} />}
