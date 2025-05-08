@@ -19,6 +19,9 @@ import Slider from "./Slider";
 import { logMsg } from "../../helpers/string_helpers";
 import { PARTICIPATED_TAG_COLOR_FADED, titleStyle } from "../../helpers/style_helpers";
 
+type HashtagTooltip = {text: string; color: string;};
+type MinTootsFilter = {[key in PropertyName]?: number};
+
 const MAX_LABEL_LENGTH = 18;
 const HASHTAG_ANCHOR = "user-hashtag-anchor";
 const HIGHLIGHT = "highlighted";
@@ -28,15 +31,14 @@ const CAPITALIZED_LABELS = [INVERT_SELECTION, SORT_KEYS].concat(Object.values(Ty
 
 // Filtered filters are those that require a minimum number of toots to appear as filter options
 const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
-const MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
-const MIN_TOOT_MSG = ` with at least ${MIN_TOOTS_TO_APPEAR_IN_FILTER} toots`;
+const DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
 const FOLLOWED_TAG_MSG = `You follow this hashtag.`;
 const PARTICIPATED_TAG_MSG = `You've posted this hashtag`
 
-type HashtagTooltip = {
-    text: string;
-    color: string;
-}
+const DEFAULT_MIN_TOOTS_TO_APPEAR: MinTootsFilter = {
+    [PropertyName.HASHTAG]: DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER,
+    [PropertyName.USER]: DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER,
+};
 
 interface FilterSetterProps {
     algorithm: TheAlgorithm,
@@ -56,6 +58,8 @@ export default function FilterSetter(props: FilterSetterProps) {
             return acc
         }, {} as Record<PropertyName, boolean>)
     );
+
+    const [minTootsCutoffs, setMinTootsCutoffs] = useState<MinTootsFilter>({...DEFAULT_MIN_TOOTS_TO_APPEAR});
 
     // TODO: this maybe should be refactored to its own Component with a state variable?
     // Throwing errors (though rarely) as it is. React's suggestion is here:
@@ -182,18 +186,7 @@ export default function FilterSetter(props: FilterSetterProps) {
 
         if (FILTERED_FILTERS.includes(filter.title)) {
             optionInfo = Object.fromEntries(Object.entries(filter.optionInfo).filter(
-                ([k, v]) => {
-                    if (v >= MIN_TOOTS_TO_APPEAR_IN_FILTER) return true;
-                    const tooltip = filter.title == PropertyName.HASHTAG ? hashtagTooltip(k) : undefined;
-
-                    if (!tooltip) {
-                        return false;
-                    } else if (tooltip.text == FOLLOWED_TAG_MSG) {
-                        return true;
-                    } else {
-                        return v >= (MIN_TOOTS_TO_APPEAR_IN_FILTER - 2);
-                    }
-                }
+                ([_k, v]) => v >= minTootsCutoffs[filter.title]
             ));
         }
 
@@ -232,15 +225,6 @@ export default function FilterSetter(props: FilterSetterProps) {
 
     const filterSectionDescription = (filterSection: PropertyFilter) => {
         let description = filterSection.description;
-
-        if (FILTERED_FILTERS.includes(filterSection.title)) {
-            description += MIN_TOOT_MSG;
-
-            if (filterSection.title == PropertyName.HASHTAG) {
-                description += ` or that you engage with`;
-            }
-        }
-
         return description;
     }
 
@@ -284,11 +268,16 @@ export default function FilterSetter(props: FilterSetterProps) {
                         {/* property filters (language, type, etc) */}
                         {visibleSections.map((filterSection) => (
                             <FilterAccordionSection
-                                description={filterSectionDescription(filterSection)}
+                                description={filterSection.description}
                                 invertCheckbox={invertSelectionCheckbox(filterSection)}
-                                key={filterSection.title}
                                 isActive={filterSection.validValues.length > 0}
+                                key={filterSection.title}
+                                minToots={minTootsCutoffs[filterSection.title]}
                                 sectionName={filterSection.title}
+                                setMinToots={(minToots) => {
+                                    minTootsCutoffs[filterSection.title] = minToots;
+                                    setMinTootsCutoffs({...minTootsCutoffs});
+                                }}
                                 sortKeysCheckbox={sortKeysCheckbox(filterSection)}
                             >
                                 {makeCheckboxList(filterSection)}

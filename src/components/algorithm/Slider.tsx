@@ -8,18 +8,20 @@ import Form from 'react-bootstrap/esm/Form';
 export const DEFAULT_STEP_SIZE = 0.02;
 
 interface SliderProps {
-    description: string;
+    description?: string;
+    hideValueBox?: boolean;
     label: string;
     minValue: number;
     maxValue: number;
     onChange: (e: ChangeEvent<HTMLInputElement>) => Promise<void>;
     stepSize?: number;
     value: number;
+    width?: string;
 };
 
 
 export default function Slider(props: SliderProps) {
-    const { description, label, minValue, maxValue, onChange, stepSize, value } = props;
+    const { description, hideValueBox, label, minValue, maxValue, onChange, stepSize, value, width } = props;
     if (!value && value != 0) return;
 
     let step = stepSize ?? (minValue >= 0 ? DEFAULT_STEP_SIZE : 1);
@@ -33,37 +35,42 @@ export default function Slider(props: SliderProps) {
         decimals = 1;
     }
 
+    let divs = [
+        <div style={labelContainer} id="innter_doop">
+            {!hideValueBox &&
+                <div style={sliderValue} id="innerest_doop">
+                    <span style={monoFont}>
+                        {value?.toFixed(decimals)}
+                    </span>
+                </div>}
+
+            <span>
+                <span style={{fontWeight: 'bold', marginRight: '3px'}}>
+                    {`${label}` + (hideValueBox ? '' : ':')}
+                </span>
+
+                {description && <span>{description}</span>}
+            </span>
+        </div>,
+
+        <div style={sliderContainer}>
+            <Form.Range
+                className={"custom-slider"}
+                id={label}
+                min={minValue}
+                max={maxValue}
+                onChange={onChange}
+                step={step}
+                style={{width: width || '100%'}}
+                value={value}
+            />
+        </div>,
+    ];
+
     return (
         <Form.Group className="me-2">
             <div style={{...labelContainer}} id="outer_doop">
-                <div style={labelContainer} id="innter_doop">
-                    <div style={sliderValue} id="innerest_doop">
-                        <span style={monoFont}>
-                            {value?.toFixed(decimals)}
-                        </span>
-                    </div>
-
-                    <span>
-                        <span style={{fontWeight: 'bold', marginRight: '3px'}}>
-                            {`${label}:`}
-                        </span>
-
-                        <span>{description}</span>
-                    </span>
-                </div>
-
-                <div style={sliderContainer}>
-                    <Form.Range
-                        className={"custom-slider"}
-                        id={label}
-                        min={minValue}
-                        max={maxValue}
-                        onChange={onChange}
-                        step={step}
-                        style={{width: '100%'}}
-                        value={value}
-                    />
-                </div>
+                {hideValueBox ? divs.toReversed() : divs}
             </div>
         </Form.Group>
     );
