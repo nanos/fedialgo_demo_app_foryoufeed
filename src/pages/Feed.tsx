@@ -7,9 +7,10 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import { GET_FEED_BUSY_MSG, READY_TO_LOAD_MSG, TheAlgorithm, Toot, timeString } from "fedialgo";
 import { mastodon, createRestAPIClient } from "masto";
 import { Modal } from "react-bootstrap";
-import { GET_FEED_BUSY_MSG, READY_TO_LOAD_MSG, TheAlgorithm, Toot, timeString } from "fedialgo";
+import { Tooltip } from 'react-tooltip';
 
 import FilterSetter from "../components/algorithm/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
@@ -30,6 +31,7 @@ const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
 const DEFAULT_LOADING_MESSAGE = "(first time can take up to a minute or so)";
 const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
+const TOOLTIP_ANCHOR = "tooltip-anchor";
 
 
 export default function Feed() {
@@ -221,6 +223,8 @@ export default function Feed() {
 
     return (
         <Container fluid style={{height: 'auto'}}>
+            <Tooltip id={TOOLTIP_ANCHOR} place="top" />
+
             <Modal show={error !== ""} onHide={() => setError("")} style={{color: "black"}}>
                 <Modal.Header closeButton>
                     <Modal.Title>Error</Modal.Title>
@@ -234,24 +238,31 @@ export default function Feed() {
                     <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
                         <div style={stickySwitchContainer}>
                             <Form.Check
-                                key={"stickPanel"}
-                                type="checkbox"
-                                label={`Stick Control Panel To Top`}
                                 checked={isControlPanelSticky}
-                                onChange={(e) => setIsControlPanelSticky(e.target.checked)}
                                 className="mb-3"
+                                key={"stickPanel"}
+                                label={`Stick Control Panel To Top`}
+                                onChange={(e) => setIsControlPanelSticky(e.target.checked)}
+                                type="checkbox"
                             />
 
                             {(!algorithm || algorithm.isDebug)
                                 ? <p>{scrollMsg}</p>
-                                : <Form.Check
-                                      key={"autoLoadNewToots"}
-                                      type="checkbox"
-                                      label={`Auto Load New Toots`}
-                                      checked={shouldAutoLoadNewToots}
-                                      onChange={(e) => setShouldAutoLoadNewToots(e.target.checked)}
-                                      className="mb-3"
-                                  />}
+                                : <a
+                                      data-tooltip-id={TOOLTIP_ANCHOR}
+                                      data-tooltip-content={"Update the feed automatically when you refocus this tab"}
+                                      key={"tooltipautoload"}
+                                      style={{color: "white"}}
+                                  >
+                                      <Form.Check
+                                          checked={shouldAutoLoadNewToots}
+                                          className="mb-3"
+                                          key={"autoLoadNewToots"}
+                                          label={`Auto Load New Toots`}
+                                          onChange={(e) => setShouldAutoLoadNewToots(e.target.checked)}
+                                          type="checkbox"
+                                      />
+                                  </a>}
                         </div>
 
                         {algorithm && <WeightSetter algorithm={algorithm} />}
