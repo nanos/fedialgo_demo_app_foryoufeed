@@ -308,7 +308,7 @@ export default function Feed() {
                         {isInitialLoad &&
                             <LoadingSpinner
                                 isFullPage={true}
-                                message={isInitialLoad ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
+                                message={isLoading ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
                             />}
 
                         <div ref={bottomRef}>

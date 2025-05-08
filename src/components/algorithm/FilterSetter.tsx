@@ -7,6 +7,7 @@ import React, { CSSProperties, ReactNode, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Col from 'react-bootstrap/Col';
+import FilterCheckbox, { HASHTAG_ANCHOR, HIGHLIGHT, INVERT_SELECTION, SORT_KEYS } from "./FilterCheckbox";
 import Form from 'react-bootstrap/esm/Form';
 import Row from 'react-bootstrap/Row';
 import { capitalCase } from "change-case";
@@ -21,13 +22,6 @@ import { PARTICIPATED_TAG_COLOR_FADED, titleStyle } from "../../helpers/style_he
 
 type HashtagTooltip = {text: string; color: string;};
 type MinTootsFilter = {[key in PropertyName]?: number};
-
-const MAX_LABEL_LENGTH = 18;
-const HASHTAG_ANCHOR = "user-hashtag-anchor";
-const HIGHLIGHT = "highlighted";
-const INVERT_SELECTION = "invertSelection";
-const SORT_KEYS = "sortByCount";
-const CAPITALIZED_LABELS = [INVERT_SELECTION, SORT_KEYS].concat(Object.values(TypeFilterName) as string[]);
 
 // Filtered filters are those that require a minimum number of toots to appear as filter options
 const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
@@ -51,6 +45,8 @@ export default function FilterSetter(props: FilterSetterProps) {
     const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
 
+    const [minTootsCutoffs, setMinTootsCutoffs] = useState<MinTootsFilter>({...DEFAULT_MIN_TOOTS_TO_APPEAR});
+
     const [sortByValue, setSortByValue] = useState<Record<PropertyName, boolean>>(
         visibleSections.reduce((acc, section) => {
             acc[section.title] = false;
@@ -58,84 +54,46 @@ export default function FilterSetter(props: FilterSetterProps) {
         }, {} as Record<PropertyName, boolean>)
     );
 
-    const [minTootsCutoffs, setMinTootsCutoffs] = useState<MinTootsFilter>({...DEFAULT_MIN_TOOTS_TO_APPEAR});
-
-    // TODO: this maybe should be refactored to its own Component with a state variable?
-    // Throwing errors (though rarely) as it is. React's suggestion is here:
-    // https://react.dev/reference/react-dom/components/input#controlling-an-input-with-a-state-variable
-    const makeCheckbox = (
-        isChecked: boolean,
-        label: string,
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-        labelExtra?: number | string,
-        tooltipText?: string,
-        tooltipColor?: string,
-    ) => {
-        labelExtra = (typeof labelExtra == "number") ? labelExtra.toLocaleString() : labelExtra;
-        const labelStyle: CSSProperties = {fontWeight: "bold"};
-        let style: CSSProperties = {};
-
-        if (tooltipText) {
-            style = highlightedCheckboxStyle;
-            if (tooltipColor) style = { ...highlightedCheckboxStyle, backgroundColor: tooltipColor };
-        }
-
-        if (CAPITALIZED_LABELS.includes(label)) {
-            label = capitalCase(label);
-            labelStyle.fontSize = "14px";
-        } else {
-            label = (label.length > (MAX_LABEL_LENGTH - 2)) ? `${label.slice(0, MAX_LABEL_LENGTH)}...` : label;
-        }
-
-        return (
-            <a
-                data-tooltip-id={HASHTAG_ANCHOR + (tooltipText ? HIGHLIGHT : "")}
-                data-tooltip-content={tooltipText}
-                key={label}
-                style={{color: "black"}}
-            >
-                <Form.Switch
-                    checked={isChecked}
-                    id={label}
-                    key={label}
-                    label={<><span style={labelStyle}>{label}</span>{labelExtra && ` (${labelExtra})`}</>}
-                    onChange={(e) => {
-                        onChange(e);
-                        algorithm.updateFilters(algorithm.filters);
-                    }}
-                    style={{...style}}
-                />
-            </a>
-        );
-    };
-
     const invertSelectionCheckbox = (filter: PropertyFilter) => {
-        return makeCheckbox(
-            filter.invertSelection,
-            INVERT_SELECTION,
-            (e) => (filter.invertSelection = e.target.checked)
+        return (
+            <FilterCheckbox
+                isChecked={filter.invertSelection}
+                label={INVERT_SELECTION}
+                onChange={(e) => {
+                    filter.invertSelection = e.target.checked;
+                    algorithm.updateFilters(algorithm.filters);
+                }}
+            />
         );
     };
 
     const sortKeysCheckbox = (filter: PropertyFilter) => {
-        return makeCheckbox(
-            sortByValue[filter.title],
-            SORT_KEYS,
-            (e) => {
-                logMsg(`sortKeysCheckbox: ${filter.title} called with ${e.target.checked}:`, e);
-                const newSortByValue = {...sortByValue};
-                newSortByValue[filter.title] = e.target.checked;
-                setSortByValue(newSortByValue);
-                logMsg(`sortByValue:`, newSortByValue);
-            }
+        return (
+            <FilterCheckbox
+                isChecked={sortByValue[filter.title]}
+                label={SORT_KEYS}
+                onChange={(e) => {
+                    logMsg(`sortKeysCheckbox: ${filter.title} called with ${e.target.checked}:`, e);
+                    const newSortByValue = {...sortByValue};
+                    newSortByValue[filter.title] = e.target.checked;
+                    setSortByValue(newSortByValue);
+                    logMsg(`sortByValue:`, newSortByValue);
+                    algorithm.updateFilters(algorithm.filters);
+                }}
+            />
         );
     };
 
     const invertNumericFilterCheckbox = (filters: NumericFilter[]) => {
-        return makeCheckbox(
-            filters.every((filter) => filter.invertSelection),
-            INVERT_SELECTION,
-            (e) => filters.map(filter => filter.invertSelection = e.target.checked)
+        return (
+            <FilterCheckbox
+                isChecked={filters.every((filter) => filter.invertSelection)}
+                label={INVERT_SELECTION}
+                onChange={(e) => {
+                    filters.map(filter => filter.invertSelection = e.target.checked)
+                    algorithm.updateFilters(algorithm.filters);
+                }}
+            />
         );
     };
 
@@ -154,13 +112,18 @@ export default function FilterSetter(props: FilterSetterProps) {
             tooltipText = `You post most in this language`;
         }
 
-        return makeCheckbox(
-            filterSection.validValues.includes(name),
-            name,
-            (e) => filterSection.updateValidOptions(name, e.target.checked),
-            filterSection.optionInfo[name],
-            tooltipText,
-            tooltipColor
+        return (
+            <FilterCheckbox
+                isChecked={filterSection.validValues.includes(name)}
+                label={name}
+                labelExtra={filterSection.optionInfo[name]}
+                onChange={(e) => {
+                    filterSection.updateValidOptions(name, e.target.checked);
+                    algorithm.updateFilters(algorithm.filters);
+                }}
+                tooltipText={tooltipText}
+                tooltipColor={tooltipColor}
+            />
         );
     };
 
@@ -306,14 +269,4 @@ export default function FilterSetter(props: FilterSetterProps) {
 
 const accordionPadding: CSSProperties = {
     padding: "0px",
-};
-
-const highlightedCheckboxStyle: CSSProperties = {
-    backgroundColor: "cyan",
-    borderRadius: "5px"
-};
-
-const followedCheckboxStyle: CSSProperties = {
-    ...highlightedCheckboxStyle,
-    backgroundColor: "yellow",
 };
