@@ -90,6 +90,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
 
         return (
             <FilterCheckbox
+                capitalize={filterSection.title == PropertyName.TYPE}
                 isChecked={filterSection.validValues.includes(name)}
                 label={name}
                 labelExtra={filterSection.optionInfo[name]}

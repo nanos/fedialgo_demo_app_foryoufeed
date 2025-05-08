@@ -5,18 +5,17 @@ import React, { CSSProperties, useState } from "react";
 
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
-import { TypeFilterName } from "fedialgo";
 import 'react-tooltip/dist/react-tooltip.css'
 
 export const HASHTAG_ANCHOR = "user-hashtag-anchor";
 export const HIGHLIGHT = "highlighted";
 export const INVERT_SELECTION = "invertSelection";
 export const SORT_KEYS = "sortByCount";
-export const CAPITALIZED_LABELS = [INVERT_SELECTION, SORT_KEYS].concat(Object.values(TypeFilterName) as string[]);
 
 const MAX_LABEL_LENGTH = 18;
 
 interface FilterCheckboxProps {
+    capitalize?: boolean,
     isChecked: boolean,
     label: string,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
@@ -27,7 +26,7 @@ interface FilterCheckboxProps {
 
 
 export default function FilterCheckbox(props: FilterCheckboxProps) {
-    let { isChecked, label, labelExtra, onChange, tooltipColor, tooltipText } = props;
+    let { capitalize, isChecked, label, labelExtra, onChange, tooltipColor, tooltipText } = props;
     const [isCheckedState, setIsCheckedState] = useState(isChecked);
 
     labelExtra = (typeof labelExtra == "number") ? labelExtra.toLocaleString() : labelExtra;
@@ -39,7 +38,7 @@ export default function FilterCheckbox(props: FilterCheckboxProps) {
         if (tooltipColor) style = { ...highlightedCheckboxStyle, backgroundColor: tooltipColor };
     }
 
-    if (CAPITALIZED_LABELS.includes(label)) {
+    if (capitalize) {
         label = capitalCase(label);
         labelStyle.fontSize = "14px";
     } else {

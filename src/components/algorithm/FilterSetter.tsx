@@ -49,6 +49,7 @@ export default function FilterSetter(props: FilterSetterProps) {
     const invertSelectionCheckbox = (filter: PropertyFilter) => {
         return (
             <FilterCheckbox
+                capitalize={true}
                 isChecked={filter.invertSelection}
                 label={INVERT_SELECTION}
                 onChange={(e) => {
@@ -62,6 +63,7 @@ export default function FilterSetter(props: FilterSetterProps) {
     const sortKeysCheckbox = (filter: PropertyFilter) => {
         return (
             <FilterCheckbox
+                capitalize={true}
                 isChecked={sortByValue[filter.title]}
                 label={SORT_KEYS}
                 onChange={(e) => {
@@ -77,6 +79,7 @@ export default function FilterSetter(props: FilterSetterProps) {
     const invertNumericFilterCheckbox = (filters: NumericFilter[]) => {
         return (
             <FilterCheckbox
+                capitalize={true}
                 isChecked={filters.every((filter) => filter.invertSelection)}
                 label={INVERT_SELECTION}
                 onChange={(e) => {
