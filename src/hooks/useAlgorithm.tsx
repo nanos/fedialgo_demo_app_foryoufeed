@@ -94,16 +94,15 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
                 msg = `algorithm.isLoading() says load in progress`;
                 warnMsg(`isLoading must be false but ${msg}`);
             } else {
-                const mostRecentAt = algorithm.mostRecentHomeTootAt();
+                const feedAgeInSeconds = algorithm.mostRecentHomeTootAgeInSeconds();
 
-                if (!mostRecentAt) {
-                    console.warn(`${timeline.length} toots in feed, but no most recent toot found!`);
-                    return false;
+                if (feedAgeInSeconds) {
+                    msg = `feed is ${feedAgeInSeconds.toFixed(0)}s old`;
+                    should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
+                } else {
+                    msg = (`${timeline.length} toots in feed but no most recent toot found!`);
+                    warnMsg(msg);
                 }
-
-                const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
-                msg = `feed is ${feedAgeInSeconds.toFixed(0)}s old, most recent from followed: ${timeString(mostRecentAt)}`;
-                should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
             }
 
             logMsg(`shouldReloadFeed() returning ${should} (${msg})`);
