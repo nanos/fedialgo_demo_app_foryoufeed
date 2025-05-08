@@ -13,7 +13,7 @@ import { Tooltip } from 'react-tooltip';
 
 import FilterSetter from "../components/algorithm/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
-import LoadingSpinner from "../components/LoadingSpinner";
+import LoadingSpinner, { fullPageCenteredSpinner } from "../components/LoadingSpinner";
 import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
@@ -171,7 +171,6 @@ export default function Feed() {
                     </div>
                 </Col>
 
-                {/* <Col style={statusesColStyle} xs={6}> */}
                 <Col xs={6}>
                     {algorithm && !isLoading && <>
                         <p style={{...loadingMsgStyle, marginTop: "8px", textAlign: "center", fontSize: "13px"}}>
@@ -193,12 +192,12 @@ export default function Feed() {
                         {timeline.length == 0 && (
                             isLoading
                                 ? <LoadingSpinner isFullPage={true} message={DEFAULT_LOADING_MESSAGE} />
-                                : <p>No toots in feed! Maybe check your filters?</p>
+                                : <div style={{...fullPageCenteredSpinner, fontSize: "20px"}}>
+                                      <p>No toots in feed! Maybe check your filters?</p>
+                                  </div>
                             )}
 
-                        <div ref={bottomRef} style={{textAlign: "center", marginTop: "10px"}}>
-                            <p>Loading More...</p>
-                        </div>
+                        <div ref={bottomRef} style={{textAlign: "center", marginTop: "10px"}} />
                     </div>
                 </Col>
             </Row>

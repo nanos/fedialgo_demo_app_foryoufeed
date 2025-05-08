@@ -38,15 +38,15 @@ const centeredSpinner: CSSProperties = {
     verticalAlign: "center",
 };
 
+export const fullPageCenteredSpinner: CSSProperties = {
+    ...centeredSpinner,
+    flex: 1,
+    height: "100vh",
+};
+
 const inlineSpinner: CSSProperties = {
     ...centeredSpinner,
     height: "20px",
     justifyContent: "start",
     marginTop: "5px",
-};
-
-const fullPageCenteredSpinner: CSSProperties = {
-    ...centeredSpinner,
-    flex: 1,
-    height: "100vh",
 };
