@@ -7,9 +7,8 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { READY_TO_LOAD_MSG, TheAlgorithm, Toot, timeString } from "fedialgo";
-import { mastodon, createRestAPIClient } from "masto";
 import { Modal } from "react-bootstrap";
+import { READY_TO_LOAD_MSG } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
 import FilterSetter from "../components/algorithm/FilterSetter";
@@ -19,8 +18,7 @@ import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
-import { triggerAlgoLoad } from "../hooks/useAlgorithm";
-import { browserLanguage, logMsg, warnMsg } from "../helpers/string_helpers";
+import { logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "../hooks/useAuth";
 import { useAlgorithmContext } from "../hooks/useAlgorithm";
 
@@ -30,7 +28,7 @@ const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
 // String constants
 const TOOLTIP_ANCHOR = "tooltip-anchor";
 // Messaging constants
-const AUTO_UPDATE_TOOLTIP_MSG = "If this box is checked new toots will be automatically loaded when you focus this browser tab.";
+const AUTO_UPDATE_TOOLTIP_MSG = "If this box is checked the feed will be automatically updated when you focus this browser tab.";
 const DEFAULT_LOADING_MESSAGE = "(first time can take up to a minute or so)";
 const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
 

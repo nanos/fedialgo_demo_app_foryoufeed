@@ -30,7 +30,8 @@ export const useAlgorithmContext = () => useContext(AlgorithmContext);
 
 const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
-const RELOAD_IF_OLDER_THAN_SECONDS = 60 * 10; // 10 minutes
+const RELOAD_IF_OLDER_THAN_MINUTES = 5;
+const RELOAD_IF_OLDER_THAN_SECONDS = 60 * RELOAD_IF_OLDER_THAN_MINUTES;
 
 
 export default function AlgorithmProvider(props: AlgorithmContextProps) {
@@ -109,12 +110,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
             return should;
         };
 
-        const handleFocus = () => {
-            if (!document.hasFocus()) return;
-            if (!shouldReloadFeed()) return;
-            triggerLoad();
-        };
-
+        const handleFocus = () => document.hasFocus() && shouldReloadFeed() && triggerLoad();
         window.addEventListener(FOCUS, handleFocus);
         return () => window.removeEventListener(FOCUS, handleFocus);
     }, [algorithm, isLoading, timeline, triggerLoad, user]);
