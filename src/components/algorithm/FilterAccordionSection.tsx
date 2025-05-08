@@ -38,7 +38,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
 
     return (
         <Accordion.Item eventKey={sectionName} >
-            <Accordion.Header key={`${sectionName}_head`}>
+            <Accordion.Header>
                 <Form.Label style={subHeaderLabel} >
                     <span className={headerClass} key={`${sectionName}_label1`}>
                         {capitalCase(sectionName)}
@@ -50,7 +50,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
                 </Form.Label>
             </Accordion.Header>
 
-            <Accordion.Body key={`${sectionName}_body`} style={accordionBody}>
+            <Accordion.Body style={accordionBodyDiv}>
                 <Tooltip id={TOOLTIP_ANCHOR} place="bottom" />
 
                 <div style={invertTagSelectionStyle} key={"invertSelection"}>
@@ -59,6 +59,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
                     {sortKeysCheckbox && sortKeysCheckbox}
                     {sortKeysCheckbox && !minToots && spacer}
 
+                    {/* Show a slider to set minToots filter if needed */}
                     {minToots && (
                         <a data-tooltip-id={TOOLTIP_ANCHOR} data-tooltip-content={tooltipText}>
                             <Slider
@@ -86,6 +87,11 @@ export default function FilterAccordionSection(props: AccordionProps) {
     );
 };
 
+
+const accordionBodyDiv: CSSProperties = {
+    ...accordionBody,
+    paddingTop: "7px",
+};
 
 const invertTagSelectionStyle: CSSProperties = {
     alignItems: 'center',
