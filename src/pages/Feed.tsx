@@ -81,18 +81,16 @@ export default function Feed() {
         setIsLoading(true);
 
         algorithm.triggerFeedUpdate()
-            .then(() => {
-                logMsg(`triggerLoad() finished`);
-            }).catch((err) => {
+            .then(() => logMsg(`triggerLoad() finished`))
+            .catch((err) => {
                 if (err.message.includes(GET_FEED_BUSY_MSG)) {
                     warnMsg(`triggerLoad() Load already in progress, please wait a moment and try again`);
                 } else {
                     console.error(`Failed to triggerLoad() with error:`, err);
                     setError(`Failed to triggerLoad: ${err}`);
                 }
-            }).finally(() => {
-                setIsLoading(false);
-            });
+            })
+            .finally(() => setIsLoading(false));
     };
 
     // Initial load of the feed (can be re-triggered by changing the value of triggerReload)
@@ -120,6 +118,7 @@ export default function Feed() {
             );
 
             setAlgorithm(algo);
+            setIsLoading(true);
 
             algo.triggerFeedUpdate()
                 .catch((err) => {
@@ -210,21 +209,13 @@ export default function Feed() {
         const handleFocus = () => {
             if (!document.hasFocus()) return;
             if (!shouldReloadFeed()) return;
-            setIsLoading(true);
-
-            algorithm.triggerFeedUpdate().then(() => {
-                setIsLoading(false);
-                logMsg(`finished calling getFeed with ${timeline.length} toots`);
-            }).catch((err) => {
-                console.error(`error calling triggerFeedUpdate():`, err);
-                setError(`error calling triggerFeedUpdate(): ${err}`);
-                setIsLoading(false);
-            })
+            triggerLoad();
         };
 
         window.addEventListener(FOCUS, handleFocus);
         return () => window.removeEventListener(FOCUS, handleFocus);
-    }, [algorithm, timeline, isInitialLoad, user]);
+    }, [algorithm, timeline, isInitialLoad, triggerLoad, user]);
+
 
     return (
         <Container fluid style={{height: 'auto'}}>
