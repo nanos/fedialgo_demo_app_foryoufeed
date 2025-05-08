@@ -39,7 +39,7 @@ const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
 
 
 export default function Feed() {
-    const { algorithm, api, timeline } = useAlgorithmContext();
+    const { algorithm, api, isLoading, timeline, triggerLoad } = useAlgorithmContext();
     const { user, logout } = useAuthContext();
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
@@ -48,7 +48,6 @@ export default function Feed() {
     const [error, setError] = useState<string>("");
     const [shouldAutoLoadNewToots, setShouldAutoLoadNewToots] = useState<boolean>(false);  // Auto load new toots
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(true);  // Left panel stickiness
-    const [isLoading, setIsLoading] = useState<boolean>(true);  // Loading spinner
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [scrollPercentage, setScrollPercentage] = useState(0);
     const [prevScrollY, setPrevScrollY] = useState(0);
@@ -58,7 +57,7 @@ export default function Feed() {
     const isInitialLoad = !algorithm || (timeline.length === 0);  // TODO: this is not really correct, it should be based on the algorithm loading status
     const scrollMsg = `Scroll: ${scrollPercentage.toFixed(2)}% (${window.scrollY}), Displaying ${numDisplayedToots} Toots`;
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
-    const triggerLoad = () => triggerAlgoLoad(algorithm, setError, setIsLoading);
+
 
     // Reset all state except for the user and server
     const reset = async () => {

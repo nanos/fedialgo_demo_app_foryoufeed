@@ -11,10 +11,10 @@ import { errorMsg, logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "./useAuth";
 
 interface AlgoContext {
-    api?: mastodon.rest.Client,
     algorithm?: TheAlgorithm,
+    api?: mastodon.rest.Client,
     isLoading?: boolean,
-    timeline: Toot[],
+    timeline?: Toot[],
     triggerLoad?: () => void,
 };
 
@@ -23,7 +23,7 @@ interface AlgorithmContextProps {
     setError?: (error: string) => void,
 };
 
-export const AlgorithmContext = createContext<AlgoContext>({timeline: []});
+const AlgorithmContext = createContext<AlgoContext>({});
 export const useAlgorithmContext = () => useContext(AlgorithmContext);
 
 
