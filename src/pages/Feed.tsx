@@ -46,9 +46,6 @@ export default function Feed() {
     const [scrollPercentage, setScrollPercentage] = useState(0);
     const [prevScrollY, setPrevScrollY] = useState(0);
 
-    // Other variables
-    // const isLoadingInitialFeed = (!algorithm || (isLoading && !timeline?.length));
-    const isInitialLoad = !algorithm || (timeline.length === 0);  // TODO: this is not really correct, it should be based on the algorithm loading status
     const scrollMsg = `Scroll: ${scrollPercentage.toFixed(2)}% (${window.scrollY}), Displaying ${numDisplayedToots} Toots`;
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
 
@@ -161,23 +158,22 @@ export default function Feed() {
                         {algorithm && <TrendingInfo />}
                         <FindFollowers api={api} user={user} />
 
-                        {/* Checking algorith.loadingStatus here DOES NOT trigger a render when the value changes */}
-                        {/* {(isInitialLoad || isLoading || algorithm?.loadingStatus) */}
-                        {(isInitialLoad || isLoading)
+                        {(isLoading)
                             ? <LoadingSpinner message={algorithm?.loadingStatus || READY_TO_LOAD_MSG} style={loadingMsgStyle} />
-                            : (algorithm && finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds))}
+                            : finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds)}
 
-                        {/* <p style={loadingMsgStyle}>
-                            <a onClick={() => algorithm.logWithState("DEMO APP", `State (isLoading=${isLoading}, isInitialLoad=${isInitialLoad}, algorithm.isLoading()=${algorithm.isLoading()})`)} >
-                                Dump current algorithm state to console
-                            </a>
-                        </p> */}
+                        {algorithm?.isDebug &&
+                            <p style={loadingMsgStyle}>
+                                <a onClick={() => algorithm.logWithState("DEMO APP", `State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()})`)} >
+                                    Dump current algorithm state to console
+                                </a>
+                            </p>}
                     </div>
                 </Col>
 
                 {/* <Col style={statusesColStyle} xs={6}> */}
                 <Col xs={6}>
-                    {algorithm && !isLoading && !isInitialLoad && <>
+                    {algorithm && !isLoading && <>
                         <p style={{...loadingMsgStyle, marginTop: "8px", textAlign: "center", fontSize: "13px"}}>
                             <a onClick={triggerLoad} style={{cursor: "pointer", textDecoration: "underline"}} >
                                 (load new toots)
@@ -194,11 +190,11 @@ export default function Feed() {
                         ))}
 
                         {/* TODO: the NO_TOOTS_MSG will never happen */}
-                        {isInitialLoad &&
-                            <LoadingSpinner
-                                isFullPage={true}
-                                message={isLoading ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
-                            />}
+                        {timeline.length == 0 && (
+                            isLoading
+                                ? <LoadingSpinner isFullPage={true} message={DEFAULT_LOADING_MESSAGE} />
+                                : <p>No toots in feed! Maybe check your filters?</p>
+                            )}
 
                         <div ref={bottomRef} style={{textAlign: "center", marginTop: "10px"}}>
                             <p>Loading More...</p>

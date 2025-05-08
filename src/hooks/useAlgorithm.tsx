@@ -39,7 +39,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
     const { user, logout } = useAuthContext();
 
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [shouldAutoLoadNewToots, setShouldAutoLoadNewToots] = useState<boolean>(false);  // Load new toots on refocus
     const [timeline, setTimeline] = useState<Toot[]>([]);  // contains timeline Toots
 
@@ -59,7 +59,6 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
             logMsg(`constructFeed() called with user ID ${user?.id} (feed already has ${timeline.length} toots)`);
             let currentUser: mastodon.v1.Account;
 
-            // TODO: this belongs in AuthContext
             try {
                 currentUser = await api.v1.accounts.verifyCredentials();
             } catch (err) {
