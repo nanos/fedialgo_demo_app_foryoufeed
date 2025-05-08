@@ -27,10 +27,7 @@ import { useAlgorithmContext } from "../hooks/useAlgorithm";
 // Number constants
 const DEFAULT_NUM_DISPLAYED_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
-const RELOAD_IF_OLDER_THAN_SECONDS = 60 * 10; // 10 minutes
 // String constants
-const FOCUS = "focus";
-const VISIBILITY_CHANGE = "visibilitychange";
 const TOOLTIP_ANCHOR = "tooltip-anchor";
 // Messaging constants
 const AUTO_UPDATE_TOOLTIP_MSG = "If this box is checked new toots will be automatically loaded when you focus this browser tab.";
@@ -39,14 +36,13 @@ const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
 
 
 export default function Feed() {
-    const { algorithm, api, isLoading, timeline, triggerLoad } = useAlgorithmContext();
-    const { user, logout } = useAuthContext();
+    const { algorithm, api, isLoading, setShouldAutoLoadNewToots, shouldAutoLoadNewToots, timeline, triggerLoad } = useAlgorithmContext();
+    const { user } = useAuthContext();
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 
     // State variables
     const [error, setError] = useState<string>("");
-    const [shouldAutoLoadNewToots, setShouldAutoLoadNewToots] = useState<boolean>(false);  // Auto load new toots
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(true);  // Left panel stickiness
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [scrollPercentage, setScrollPercentage] = useState(0);
@@ -57,7 +53,6 @@ export default function Feed() {
     const isInitialLoad = !algorithm || (timeline.length === 0);  // TODO: this is not really correct, it should be based on the algorithm loading status
     const scrollMsg = `Scroll: ${scrollPercentage.toFixed(2)}% (${window.scrollY}), Displaying ${numDisplayedToots} Toots`;
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
-
 
     // Reset all state except for the user and server
     const reset = async () => {
@@ -91,19 +86,13 @@ export default function Feed() {
                 const msg = `Showing ${numDisplayedToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
                 logMsg(`${msg} (${timeline.length} available in feed)`);
                 setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
-            } else {
-                logMsg(`Already showing ${numDisplayedToots} toots, no more toots available`);
             }
         };
 
-        if (isBottom && timeline.length) {
-            showMoreToots();
-        }
-
+        // If the user scrolls to the bottom of the page, show more toots
+        if (isBottom && timeline.length) showMoreToots();
         // If there's less than numDisplayedToots in the feed set numDisplayedToots to the number of toots in the feed
-        if (timeline?.length && timeline.length < numDisplayedToots) {
-            setNumDisplayedToots(timeline.length);
-        }
+        if (timeline?.length && timeline.length < numDisplayedToots) setNumDisplayedToots(timeline.length);
 
         const handleScroll = () => {
             const scrollHeight = document.documentElement.scrollHeight; // Total height
@@ -123,44 +112,6 @@ export default function Feed() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isBottom, numDisplayedToots, prevScrollY, setNumDisplayedToots, setPrevScrollY, timeline]);
-
-    // Set up feed reloader to call algorithm.triggerFeedUpdate() on focus after RELOAD_IF_OLDER_THAN_SECONDS
-    useEffect(() => {
-        if (!user || !algorithm || isInitialLoad) return;
-
-        const shouldReloadFeed = (): boolean => {
-            if (!shouldAutoLoadNewToots) return false;
-            let should = false;
-            let msg: string;
-
-            if (algorithm.isLoading()) {
-                msg = `algorithm.isLoading() says load in progress`;
-            } else {
-                const mostRecentAt = algorithm.mostRecentHomeTootAt();
-
-                if (!mostRecentAt) {
-                    console.warn(`${timeline.length} toots in feed, but no most recent toot found!`);
-                    return false;
-                }
-
-                const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
-                msg = `feed is ${feedAgeInSeconds.toFixed(0)}s old, most recent from followed: ${timeString(mostRecentAt)}`;
-                should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
-            }
-
-            logMsg(`shouldReloadFeed() returning ${should} (${msg})`);
-            return should;
-        };
-
-        const handleFocus = () => {
-            if (!document.hasFocus()) return;
-            if (!shouldReloadFeed()) return;
-            triggerLoad();
-        };
-
-        window.addEventListener(FOCUS, handleFocus);
-        return () => window.removeEventListener(FOCUS, handleFocus);
-    }, [algorithm, timeline, isInitialLoad, triggerLoad, user]);
 
 
     return (
@@ -238,11 +189,9 @@ export default function Feed() {
                     <div style={statusesColStyle}>
                         {timeline.slice(0, Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots)).map((toot) => (
                             <StatusComponent
-                                api={api}
                                 key={toot.uri}
                                 setError={setError}
                                 status={toot}
-                                user={user}
                             />
                         ))}
 

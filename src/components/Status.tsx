@@ -18,18 +18,18 @@ import ScoreModal from './status/ScoreModal';
 import { logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
 import { PARTICIPATED_TAG_COLOR } from "../helpers/style_helpers";
-import { User } from '../types';
+import { useAlgorithmContext } from "../hooks/useAlgorithm";
 
 interface StatusComponentProps {
-    api: mastodon.rest.Client,
     setError: (error: string) => void,
     status: Toot,
-    user: User,
 };
 
 
 export default function StatusComponent(props: StatusComponentProps) {
-    const { api, setError } = props;
+    const { setError } = props;
+    const { api } = useAlgorithmContext();
+
     // If it's a retoot set 'toot' to the original toot
     let toot = props.status.realToot();
     let retoot = toot.reblog ? props.status : null;

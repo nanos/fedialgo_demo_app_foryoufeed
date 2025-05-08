@@ -3,7 +3,7 @@
  */
 import React, { ReactNode, createContext, useContext, useEffect, useState } from "react";
 
-import { GET_FEED_BUSY_MSG, TheAlgorithm, Toot } from "fedialgo";
+import { GET_FEED_BUSY_MSG, TheAlgorithm, Toot, timeString } from "fedialgo";
 import { createRestAPIClient, mastodon } from "masto";
 
 import { browserLanguage } from "../helpers/string_helpers";
@@ -14,7 +14,9 @@ interface AlgoContext {
     algorithm?: TheAlgorithm,
     api?: mastodon.rest.Client,
     isLoading?: boolean,
-    timeline?: Toot[],
+    shouldAutoLoadNewToots?: boolean,
+    setShouldAutoLoadNewToots?: (shouldAutoLoadNewToots: boolean) => void,
+    timeline: Toot[],
     triggerLoad?: () => void,
 };
 
@@ -23,8 +25,12 @@ interface AlgorithmContextProps {
     setError?: (error: string) => void,
 };
 
-const AlgorithmContext = createContext<AlgoContext>({});
+const AlgorithmContext = createContext<AlgoContext>({timeline: []});
 export const useAlgorithmContext = () => useContext(AlgorithmContext);
+
+const FOCUS = "focus";
+const VISIBILITY_CHANGE = "visibilitychange";
+const RELOAD_IF_OLDER_THAN_SECONDS = 60 * 10; // 10 minutes
 
 
 export default function AlgorithmProvider(props: AlgorithmContextProps) {
@@ -33,13 +39,14 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
 
     const [algorithm, setAlgorithm] = useState<TheAlgorithm>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [shouldAutoLoadNewToots, setShouldAutoLoadNewToots] = useState<boolean>(false);  // Load new toots on refocus
     const [timeline, setTimeline] = useState<Toot[]>([]);  // contains timeline Toots
 
     // TODO: this doesn't make any API calls yet, right?
     const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token});
     const triggerLoad = () => triggerAlgoLoad(algorithm, setError, setIsLoading);
 
-    // Initial load of the feed (can be re-triggered by changing the value of triggerReload)
+    // Initial load of the feed
     useEffect(() => {
         if (!user) {
             console.warn(`constructFeed() useEffect called without user, skipping initial load`);
@@ -74,8 +81,57 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
         constructFeed();
     }, [setAlgorithm, user]);  // TODO: add setError and setIsLoading to this list of dependencies?
 
+    // Set up feed reloader to call algorithm.triggerFeedUpdate() on focus after RELOAD_IF_OLDER_THAN_SECONDS
+    useEffect(() => {
+        if (!user || !algorithm) return;
+
+        const shouldReloadFeed = (): boolean => {
+            if (isLoading || !shouldAutoLoadNewToots) return false;
+            let should = false;
+            let msg: string;
+
+            if (algorithm.isLoading()) {
+                msg = `algorithm.isLoading() says load in progress`;
+                warnMsg(`isLoading must be false but ${msg}`);
+            } else {
+                const mostRecentAt = algorithm.mostRecentHomeTootAt();
+
+                if (!mostRecentAt) {
+                    console.warn(`${timeline.length} toots in feed, but no most recent toot found!`);
+                    return false;
+                }
+
+                const feedAgeInSeconds = (Date.now() - mostRecentAt.getTime()) / 1000;
+                msg = `feed is ${feedAgeInSeconds.toFixed(0)}s old, most recent from followed: ${timeString(mostRecentAt)}`;
+                should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
+            }
+
+            logMsg(`shouldReloadFeed() returning ${should} (${msg})`);
+            return should;
+        };
+
+        const handleFocus = () => {
+            if (!document.hasFocus()) return;
+            if (!shouldReloadFeed()) return;
+            triggerLoad();
+        };
+
+        window.addEventListener(FOCUS, handleFocus);
+        return () => window.removeEventListener(FOCUS, handleFocus);
+    }, [algorithm, isLoading, timeline, triggerLoad, user]);
+
+    const algoContext: AlgoContext = {
+        algorithm,
+        api,
+        isLoading,
+        setShouldAutoLoadNewToots,
+        shouldAutoLoadNewToots,
+        timeline,
+        triggerLoad
+    };
+
     return (
-        <AlgorithmContext.Provider value={{ algorithm, api, isLoading, timeline, triggerLoad }}>
+        <AlgorithmContext.Provider value={algoContext}>
             {children}
         </AlgorithmContext.Provider>
     );
