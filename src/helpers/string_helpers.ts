@@ -11,11 +11,15 @@ export function browserLanguage(): string {
 };
 
 
-export function logMsg (message: string, ...args: unknown[]): void {
+export function errorMsg(message: string, ...args: unknown[]): void {
+    console.error(`[${DEMO_APP}] ${message}`, ...args);
+};
+
+export function logMsg(message: string, ...args: unknown[]): void {
     console.log(`[${DEMO_APP}] ${message}`, ...args);
 };
 
-export function warnMsg (message: string, ...args: unknown[]): void {
+export function warnMsg(message: string, ...args: unknown[]): void {
     console.warn(`[${DEMO_APP}] ${message}`, ...args);
 };
 

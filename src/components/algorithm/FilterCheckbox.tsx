@@ -30,7 +30,7 @@ interface FilterCheckboxProps {
 export default function FilterCheckbox(props: FilterCheckboxProps) {
     let { capitalize, isChecked, label, labelExtra, onChange, tooltipColor, tooltipText } = props;
     const [isCheckedState, setIsCheckedState] = useState(isChecked);
-    const algorithm = useAlgorithmContext();
+    const { algorithm } = useAlgorithmContext();
 
     labelExtra = (typeof labelExtra == "number") ? labelExtra.toLocaleString() : labelExtra;
     const labelStyle: CSSProperties = {fontWeight: "bold"};

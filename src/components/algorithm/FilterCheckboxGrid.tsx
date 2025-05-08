@@ -29,7 +29,7 @@ interface FilterCheckboxGridProps {
 
 export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     const { filterSection, minToots, sortByValue } = props;
-    const algorithm = useAlgorithmContext();
+    const { algorithm } = useAlgorithmContext();
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
     let optionInfo = filterSection.optionInfo;
 

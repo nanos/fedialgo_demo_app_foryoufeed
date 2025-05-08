@@ -31,7 +31,7 @@ const ATTACHMENT_PREFIXES: Record<MediaCategory, string> = {
 
 
 export default function TrendingInfo() {
-    const algorithm = useAlgorithmContext();
+    const { algorithm } = useAlgorithmContext();
     const linkMapper = (link: TrendingObj) => `${(link as TrendingLink).url}`;
     const infoTxt = (obj: TrendingWithHistory) => `${obj.numToots?.toLocaleString()} toots by ${obj.numAccounts?.toLocaleString()} accounts`;
 

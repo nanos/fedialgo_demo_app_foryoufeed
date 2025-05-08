@@ -19,7 +19,7 @@ import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
-import { AlgorithmProvider } from "../hooks/useAlgorithm";
+import { AlgorithmProvider, triggerAlgoLoad } from "../hooks/useAlgorithm";
 import { browserLanguage, logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "../hooks/useAuth";
 
@@ -57,7 +57,7 @@ export default function Feed() {
 
     // Other variables
     // const isLoadingInitialFeed = (!algorithm || (isLoading && !timeline?.length));
-    const isInitialLoad = timeline.length === 0;  // TODO: this is not really correct, it should be based on the algorithm loading status
+    const isInitialLoad = !algorithm || (timeline.length === 0);  // TODO: this is not really correct, it should be based on the algorithm loading status
     const scrollMsg = `Scroll: ${scrollPercentage.toFixed(2)}% (${window.scrollY}), Displaying ${numDisplayedToots} Toots`;
     const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
 
@@ -83,25 +83,15 @@ export default function Feed() {
     };
 
     const triggerLoad = () => {
-        if (!algorithm) return;
-        setIsLoading(true);
-
-        algorithm.triggerFeedUpdate()
-            .then(() => logMsg(`triggerLoad() finished`))
-            .catch((err) => {
-                if (err.message.includes(GET_FEED_BUSY_MSG)) {
-                    warnMsg(`triggerLoad() Load already in progress, please wait a moment and try again`);
-                } else {
-                    console.error(`Failed to triggerLoad() with error:`, err);
-                    setError(`Failed to triggerLoad: ${err}`);
-                }
-            })
-            .finally(() => setIsLoading(false));
+        triggerAlgoLoad(algorithm, setError, setIsLoading);
     };
 
     // Initial load of the feed (can be re-triggered by changing the value of triggerReload)
     useEffect(() => {
-        if (!user) return;
+        if (!user) {
+            console.warn(`constructFeed() useEffect called without user, skipping initial load`);
+            return;
+        }
 
         // Check that we have valid user credentials and load timeline toots, otherwise force a logout.
         const constructFeed = async (): Promise<void> => {
@@ -120,25 +110,15 @@ export default function Feed() {
                 api: api, user:
                 currentUser,
                 setTimelineInApp: setTimeline,
-                language: browserLanguage()}
-            );
+                language: browserLanguage()
+            });
 
             setAlgorithm(algo);
-            setIsLoading(true);
-
-            algo.triggerFeedUpdate()
-                .catch((err) => {
-                    console.error(`Failed to triggerFeedUpdate() with error:`, err);
-                    setError(`Failed to triggerFeedUpdate: ${err}`);
-                })
-                .finally(() => {
-                    setIsLoading(false);
-                    logMsg(`Finished loading feed with ${timeline.length} toots`);
-                });
+            triggerAlgoLoad(algo, setError, setIsLoading);
         };
 
         constructFeed();
-    }, [setAlgorithm, triggerReload, user]);
+    }, [setAlgorithm, triggerReload, user]);  // TODO: add setError and setIsLoading to this list of dependencies?
 
     // Show more toots when the user scrolls to bottom of the page
     // TODO: This doesn't actually trigger any API calls, it just shows more of the preloaded toots

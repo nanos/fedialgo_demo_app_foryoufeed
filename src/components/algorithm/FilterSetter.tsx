@@ -29,7 +29,7 @@ const DEFAULT_MIN_TOOTS_TO_APPEAR: MinTootsFilter = {
 
 
 export default function FilterSetter() {
-    const algorithm = useAlgorithmContext();
+    const { algorithm } = useAlgorithmContext();
 
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
     const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
