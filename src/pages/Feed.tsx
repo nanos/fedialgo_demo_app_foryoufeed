@@ -9,7 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { mastodon, createRestAPIClient } from "masto";
 import { Modal } from "react-bootstrap";
-import { READY_TO_LOAD_MSG, TheAlgorithm, Toot, timeString } from "fedialgo";
+import { GET_FEED_BUSY_MSG, READY_TO_LOAD_MSG, TheAlgorithm, Toot, timeString } from "fedialgo";
 
 import FilterSetter from "../components/algorithm/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
@@ -18,7 +18,7 @@ import StatusComponent from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
-import { browserLanguage, logMsg } from "../helpers/string_helpers";
+import { browserLanguage, logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "../hooks/useAuth";
 
 // Number constants
@@ -80,14 +80,20 @@ export default function Feed() {
         if (!algorithm) return;
         setIsLoading(true);
 
-        algorithm.triggerFeedUpdate().then(() => {
-            logMsg(`triggerLoad() finished`);
-        }).catch((err) => {
-            console.error(`Failed to triggerLoad() with error:`, err);
-            setError(`Failed to triggerLoad: ${err}`);
-        }).finally(() => {
-            setIsLoading(false);
-        });
+        algorithm.triggerFeedUpdate()
+            .then(() => {
+                logMsg(`triggerLoad() finished`);
+            }).catch((err) => {
+                if (err.message.includes(GET_FEED_BUSY_MSG)) {
+                    // setError(`Load already in progress...`);
+                    warnMsg(`triggerLoad() Load already in progress, please wait a moment and try again`);
+                } else {
+                    console.error(`Failed to triggerLoad() with error:`, err);
+                    setError(`Failed to triggerLoad: ${err}`);
+                }
+            }).finally(() => {
+                setIsLoading(false);
+            });
     };
 
     // Initial load of the feed (can be re-triggered by changing the value of triggerReload)
@@ -263,14 +269,16 @@ export default function Feed() {
                     </div>
                 </Col>
 
-                <Col style={statusesColStyle} xs={6}>
+                {/* <Col style={statusesColStyle} xs={6}> */}
+                <Col xs={6}>
                     {api && !isInitialLoad && <>
                         <p style={{...loadingMsgStyle, marginTop: "8px", textAlign: "center", fontSize: "13px"}}>
                             <a onClick={triggerLoad} style={{cursor: "pointer", textDecoration: "underline"}} >
                                 (load new toots)
                             </a>
-                        </p>
+                        </p></>}
 
+                    <div style={statusesColStyle}>
                         {timeline.slice(0, Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots)).map((toot) => (
                             <StatusComponent
                                 api={api}
@@ -279,17 +287,18 @@ export default function Feed() {
                                 status={toot}
                                 user={user}
                             />
-                        ))}</>}
+                        ))}
 
-                    {/* TODO: the NO_TOOTS_MSG will never happen */}
-                    {isInitialLoad &&
-                        <LoadingSpinner
-                            isFullPage={true}
-                            message={isInitialLoad ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
-                        />}
+                        {/* TODO: the NO_TOOTS_MSG will never happen */}
+                        {isInitialLoad &&
+                            <LoadingSpinner
+                                isFullPage={true}
+                                message={isInitialLoad ? DEFAULT_LOADING_MESSAGE : NO_TOOTS_MSG}
+                            />}
 
-                    <div ref={bottomRef}>
-                        <p>Load More</p>
+                        <div ref={bottomRef}>
+                            <p>Load More</p>
+                        </div>
                     </div>
                 </Col>
             </Row>
@@ -314,6 +323,7 @@ const resetLinkStyle: CSSProperties = {
 
 const statusesColStyle: CSSProperties = {
     backgroundColor: '#15202b',
+    borderRadius: '10px',
     height: 'auto',
 };
 
