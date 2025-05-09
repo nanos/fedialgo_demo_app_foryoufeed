@@ -32,7 +32,6 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     const { filterSection, minToots, sortByValue } = props;
     const { algorithm } = useAlgorithm();
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
-    const suppressedJapanese: Record<string, number> = {};  // This sucks and is just for logging
     let optionInfo = filterSection.optionInfo;
     let optionKeys: string[];
 
