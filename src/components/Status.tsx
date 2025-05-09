@@ -149,9 +149,9 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                                 {toot.isDM()
                                     ? buildIcon("lock", "Direct Message", "purple")
-                                    : toot.isFollowed
-                                        ? buildIcon("globe", "You follow this account")
-                                        : buildIcon("globe", "Not an account you follow", "#025c78")}
+                                    : toot.account.isFollowed
+                                        ? buildIcon("globe", "You follow this account", "#025c78")
+                                        : buildIcon("globe", "Not an account you follow")}
                             </span>
 
                             <time dateTime={toot.createdAt} title={toot.createdAt}>
