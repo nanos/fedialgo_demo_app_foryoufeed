@@ -53,7 +53,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     }
 
     if (Object.keys(suppressedJapanese).length) {
-        warnMsg(`Suppressed ${Object.values(suppressedJapanese).length} Japanese filter options:`, suppressedJapanese);
+        debugMsg(`Suppressed ${Object.values(suppressedJapanese).length} Japanese filter options:`, suppressedJapanese);
     }
 
     let optionKeys = Object.keys(optionInfo);
