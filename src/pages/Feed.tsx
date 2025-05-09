@@ -59,7 +59,7 @@ export default function Feed() {
     };
 
     const finishedLoadingMsg = (lastLoadTimeInSeconds: number | null) => {
-        let msg = `Loaded ${(timeline?.length || 0).toLocaleString()} toots for timeline`;
+        let msg = `Loaded ${(timeline?.length || 0).toLocaleString()} toots`;
         if (lastLoadTimeInSeconds) msg += ` in ${lastLoadTimeInSeconds.toFixed(1)} seconds`;
 
         return (
