@@ -37,7 +37,7 @@ export default function Poll(props: PollProps) {
 
     const votesCount = useMemo(() => {
         const votesCount = poll.votersCount ?? poll.votesCount;
-        return <span>{votesCount} {votesCount === 1 ? 'person' : 'people'} have voted</span>;
+        return <span>{votesCount} {votesCount === 1 ? 'person has' : 'people have'} voted</span>;
     }, [poll]);
 
     const voteDisabled = expired || hasVoted || Object.values(selected).every((item) => !item);
@@ -62,7 +62,10 @@ export default function Poll(props: PollProps) {
             await api.v1.polls.$select(poll.id).votes.create({choices: choiceIndexes});
             debugMsg('Vote successful, selected:', selected, '\nchoiceIndexes:', choiceIndexes);
             choiceIndexes.forEach((i) => poll.options[i].votesCount = (poll.options[i].votesCount || 0) + 1);
+            poll.voted = true;
             poll.ownVotes = choiceIndexes;
+            poll.votersCount = (poll.votersCount || 0) + 1;
+            poll.votesCount = (poll.votesCount || 0) + choiceIndexes.length;
             setRevealed(true);
             setHasVoted(true);
         } catch (error) {
@@ -103,7 +106,7 @@ export default function Poll(props: PollProps) {
                         Vote
                     </button>)}
 
-                {disabled &&
+                {!disabled &&
                     <>
                         <button className='poll__link' onClick={() => {
                             debugMsg('See results clicked, current selected:', selected);
