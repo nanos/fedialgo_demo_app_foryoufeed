@@ -104,8 +104,9 @@ const accordionBodyDiv: CSSProperties = {
 
 const filterSwitchContainer: CSSProperties = {
     ...roundedBox,
-    paddingTop: "12px",
-    paddingBottom: "10px",
+    paddingTop: "10px",
+    paddingBottom: "5px",
+    paddingRight: "15px",
 };
 
 const invertTagSelectionStyle: CSSProperties = {
