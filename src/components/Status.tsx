@@ -126,7 +126,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         </div>
 
                         <span>
-                            {toot.reblogsBy.map((booster, i) => {
+                            {toot.reblogsBy.sort((a, b) => (a.displayName.toLowerCase() < b.displayName.toLowerCase()) ? -1 : 1).map((booster, i) => {
                                 const rebloggerLink = reblogger(booster, i);
                                 return i < (toot.reblogsBy.length - 1) ? [rebloggerLink, ', '] : rebloggerLink;
                             })} boosted
