@@ -53,6 +53,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
             <Accordion.Body style={accordionBodyDiv}>
                 <Tooltip id={TOOLTIP_ANCHOR} place="bottom" />
 
+                {/* Top bar with invert/sort switches */}
                 <div style={invertTagSelectionStyle} key={"invertSelection"}>
                     {sortKeysCheckbox && !minToots && spacer}
                     {invertCheckbox}

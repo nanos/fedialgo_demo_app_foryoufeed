@@ -65,7 +65,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
         return (
             <div className="media-gallery" style={{ height: `${VIDEO_HEIGHT}px`, ...style }}>
                 {status.videoAttachments.map((video, i) => {
-                    const sourceTag = <source src={video?.url} type="video/mp4" />;
+                    const sourceTag = <source src={video?.remoteUrl || video?.url} type="video/mp4" />;
                     let videoTag: React.ReactElement;
 
                     // GIFs autoplay play in a loop; mp4s are controlled by the user.

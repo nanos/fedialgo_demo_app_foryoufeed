@@ -28,12 +28,11 @@ interface StatusComponentProps {
 
 
 export default function StatusComponent(props: StatusComponentProps) {
-    const { setError } = props;
+    const { setError, status } = props;
     const { api } = useAlgorithm();
 
     // If it's a retoot set 'toot' to the original toot
-    let toot = props.status.realToot();
-    let retoot = toot.reblog ? props.status : null;
+    const toot = status.realToot();
     const hasAttachments = toot.mediaAttachments.length > 0;
     const isReblog = toot.reblogsBy.length > 0;
     const ariaLabel = `${toot.account.displayName}, ${toot.account.note} ${toot.account.webfingerURI}`;
@@ -64,7 +63,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Show the score of a toot
     const showScore = async () => {
-        logMsg(`showScore() called for toot: `, retoot || toot);
+        logMsg(`showScore() called for toot: `, status);
         setShowScoreModal(true);
     };
 
