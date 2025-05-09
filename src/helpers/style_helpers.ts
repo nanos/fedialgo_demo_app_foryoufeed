@@ -33,10 +33,10 @@ export const linkesque: CSSProperties = {
 }
 
 export const roundedBox: CSSProperties = {
-    borderRadius: "25px",
+    borderRadius: "20px",
     background: "lightgrey",
-    paddingLeft: "30px",
-    paddingRight: "30px",
+    paddingLeft: "25px",
+    paddingRight: "20px",
     paddingBottom: "13px",
     paddingTop: "20px",
 };

@@ -84,7 +84,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
                         </a></div>)}
                 </div>
 
-                <div style={roundedBox} key={sectionName}>
+                <div style={filterSwitchContainer} key={sectionName}>
                     <Form.Group className="mb-1">
                         <Form.Group className="mb-1">
                             {children}
@@ -100,6 +100,12 @@ export default function FilterAccordionSection(props: AccordionProps) {
 const accordionBodyDiv: CSSProperties = {
     ...accordionBody,
     paddingTop: "7px",
+};
+
+const filterSwitchContainer: CSSProperties = {
+    ...roundedBox,
+    paddingTop: "12px",
+    paddingBottom: "10px",
 };
 
 const invertTagSelectionStyle: CSSProperties = {

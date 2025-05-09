@@ -73,5 +73,5 @@ export default function FilterCheckbox(props: FilterCheckboxProps) {
 
 const highlightedCheckboxStyle: CSSProperties = {
     backgroundColor: "cyan",
-    borderRadius: "5px"
+    borderRadius: "12px"
 };
