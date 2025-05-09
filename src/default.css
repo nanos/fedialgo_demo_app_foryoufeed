@@ -13970,6 +13970,15 @@ input[type="range"]::-ms-thumb {
     padding-right: 10px;
 }
 
+.filterHeader--rounded {
+    border-radius: 10px;
+    background-color: #4b2852;
+    color: white;
+    font-weight: 500;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .filterHeader--active {
     background-color: #4b2852;
     color: white;

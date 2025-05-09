@@ -32,7 +32,7 @@ export default function FilterSetter() {
     const { algorithm } = useAlgorithm();
 
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
-    const hasActivePropertyFilter = Object.values(algorithm.filters.filterSections).some(f => f.validValues.length);
+    const hasActivePropertyFilter = Object.values(algorithm.filters.filterSections).some(f => f.visible && f.validValues.length);
     const hasAnyActiveFilter = hasActiveNumericFilter || hasActivePropertyFilter;
     const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
     const [minTootsCutoffs, setMinTootsCutoffs] = useState<MinTootsFilter>({...DEFAULT_MIN_TOOTS_TO_APPEAR});
@@ -114,7 +114,10 @@ export default function FilterSetter() {
         <Accordion>
             <Accordion.Item eventKey="filters">
                 <Accordion.Header style={accordionPadding}>
-                    <span style={{...titleStyle}}>
+                    <span
+                        className={hasAnyActiveFilter && "filterHeader--rounded"}
+                        style={{...titleStyle, color: hasAnyActiveFilter ? "white" : "black"}}
+                    >
                         Feed Filters
                     </span>
                 </Accordion.Header>
