@@ -32,7 +32,7 @@ const TOOLTIP_ANCHOR = "tooltip-anchor";
 // Messaging constants
 const AUTO_UPDATE_TOOLTIP_MSG = "If this box is checked the feed will be automatically updated when you focus this browser tab.";
 const DEFAULT_LOADING_MESSAGE = "(first time can take up to a minute or so)";
-const NO_TOOTS_MSG = "but no toots found! Maybe check your filter settings";
+const NO_TOOTS_MSG = "No toots in feed! Maybe check your filters settings?";
 
 
 export default function Feed() {
@@ -196,7 +196,7 @@ export default function Feed() {
                             isLoading
                                 ? <LoadingSpinner isFullPage={true} message={DEFAULT_LOADING_MESSAGE} />
                                 : <div style={{...fullPageCenteredSpinner, fontSize: "20px"}}>
-                                      <p>No toots in feed! Maybe check your filters?</p>
+                                      <p>{NO_TOOTS_MSG}</p>
                                   </div>
                             )}
 
