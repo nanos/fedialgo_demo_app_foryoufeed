@@ -115,7 +115,7 @@ export default function FilterSetter() {
             <Accordion.Item eventKey="filters">
                 <Accordion.Header style={accordionPadding}>
                     <span
-                        className={hasAnyActiveFilter && "filterHeader--rounded"}
+                        className={hasAnyActiveFilter ? "filterHeader--rounded" : "blahblahblah"}
                         style={{...titleStyle, color: hasAnyActiveFilter ? "white" : "black"}}
                     >
                         Feed Filters

@@ -10,8 +10,6 @@ import FilterCheckbox from "./FilterCheckbox";
 import Row from 'react-bootstrap/Row';
 import { PropertyName, PropertyFilter } from "fedialgo";
 
-import { browserLanguage, debugMsg, JAPANESE_LANGUAGE, warnMsg } from "../../helpers/string_helpers";
-import { isJapanese } from "../../helpers/string_helpers";
 import { PARTICIPATED_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
@@ -40,20 +38,11 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     if (FILTERED_FILTERS.includes(filterSection.title)) {
         optionInfo = Object.fromEntries(Object.entries(filterSection.optionInfo).filter(
             ([option, numToots]) => {
-                if (isJapanese(option) && browserLanguage() != JAPANESE_LANGUAGE) {
-                    suppressedJapanese[option] = (suppressedJapanese[option] || 0) + 1;
-                    return false;
-                }
-
                 if (numToots >= minToots) return true;
                 if (filterSection.title != PropertyName.HASHTAG) return false;
                 return option in algorithm.userData.followedTags;  // TODO: this sucks but works for now
             }
         ));
-    }
-
-    if (Object.keys(suppressedJapanese).length) {
-        debugMsg(`Suppressed ${Object.values(suppressedJapanese).length} Japanese filter options:`, suppressedJapanese);
     }
 
     let optionKeys = Object.keys(optionInfo);
