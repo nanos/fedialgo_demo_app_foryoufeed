@@ -64,7 +64,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Show the score of a toot
     const showScore = async () => {
-        logMsg(`showScore() called for toot: `, toot, `\noriginalStatus:`, retoot);
+        logMsg(`showScore() called for toot: `, retoot || toot);
         setShowScoreModal(true);
     };
 
