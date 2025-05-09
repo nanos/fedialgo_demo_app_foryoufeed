@@ -25,7 +25,7 @@ const STATIC_PATH = path.join(process.cwd(), "./dist");
 const toBool = [() => true, () => false];
 
 const prepareFile = async (url) => {
-    const [baseUrl, args] = url.split("?")[0];
+    const [baseUrl, args] = url.split("?");
     console.log(`* [prepareFile] url: ${url}, baseUrl: ${baseUrl}`);
     let paths = [STATIC_PATH, baseUrl];
 
@@ -35,7 +35,8 @@ const prepareFile = async (url) => {
         paths = [STATIC_PATH, "index.html"];
     }
 
-    console.log(`* [prepareFile] baseUrl: ${baseUrl}, paths:`, paths);
+    await new Promise(r => setTimeout(r, 1000));
+    console.log(`* [prepareFile] baseUrl: ${baseUrl}, paths: ${JSON.stringify(paths)}`);
     const filePath = path.join(...paths);
     const pathTraversal = !filePath.startsWith(STATIC_PATH);
     const exists = await fs.promises.access(filePath).then(...toBool);
@@ -48,7 +49,9 @@ const prepareFile = async (url) => {
 
 
 http.createServer(async (req, res) => {
+        console.log(`\n\n* [server] req.url: ${req.url}`);
         const file = await prepareFile(req.url);
+        console.log(`* [server] result of prepareFile(): ${JSON.stringify(file)}`);
         const statusCode = file.found ? 200 : 404;
         const mimeType = MIME_TYPES[file.ext] || MIME_TYPES.default;
         res.writeHead(statusCode, { "Content-Type": mimeType });
