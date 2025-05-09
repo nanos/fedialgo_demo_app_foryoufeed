@@ -5,10 +5,15 @@ const DEMO_APP = "DEMO APP";
 const DEFAULT_LOCALE = "en-US";
 
 
+// Extract the language from the browser's locale
 export function browserLanguage(): string {
     const locale = navigator?.language || DEFAULT_LOCALE;
     return locale.split('-')[0];
 };
+
+
+// for use with sort()
+export const compareStr = (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase());
 
 
 export function debugMsg(message: string, ...args: unknown[]): void {

@@ -8,8 +8,9 @@ import React, { CSSProperties, ReactNode, useState } from "react";
 import Col from 'react-bootstrap/Col';
 import FilterCheckbox from "./FilterCheckbox";
 import Row from 'react-bootstrap/Row';
-import { PropertyName, PropertyFilter } from "fedialgo";
+import { PropertyName, PropertyFilter, sortKeysByValue } from "fedialgo";
 
+import { compareStr } from "../../helpers/string_helpers";
 import { PARTICIPATED_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
@@ -33,6 +34,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
     const suppressedJapanese: Record<string, number> = {};  // This sucks and is just for logging
     let optionInfo = filterSection.optionInfo;
+    let optionKeys: string[];
 
     // For "filtered" filters only allow options with a minimum number of toots and followed hashtags.
     if (FILTERED_FILTERS.includes(filterSection.title)) {
@@ -45,12 +47,10 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
         ));
     }
 
-    let optionKeys = Object.keys(optionInfo);
-
     if (sortByValue) {
-        optionKeys = optionKeys.sort((a, b) => (optionInfo[b] || 0) - (optionInfo[a] || 0));
+        optionKeys = sortKeysByValue(optionInfo)
     } else {
-        optionKeys = optionKeys.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
+        optionKeys = Object.keys(optionInfo).sort((a, b) => compareStr(a, b));
     }
 
     // Generate color and tooltip text for a hashtag checkbox
