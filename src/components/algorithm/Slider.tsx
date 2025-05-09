@@ -70,7 +70,7 @@ export default function Slider(props: SliderProps) {
     return (
         <Form.Group className="me-2">
             <div style={{...labelContainer}} id="outer_doop">
-                {hideValueBox ? divs.toReversed() : divs}
+                {hideValueBox ? divs.reverse() : divs}
             </div>
         </Form.Group>
     );

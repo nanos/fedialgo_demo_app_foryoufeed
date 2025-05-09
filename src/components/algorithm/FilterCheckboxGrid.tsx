@@ -106,7 +106,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
         );
     };
 
-    const gridify = (list: ReactNode[]): ReactNode => {
+    const gridify = (list: ReactNode[]): React.ReactElement => {
         if (!list || list.length === 0) return <></>;
         const numCols = list.length > 10 ? 3 : 2;
 
@@ -124,5 +124,5 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
         );
     };
 
-    return gridify(optionKeys.map((e) => propertyCheckbox(e, filterSection)));
+    return gridify(optionKeys.map((e) => propertyCheckbox(e)));
 };

@@ -26,7 +26,7 @@ const APP_NAME = "FedialgoDemo";  // Name of the app that will be created on the
 
 
 export default function LoginPage() {
-    const [server, setServer] = usePersistentState<string>(DEFAULT_MASTODON_SERVER, "server");
+    const [server, setServer] = usePersistentState<string>(DEFAULT_MASTODON_SERVER, {storageKey: "server"});
     // TODO: why is this not using useAppStorage?
     const [_app, setApp] = useLocalStorage({keyName: "app", defaultValue: {}} as AppStorage);
     const logThis = (msg: string, ...args: any[]) => logMsg(`<LoginPage> ${msg}`, ...args);
