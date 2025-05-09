@@ -150,7 +150,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 {toot.isDM()
                                     ? buildIcon("lock", "Direct Message", "purple")
                                     : toot.account.isFollowed
-                                        ? buildIcon("globe", "You follow this account", "#025c78")
+                                        ? buildIcon("globe", "You follow this account", "darkgreen")  //"#025c78")
                                         : buildIcon("globe", "Not an account you follow")}
                             </span>
 
