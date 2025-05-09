@@ -247,4 +247,6 @@ const stickySwitchContainer: CSSProperties = {
     height: "20px",
     justifyContent: "space-between",
     marginBottom: "5px",
+    paddingLeft: "2px",
+    paddingRight: "2px",
 };
