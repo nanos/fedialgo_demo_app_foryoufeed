@@ -129,7 +129,7 @@ export default function Feed() {
                         <div style={stickySwitchContainer}>
                             <Form.Check
                                 checked={isControlPanelSticky}
-                                className="mb-3"
+                                className="mb-3"  // bootstrap spacing info: https://getbootstrap.com/docs/5.1/utilities/spacing/
                                 key={"stickPanel"}
                                 label={`Stick Control Panel To Top`}
                                 onChange={(e) => setIsControlPanelSticky(e.target.checked)}
