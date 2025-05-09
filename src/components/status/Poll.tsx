@@ -53,7 +53,7 @@ export default function Poll(props: PollProps) {
     };
 
     const vote = async () => {
-        const choiceIndexes = Object.keys(selected).filter((key) => selected[key]).map(parseInt);
+        const choiceIndexes = Object.keys(selected).filter((k) => selected[k]).map((n) => parseInt(n));
         debugMsg('Vote clicked, selected is:', selected, '\nchoiceIndexes is:', choiceIndexes);
 
         try {
@@ -69,7 +69,7 @@ export default function Poll(props: PollProps) {
             if (isAccessTokenRevokedError(error)) {
                 setError('Your access token has been revoked. Please logout and back in again.');
             } else {
-                setError(`Error voting ${error.message}`);
+                setError(`Error voting!\n${error.message}`);
             }
         }
     }

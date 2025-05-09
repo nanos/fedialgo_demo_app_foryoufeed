@@ -209,7 +209,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                     {/* Preview card and attachment display */}
                     {toot.card && !hasAttachments && <PreviewCard card={toot.card as mastodon.v1.PreviewCard} />}
                     {hasAttachments && <MultimediaNode setMediaInspectionIdx={setMediaInspectionIdx} status={toot}/>}
-                    {toot.poll && <Poll poll={toot.poll} />}
+                    {toot.poll && <Poll poll={toot.poll} setError={setError} />}
 
                     {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">
