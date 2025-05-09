@@ -5,6 +5,8 @@ import { GIFV, Toot } from "fedialgo";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 
+import { warnMsg } from "../../helpers/string_helpers";
+
 const IMAGES_HEIGHT = 314;
 const VIDEO_HEIGHT = Math.floor(IMAGES_HEIGHT * 1.7);
 
@@ -101,7 +103,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
             </div>
         );
     } else {
-        console.error(`Unknown media type for status: ${status.uri}`, status);
+        warnMsg(`Unknown media type for status: ${status.uri}`, status);
     }
 };
 

@@ -3,14 +3,14 @@
  * Things like how much to prefer people you favorite a lot or how much to posts that
  * are trending in the Fedivers.
  */
-import React, { CSSProperties, ReactNode, useState } from "react";
+import React, { CSSProperties, ReactNode, useMemo, useState } from "react";
 
 import Col from 'react-bootstrap/Col';
 import FilterCheckbox from "./FilterCheckbox";
 import Row from 'react-bootstrap/Row';
 import { PropertyName, PropertyFilter, sortKeysByValue } from "fedialgo";
 
-import { compareStr } from "../../helpers/string_helpers";
+import { compareStr, debugMsg } from "../../helpers/string_helpers";
 import { PARTICIPATED_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
@@ -32,19 +32,25 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     const { filterSection, minToots, sortByValue } = props;
     const { algorithm } = useAlgorithm();
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
-    let optionInfo = filterSection.optionInfo;
     let optionKeys: string[];
 
-    // For "filtered" filters only allow options with a minimum number of toots and followed hashtags.
-    if (FILTERED_FILTERS.includes(filterSection.title)) {
-        optionInfo = Object.fromEntries(Object.entries(filterSection.optionInfo).filter(
-            ([option, numToots]) => {
-                if (numToots >= minToots) return true;
-                if (filterSection.title != PropertyName.HASHTAG) return false;
-                return option in algorithm.userData.followedTags;  // TODO: this sucks but works for now
-            }
-        ));
-    }
+    const optionInfo = useMemo(
+        () => {
+            // debugMsg(`FilterCheckboxGrid recomputing optionInfo useMemo(${filterSection.title}), validValues:`, filterSection.validValues);
+            if (!FILTERED_FILTERS.includes(filterSection.title)) return filterSection.optionInfo;
+
+            // For "filtered" filters only allow options with a minimum number of toots and followed hashtags.
+            return Object.fromEntries(Object.entries(filterSection.optionInfo).filter(
+                ([option, numToots]) => {
+                    if (numToots >= minToots) return true;
+                    if (filterSection.validValues.includes(option)) return true;
+                    if (filterSection.title != PropertyName.HASHTAG) return false;
+                    return option in algorithm.userData.followedTags;  // TODO: this sucks but works for now
+                }
+            ));
+        },
+        [algorithm.userData.followedTags, filterSection.optionInfo, filterSection.title, filterSection.validValues, minToots]
+    );
 
     if (sortByValue) {
         optionKeys = sortKeysByValue(optionInfo)
@@ -123,5 +129,5 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
         );
     };
 
-    return gridify(optionKeys.map((e) => propertyCheckbox(e)));
+    return gridify(optionKeys.map((option) => propertyCheckbox(option)));
 };
