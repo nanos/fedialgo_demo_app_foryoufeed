@@ -144,7 +144,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 {toot.inReplyToAccountId && buildIcon("reply", "Reply", "blue")}
                                 {toot.containsTagsMsg() && buildIcon("hashtag", toot.containsTagsMsg())}
                                 {toot.trendingRank > 0 && buildIcon("fire", "Trending Toot", RED)}
-                                {toot.trendingLinks.length > 0 && buildIcon("link", "Trending Link", RED)}
+                                {toot.trendingLinks.length > 0 && buildIcon("link", "Contains Trending Link", RED)}
                                 {toot.containsUserMention() && buildIcon("bolt", "You're Mentioned", "green")}
 
                                 {toot.isDM()
