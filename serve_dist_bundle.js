@@ -1,4 +1,5 @@
 /*
+ * Janky way to serve dist/bundle.js locally
  * https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/Node_server_without_framework
  */
 
