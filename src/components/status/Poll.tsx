@@ -9,6 +9,8 @@ import { debugMsg, errorMsg } from '../../helpers/string_helpers';
 import { isAccessTokenRevokedError, timeString } from 'fedialgo';
 import { useAlgorithm } from '../../hooks/useAlgorithm';
 
+const ALREADY_VOTED_MSG = `You have already voted`;
+
 interface PollProps {
     poll: mastodon.v1.Poll,
     setError: (error: string) => void,
@@ -68,6 +70,8 @@ export default function Poll(props: PollProps) {
 
             if (isAccessTokenRevokedError(error)) {
                 setError('Your access token has been revoked. Please logout and back in again.');
+            } else if (error.message.includes(ALREADY_VOTED_MSG)) {
+                setError('You have already voted in this poll.');
             } else {
                 setError(`Error voting!\n${error.message}`);
             }
