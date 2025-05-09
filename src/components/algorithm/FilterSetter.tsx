@@ -128,6 +128,7 @@ export default function FilterSetter() {
                                 isActive={filterSection.validValues.length > 0}
                                 key={filterSection.title}
                                 minToots={minTootsCutoffs[filterSection.title]}
+                                maxToots={Math.max(...Object.values(filterSection.optionInfo))}
                                 sectionName={filterSection.title}
                                 setMinToots={(minToots) => {
                                     minTootsCutoffs[filterSection.title] = minToots;

@@ -21,6 +21,7 @@ interface AccordionProps {
     description: string,
     invertCheckbox?: React.ReactElement,
     isActive: boolean,
+    maxToots?: number,
     minToots?: number,
     sectionName: string;
     setMinToots?: (minToots: number) => void,
@@ -29,7 +30,7 @@ interface AccordionProps {
 
 
 export default function FilterAccordionSection(props: AccordionProps) {
-    const { children, description, invertCheckbox, isActive, minToots, sectionName, setMinToots, sortKeysCheckbox } = props;
+    const { children, description, invertCheckbox, isActive, maxToots, minToots, sectionName, setMinToots, sortKeysCheckbox } = props;
     const headerClass = `filterHeader ${isActive ? "filterHeader--active" : ""}`;
     const spacer = <div style={{width: "20px"}} />
 
@@ -61,19 +62,19 @@ export default function FilterAccordionSection(props: AccordionProps) {
                     {sortKeysCheckbox && !minToots && spacer}
 
                     {/* Show a slider to set minToots filter if needed */}
-                    {minToots && (
+                    {minToots && (<div style={{width: "23%"}} key={"minTootsSlider"}>
                         <a data-tooltip-id={TOOLTIP_ANCHOR} data-tooltip-content={tooltipText}>
                             <Slider
                                 hideValueBox={true}
                                 label="Minimum"
                                 minValue={1}
-                                maxValue={100}
+                                maxValue={maxToots || 20}
                                 onChange={async (e) => setMinToots(parseInt(e.target.value))}
                                 stepSize={1}
                                 value={minToots}
                                 width={"80%"}
                             />
-                        </a>)}
+                        </a></div>)}
                 </div>
 
                 <div style={roundedBox} key={sectionName}>
