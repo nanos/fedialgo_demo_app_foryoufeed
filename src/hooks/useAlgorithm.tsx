@@ -90,13 +90,13 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
         if (!user || !algorithm) return;
 
         const shouldReloadFeed = (): boolean => {
-            if (isLoading || !shouldAutoUpdate) return false;
+            if (!shouldAutoUpdate) return false;
             let should = false;
             let msg: string;
 
-            if (algorithm.isLoading()) {
-                msg = `algorithm.isLoading() says load in progress`;
-                warnMsg(`isLoading must be false but ${msg}`);
+            if (isLoading || algorithm.isLoading()) {
+                msg = `load in progress`;
+                if (!isLoading) warnMsg(`isLoading is true but ${msg}`);
             } else {
                 const feedAgeInSeconds = algorithm.mostRecentHomeTootAgeInSeconds();
 
@@ -104,7 +104,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
                     msg = `feed is ${feedAgeInSeconds.toFixed(0)}s old`;
                     should = feedAgeInSeconds > RELOAD_IF_OLDER_THAN_SECONDS;
                 } else {
-                    msg = (`${timeline.length} toots in feed but no most recent toot found!`);
+                    msg = `${timeline.length} toots in feed but no most recent toot found!`;
                     warnMsg(msg);
                 }
             }

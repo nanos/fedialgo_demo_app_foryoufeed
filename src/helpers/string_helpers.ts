@@ -11,6 +11,10 @@ export function browserLanguage(): string {
 };
 
 
+export function debugMsg(message: string, ...args: unknown[]): void {
+    console.error(`[${DEMO_APP}] ${message}`, ...args);
+};
+
 export function errorMsg(message: string, ...args: unknown[]): void {
     console.error(`[${DEMO_APP}] ${message}`, ...args);
 };

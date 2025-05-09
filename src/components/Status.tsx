@@ -13,6 +13,7 @@ import { mastodon } from 'masto';
 import ActionButton, { ButtonAction } from "./status/ActionButton";
 import AttachmentsModal from './status/AttachmentsModal';
 import MultimediaNode from "./status/MultimediaNode";
+import Poll from "./status/Poll";
 import PreviewCard from "./status/PreviewCard";
 import ScoreModal from './status/ScoreModal';
 import { logMsg } from '../helpers/string_helpers';
@@ -208,6 +209,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                     {/* Preview card and attachment display */}
                     {toot.card && !hasAttachments && <PreviewCard card={toot.card as mastodon.v1.PreviewCard} />}
                     {hasAttachments && <MultimediaNode setMediaInspectionIdx={setMediaInspectionIdx} status={toot}/>}
+                    {toot.poll && <Poll poll={toot.poll} />}
 
                     {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">
