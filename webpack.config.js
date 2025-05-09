@@ -1,3 +1,7 @@
+/*
+ * Simple node.js webserver w/out framework: https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/Node_server_without_framework
+ */
+
 const path = require("path");
 
 const CopyPlugin = require('copy-webpack-plugin');
