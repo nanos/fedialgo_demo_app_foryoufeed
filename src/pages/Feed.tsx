@@ -48,14 +48,11 @@ export default function Feed() {
     const [scrollPercentage, setScrollPercentage] = useState(0);
     const [prevScrollY, setPrevScrollY] = useState(0);
 
-    const scrollMsg = `Scroll: ${scrollPercentage.toFixed(2)}% (${window.scrollY}), Displaying ${numDisplayedToots} Toots`;
-    const resetNumDisplayedToots = () => setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
-
     // Reset all state except for the user and server
     const reset = async () => {
         if (!window.confirm("Are you sure?")) return;
         setError("");
-        resetNumDisplayedToots();
+        setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
         if (!algorithm) return;
         await algorithm.reset();
         triggerLoad();
@@ -136,23 +133,21 @@ export default function Feed() {
                                 type="checkbox"
                             />
 
-                            {(!algorithm || algorithm.isDebug)
-                                ? <p>{scrollMsg}</p>
-                                : <a
-                                      data-tooltip-id={TOOLTIP_ANCHOR}
-                                      data-tooltip-content={AUTO_UPDATE_TOOLTIP_MSG}
-                                      key={"tooltipautoload"}
-                                      style={{color: "white"}}
-                                  >
-                                      <Form.Check
-                                          checked={shouldAutoUpdate}
-                                          className="mb-3"
-                                          key={"autoLoadNewToots"}
-                                          label={`Auto Load New Toots`}
-                                          onChange={(e) => setShouldAutoUpdate(e.target.checked)}
-                                          type="checkbox"
-                                      />
-                                </a>}
+                            <a
+                                data-tooltip-id={TOOLTIP_ANCHOR}
+                                data-tooltip-content={AUTO_UPDATE_TOOLTIP_MSG}
+                                key={"tooltipautoload"}
+                                style={{color: "white"}}
+                            >
+                                <Form.Check
+                                    checked={shouldAutoUpdate}
+                                    className="mb-3"
+                                    key={"autoLoadNewToots"}
+                                    label={`Auto Load New Toots`}
+                                    onChange={(e) => setShouldAutoUpdate(e.target.checked)}
+                                    type="checkbox"
+                                />
+                            </a>
                         </div>
 
                         {algorithm && <WeightSetter />}
@@ -160,9 +155,15 @@ export default function Feed() {
                         {algorithm && <TrendingInfo />}
                         <FindFollowers api={api} user={user} />
 
-                        {(isLoading)
-                            ? <LoadingSpinner message={algorithm?.loadingStatus || READY_TO_LOAD_MSG} style={loadingMsgStyle} />
-                            : finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds)}
+                        <div style={stickySwitchContainer}>
+                            {(isLoading)
+                                ? <LoadingSpinner message={algorithm?.loadingStatus || READY_TO_LOAD_MSG} style={loadingMsgStyle} />
+                                : finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds)}
+
+                            <p style={scrollStatusMsg}>
+                                {`Displaying ${numDisplayedToots} Toots (Scroll: ${scrollPercentage.toFixed(1)}%)`}
+                            </p>
+                        </div>
 
                         {algorithm?.isDebug &&
                             <p style={loadingMsgStyle}>
@@ -173,6 +174,7 @@ export default function Feed() {
                     </div>
                 </Col>
 
+                {/* Feed column */}
                 <Col xs={6}>
                     {algorithm && !isLoading &&
                         <p style={loadNewTootsText}>
@@ -227,6 +229,11 @@ const resetLinkStyle: CSSProperties = {
     fontSize: "14px",
     fontWeight: "bold",
     textDecoration: "underline",
+};
+
+const scrollStatusMsg: CSSProperties = {
+    ...loadingMsgStyle,
+    color: "grey",
 };
 
 const statusesColStyle: CSSProperties = {
