@@ -21,6 +21,8 @@ import { logLocaleInfo, logMsg } from "./helpers/string_helpers";
 
 export default function App(): React.ReactElement {
     if ('serviceWorker' in navigator) {
+        console.log('Service Worker is supported, registering...');
+
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('/service-worker.js');
         });
