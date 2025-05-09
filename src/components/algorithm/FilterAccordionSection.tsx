@@ -61,7 +61,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
                 <Tooltip id={TOOLTIP_ANCHOR} place="bottom" />
 
                 {/* Top bar with invert/sort switches */}
-                <div style={invertTagSelectionStyle} key={"invertSelection"}>
+                <div style={switchesContainer} key={"invertSelection"}>
                     {switches.sortKeys && !minToots && spacer}
                     {switches.invert}
                     {switches.sortKeys && switches.sortKeys}
@@ -109,7 +109,7 @@ const filterSwitchContainer: CSSProperties = {
     paddingRight: "15px",
 };
 
-const invertTagSelectionStyle: CSSProperties = {
+const switchesContainer: CSSProperties = {
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'row',
@@ -117,7 +117,7 @@ const invertTagSelectionStyle: CSSProperties = {
     fontWeight: "bold",
     height: "25px",
     justifyContent: 'space-around',
-    marginBottom: '6px',
+    marginBottom: '3px',
 };
 
 const subHeaderFont: CSSProperties = {
