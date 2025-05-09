@@ -31,7 +31,7 @@ const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
 const TOOLTIP_ANCHOR = "tooltip-anchor";
 // Messaging constants
 const AUTO_UPDATE_TOOLTIP_MSG = "If this box is checked the feed will be automatically updated when you focus this browser tab.";
-const DEFAULT_LOADING_MESSAGE = "(first time can take up to a minute or so)";
+const DEFAULT_LOADING_MESSAGE = "Loading (first time can take up to a minute or so)";
 const NO_TOOTS_MSG = "No toots in feed! Maybe check your filters settings?";
 
 
@@ -47,6 +47,8 @@ export default function Feed() {
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [scrollPercentage, setScrollPercentage] = useState(0);
     const [prevScrollY, setPrevScrollY] = useState(0);
+
+    const numShownToots = Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots);
 
     // Reset all state except for the user and server
     const reset = async () => {
@@ -77,7 +79,7 @@ export default function Feed() {
         // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
         const showMoreToots = () => {
             if (numDisplayedToots < timeline.length) {
-                const msg = `Showing ${numDisplayedToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
+                const msg = `Showing ${numShownToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
                 logMsg(`${msg} (${timeline.length} available in feed)`);
                 setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
             }
@@ -184,7 +186,7 @@ export default function Feed() {
                         </p>}
 
                     <div style={statusesColStyle}>
-                        {timeline.slice(0, Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots)).map((toot) => (
+                        {timeline.slice(0, numShownToots).map((toot) => (
                             <StatusComponent
                                 key={toot.uri}
                                 setError={setError}
