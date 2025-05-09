@@ -27,11 +27,12 @@ interface AccordionProps {
     sectionName: string;
     setMinToots?: (minToots: number) => void,
     sortKeysCheckbox?: React.ReactElement,
+    tooltipOnlyCheckbox?: React.ReactElement,
 };
 
 
 export default function FilterAccordionSection(props: AccordionProps) {
-    const { children, description, invertCheckbox, isActive, maxToots, minToots, sectionName, setMinToots, sortKeysCheckbox } = props;
+    const { children, description, invertCheckbox, isActive, maxToots, minToots, sectionName, setMinToots, sortKeysCheckbox, tooltipOnlyCheckbox } = props;
     const headerClass = `filterHeader ${isActive ? "filterHeader--active" : ""}`;
     const spacer = <div style={{width: "20px"}} />
 
@@ -60,6 +61,7 @@ export default function FilterAccordionSection(props: AccordionProps) {
                     {sortKeysCheckbox && !minToots && spacer}
                     {invertCheckbox}
                     {sortKeysCheckbox && sortKeysCheckbox}
+                    {tooltipOnlyCheckbox && tooltipOnlyCheckbox}
                     {sortKeysCheckbox && !minToots && spacer}
 
                     {/* Show a slider to set minToots filter if needed */}

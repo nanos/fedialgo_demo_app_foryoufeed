@@ -12,7 +12,7 @@ import { Tooltip } from 'react-tooltip';
 
 import FilterAccordionSection, { ACTIVE_CLASSNAME } from "./FilterAccordionSection";
 import FilterCheckbox, { HASHTAG_ANCHOR, HIGHLIGHT, INVERT_SELECTION, SORT_KEYS } from "./FilterCheckbox";
-import FilterCheckboxGrid from "./FilterCheckboxGrid";
+import FilterCheckboxGrid, { FILTERED_FILTERS } from "./FilterCheckboxGrid";
 import Slider from "./Slider";
 import { logMsg } from "../../helpers/string_helpers";
 import { titleStyle } from "../../helpers/style_helpers";
@@ -44,6 +44,13 @@ export default function FilterSetter() {
         }, {} as Record<PropertyName, boolean>)
     );
 
+    const [tooltippedOnly, setTooltippedOnly] = useState<Record<PropertyName, boolean>>(
+        visibleSections.reduce((acc, section) => {
+            acc[section.title] = false;
+            return acc
+        }, {} as Record<PropertyName, boolean>)
+    );
+
     const invertSelectionCheckbox = (filter: PropertyFilter) => {
         return (
             <FilterCheckbox
@@ -67,6 +74,21 @@ export default function FilterSetter() {
                     const newSortByValue = {...sortByValue};
                     newSortByValue[filter.title] = e.target.checked;
                     setSortByValue(newSortByValue);
+                }}
+            />
+        );
+    };
+
+    const tooltipOnlyCheckbox = (filter: PropertyFilter) => {
+        return (
+            <FilterCheckbox
+                capitalize={true}
+                isChecked={tooltippedOnly[filter.title]}
+                label={"Highlights Only"}
+                onChange={(e) => {
+                    const newTooltippedOnly = {...tooltippedOnly};
+                    newTooltippedOnly[filter.title] = e.target.checked;
+                    setTooltippedOnly(newTooltippedOnly);
                 }}
             />
         );
@@ -141,11 +163,13 @@ export default function FilterSetter() {
                                     setMinTootsCutoffs({...minTootsCutoffs});
                                 }}
                                 sortKeysCheckbox={sortKeysCheckbox(filterSection)}
+                                tooltipOnlyCheckbox={FILTERED_FILTERS.includes(filterSection.title) && tooltipOnlyCheckbox(filterSection)}
                             >
                                 <FilterCheckboxGrid
                                     filterSection={filterSection}
                                     minToots={minTootsCutoffs[filterSection.title]}
                                     sortByValue={sortByValue[filterSection.title]}
+                                    tooltippedOnly={tooltippedOnly[filterSection.title]}
                                 />
                             </FilterAccordionSection>))}
 

@@ -13,11 +13,12 @@ import { PropertyName, PropertyFilter, sortKeysByValue } from "fedialgo";
 import { compareStr, debugMsg } from "../../helpers/string_helpers";
 import { PARTICIPATED_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
+import { get } from "http";
 
 type HashtagTooltip = {text: string; color: string;};
 
 // Filtered filters are those that require a minimum number of toots to appear as filter options
-const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
+export const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
 const FOLLOWED_TAG_MSG = `You follow this hashtag.`;
 const PARTICIPATED_TAG_MSG = `You've posted this hashtag`
 
@@ -25,14 +26,43 @@ interface FilterCheckboxGridProps {
     filterSection: PropertyFilter,  // TODO: maybe rename propertyFilter
     minToots?: number,
     sortByValue?: boolean,
+    tooltippedOnly?: boolean,
 };
 
 
 export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
-    const { filterSection, minToots, sortByValue } = props;
+    const { filterSection, minToots, sortByValue, tooltippedOnly } = props;
     const { algorithm } = useAlgorithm();
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
     let optionKeys: string[];
+
+    // Generate color and tooltip text for a hashtag checkbox
+    const getTooltipInfo = (name: string): HashtagTooltip => {
+        if (filterSection.title == PropertyName.HASHTAG) {
+            if (name in algorithm.userData.followedTags) {
+                return {
+                    text: FOLLOWED_TAG_MSG,
+                    color: "yellow",
+                }
+            } else if (trendingTagNames.includes(name)) {
+                return {
+                    text: `This hashtag is trending.`,
+                    color: "#FAD5A5",
+                }
+            } else if (name in algorithm.userData.participatedHashtags) {
+                const tag = algorithm.userData.participatedHashtags[name];
+
+                return {
+                    text: `${PARTICIPATED_TAG_MSG} ${tag.numToots} times recently.`,
+                    color: PARTICIPATED_TAG_COLOR_FADED,
+                }
+            }
+        } else if (filterSection.title == PropertyName.USER && name in algorithm.userData.followedAccounts) {
+            return {color: 'cyan', text: `You follow this account`};
+        } else if (filterSection.title == PropertyName.LANGUAGE && name == algorithm.userData.preferredLanguage) {
+            return {color: 'cyan', text: `You post most in this language`};
+        }
+    };
 
     const optionInfo = useMemo(
         () => {
@@ -42,14 +72,13 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
             // For "filtered" filters only allow options with a minimum number of toots and followed hashtags.
             return Object.fromEntries(Object.entries(filterSection.optionInfo).filter(
                 ([option, numToots]) => {
-                    if (numToots >= minToots) return true;
                     if (filterSection.validValues.includes(option)) return true;
-                    if (filterSection.title != PropertyName.HASHTAG) return false;
-                    return option in algorithm.userData.followedTags;  // TODO: this sucks but works for now
+                    if (numToots >= minToots) return (tooltippedOnly ? !!getTooltipInfo(option) : true);
+                    return false;
                 }
             ));
         },
-        [algorithm.userData.followedTags, filterSection.optionInfo, filterSection.title, filterSection.validValues, minToots]
+        [algorithm.userData.followedTags, filterSection.optionInfo, filterSection.title, filterSection.validValues, minToots, tooltippedOnly]
     );
 
     if (sortByValue) {
@@ -58,42 +87,9 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
         optionKeys = Object.keys(optionInfo).sort((a, b) => compareStr(a, b));
     }
 
-    // Generate color and tooltip text for a hashtag checkbox
-    const hashtagTooltip = (name: string): HashtagTooltip => {
-        if (name in algorithm.userData.followedTags) {
-            return {
-                text: FOLLOWED_TAG_MSG,
-                color: "yellow",
-            }
-        } else if (trendingTagNames.includes(name)) {
-            return {
-                text: `This hashtag is trending.`,
-                color: "#FAD5A5",
-            }
-        } else if (name in algorithm.userData.participatedHashtags) {
-            const tag = algorithm.userData.participatedHashtags[name];
-
-            return {
-                text: `${PARTICIPATED_TAG_MSG} ${tag.numToots} times recently.`,
-                color: PARTICIPATED_TAG_COLOR_FADED,
-            }
-        }
-    };
-
     // Build a checkbox for a property filter. The 'name' is also the element of the filter array.
     const propertyCheckbox = (name: string) => {
-        let tooltipText: string | undefined;
-        let tooltipColor: string | undefined;
-
-        if (filterSection.title == PropertyName.HASHTAG) {
-            const tooltip = hashtagTooltip(name);
-            tooltipText = tooltip?.text;
-            tooltipColor = tooltip?.color;
-        } else if (filterSection.title == PropertyName.USER && name in algorithm.userData.followedAccounts) {
-            tooltipText = `You follow this account`;
-        } else if (filterSection.title == PropertyName.LANGUAGE && name == algorithm.userData.preferredLanguage) {
-            tooltipText = `You post most in this language`;
-        }
+        const tooltip = getTooltipInfo(name);
 
         return (
             <FilterCheckbox
@@ -105,8 +101,8 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
                 onChange={(e) => {
                     filterSection.updateValidOptions(name, e.target.checked);
                 }}
-                tooltipText={tooltipText}
-                tooltipColor={tooltipColor}
+                tooltipText={tooltip?.text}
+                tooltipColor={tooltip?.color}
             />
         );
     };
