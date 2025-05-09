@@ -6,11 +6,12 @@
 import React, { CSSProperties, ReactNode, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import FilterCheckbox, { HASHTAG_ANCHOR, HIGHLIGHT, INVERT_SELECTION, SORT_KEYS } from "./FilterCheckbox";
+import Form from 'react-bootstrap/esm/Form';
 import { NumericFilter, PropertyName, PropertyFilter } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
-import FilterAccordionSection from "./FilterAccordionSection";
+import FilterAccordionSection, { ACTIVE_CLASSNAME } from "./FilterAccordionSection";
+import FilterCheckbox, { HASHTAG_ANCHOR, HIGHLIGHT, INVERT_SELECTION, SORT_KEYS } from "./FilterCheckbox";
 import FilterCheckboxGrid from "./FilterCheckboxGrid";
 import Slider from "./Slider";
 import { logMsg } from "../../helpers/string_helpers";
@@ -31,6 +32,8 @@ export default function FilterSetter() {
     const { algorithm } = useAlgorithm();
 
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
+    const hasActivePropertyFilter = Object.values(algorithm.filters.filterSections).some(f => f.validValues.length);
+    const hasAnyActiveFilter = hasActiveNumericFilter || hasActivePropertyFilter;
     const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
     const [minTootsCutoffs, setMinTootsCutoffs] = useState<MinTootsFilter>({...DEFAULT_MIN_TOOTS_TO_APPEAR});
 
@@ -111,9 +114,9 @@ export default function FilterSetter() {
         <Accordion>
             <Accordion.Item eventKey="filters">
                 <Accordion.Header style={accordionPadding}>
-                    <p style={titleStyle}>
+                    <span style={{...titleStyle}}>
                         Feed Filters
-                    </p>
+                    </span>
                 </Accordion.Header>
 
                 <Accordion.Body style={accordionPadding}>

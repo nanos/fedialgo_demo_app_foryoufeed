@@ -14,6 +14,7 @@ import { Tooltip } from 'react-tooltip';
 import Slider from "./Slider";
 import { accordionBody, globalFont, roundedBox } from "../../helpers/style_helpers";
 
+export const ACTIVE_CLASSNAME = "filterHeader--active";
 const TOOLTIP_ANCHOR = "ToolTipAnchor";
 
 interface AccordionProps {
