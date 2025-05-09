@@ -3,13 +3,15 @@
  * Things like how much to prefer people you favorite a lot or how much to posts that
  * are trending in the Fedivers.
  */
-import React, { CSSProperties, ReactNode } from "react";
+import React, { CSSProperties, ReactNode, useState } from "react";
 
 import Col from 'react-bootstrap/Col';
 import FilterCheckbox from "./FilterCheckbox";
 import Row from 'react-bootstrap/Row';
 import { PropertyName, PropertyFilter } from "fedialgo";
 
+import { browserLanguage, debugMsg, JAPANESE_LANGUAGE, warnMsg } from "../../helpers/string_helpers";
+import { isJapanese } from "../../helpers/string_helpers";
 import { PARTICIPATED_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
@@ -31,17 +33,27 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     const { filterSection, minToots, sortByValue } = props;
     const { algorithm } = useAlgorithm();
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
+    const suppressedJapanese: Record<string, number> = {};  // This sucks and is just for logging
     let optionInfo = filterSection.optionInfo;
 
     // For "filtered" filters only allow options with a minimum number of toots and followed hashtags.
     if (FILTERED_FILTERS.includes(filterSection.title)) {
         optionInfo = Object.fromEntries(Object.entries(filterSection.optionInfo).filter(
             ([option, numToots]) => {
+                if (isJapanese(option) && browserLanguage() != JAPANESE_LANGUAGE) {
+                    suppressedJapanese[option] = (suppressedJapanese[option] || 0) + 1;
+                    return false;
+                }
+
                 if (numToots >= minToots) return true;
                 if (filterSection.title != PropertyName.HASHTAG) return false;
                 return option in algorithm.userData.followedTags;  // TODO: this sucks but works for now
             }
         ));
+    }
+
+    if (Object.keys(suppressedJapanese).length) {
+        warnMsg(`Suppressed ${Object.values(suppressedJapanese).length} Japanese filter options:`, suppressedJapanese);
     }
 
     let optionKeys = Object.keys(optionInfo);

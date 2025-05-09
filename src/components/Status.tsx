@@ -19,6 +19,7 @@ import ScoreModal from './status/ScoreModal';
 import { logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
 import { PARTICIPATED_TAG_COLOR } from "../helpers/style_helpers";
+import { RED } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
 interface StatusComponentProps {
@@ -78,7 +79,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const buildIcon = (iconName: string, title?: string, color?: string): React.ReactNode => {
         if (iconName == "hashtag") {
             if (toot.trendingTags?.length) {
-                color = "orange";
+                color = RED;
             } else if (toot.followedTags?.length) {
                 color = "yellow";
             } else if (toot.participatedTags?.length) {
@@ -142,8 +143,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 {toot.editedAt && buildIcon("pencil", `Edited at ${toot.editedAt}`)}
                                 {toot.inReplyToAccountId && buildIcon("reply", "Reply", "blue")}
                                 {toot.containsTagsMsg() && buildIcon("hashtag", toot.containsTagsMsg())}
-                                {toot.trendingRank > 0 && buildIcon("fire", "Trending Toot", "red")}
-                                {toot.trendingLinks.length > 0 && buildIcon("link", "Trending Link", "orange")}
+                                {toot.trendingRank > 0 && buildIcon("fire", "Trending Toot", RED)}
+                                {toot.trendingLinks.length > 0 && buildIcon("link", "Trending Link", RED)}
                                 {toot.containsUserMention() && buildIcon("bolt", "You're Mentioned", "green")}
 
                                 {toot.isDM()

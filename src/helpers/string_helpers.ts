@@ -1,8 +1,11 @@
 /*
  * String manipulation helpers.
  */
-const DEFAULT_LOCALE = "en-US";
 const DEMO_APP = "DEMO APP";
+const DEFAULT_LOCALE = "en-US";
+
+export const JAPANESE_LANGUAGE = "ja"
+const JAPANESE_REGEX = /^[一ー-龯ぁ-んァ-ン]{2,}/;  // https://gist.github.com/terrancesnyder/1345094
 
 
 export function browserLanguage(): string {
@@ -27,6 +30,8 @@ export function warnMsg(message: string, ...args: unknown[]): void {
     console.warn(`[${DEMO_APP}] ${message}`, ...args);
 };
 
+
+export const isJapanese = (str: string) => JAPANESE_REGEX.test(str);
 
 export const logLocaleInfo = (): void => {
     // if (process.env.NODE_ENV === "production") inject();
