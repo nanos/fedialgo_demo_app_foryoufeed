@@ -17,22 +17,26 @@ import { accordionBody, globalFont, roundedBox } from "../../helpers/style_helpe
 export const ACTIVE_CLASSNAME = "filterHeader--active";
 const TOOLTIP_ANCHOR = "ToolTipAnchor";
 
+export interface FilterSwitches {
+    invert: React.ReactElement,
+    sortKeys?: React.ReactElement,
+    tooltipOnly?: React.ReactElement,
+}
+
 interface AccordionProps {
     children: ReactNode,
     description: string,
-    invertCheckbox?: React.ReactElement,
     isActive: boolean,
     maxToots?: number,
     minToots?: number,
     sectionName: string;
     setMinToots?: (minToots: number) => void,
-    sortKeysCheckbox?: React.ReactElement,
-    tooltipOnlyCheckbox?: React.ReactElement,
+    switches?: FilterSwitches,
 };
 
 
 export default function FilterAccordionSection(props: AccordionProps) {
-    const { children, description, invertCheckbox, isActive, maxToots, minToots, sectionName, setMinToots, sortKeysCheckbox, tooltipOnlyCheckbox } = props;
+    const { children, description, isActive, maxToots, minToots, sectionName, setMinToots, switches } = props;
     const headerClass = `filterHeader ${isActive ? "filterHeader--active" : ""}`;
     const spacer = <div style={{width: "20px"}} />
 
@@ -58,11 +62,11 @@ export default function FilterAccordionSection(props: AccordionProps) {
 
                 {/* Top bar with invert/sort switches */}
                 <div style={invertTagSelectionStyle} key={"invertSelection"}>
-                    {sortKeysCheckbox && !minToots && spacer}
-                    {invertCheckbox}
-                    {sortKeysCheckbox && sortKeysCheckbox}
-                    {tooltipOnlyCheckbox && tooltipOnlyCheckbox}
-                    {sortKeysCheckbox && !minToots && spacer}
+                    {switches.sortKeys && !minToots && spacer}
+                    {switches.invert}
+                    {switches.sortKeys && switches.sortKeys}
+                    {switches.tooltipOnly && switches.tooltipOnly}
+                    {switches.sortKeys && !minToots && spacer}
 
                     {/* Show a slider to set minToots filter if needed */}
                     {minToots && (<div style={{width: "23%"}} key={"minTootsSlider"}>

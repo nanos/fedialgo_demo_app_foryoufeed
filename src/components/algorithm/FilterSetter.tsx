@@ -152,7 +152,6 @@ export default function FilterSetter() {
                         {visibleSections.map((filterSection) => (
                             <FilterAccordionSection
                                 description={filterSection.description}
-                                invertCheckbox={invertSelectionCheckbox(filterSection)}
                                 isActive={filterSection.validValues.length > 0}
                                 key={filterSection.title}
                                 minToots={minTootsCutoffs[filterSection.title]}
@@ -162,8 +161,11 @@ export default function FilterSetter() {
                                     minTootsCutoffs[filterSection.title] = minToots;
                                     setMinTootsCutoffs({...minTootsCutoffs});
                                 }}
-                                sortKeysCheckbox={sortKeysCheckbox(filterSection)}
-                                tooltipOnlyCheckbox={FILTERED_FILTERS.includes(filterSection.title) && tooltipOnlyCheckbox(filterSection)}
+                                switches={{
+                                    invert: invertSelectionCheckbox(filterSection),
+                                    sortKeys: sortKeysCheckbox(filterSection),
+                                    tooltipOnly: FILTERED_FILTERS.includes(filterSection.title) && tooltipOnlyCheckbox(filterSection),
+                                }}
                             >
                                 <FilterCheckboxGrid
                                     filterSection={filterSection}
@@ -175,10 +177,10 @@ export default function FilterSetter() {
 
                         <FilterAccordionSection
                             description={"Filter based on minimum/maximum number of replies, reposts, etc"}
-                            invertCheckbox={invertNumericFilterCheckbox(Object.values(algorithm.filters.numericFilters))}
                             isActive={hasActiveNumericFilter}
                             key={"numericFilters"}
                             sectionName="Interactions"
+                            switches={{invert: invertNumericFilterCheckbox(Object.values(algorithm.filters.numericFilters))}}
                         >
                             {numericSliders}
                         </FilterAccordionSection>

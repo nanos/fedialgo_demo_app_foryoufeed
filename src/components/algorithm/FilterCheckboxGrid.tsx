@@ -40,15 +40,9 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     const getTooltipInfo = (name: string): HashtagTooltip => {
         if (filterSection.title == PropertyName.HASHTAG) {
             if (name in algorithm.userData.followedTags) {
-                return {
-                    text: FOLLOWED_TAG_MSG,
-                    color: "yellow",
-                }
+                return {color: "yellow", text: FOLLOWED_TAG_MSG};
             } else if (trendingTagNames.includes(name)) {
-                return {
-                    text: `This hashtag is trending.`,
-                    color: "#FAD5A5",
-                }
+                return {color: "#FAD5A5", text: `This hashtag is trending.`}
             } else if (name in algorithm.userData.participatedHashtags) {
                 const tag = algorithm.userData.participatedHashtags[name];
 
@@ -66,7 +60,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
 
     const optionInfo = useMemo(
         () => {
-            // debugMsg(`FilterCheckboxGrid recomputing optionInfo useMemo(${filterSection.title}), validValues:`, filterSection.validValues);
+            debugMsg(`useMemo() recomputing optionInfo for ${filterSection.title}, validValues:`, filterSection.validValues);
             if (!FILTERED_FILTERS.includes(filterSection.title)) return filterSection.optionInfo;
 
             // For "filtered" filters only allow options with a minimum number of toots and followed hashtags.
@@ -78,7 +72,14 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
                 }
             ));
         },
-        [algorithm.userData.followedTags, filterSection.optionInfo, filterSection.title, filterSection.validValues, minToots, tooltippedOnly]
+        [
+            algorithm.userData.followedTags,
+            filterSection.optionInfo,
+            filterSection.title,
+            filterSection.validValues,
+            minToots,
+            tooltippedOnly
+        ]
     );
 
     if (sortByValue) {
@@ -107,11 +108,11 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
         );
     };
 
-    const gridify = (list: React.ReactElement[]): React.ReactElement => {
-        if (!list || list.length === 0) return <></>;
-        const numCols = list.length > 10 ? 3 : 2;
+    const gridify = (elements: React.ReactElement[]): React.ReactElement => {
+        if (!elements || elements.length === 0) return <></>;
+        const numCols = elements.length > 10 ? 3 : 2;
 
-        const columns = list.reduce((cols, element, index) => {
+        const columns = elements.reduce((cols, element, index) => {
             const colIndex = index % numCols;
             cols[colIndex] ??= [];
             cols[colIndex].push(element);
