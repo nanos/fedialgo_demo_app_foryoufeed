@@ -23,7 +23,7 @@ export default function LoadingSpinner(props: LoadingSpinnerProps) {
                 : <Spinner animation={ANIMATION} size="sm" />}
 
             <div style={{marginLeft: "12px"}}>
-                <p>{`Loading ${message}...`}</p>
+                <p>{`${message}...`}</p>
             </div>
         </div>
     );
