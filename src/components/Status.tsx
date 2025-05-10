@@ -7,7 +7,7 @@ import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
 import { Account, Toot, timeString } from "fedialgo";
 import { capitalCase } from "change-case";
-import { IconDefinition, faHashtag, faFire, faFireAlt, faFireFlameCurved, faGlobe, faPencil, faReply, faLink, faBolt, faLock } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition, faHashtag, faFireFlameCurved, faGlobe, faPencil, faReply, faLink, faBolt, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
@@ -21,6 +21,7 @@ import ScoreModal from './status/ScoreModal';
 import { accountTooltipTxt, logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
 import { PARTICIPATED_TAG_COLOR, PARTICIPATED_TAG_COLOR_FADED, RED } from "../helpers/style_helpers";
+import { timestampString } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
 export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
@@ -157,7 +158,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             </span>
 
                             <time dateTime={toot.createdAt} title={toot.createdAt}>
-                                {timeString(toot.createdAt, navigator?.language).replace("today", "Today")}
+                                {timestampString(toot.createdAt)}
                             </time>
                         </a>
 
@@ -239,5 +240,5 @@ const accountLink: CSSProperties = {
 };
 
 const baseIconStyle: CSSProperties = {
-    marginRight: "4px",
+    marginRight: "5px",
 };

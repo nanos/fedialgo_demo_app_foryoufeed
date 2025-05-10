@@ -15,7 +15,7 @@ export const accountTooltipTxt = (account: Account): string => {
     const createdAt = new Date(account.createdAt);
 
     const accountStats = [
-        `Created ${createdAt.toLocaleDateString('en-us', {year: "numeric", month: "short", day:"numeric"})}`,
+        `Created ${createdAt.toLocaleDateString(browserLocale(), {year: "numeric", month: "short", day:"numeric"})}`,
         `${account.followersCount.toLocaleString()} Followers`,
         `${account.statusesCount.toLocaleString()} Toots`,
     ]
@@ -24,10 +24,24 @@ export const accountTooltipTxt = (account: Account): string => {
 };
 
 
-// Extract the language from the browser's locale
-export function browserLanguage(): string {
-    const locale = navigator?.language || DEFAULT_LOCALE;
-    return locale.split('-')[0];
+// Locale
+export const browserLocale = () => navigator?.language || DEFAULT_LOCALE;
+export const browserLanguage = () => browserLocale().split('-')[0];
+export const browserCountry = () => browserLocale().split('-')[1];
+
+// Log the browser's locale information to the console
+export const logLocaleInfo = (): void => {
+    const locale = navigator?.language;
+    const localeParts = locale.split('-');
+    const region = localeParts[1] || '';
+
+    const msg = [
+        `locale="${browserLocale()}"`,
+        `language="${browserLanguage()}"`,
+        `country="${browserCountry()}"`,
+    ];
+
+    logMsg(`${msg.join(", ")}`);
 };
 
 
@@ -35,47 +49,8 @@ export function browserLanguage(): string {
 export const compareStr = (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase());
 
 
-export function debugMsg(message: string, ...args: unknown[]): void {
-    console.debug(`[${DEMO_APP}] ${message}`, ...args);
-};
-
-export function errorMsg(message: string, ...args: unknown[]): void {
-    console.error(`[${DEMO_APP}] ${message}`, ...args);
-};
-
-export function logMsg(message: string, ...args: unknown[]): void {
-    console.log(`[${DEMO_APP}] ${message}`, ...args);
-};
-
-export function warnMsg(message: string, ...args: unknown[]): void {
-    console.warn(`[${DEMO_APP}] ${message}`, ...args);
-};
-
-
-export const logLocaleInfo = (): void => {
-    // if (process.env.NODE_ENV === "production") inject();
-    const locale = navigator?.language;
-    const localeParts = locale.split('-');
-    const language = localeParts[0];
-    const region = localeParts[1] || '';
-    let msg = [];
-
-    // if (process.env.NODE_ENV) {
-    //     msg.push(`NODE_ENV="${process?.env?.NODE_ENV}"`);
-    // }
-
-    msg = msg.concat([
-        `locale="${locale}"`,
-        `language="${language}"`,
-        `region="${region}"`,
-    ]);
-
-    logMsg(`${msg.join(", ")}`);
-};
-
-
+// Remove http:// or https:// from the server URL, Remove everything after slash
 export function sanitizeServerUrl(server: string): string {
-    // Remove http:// or https:// from the server URL, Remove everything after slash
     server = server.replace(/^https?:\/\//, '').split('/')[0];
     return `https://${server}`;
 };
@@ -103,3 +78,35 @@ export const scoreString = (score: number | null): string => {
 
     return `${score.toFixed(decimalPlaces)}`;
 };
+
+
+const DATE_FORMAT = Intl.DateTimeFormat(
+    browserLocale(),
+    {weekday: "short", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"}
+);
+
+
+export const timestampString = (_timestamp: string): string => {
+    const timestamp = new Date(_timestamp);
+    const ageInSeconds = (Date.now() - timestamp.getTime()) / 1000;
+    const isToday = timestamp.getDate() == new Date().getDate();
+    let str: string;
+
+    if (isToday && ageInSeconds < (3600 * 48)) {
+        str = `Today ${timestamp.toLocaleTimeString(browserLocale())}`;
+    } else if (ageInSeconds < (3600 * 6 * 24)) {
+        str = timestamp.toLocaleTimeString(browserLocale(), { weekday: "short" });
+    } else {
+        str = DATE_FORMAT.format(timestamp);
+    }
+
+    return str;
+};
+
+
+// Log helpers
+export const debugMsg = (message: string, ...args: unknown[]) => console.debug(`[${DEMO_APP}] ${message}`, ...args);
+export const infoMsg = (message: string, ...args: unknown[]) => console.info(`[${DEMO_APP}] ${message}`, ...args);
+export const logMsg = (message: string, ...args: unknown[]) => console.log(`[${DEMO_APP}] ${message}`, ...args);
+export const warnMsg = (message: string, ...args: unknown[]) => console.warn(`[${DEMO_APP}] ${message}`, ...args);
+export const errorMsg = (message: string, ...args: unknown[]) => console.error(`[${DEMO_APP}] ${message}`, ...args);
