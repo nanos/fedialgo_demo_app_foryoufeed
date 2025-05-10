@@ -1,7 +1,7 @@
 /*
  * String manipulation helpers.
  */
-const DEMO_APP = "DEMO APP";
+export const DEMO_APP = "DEMO APP";
 const DEFAULT_LOCALE = "en-US";
 
 

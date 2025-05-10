@@ -16,16 +16,16 @@ export type TrendingListObj = TrendingObj | string;
 interface TrendingProps {
     hasCustomStyle?: boolean;
     infoTxt: (obj: TrendingListObj) => string | undefined;
-    linkText: (obj: TrendingListObj) => React.ReactElement | string;
+    linkLabel: (obj: TrendingListObj) => React.ReactElement | string;
     linkUrl: (obj: TrendingListObj) => string;
-    onClick: (obj: TrendingListObj, e: React.MouseEvent) => void;
     name: string;
+    onClick: (obj: TrendingListObj, e: React.MouseEvent) => void;
     trendingObjs: TrendingListObj[];
 };
 
 
 export default function TrendingSection(props: TrendingProps) {
-    const { hasCustomStyle, infoTxt, linkText, linkUrl, onClick, name, trendingObjs } = props;
+    const { hasCustomStyle, infoTxt, linkLabel, linkUrl, onClick, name, trendingObjs } = props;
     const linkStyle = hasCustomStyle ? tagLinkStyle : boldTagLinkStyle;
 
     return (
@@ -44,7 +44,7 @@ export default function TrendingSection(props: TrendingProps) {
                         {trendingObjs.map((obj, i) => (
                             <li key={i} style={listItemStyle}>
                                 <a href={linkUrl(obj)} onClick={e => onClick(obj, e)} style={linkStyle} target="_blank">
-                                    {linkText(obj)}
+                                    {linkLabel(obj)}
                                 </a>
 
                                 {infoTxt(obj) && (

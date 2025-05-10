@@ -16,7 +16,8 @@ import {
 
 import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
 import { accordionBody, titleStyle } from "../helpers/style_helpers";
-import { followUri, openToot } from "../helpers/react_helpers";
+import { followUri, openToot, openTrendingLink } from "../helpers/react_helpers";
+import { logMsg } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
 const MAX_TRENDING_LINK_LEN = 170;
@@ -31,24 +32,29 @@ const ATTACHMENT_PREFIXES: Record<MediaCategory, string> = {
 
 export default function TrendingInfo() {
     const { algorithm } = useAlgorithm();
-    const linkMapper = (link: TrendingObj) => `${(link as TrendingLink).url}`;
-    const infoTxt = (obj: TrendingWithHistory) => `${obj.numToots?.toLocaleString()} toots by ${obj.numAccounts?.toLocaleString()} accounts`;
+    // logMsg(`mastodonServers:`, algorithm.mastodonServers);
+
+    const linkMapper = (obj: TrendingWithHistory) => `${obj.url}`;
+
+    const linkInfoTxt = (obj: TrendingWithHistory) => {
+        return `${obj.numToots?.toLocaleString()} toots by ${obj.numAccounts?.toLocaleString()} accounts`;
+    };
+
+    const linkText = (obj: TrendingObj): React.ReactElement => {
+        const link = obj as TrendingLink;
+        return prefixedHtml(link.title, extractDomain(link.url));
+    };
 
     const tootLinkText = (obj: TrendingObj): React.ReactElement => {
         const toot = obj as Toot;
 
-        return prefixedText(
+        return prefixedHtml(
             toot.contentShortened(MAX_TRENDING_LINK_LEN),
             ATTACHMENT_PREFIXES[toot.attachmentType()] || (toot.card?.url && 'link')
         );
     };
 
-    const linkText = (obj: TrendingObj): React.ReactElement => {
-        const link = obj as TrendingLink;
-        return prefixedText(link.title, extractDomain(link.url));
-    };
-
-    const prefixedText = (text: string, prefix?: string): React.ReactElement => {
+    const prefixedHtml = (text: string, prefix?: string): React.ReactElement => {
         return (<>
             {prefix?.length ? <span style={monospace}>{`[${prefix}]`}</span> : ''}
             <span style={bold}>{prefix?.length ? ' ' : ''}{text}</span>
@@ -72,28 +78,31 @@ export default function TrendingInfo() {
                     <Accordion>
                         <TrendingSection
                             name="Hashtags"
-                            infoTxt={infoTxt}
-                            linkText={(tag) => `#${(tag as TagWithUsageCounts).name}`}
-                            linkUrl={(tag) => (tag as TagWithUsageCounts).url}
-                            onClick={(tag, e) => followUri((tag as TagWithUsageCounts).url, e)}
+                            infoTxt={linkInfoTxt}
+                            linkLabel={(tag: TagWithUsageCounts) => `#${tag.name}`}
+                            linkUrl={linkMapper}
+                            onClick={openTrendingLink}
                             trendingObjs={algorithm.trendingData.tags}
                         />
 
                         <TrendingSection
                             name="Links"
                             hasCustomStyle={true}
-                            infoTxt={infoTxt}
-                            linkText={linkText}
+                            infoTxt={linkInfoTxt}
+                            linkLabel={linkText}
                             linkUrl={linkMapper}
-                            onClick={(link, e) => followUri(`${(link as TrendingLink).url}`, e)}
+                            onClick={openTrendingLink}
                             trendingObjs={algorithm.trendingData.links}
                         />
 
                         <TrendingSection
                             name="Toots"
                             hasCustomStyle={true}
-                            infoTxt={(t: Toot) => `${t.repliesCount?.toLocaleString()} replies, ${t.reblogsCount?.toLocaleString()} retoots`}
-                            linkText={tootLinkText}
+                            infoTxt={(toot: Toot) => {
+                                const msg = `${toot.repliesCount?.toLocaleString()} replies`;
+                                return `${msg}, ${toot.reblogsCount?.toLocaleString()} retoots`
+                            }}
+                            linkLabel={tootLinkText}
                             linkUrl={linkMapper}
                             onClick={openToot}
                             trendingObjs={algorithm.trendingData.toots}
@@ -101,24 +110,24 @@ export default function TrendingInfo() {
 
                         <TrendingSection
                             name="Servers That Were Scraped"
-                            infoTxt={(domain) => {
+                            infoTxt={(domain: string) => {
                                 const serverInfo = algorithm.mastodonServers[domain as string];
                                 const info = [`MAU: ${serverInfo.MAU.toLocaleString()}`];
                                 info.push(`followed pct of MAU: ${serverInfo.followedPctOfMAU.toFixed(3)}%`);
                                 return info.join(', ');
                             }}
-                            linkText={(server) => server as string}
-                            linkUrl={(server) => `https://${server}`}
-                            onClick={(server, e) => followUri(`https://${server}`, e)}
+                            linkLabel={(domain: string) => domain as string}
+                            linkUrl={(domain: string) => `https://${domain}`}
+                            onClick={(domain: string, e) => followUri(`https://${domain}`, e)}
                             trendingObjs={Object.keys(algorithm.mastodonServers)}
                         />
 
                         <TrendingSection
                             name="Your Most Participated Hashtags"
-                            infoTxt={(tag) => `${(tag as TagWithUsageCounts).numToots?.toLocaleString()} of your recent toots`}
-                            linkText={(tag) => `#${(tag as TagWithUsageCounts).name}`}
-                            linkUrl={(tag) => (tag as TagWithUsageCounts).url}
-                            onClick={(tag, e) => followUri((tag as TagWithUsageCounts).url, e)}
+                            infoTxt={(tag: TagWithUsageCounts) => `${tag.numToots?.toLocaleString()} of your recent toots`}
+                            linkLabel={(tag: TagWithUsageCounts) => `#${tag.name}`}
+                            linkUrl={(tag: TagWithUsageCounts) => tag.url}
+                            onClick={openTrendingLink}
                             trendingObjs={algorithm.userData.popularUserTags().slice(0, MAX_HASHTAGS_TO_SHOW)}
                         />
                     </Accordion>

@@ -20,7 +20,7 @@ import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
 import { linkesque } from "../helpers/style_helpers";
-import { logMsg, warnMsg } from "../helpers/string_helpers";
+import { DEMO_APP, logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
 
@@ -168,8 +168,18 @@ export default function Feed() {
                         </div>
 
                         {algorithm?.isDebug &&
-                            <p style={loadingMsgStyle}>
-                                <a onClick={() => algorithm.logWithState("DEMO APP", `State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()})`)} >
+                            <p style={{...loadingMsgStyle, marginTop: "10px"}}>
+                                <a
+                                    onClick={() => {
+                                        algorithm.logWithState(
+                                            DEMO_APP,
+                                            `State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()})`
+                                        );
+
+                                        logMsg(`mastodonServers:`, algorithm.mastodonServers);
+                                    }}
+                                    style={{textDecoration: "underline", color: "white"}}
+                                >
                                     Dump current algorithm state to console
                                 </a>
                             </p>}

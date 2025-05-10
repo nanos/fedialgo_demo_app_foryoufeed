@@ -1,9 +1,10 @@
 /*
  * Navigation helpers for React components.
  */
+import { MouseEvent } from "react";
 
 import { logMsg } from "./string_helpers";
-import { Toot } from "fedialgo";
+import { Toot, TrendingWithHistory } from "fedialgo";
 
 
 // Opens in new tab. For same tab do this:  window.location.href = statusURL;
@@ -20,4 +21,10 @@ export async function openToot(toot: Toot, e: React.MouseEvent): Promise<boolean
     logMsg("openToot() called with:", toot);
     const resolvedURL = await toot.homeserverURL();
     return followUri(resolvedURL, e);
+};
+
+
+// Open the url property of a TrendingLink or TagWithUsageCounts
+export async function openTrendingLink(obj: TrendingWithHistory, e: MouseEvent): Promise<boolean> {
+    return followUri(obj.url, e);
 };
