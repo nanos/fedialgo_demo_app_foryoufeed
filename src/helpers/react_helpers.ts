@@ -25,6 +25,6 @@ export async function openToot(toot: Toot, e: React.MouseEvent): Promise<boolean
 
 
 // Open the url property of a TrendingLink or TagWithUsageCounts
-export async function openTrendingLink(obj: TrendingWithHistory, e: MouseEvent): Promise<boolean> {
+export function openTrendingLink(obj: TrendingWithHistory, e: MouseEvent): boolean {
     return followUri(obj.url, e);
 };
