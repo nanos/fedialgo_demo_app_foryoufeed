@@ -82,7 +82,7 @@ export const scoreString = (score: number | null): string => {
 
 const DATE_FORMAT = Intl.DateTimeFormat(
     browserLocale(),
-    {weekday: "short", year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"}
+    {year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"}
 );
 
 
@@ -96,6 +96,10 @@ export const timestampString = (_timestamp: string): string => {
         str = `Today ${timestamp.toLocaleTimeString(browserLocale())}`;
     } else if (ageInSeconds < (3600 * 6 * 24)) {
         str = timestamp.toLocaleTimeString(browserLocale(), { weekday: "short" });
+    } else if (ageInSeconds < (3600 * 30 * 24)) {
+        str = timestamp.toLocaleDateString(browserLocale(), { month: "short", day: "numeric" });
+        str += ordinalSuffix(timestamp.getDate());
+        str += ` ${timestamp.toLocaleTimeString(browserLocale())}`;
     } else {
         str = DATE_FORMAT.format(timestamp);
     }
@@ -110,3 +114,15 @@ export const infoMsg = (message: string, ...args: unknown[]) => console.info(`[$
 export const logMsg = (message: string, ...args: unknown[]) => console.log(`[${DEMO_APP}] ${message}`, ...args);
 export const warnMsg = (message: string, ...args: unknown[]) => console.warn(`[${DEMO_APP}] ${message}`, ...args);
 export const errorMsg = (message: string, ...args: unknown[]) => console.error(`[${DEMO_APP}] ${message}`, ...args);
+
+
+const ordinalSuffix = (n: number): string => {
+    if (n > 3 && n < 21) return "th";
+
+    switch (n % 10) {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
+    }
+};
