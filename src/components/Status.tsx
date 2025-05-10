@@ -7,7 +7,7 @@ import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
 import { Account, Toot, timeString } from "fedialgo";
 import { capitalCase } from "change-case";
-import { IconDefinition, faHashtag, faFire, faGlobe, faPencil, faReply, faLink, faBolt, faLock } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition, faHashtag, faFire, faFireAlt, faFireFlameCurved, faGlobe, faPencil, faReply, faLink, faBolt, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
@@ -144,7 +144,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <span className="status__visibility-icon">
                                 {toot.editedAt && buildIcon(faPencil, `Edited at ${toot.editedAt}`)}
                                 {toot.inReplyToAccountId && buildIcon(faReply, "Reply", "blue")}
-                                {toot.trendingRank > 0 && buildIcon(faFire, "Trending Toot", RED)}
+                                {toot.trendingRank > 0 && buildIcon(faFireFlameCurved, "Trending Toot", RED)}
                                 {toot.trendingLinks.length > 0 && buildIcon(faLink, "Contains Trending Link", RED)}
                                 {toot.containsUserMention() && buildIcon(faBolt, "You're Mentioned", "green")}
                                 {toot.containsTagsMsg() && buildIcon(faHashtag, toot.containsTagsMsg())}

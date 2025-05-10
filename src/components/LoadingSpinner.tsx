@@ -3,6 +3,7 @@
  */
 import React, { CSSProperties } from 'react';
 import Spinner from 'react-bootstrap/esm/Spinner';
+import { READY_TO_LOAD_MSG } from "fedialgo";
 
 const ANIMATION = "grow";  // "border" is the other option
 
@@ -14,16 +15,17 @@ interface LoadingSpinnerProps {
 
 
 export default function LoadingSpinner(props: LoadingSpinnerProps) {
-    let { isFullPage, message, style } = props;
+    const { isFullPage, message, style } = props;
+    const spinnerStyle = isFullPage ? fullPageCenteredSpinner : inlineSpinner;
 
     return (
-        <div style={{...(isFullPage ? fullPageCenteredSpinner : inlineSpinner), ...(style || {})}}>
+        <div style={{...spinnerStyle, ...(style || {})}}>
             {isFullPage
                 ? <Spinner animation={ANIMATION} />
                 : <Spinner animation={ANIMATION} size="sm" />}
 
             <div style={{marginLeft: "12px"}}>
-                <p>{`${message}...`}</p>
+                <p>{`${message || READY_TO_LOAD_MSG}...`}</p>
             </div>
         </div>
     );

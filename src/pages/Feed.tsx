@@ -8,7 +8,6 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { Modal } from "react-bootstrap";
-import { READY_TO_LOAD_MSG } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
 import FilterSetter from "../components/algorithm/FilterSetter";
@@ -168,7 +167,7 @@ export default function Feed() {
 
                         <div style={stickySwitchContainer}>
                             {(isLoading)
-                                ? <LoadingSpinner message={algorithm?.loadingStatus || READY_TO_LOAD_MSG} style={loadingMsgStyle} />
+                                ? <LoadingSpinner message={algorithm?.loadingStatus} style={loadingMsgStyle} />
                                 : finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds)}
 
                             <p style={scrollStatusMsg}>

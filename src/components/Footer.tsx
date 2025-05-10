@@ -17,8 +17,7 @@ export default function Footer() {
                 <Navbar.Brand style={navLink}>FediAlgo</Navbar.Brand>
 
                 <Nav className="me-auto">
-                    {/* <Nav.Link href="/" style={navLink}>Home</Nav.Link>
- */}
+                    {/* <Nav.Link href="/" style={navLink}>Home</Nav.Link> */}
                     <Nav.Link href="https://github.com/michelcrypt4d4mus/fedialgo_demo_app_foryoufeed" style={navLink}>
                         <img
                             alt="Github Logo"
