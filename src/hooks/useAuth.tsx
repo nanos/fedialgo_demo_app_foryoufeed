@@ -1,6 +1,7 @@
 /*
  * Authorization context for the app.
  */
+import axios from "axios";
 import React, { PropsWithChildren } from "react";
 import { createContext, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -42,22 +43,19 @@ export default function AuthProvider(props: PropsWithChildren) {
     // call this function to sign out logged in user
     const logout = async (): Promise<void> => {
         logThis("logout() called...")
+        const oauthRevokeURL = user.server + '/oauth/revoke';
         const body = new FormData();
         body.append("token", user.access_token);
         body.append("client_id", app.clientId)
         body.append("client_secret", app.clientSecret);
 
-        // TODO: this seems to always fail with error
-        // Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://universeodon.com/oauth/revoke. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200.
         try {
-            await fetch(user.server + '/oauth/revoke',
-                {
-                    method: 'POST',
-                    body: body,
-                }
-            );
+            // Throws errors but seems to yield a 200 OK status so it works? error: "Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://universeodon.com/oauth/revoke. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200.""
+            // Tried to set "Access-Control-Allow-Origin" header in the request but it doesn't work.
+            // console.log(`fetching "${oauthRevokeURL}", window.location.origin:`, window.location.origin);
+            const resp = await axios.post(oauthRevokeURL, body);
         } catch (error) {
-            console.error("Error while trying to logout:", error);
+            console.error(`Error while trying to logout "${error}":`, error);
         }
 
         setUser(null);
