@@ -28,7 +28,6 @@ export default function App(): React.ReactElement {
         });
     }
 
-    logMsg(`process.env.NODE_ENV: ${process.env.NODE_ENV}, process.env.DEBUG: ${process.env.DEBUG}`);
     logLocaleInfo();
 
     return (

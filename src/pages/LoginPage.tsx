@@ -1,10 +1,11 @@
 import React, { CSSProperties } from 'react';
-import { usePersistentState } from "react-persistent-state"
 
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
 import { createRestAPIClient } from 'masto';
-import { stringifyQuery } from 'ufo'
+import { isDebugMode } from "fedialgo";
+import { stringifyQuery } from 'ufo';
+import { usePersistentState } from "react-persistent-state";
 
 import { AppStorage, useLocalStorage } from "../hooks/useLocalStorage";
 import { logMsg, sanitizeServerUrl } from '../helpers/string_helpers';
@@ -39,10 +40,10 @@ export default function LoginPage() {
         let appTouse;
 
         if (_app?.clientId) {
-            // logFxn(`found existing app creds to use connecting to '${sanitizedServer}':`, _app);
+            if (isDebugMode) logFxn(`found existing app creds to use connecting to '${sanitizedServer}':`, _app);
             appTouse = _app;
         } else {
-            // logFxn(`no existing app found, creating a new app for '${sanitizedServer}':`, _app);
+            if (isDebugMode)  logFxn(`no existing app found, creating a new app for '${sanitizedServer}':`, _app);
 
             appTouse = await api.v1.apps.create({
                 clientName: APP_NAME,
@@ -51,7 +52,7 @@ export default function LoginPage() {
                 website: sanitizedServer,
             });
 
-            // logFxn("Created app with api.v1.apps.create(), response var 'appTouse':", appTouse);
+            if (isDebugMode) logFxn("Created app with api.v1.apps.create(), response var 'appTouse':", appTouse);
         }
 
         const newApp = { ...appTouse, redirectUri };

@@ -14,7 +14,7 @@ const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const envMsg = `* [WEBPACK] process.env.NODE_ENV: ${process.env.NODE_ENV} *`;
 console.log(`${'*'.repeat(envMsg.length)}\n${envMsg}\n${'*'.repeat(envMsg.length)}`);
-console.log(`\nprocess.env.DEBUG: ${process.env.DEBUG}\n\n`);
+console.log(`\nprocess.env.FEDIALGO_DEBUG: ${process.env.FEDIALGO_DEBUG}\n\n`);
 
 
 module.exports = {

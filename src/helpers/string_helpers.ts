@@ -1,7 +1,7 @@
 /*
  * String manipulation helpers.
  */
-import { Account } from "fedialgo";
+import { isDebugMode } from "fedialgo";
 
 export const DEMO_APP = "DEMO APP";
 const DEFAULT_LOCALE = "en-US";
@@ -24,6 +24,8 @@ export const logLocaleInfo = (): void => {
     ];
 
     logMsg(`${msg.join(", ")}`);
+    logMsg(`process.env.NODE_ENV: ${process.env.NODE_ENV}`);
+    logMsg(`process.env.FEDIALGO_DEBUG: ${process.env.FEDIALGO_DEBUG}, fedialgo.isDebugMode: ${isDebugMode}`);
 };
 
 
