@@ -48,11 +48,9 @@ export default function AuthProvider(props: PropsWithChildren) {
         body.append("client_id", app.clientId)
         body.append("client_secret", app.clientSecret);
 
+        // Throws error but log says 200 OK status so it works? Hard to get at the actual status code;
+        // it's only in the low level logs. Error: "Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://universeodon.com/oauth/revoke. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200.""
         try {
-            // Throws errors but seems to yield a 200 OK status so it works?
-            // error: "Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://universeodon.com/oauth/revoke. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200.""
-            // Tried to set "Access-Control-Allow-Origin" header in the request but it doesn't work.
-            // console.log(`fetching "${oauthRevokeURL}", window.location.origin:`, window.location.origin);
             const resp = await axios.post(oauthRevokeURL, body);
         } catch (error) {
             console.error(`Error while trying to logout "${error}":`, error);
