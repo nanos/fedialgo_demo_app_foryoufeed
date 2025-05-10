@@ -7,8 +7,8 @@ import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
 import { Account, Toot, timeString } from "fedialgo";
 import { capitalCase } from "change-case";
-import { IconDefinition, faHashtag, faFireFlameCurved, faGlobe, faPencil, faReply, faLink, faBolt, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconDefinition, faHashtag, faFireFlameCurved, faGlobe, faPencil, faReply, faLink, faBolt, faLock } from "@fortawesome/free-solid-svg-icons";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 
@@ -240,5 +240,5 @@ const accountLink: CSSProperties = {
 };
 
 const baseIconStyle: CSSProperties = {
-    marginRight: "5px",
+    marginRight: "3px",
 };
