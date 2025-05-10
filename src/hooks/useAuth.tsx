@@ -9,6 +9,8 @@ import { logMsg } from "../helpers/string_helpers";
 import { useAppStorage, useUserStorage } from "./useLocalStorage";
 import { User } from "../types";
 
+const logThis = (msg: string, ...args: any[]) => logMsg(`<AuthProvider> ${msg}`, ...args);
+
 const AuthContext = createContext({
     user: null,
     loginUser: async (_user: User) => {},
@@ -20,7 +22,6 @@ export default function AuthProvider(props: PropsWithChildren) {
     const [app, _setApp] = useAppStorage({ keyName: "app", defaultValue: null })
     const [user, setUser] = useUserStorage({ keyName: "user", defaultValue: null })
     const navigate = useNavigate();
-    const logThis = (msg: string, ...args: any[]) => logMsg(`<AuthProvider> ${msg}`, ...args);
 
     // NOTE: this doesn't actually authenticate the user, it just sets the user object in local storage
     // call this function when you want to authenticate the user. User object looks like this:
