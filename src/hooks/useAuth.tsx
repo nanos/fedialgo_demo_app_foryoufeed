@@ -2,14 +2,12 @@
  * Authorization context for the app.
  */
 import axios from "axios";
-import React, { PropsWithChildren } from "react";
-import { createContext, useContext, useMemo } from "react";
+import React, { PropsWithChildren, createContext, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { logMsg } from "../helpers/string_helpers";
 import { useAppStorage, useUserStorage } from "./useLocalStorage";
 import { User } from "../types";
-
 
 const AuthContext = createContext({
     user: null,
@@ -19,11 +17,12 @@ const AuthContext = createContext({
 
 
 export default function AuthProvider(props: PropsWithChildren) {
-    const [user, setUser] = useUserStorage({ keyName: "user", defaultValue: null })
     const [app, _setApp] = useAppStorage({ keyName: "app", defaultValue: null })
+    const [user, setUser] = useUserStorage({ keyName: "user", defaultValue: null })
     const navigate = useNavigate();
     const logThis = (msg: string, ...args: any[]) => logMsg(`<AuthProvider> ${msg}`, ...args);
 
+    // NOTE: this doesn't actually authenticate the user, it just sets the user object in local storage
     // call this function when you want to authenticate the user. User object looks like this:
     // {
     //     access_token: "xyssdsfdnffdwf"
@@ -32,9 +31,8 @@ export default function AuthProvider(props: PropsWithChildren) {
     //     server: "https://universeodon.com"
     //     username: "cryptadamus"
     // }
-    // TODO: this doesn't actually authenticate the user, it just sets the user object in local storage
     const loginUser = async (user: User) => {
-        // TODO: this contains secret keys, don't log it unsanitized
+        // This contains secret keys, don't log it unsanitized
         // logThis("loginUser() called while 'app' state var is:", app, `\nuser:`, user);
         setUser(user);
         navigate("/");
@@ -50,7 +48,8 @@ export default function AuthProvider(props: PropsWithChildren) {
         body.append("client_secret", app.clientSecret);
 
         try {
-            // Throws errors but seems to yield a 200 OK status so it works? error: "Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://universeodon.com/oauth/revoke. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200.""
+            // Throws errors but seems to yield a 200 OK status so it works?
+            // error: "Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://universeodon.com/oauth/revoke. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200.""
             // Tried to set "Access-Control-Allow-Origin" header in the request but it doesn't work.
             // console.log(`fetching "${oauthRevokeURL}", window.location.origin:`, window.location.origin);
             const resp = await axios.post(oauthRevokeURL, body);
