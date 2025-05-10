@@ -8,9 +8,21 @@ import parse from 'html-react-parser';
 import { Account, Toot, timeString } from "fedialgo";
 import { capitalCase } from "change-case";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconDefinition, faCheckCircle, faHashtag, faFireFlameCurved, faGlobe, faPencil, faReply, faLink, faBolt, faLock, faRetweet } from "@fortawesome/free-solid-svg-icons";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
+import {
+    IconDefinition,
+    faBolt,
+    faCheckCircle,
+    faFireFlameCurved,
+    faGlobe,
+    faHashtag,
+    faLink,
+    faLock,
+    faPencil,
+    faReply,
+    faRetweet,
+} from "@fortawesome/free-solid-svg-icons";
 
 import ActionButton, { ButtonAction } from "./status/ActionButton";
 import AttachmentsModal from './status/AttachmentsModal';
