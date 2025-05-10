@@ -20,7 +20,7 @@ import PreviewCard from "./status/PreviewCard";
 import ScoreModal from './status/ScoreModal';
 import { accountTooltipTxt, logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
-import { PARTICIPATED_TAG_COLOR, RED } from "../helpers/style_helpers";
+import { PARTICIPATED_TAG_COLOR, PARTICIPATED_TAG_COLOR_FADED, RED } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
 export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
@@ -142,18 +142,17 @@ export default function StatusComponent(props: StatusComponentProps) {
                         {/* Top right icons + timestamp that link to the toot */}
                         <a className="status__relative-time" href={toot.uri} rel="noreferrer" target="_blank">
                             <span className="status__visibility-icon">
-                                {/* TODO: the pencil doesn't seem to show up */}
                                 {toot.editedAt && buildIcon(faPencil, `Edited at ${toot.editedAt}`)}
                                 {toot.inReplyToAccountId && buildIcon(faReply, "Reply", "blue")}
-                                {toot.containsTagsMsg() && buildIcon(faHashtag, toot.containsTagsMsg())}
                                 {toot.trendingRank > 0 && buildIcon(faFire, "Trending Toot", RED)}
                                 {toot.trendingLinks.length > 0 && buildIcon(faLink, "Contains Trending Link", RED)}
                                 {toot.containsUserMention() && buildIcon(faBolt, "You're Mentioned", "green")}
+                                {toot.containsTagsMsg() && buildIcon(faHashtag, toot.containsTagsMsg())}
 
                                 {toot.isDM()
                                     ? buildIcon(faLock, "Direct Message", "purple")
                                     : toot.account.isFollowed
-                                        ? buildIcon(faGlobe, "You follow this account", "darkgreen")  //"#025c78")
+                                        ? buildIcon(faGlobe, "You follow this account", "#2092a1") // )  //"#025c78")
                                         : buildIcon(faGlobe, "Not an account you follow")}
                             </span>
 
