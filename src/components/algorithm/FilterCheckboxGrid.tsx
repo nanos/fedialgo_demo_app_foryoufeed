@@ -110,6 +110,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
                 onChange={(e) => filterSection.updateValidOptions(name, e.target.checked)}
                 tooltipColor={tooltip?.color}
                 tooltipText={tooltip?.text}
+                url={filterSection.title == PropertyName.HASHTAG && algorithm.tagUrl(name)}
             />
         );
     };
