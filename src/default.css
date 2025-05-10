@@ -3453,13 +3453,13 @@ body > [data-popper-placement] {
 }
 
 .status__relative-time {
+    color: #606984;
     display: block;
-    font-size: 15px;
-    line-height: 22px;
-    height: 40px;
-    order: 2;
     flex: 0 0 auto;
-    color:#606984
+    font-size: 15px;
+    height: 40px;
+    line-height: 22px;
+    order: 2;
 }
 
 .notification__relative_time {
