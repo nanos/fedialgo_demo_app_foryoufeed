@@ -38,10 +38,8 @@ interface AccordionProps {
 export default function FilterAccordionSection(props: AccordionProps) {
     const { children, description, isActive, maxToots, minToots, sectionName, setMinToots, switches } = props;
     const headerClass = `filterHeader ${isActive ? "filterHeader--active" : ""}`;
+    const tooltipText = `Hide ${sectionName}s with less than ${minToots} toots`;
     const spacer = <div style={{width: "20px"}} />
-
-    let tooltipText = `Hide ${sectionName}s with less than ${minToots} toots`;
-    if (sectionName == PropertyName.HASHTAG.toString()) tooltipText += ` (followed hashtags will always appear)`;
 
     return (
         <Accordion.Item eventKey={sectionName} >

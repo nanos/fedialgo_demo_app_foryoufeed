@@ -63,7 +63,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
             debugMsg(`useMemo() recomputing optionInfo for ${filterSection.title}, validValues:`, filterSection.validValues);
             if (!FILTERED_FILTERS.includes(filterSection.title)) return filterSection.optionInfo;
 
-            // For "filtered" filters only allow options with a minimum number of toots and followed hashtags.
+            // For "filtered" filters only allow options with a minimum number of toots (and active options)
             return Object.fromEntries(Object.entries(filterSection.optionInfo).filter(
                 ([option, numToots]) => {
                     if (filterSection.validValues.includes(option)) return true;
