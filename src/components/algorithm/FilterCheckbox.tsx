@@ -54,9 +54,9 @@ export default function FilterCheckbox(props: FilterCheckboxProps) {
 
     if (url) {
         labelNode = (
-            <a href={url} onClick={(e) => followUri(url, e)} style={hashtagLink}>
-                {labelNode}
-            </a>
+            <span onClick={(e) => followUri(url, e)} style={{...labelStyle, ...hashtagLink}}>
+                {label}
+            </span>
         );
     }
 
