@@ -7,6 +7,8 @@ import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
 import { Account, Toot, timeString } from "fedialgo";
 import { capitalCase } from "change-case";
+import { IconDefinition, faHashtag, faFire, faGlobe, faPencil, faReply, faLink, faBolt, faLock } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 
@@ -76,8 +78,8 @@ export default function StatusComponent(props: StatusComponentProps) {
         </a>
     );
 
-    const buildIcon = (iconName: string, title?: string, color?: string): React.ReactNode => {
-        if (iconName == "hashtag") {
+    const buildIcon = (icon: IconDefinition, title?: string, color?: string): React.ReactElement => {
+        if (icon.iconName == "hashtag") {
             if (toot.trendingTags?.length) {
                 color = RED;
             } else if (toot.followedTags?.length) {
@@ -87,10 +89,10 @@ export default function StatusComponent(props: StatusComponentProps) {
             }
         }
 
-        return <i
-            className={`fa fa-${iconName}`}
+        return <FontAwesomeIcon
+            icon={icon}
             style={color ? {...baseIconStyle, color: color} : baseIconStyle}
-            title={title || capitalCase(iconName)}
+            title={title || capitalCase(icon.iconName)}
         />;
     };
 
@@ -140,18 +142,18 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <a className="status__relative-time" href={toot.uri} rel="noreferrer" target="_blank">
                             <span className="status__visibility-icon">
                                 {/* TODO: the pencil doesn't seem to show up */}
-                                {toot.editedAt && buildIcon("pencil", `Edited at ${toot.editedAt}`)}
-                                {toot.inReplyToAccountId && buildIcon("reply", "Reply", "blue")}
-                                {toot.containsTagsMsg() && buildIcon("hashtag", toot.containsTagsMsg())}
-                                {toot.trendingRank > 0 && buildIcon("fire", "Trending Toot", RED)}
-                                {toot.trendingLinks.length > 0 && buildIcon("link", "Contains Trending Link", RED)}
-                                {toot.containsUserMention() && buildIcon("bolt", "You're Mentioned", "green")}
+                                {toot.editedAt && buildIcon(faPencil, `Edited at ${toot.editedAt}`)}
+                                {toot.inReplyToAccountId && buildIcon(faReply, "Reply", "blue")}
+                                {toot.containsTagsMsg() && buildIcon(faHashtag, toot.containsTagsMsg())}
+                                {toot.trendingRank > 0 && buildIcon(faFire, "Trending Toot", RED)}
+                                {toot.trendingLinks.length > 0 && buildIcon(faLink, "Contains Trending Link", RED)}
+                                {toot.containsUserMention() && buildIcon(faBolt, "You're Mentioned", "green")}
 
                                 {toot.isDM()
-                                    ? buildIcon("lock", "Direct Message", "purple")
+                                    ? buildIcon(faLock, "Direct Message", "purple")
                                     : toot.account.isFollowed
-                                        ? buildIcon("globe", "You follow this account", "darkgreen")  //"#025c78")
-                                        : buildIcon("globe", "Not an account you follow")}
+                                        ? buildIcon(faGlobe, "You follow this account", "darkgreen")  //"#025c78")
+                                        : buildIcon(faGlobe, "Not an account you follow")}
                             </span>
 
                             <time dateTime={toot.createdAt} title={toot.createdAt}>
