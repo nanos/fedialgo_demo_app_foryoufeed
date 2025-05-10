@@ -68,7 +68,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
 
     const optionInfo = useMemo(
         () => {
-            debugMsg(`useMemo() recomputing optionInfo for ${filterSection.title}, validValues:`, filterSection.validValues);
+            // debugMsg(`useMemo() recomputing optionInfo for ${filterSection.title}, validValues:`, filterSection.validValues);
             if (!FILTERED_FILTERS.includes(filterSection.title)) return filterSection.optionInfo;
 
             // For "filtered" filters only allow options with a minimum number of toots (and active options)
@@ -107,11 +107,9 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
                 key={name}
                 label={name}
                 labelExtra={filterSection.optionInfo[name]}
-                onChange={(e) => {
-                    filterSection.updateValidOptions(name, e.target.checked);
-                }}
-                tooltipText={tooltip?.text}
+                onChange={(e) => filterSection.updateValidOptions(name, e.target.checked)}
                 tooltipColor={tooltip?.color}
+                tooltipText={tooltip?.text}
             />
         );
     };

@@ -10,25 +10,23 @@ import Row from 'react-bootstrap/Row';
 import { Modal } from "react-bootstrap";
 import { READY_TO_LOAD_MSG } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
-// import 'react-tooltip/dist/react-tooltip.css'
 
 import FilterSetter from "../components/algorithm/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
 import LoadingSpinner, { fullPageCenteredSpinner } from "../components/LoadingSpinner";
-import StatusComponent from "../components/Status";
+import StatusComponent, { TOOLTIP_ACCOUNT_ANCHOR} from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
 import { linkesque } from "../helpers/style_helpers";
 import { DEMO_APP, logMsg, warnMsg } from "../helpers/string_helpers";
+import { TOOLTIP_ANCHOR } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
 
 // Number constants
 const DEFAULT_NUM_DISPLAYED_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
-// String constants
-const TOOLTIP_ANCHOR = "tooltip-anchor";
 // Messaging constants
 const AUTO_UPDATE_TOOLTIP_MSG = "If this box is checked the feed will be automatically updated when you focus this browser tab.";
 const DEFAULT_LOADING_MESSAGE = "Loading (first time can take up to a minute or so)";
@@ -112,7 +110,9 @@ export default function Feed() {
 
     return (
         <Container fluid style={{height: 'auto'}}>
+            {/* Tooltip options: https://react-tooltip.com/docs/options */}
             <Tooltip id={TOOLTIP_ANCHOR} place="top" />
+            <Tooltip delayShow={100} id={TOOLTIP_ACCOUNT_ANCHOR} place="left" style={tooltipStyle} variant="light"/>
 
             <Modal show={error !== ""} onHide={() => setError("")} style={{color: "black"}}>
                 <Modal.Header closeButton>
@@ -261,4 +261,9 @@ const stickySwitchContainer: CSSProperties = {
     marginBottom: "5px",
     paddingLeft: "2px",
     paddingRight: "2px",
+};
+
+const tooltipStyle: CSSProperties = {
+    width: "500px",
+    zIndex: 2000,
 };

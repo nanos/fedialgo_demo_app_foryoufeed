@@ -13,7 +13,7 @@ export const HIGHLIGHT = "highlighted";
 export const INVERT_SELECTION = "invertSelection";
 export const SORT_KEYS = "sortByCount";
 
-const MAX_LABEL_LENGTH = 18;
+const MAX_LABEL_LENGTH = 21;
 
 interface FilterCheckboxProps {
     capitalize?: boolean,

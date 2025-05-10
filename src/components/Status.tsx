@@ -20,9 +20,11 @@ import PreviewCard from "./status/PreviewCard";
 import ScoreModal from './status/ScoreModal';
 import { logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
-import { PARTICIPATED_TAG_COLOR } from "../helpers/style_helpers";
-import { RED } from "../helpers/style_helpers";
+import { PARTICIPATED_TAG_COLOR, RED, TOOLTIP_ANCHOR } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
+
+export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
+const NBSP_REGEX = /&nbsp;/g;
 
 interface StatusComponentProps {
     setError: (error: string) => void,
@@ -163,11 +165,16 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                         {/* Account name + avatar */}
                         <div title={toot.account.webfingerURI} className="status__display-name">
-                            <div className="status__avatar">
-                                <div className="account__avatar" style={{ width: "46px", height: "46px" }}>
-                                    <LazyLoadImage src={toot.account.avatar} alt={`${toot.account.webfingerURI}`} />
+                            <a
+                                data-tooltip-id={TOOLTIP_ACCOUNT_ANCHOR}
+                                data-tooltip-html={toot.account.note.replace(NBSP_REGEX, " ")}
+                            >
+                                <div className="status__avatar">
+                                    <div className="account__avatar" style={{ width: "46px", height: "46px" }}>
+                                        <LazyLoadImage src={toot.account.avatar} alt={`${toot.account.webfingerURI}`} />
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
 
                             <span className="display-name">
                                 <bdi>

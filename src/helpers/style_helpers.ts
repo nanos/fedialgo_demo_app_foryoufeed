@@ -50,3 +50,4 @@ export const titleStyle: CSSProperties = {
     marginTop: "0px",
     textDecoration: "underline",
 };
+export const TOOLTIP_ANCHOR = "tooltip-anchor";
