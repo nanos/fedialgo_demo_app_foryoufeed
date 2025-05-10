@@ -18,7 +18,7 @@ import MultimediaNode from "./status/MultimediaNode";
 import Poll from "./status/Poll";
 import PreviewCard from "./status/PreviewCard";
 import ScoreModal from './status/ScoreModal';
-import { accountTooltipTxt, logMsg } from '../helpers/string_helpers';
+import { logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
 import { PARTICIPATED_TAG_COLOR, PARTICIPATED_TAG_COLOR_FADED, RED } from "../helpers/style_helpers";
 import { timestampString } from "../helpers/string_helpers";
@@ -166,7 +166,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <div title={toot.account.webfingerURI} className="status__display-name">
                             <a
                                 data-tooltip-id={TOOLTIP_ACCOUNT_ANCHOR}
-                                data-tooltip-html={accountTooltipTxt(toot.account)}
+                                data-tooltip-html={toot.account.noteWithAccountInfo()}
                             >
                                 <div className="status__avatar">
                                     <div className="account__avatar" style={{ width: "46px", height: "46px" }}>

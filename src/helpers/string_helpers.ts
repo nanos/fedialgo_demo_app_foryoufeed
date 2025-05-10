@@ -5,24 +5,6 @@ import { Account } from "fedialgo";
 
 export const DEMO_APP = "DEMO APP";
 const DEFAULT_LOCALE = "en-US";
-const NBSP_REGEX = /&nbsp;/g;
-const ACCOUNT_JOINER = '  ●  '
-
-
-// Returns HTML combining the Account.note property with the followers and toots count
-export const accountTooltipTxt = (account: Account): string => {
-    let txt = account.note.replace(NBSP_REGEX, " ");  // Remove non-breaking spaces so we can wrap the text
-    const createdAt = new Date(account.createdAt);
-
-    const accountStats = [
-        `Created ${createdAt.toLocaleDateString(browserLocale(), {year: "numeric", month: "short", day:"numeric"})}`,
-        `${account.followersCount.toLocaleString()} Followers`,
-        `${account.statusesCount.toLocaleString()} Toots`,
-    ]
-
-    return `${txt}<br /><p style="font-weight: bold; font-size: 13px;">[${accountStats.join(ACCOUNT_JOINER)}]</p>`;
-};
-
 
 // Locale
 export const browserLocale = () => navigator?.language || DEFAULT_LOCALE;

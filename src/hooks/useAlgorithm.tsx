@@ -75,7 +75,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
                 api: api,
                 user: currentUser,
                 setTimelineInApp: setTimeline,
-                language: browserLanguage()
+                locale: navigator?.language
             });
 
             setAlgorithm(algo);
