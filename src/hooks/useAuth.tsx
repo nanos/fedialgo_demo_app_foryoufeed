@@ -42,18 +42,18 @@ export default function AuthProvider(props: PropsWithChildren) {
     // call this function to sign out logged in user
     const logout = async (): Promise<void> => {
         logThis("logout() called...")
-        const oauthRevokeURL = user.server + '/oauth/revoke';
         const body = new FormData();
         body.append("token", user.access_token);
         body.append("client_id", app.clientId)
         body.append("client_secret", app.clientSecret);
+        const oauthRevokeURL = user.server + '/oauth/revoke';
 
         // Throws error but log says 200 OK status so it works? Hard to get at the actual status code;
         // it's only in the low level logs. Error: "Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://universeodon.com/oauth/revoke. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200.""
         try {
             const resp = await axios.post(oauthRevokeURL, body);
         } catch (error) {
-            console.error(`Error while trying to logout "${error}":`, error);
+            console.warn(`Error while trying to logout "${error}":`, error);
         }
 
         setUser(null);
