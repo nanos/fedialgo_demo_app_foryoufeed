@@ -7,11 +7,10 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import {
     extractDomain,
     MediaCategory,
-    TheAlgorithm,
     Toot,
+    TagWithUsageCounts,
     TrendingLink,
     TrendingObj,
-    TrendingTag,
     TrendingWithHistory,
 } from "fedialgo";
 
@@ -74,9 +73,9 @@ export default function TrendingInfo() {
                         <TrendingSection
                             name="Hashtags"
                             infoTxt={infoTxt}
-                            linkText={(tag) => `#${(tag as TrendingTag).name}`}
-                            linkUrl={(tag) => (tag as TrendingTag).url}
-                            onClick={(tag, e) => followUri((tag as TrendingTag).url, e)}
+                            linkText={(tag) => `#${(tag as TagWithUsageCounts).name}`}
+                            linkUrl={(tag) => (tag as TagWithUsageCounts).url}
+                            onClick={(tag, e) => followUri((tag as TagWithUsageCounts).url, e)}
                             trendingObjs={algorithm.trendingData.tags}
                         />
 
@@ -116,10 +115,10 @@ export default function TrendingInfo() {
 
                         <TrendingSection
                             name="Your Most Participated Hashtags"
-                            infoTxt={(tag) => `${(tag as TrendingTag).numToots?.toLocaleString()} of your recent toots`}
-                            linkText={(tag) => `#${(tag as TrendingTag).name}`}
-                            linkUrl={(tag) => (tag as TrendingTag).url}
-                            onClick={(tag, e) => followUri((tag as TrendingTag).url, e)}
+                            infoTxt={(tag) => `${(tag as TagWithUsageCounts).numToots?.toLocaleString()} of your recent toots`}
+                            linkText={(tag) => `#${(tag as TagWithUsageCounts).name}`}
+                            linkUrl={(tag) => (tag as TagWithUsageCounts).url}
+                            onClick={(tag, e) => followUri((tag as TagWithUsageCounts).url, e)}
                             trendingObjs={algorithm.userData.popularUserTags().slice(0, MAX_HASHTAGS_TO_SHOW)}
                         />
                     </Accordion>
