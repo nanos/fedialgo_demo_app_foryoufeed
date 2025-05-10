@@ -112,7 +112,16 @@ export default function Feed() {
         <Container fluid style={{height: 'auto'}}>
             {/* Tooltip options: https://react-tooltip.com/docs/options */}
             <Tooltip id={TOOLTIP_ANCHOR} place="top" />
-            <Tooltip delayShow={100} id={TOOLTIP_ACCOUNT_ANCHOR} place="left" style={tooltipStyle} variant="light"/>
+
+            <Tooltip
+                clickable={true}
+                delayShow={100}
+                id={TOOLTIP_ACCOUNT_ANCHOR}
+                opacity={0.95}
+                place="left"
+                style={tooltipStyle}
+                variant="light"
+            />
 
             <Modal show={error !== ""} onHide={() => setError("")} style={{color: "black"}}>
                 <Modal.Header closeButton>

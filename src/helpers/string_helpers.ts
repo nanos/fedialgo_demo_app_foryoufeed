@@ -1,8 +1,19 @@
 /*
  * String manipulation helpers.
  */
+import { Account } from "fedialgo";
+
 export const DEMO_APP = "DEMO APP";
 const DEFAULT_LOCALE = "en-US";
+const NBSP_REGEX = /&nbsp;/g;
+
+
+export const accountTooltipTxt = (account: Account): string => {
+    let txt = account.note.replace(NBSP_REGEX, " ")
+    txt += `<br /><p style="font-weight: bold">(${account.followersCount.toLocaleString()} followers`;
+    txt += `, ${account.statusesCount.toLocaleString()} toots`;
+    return txt + `, created ${account.createdAt.split('T')[0]})</p>`;
+};
 
 
 // Extract the language from the browser's locale

@@ -18,13 +18,12 @@ import MultimediaNode from "./status/MultimediaNode";
 import Poll from "./status/Poll";
 import PreviewCard from "./status/PreviewCard";
 import ScoreModal from './status/ScoreModal';
-import { logMsg } from '../helpers/string_helpers';
+import { accountTooltipTxt, logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
-import { PARTICIPATED_TAG_COLOR, RED, TOOLTIP_ANCHOR } from "../helpers/style_helpers";
+import { PARTICIPATED_TAG_COLOR, RED } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
 export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
-const NBSP_REGEX = /&nbsp;/g;
 
 interface StatusComponentProps {
     setError: (error: string) => void,
@@ -167,7 +166,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         <div title={toot.account.webfingerURI} className="status__display-name">
                             <a
                                 data-tooltip-id={TOOLTIP_ACCOUNT_ANCHOR}
-                                data-tooltip-html={toot.account.note.replace(NBSP_REGEX, " ")}
+                                data-tooltip-html={accountTooltipTxt(toot.account)}
                             >
                                 <div className="status__avatar">
                                     <div className="account__avatar" style={{ width: "46px", height: "46px" }}>
