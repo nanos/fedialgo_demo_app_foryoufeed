@@ -8,19 +8,27 @@ import React, { CSSProperties, ReactNode, useMemo, useState } from "react";
 import Col from 'react-bootstrap/Col';
 import FilterCheckbox from "./FilterCheckbox";
 import Row from 'react-bootstrap/Row';
-import { PropertyName, PropertyFilter, sortKeysByValue } from "fedialgo";
+import { PropertyName, PropertyFilter, TypeFilterName, sortKeysByValue } from "fedialgo";
 
 import { compareStr, debugMsg } from "../../helpers/string_helpers";
 import { PARTICIPATED_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
-import { get } from "http";
 
 type HashtagTooltip = {text: string; color: string;};
 
 // Filtered filters are those that require a minimum number of toots to appear as filter options
-export const FILTERED_FILTERS = [PropertyName.HASHTAG, PropertyName.USER];
-const FOLLOWED_TAG_MSG = `You follow this hashtag.`;
-const PARTICIPATED_TAG_MSG = `You've posted this hashtag`
+export const FILTERED_FILTERS = [
+    PropertyName.HASHTAG,
+    PropertyName.USER
+];
+
+const TOOLTIPS = {
+    [TypeFilterName.FOLLOWED_ACCOUNTS]: `You follow this account.`,
+    [TypeFilterName.FOLLOWED_HASHTAGS]: `You follow this hashtag.`,
+    [TypeFilterName.PARTICIPATED_HASHTAGS]: (n: number) => `You've posted this hashtag ${n} times recently.`,
+    [TypeFilterName.TRENDING_HASHTAGS]: `This hashtag is trending.`,
+    [PropertyName.LANGUAGE]: `You post most in this language.`,
+};
 
 interface FilterCheckboxGridProps {
     filterSection: PropertyFilter,  // TODO: maybe rename propertyFilter
@@ -40,21 +48,21 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     const getTooltipInfo = (name: string): HashtagTooltip => {
         if (filterSection.title == PropertyName.HASHTAG) {
             if (name in algorithm.userData.followedTags) {
-                return {color: "yellow", text: FOLLOWED_TAG_MSG};
+                return {color: "yellow", text: TOOLTIPS[TypeFilterName.FOLLOWED_HASHTAGS]};
             } else if (trendingTagNames.includes(name)) {
-                return {color: "#FAD5A5", text: `This hashtag is trending.`}
+                return {color: "#FAD5A5", text: TOOLTIPS[TypeFilterName.TRENDING_HASHTAGS]};
             } else if (name in algorithm.userData.participatedHashtags) {
                 const tag = algorithm.userData.participatedHashtags[name];
 
                 return {
-                    text: `${PARTICIPATED_TAG_MSG} ${tag.numToots} times recently.`,
                     color: PARTICIPATED_TAG_COLOR_FADED,
+                    text: `${TOOLTIPS[TypeFilterName.PARTICIPATED_HASHTAGS](tag.numToots)}`,
                 }
             }
         } else if (filterSection.title == PropertyName.USER && name in algorithm.userData.followedAccounts) {
-            return {color: 'cyan', text: `You follow this account`};
+            return {color: 'cyan', text: TOOLTIPS[TypeFilterName.FOLLOWED_ACCOUNTS]};
         } else if (filterSection.title == PropertyName.LANGUAGE && name == algorithm.userData.preferredLanguage) {
-            return {color: 'cyan', text: `You post most in this language`};
+            return {color: 'cyan', text: TOOLTIPS[PropertyName.LANGUAGE]};
         }
     };
 
