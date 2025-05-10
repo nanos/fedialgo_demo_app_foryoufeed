@@ -8,7 +8,7 @@ import parse from 'html-react-parser';
 import { Account, Toot, timeString } from "fedialgo";
 import { capitalCase } from "change-case";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconDefinition, faHashtag, faFireFlameCurved, faGlobe, faPencil, faReply, faLink, faBolt, faLock } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition, faCheckCircle, faHashtag, faFireFlameCurved, faGlobe, faPencil, faReply, faLink, faBolt, faLock, faRetweet } from "@fortawesome/free-solid-svg-icons";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 
@@ -126,7 +126,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 {isReblog &&
                     <div className="status__prepend">
                         <div className="status__prepend-icon-wrapper">
-                            <i className="fa fa-retweet status__prepend-icon fa-fw" />
+                            <FontAwesomeIcon className="status__prepend-icon fa-fw" icon={faRetweet} />
                         </div>
 
                         <span>
@@ -194,7 +194,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                                 style={{ color: "lightblue", padding: "0px 5px" }}
                                                 title={f.value.replace(/<[^>]*>?/gm, '')}
                                             >
-                                                <i aria-hidden="true" className="fa fa-check-circle" />
+                                                <FontAwesomeIcon aria-hidden="true" icon={faCheckCircle} />
                                             </span>
                                         ))}
                                     </strong>

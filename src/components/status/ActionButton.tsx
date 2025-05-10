@@ -5,10 +5,12 @@
 import React, { CSSProperties } from "react";
 
 import { capitalCase } from "change-case";
-import { logMsg } from "../../helpers/string_helpers";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition, faBalanceScale, faBookmark, faReply, faRetweet, faStar } from "@fortawesome/free-solid-svg-icons";
 import { mastodon } from 'masto';
 import { Toot } from "fedialgo";
 
+import { logMsg } from "../../helpers/string_helpers";
 import { scoreString } from "../../helpers/string_helpers";
 
 export enum ButtonAction {
@@ -25,30 +27,30 @@ const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
 type ActionInfo = {
     booleanName?: string,
     countName?: string,
-    icon: string,
+    icon: IconDefinition,
 };
 
 const ACTION_INFO: Record<ButtonAction, ActionInfo> = {
     [ButtonAction.Bookmark]: {
         booleanName: `${ButtonAction.Bookmark}ed`,
-        icon: ButtonAction.Bookmark,
+        icon: faBookmark
     },
     [ButtonAction.Favourite]: {
         booleanName: `${ButtonAction.Favourite}d`,
         countName: `${ButtonAction.Favourite}sCount`,
-        icon: 'star',
+        icon: faStar,
     },
     [ButtonAction.Reblog]: {
         booleanName: 'reblogged',
         countName: 'reblogsCount',
-        icon: 'retweet',
+        icon: faRetweet,
     },
     [ButtonAction.Reply]: {
         countName: 'repliesCount',
-        icon: ButtonAction.Reply,
+        icon: faReply,
     },
     [ButtonAction.Score]: {
-        icon: 'balance-scale',
+        icon: faBalanceScale,
     },
 };
 
@@ -152,7 +154,7 @@ export default function ActionButton(props: ActionButtonProps) {
             title={label}
             type="button"
         >
-            <i aria-hidden="true" className={`fa fa-${actionInfo['icon']} fa-fw`} />
+            <FontAwesomeIcon aria-hidden="true" className="fa-fw" icon={actionInfo.icon} />
 
             {(buttonText || buttonText === 0) && (
                 <span className="icon-button__counter">
