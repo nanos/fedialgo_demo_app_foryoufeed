@@ -16,7 +16,7 @@ interface AlgoContext {
     shouldAutoUpdate?: boolean,
     setShouldAutoUpdate?: (should: boolean) => void,
     timeline: Toot[],
-    triggerLoad?: () => void,
+    triggerLoad?: (moreOldToots?: boolean) => void,
 };
 
 interface AlgorithmContextProps {
@@ -44,7 +44,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
 
     // TODO: this doesn't make any API calls yet, right?
     const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token});
-    const triggerLoad = () => triggerAlgoLoad(algorithm, setError, setIsLoading);
+    const triggerLoad = (moreOldToots?: boolean) => triggerAlgoLoad(algorithm, setError, setIsLoading, moreOldToots);
 
     // Initial load of the feed
     useEffect(() => {
@@ -141,12 +141,13 @@ const triggerAlgoLoad = (
     algorithm: TheAlgorithm,
     setError?: (error: string) => void,
     setIsLoading?: (isLoading: boolean) => void,
+    moreOldToots?: boolean
 ) => {
     logMsg(`triggerAlgoLoad() called. algorithm exists?: ${!!algorithm}`);
     if (!algorithm) return;
     setIsLoading?.(true);
 
-    algorithm.triggerFeedUpdate()
+    algorithm.triggerFeedUpdate(moreOldToots)
         .then(() => logMsg(`triggerLoad() finished`))
         .catch((err) => {
             if (err.message.includes(GET_FEED_BUSY_MSG)) {

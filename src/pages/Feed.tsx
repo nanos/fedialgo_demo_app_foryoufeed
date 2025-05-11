@@ -22,6 +22,7 @@ import { DEMO_APP, logMsg, warnMsg } from "../helpers/string_helpers";
 import { TOOLTIP_ANCHOR } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
+import { link } from "fs";
 
 // Number constants
 const DEFAULT_NUM_DISPLAYED_TOOTS = 20;
@@ -198,8 +199,14 @@ export default function Feed() {
                 <Col xs={6}>
                     {algorithm && !isLoading &&
                         <p style={loadNewTootsText}>
-                            <a onClick={triggerLoad}>
+                            <a onClick={() => triggerLoad()} style={linkesque}>
                                 (load new toots)
+                            </a>
+
+                           {' ● '}
+
+                            <a onClick={() => triggerLoad(true)} style={linkesque}>
+                                (load more old toots)
                             </a>
                         </p>}
 
@@ -237,7 +244,6 @@ const loadingMsgStyle: CSSProperties = {
 
 const loadNewTootsText: CSSProperties = {
     ...loadingMsgStyle,
-    ...linkesque,
     fontSize: "13px",
     marginTop: "8px",
     textAlign: "center",
