@@ -132,7 +132,7 @@ export default function Feed() {
             </Modal>
 
             <Row>
-                <Col xs={6}>
+                <Col xs={12} md={6}>
                     <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
                         <div style={stickySwitchContainer}>
                             <Form.Check
@@ -196,7 +196,7 @@ export default function Feed() {
                 </Col>
 
                 {/* Feed column */}
-                <Col xs={6}>
+                <Col xs={12} md={6}>
                     {algorithm && !isLoading &&
                         <p style={loadNewTootsText}>
                             <a onClick={() => triggerLoad()} style={linkesque}>
