@@ -4,6 +4,7 @@
 import React, { CSSProperties } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
     extractDomain,
     MediaCategory,
@@ -14,7 +15,7 @@ import {
     TrendingWithHistory,
 } from "fedialgo";
 
-import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
+import TrendingSection, { LINK_FONT_SIZE, infoTxtStyle } from "./TrendingSection";
 import { accordionBody, titleStyle } from "../helpers/style_helpers";
 import { followUri, openToot, openTrendingLink } from "../helpers/react_helpers";
 import { logMsg } from "../helpers/string_helpers";
@@ -45,13 +46,35 @@ export default function TrendingInfo() {
         return prefixedHtml(link.title, extractDomain(link.url));
     };
 
+    const tootInfoTxt = (toot: Toot) => {
+        const msg = `${toot.repliesCount?.toLocaleString()} replies`;
+        return `${msg}, ${toot.reblogsCount?.toLocaleString()} retoots`
+    }
+
     const tootLinkText = (obj: TrendingObj): React.ReactElement => {
         const toot = obj as Toot;
 
-        return prefixedHtml(
-            toot.contentShortened(MAX_TRENDING_LINK_LEN),
-            ATTACHMENT_PREFIXES[toot.attachmentType()] || (toot.card?.url && 'link')
-        );
+        if (toot.attachmentType() == MediaCategory.IMAGE) {
+            const image = toot.imageAttachments[0];
+            return <>
+                <span style={bold}>{toot.contentShortened(MAX_TRENDING_LINK_LEN)}</span>
+                <span style={infoTxtStyle}>({tootInfoTxt(obj as Toot)})</span>
+                <br />
+
+                <LazyLoadImage
+                    alt={toot.imageAttachments[0].description}
+                    effect="blur"
+                    src={image.previewUrl}
+                    style={imageStyle}
+                    wrapperProps={{style: {position: "static"}}}  // Required to center properly with blur
+                />
+            </>
+        } else {
+            return prefixedHtml(
+                toot.contentShortened(MAX_TRENDING_LINK_LEN),
+                ATTACHMENT_PREFIXES[toot.attachmentType()] || (toot.card?.url && 'link')
+            );
+        }
     };
 
     const prefixedHtml = (text: string, prefix?: string): React.ReactElement => {
@@ -98,10 +121,7 @@ export default function TrendingInfo() {
                         <TrendingSection
                             name="Toots"
                             hasCustomStyle={true}
-                            infoTxt={(toot: Toot) => {
-                                const msg = `${toot.repliesCount?.toLocaleString()} replies`;
-                                return `${msg}, ${toot.reblogsCount?.toLocaleString()} retoots`
-                            }}
+                            infoTxt={(t) => undefined}
                             linkLabel={tootLinkText}
                             linkUrl={linkMapper}
                             onClick={openToot}
@@ -149,4 +169,11 @@ const monospace: CSSProperties = {
 
 const subheader: CSSProperties = {
     marginBottom: "7px",
+};
+
+const imageStyle: CSSProperties = {
+    maxWidth: "400px",
+    maxHeight: "200px",
+    objectFit: "contain",
+    objectPosition: "top",
 };

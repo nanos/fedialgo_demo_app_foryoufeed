@@ -47,11 +47,10 @@ export default function TrendingSection(props: TrendingProps) {
                                     {linkLabel(obj)}
                                 </a>
 
-                                {infoTxt(obj) && (
+                                {infoTxt(obj) &&
                                     <span style={infoTxtStyle}>
                                         ({infoTxt(obj)})
-                                    </span>
-                                )}
+                                    </span>}
                             </li>
                         ))}
                     </ol>
@@ -88,7 +87,7 @@ const boldTagLinkStyle: CSSProperties = {
     fontWeight: "bold",
 };
 
-const infoTxtStyle: CSSProperties = {
+export const infoTxtStyle: CSSProperties = {
     fontSize: LINK_FONT_SIZE - 3,
     marginLeft: "6px",
 };

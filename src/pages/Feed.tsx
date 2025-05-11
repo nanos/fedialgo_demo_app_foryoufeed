@@ -182,10 +182,10 @@ export default function Feed() {
                                     onClick={() => {
                                         algorithm.logWithState(
                                             DEMO_APP,
-                                            `State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()})`
+                                            `State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()}, timeline.length=${timeline.length})`,
                                         );
 
-                                        logMsg(`mastodonServers:`, algorithm.mastodonServers);
+                                        // logMsg(`mastodonServers:`, algorithm.mastodonServers);
                                     }}
                                     style={{textDecoration: "underline", color: "white"}}
                                 >
