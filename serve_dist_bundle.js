@@ -1,29 +1,29 @@
 /*
- * Janky way to serve dist/bundle.js locally
+ * Janky way to serve dist/bundle.js locally based on:
  * https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/Node_server_without_framework
  */
 
-import * as fs from "node:fs";
-import * as http from "node:http";
-import * as path from "node:path";
+const fs = require("node:fs");
+const http = require("node:http");
+const path = require("node:path");
 
+const STATIC_PATH = path.join(process.cwd(), "./dist");
 const PORT = 9090;
 
 const MIME_TYPES = {
-  default: "application/octet-stream",
-  html: "text/html; charset=UTF-8",
-  js: "text/javascript",
-  css: "text/css",
-  png: "image/png",
-  jpg: "image/jpeg",
-  gif: "image/gif",
-  ico: "image/x-icon",
-  svg: "image/svg+xml",
+    default: "application/octet-stream",
+    html: "text/html; charset=UTF-8",
+    js: "text/javascript",
+    css: "text/css",
+    png: "image/png",
+    jpg: "image/jpeg",
+    gif: "image/gif",
+    ico: "image/x-icon",
+    svg: "image/svg+xml",
 };
 
-const STATIC_PATH = path.join(process.cwd(), "./dist");
-
 const toBool = [() => true, () => false];
+
 
 const prepareFile = async (url) => {
     const [baseUrl, args] = url.split("?");

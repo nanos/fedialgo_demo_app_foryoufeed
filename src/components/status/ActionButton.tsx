@@ -156,14 +156,14 @@ export default function ActionButton(props: ActionButtonProps) {
         >
             <FontAwesomeIcon aria-hidden="true" className="fa-fw" icon={actionInfo.icon} />
 
-            {(buttonText || buttonText === 0) && (
+            {(buttonText || buttonText === 0) &&
                 <span className="icon-button__counter">
                     <span className="animated-number">
                         <span style={{position: "static"}}>
                             <span>{buttonText}</span>
                         </span>
                     </span>
-                </span>)}
+                </span>}
         </button>
     );
 };
