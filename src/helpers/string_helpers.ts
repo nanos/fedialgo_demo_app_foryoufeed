@@ -51,14 +51,17 @@ export const scoreString = (score: number | null): string => {
     } else if (score < 0.0001) {
         decimalPlaces = 7;
     } else if (score < 0.001) {
-        decimalPlaces = 5;
+        decimalPlaces = 6;
     } else if (score < 0.01) {
-        decimalPlaces = 4;
+        decimalPlaces = 5;
     } else if (score < 0.1) {
-        decimalPlaces = 3;
+        decimalPlaces = 4;
     } else if (score < 1) {
+        decimalPlaces = 3;
+    } else if (score < 10) {
         decimalPlaces = 2;
     }
+
 
     return `${score.toFixed(decimalPlaces)}`;
 };
