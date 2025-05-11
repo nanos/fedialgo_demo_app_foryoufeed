@@ -4,6 +4,7 @@
 
 const path = require("path");
 
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -56,6 +57,7 @@ module.exports = {
 
     plugins: [
         isDevelopment && new ReactRefreshWebpackPlugin(),
+        // new BundleAnalyzerPlugin(),  // Generates an analysis of the bundle whenever webpack is run
         new CopyPlugin({
             patterns: [
                 { from: 'assets', to: '' }, // copies all files from assets to dist/
