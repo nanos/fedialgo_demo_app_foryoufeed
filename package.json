@@ -11,7 +11,7 @@
         "bootstrap": "^5.2.3",
         "buffer": "^6.0.3",
         "change-case": "^5.4.4",
-        "fedialgo": "github:michelcrypt4d4mus/fedialgo#9416ed896e87d33c0225f8099236eb901877665f",
+        "fedialgo": "github:michelcrypt4d4mus/fedialgo#v0.31.3",
         "html-react-parser": "^3.0.15",
         "masto": "^7.0.0",
         "node-emoji": "^2.1.3",
