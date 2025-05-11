@@ -3,6 +3,8 @@
  */
 import React, { KeyboardEventHandler, useCallback, useMemo, useState } from 'react';
 
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { mastodon } from 'masto';
 
 import { debugMsg, errorMsg } from '../../helpers/string_helpers';
@@ -201,12 +203,13 @@ function PollOption(props) {
 
                 {!!voted &&
                     <span className='poll__voted'>
-                        {'('}<i
-                            className={`fa fa-check`}
+                        {'('}
+                        <FontAwesomeIcon
+                            icon={faCheck}
                             style={{color: 'cyan'}}
-                            // style={{color: "#8ba1bf"}}
                             title={'You voted for this answer'}
-                        />{')'}
+                        />
+                        {')'}
                     </span>}
             </label>
 
