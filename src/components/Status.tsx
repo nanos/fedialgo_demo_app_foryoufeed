@@ -120,6 +120,28 @@ export default function StatusComponent(props: StatusComponentProps) {
         </a>
     );
 
+    const rebloggersLinks = () => (
+        <span>
+            {toot.reblogsBy.map((account, i) => {
+                const rebloggerLink = (
+                    <a
+                        className="status__display-name muted"
+                        href={account.homserverURL()}
+                        key={i}
+                        rel="noreferrer"
+                        target="_blank"
+                    >
+                        <bdi><strong>
+                            {parse(account.displayNameWithEmojis())}
+                        </strong></bdi>
+                    </a>
+                );
+
+                return i < (toot.reblogsBy.length - 1) ? [rebloggerLink, ', '] : rebloggerLink;
+            })} retooted
+        </span>
+    );
+
     // Construct a colored font awesome icon
     const infoIcon = (iconType: InfoIconType): React.ReactElement => {
         const iconInfo = INFO_ICONS[iconType];
@@ -185,12 +207,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <FontAwesomeIcon className="status__prepend-icon fa-fw" icon={faRetweet} />
                         </div>
 
-                        <span>
-                            {toot.reblogsBy.sort((a, b) => (a.displayName.toLowerCase() < b.displayName.toLowerCase()) ? -1 : 1).map((booster, i) => {
-                                const rebloggerLink = reblogger(booster, i);
-                                return i < (toot.reblogsBy.length - 1) ? [rebloggerLink, ', '] : rebloggerLink;
-                            })} retooted
-                        </span>
+                        {rebloggersLinks()}
                     </div>}
 
                 <div className="status" style={isReblog ? { paddingTop: "10px" } : {}}>
