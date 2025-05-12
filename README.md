@@ -128,6 +128,19 @@ You can install the local `fedialgo` package by running `npm link`  in the `fedi
 
 Assuming you check both `fedialgo` and this repo out to the same directory there's a helper script to link the local repo in [`link_local_fedialgo.sh`](./link_local_fedialgo.sh).
 
+#### Beta Users
+* @benroyce@mastodon.social
+* @joeneXtra@todon.eu
+* @LaurensHof@fediversereport.com
+* @michael@thms.uk
+* @paige@canadiancivil.com
+* @rolle@mementomori.social
+
+#### Hashtags
+```
+#activitypub #algorithm #algorithmicFeed #algorithmicTimeline #Fedi #FediTips #FediTools #Fediverse #Feed #FOSS #MastoAdmin #Mastodon #mastohelp #nodejs #nod #opensource #SocialWeb #timeline #TL #webdev
+```
+
 
 #### Code Notes
 * There's tons of info on how the scoring and weighting of toots is being done in your browser's javascript debug console logs.
