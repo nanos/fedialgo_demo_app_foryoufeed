@@ -34,13 +34,40 @@ import { logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
 import { PARTICIPATED_TAG_COLOR, PARTICIPATED_TAG_COLOR_FADED, RED } from "../helpers/style_helpers";
 import { timestampString } from "../helpers/string_helpers";
-import { useAlgorithm } from "../hooks/useAlgorithm";
+import { title } from "process";
 
 export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
 
 interface StatusComponentProps {
     setError: (error: string) => void,
     status: Toot,
+};
+
+enum InfoIconType {
+    DM = "Direct Message",
+    Edited = "Edited",
+    Hashtags = "Hashtags",
+    Mention = "You're Mentioned",
+    Public = "Public",
+    Reply = "Reply",
+    TrendingLink = "Contains Trending Link",
+    TrendingToot = "Trending Toot",
+};
+
+type IconInfo = {
+    icon: IconDefinition,
+    color?: string,
+};
+
+const INFO_ICONS: Record<InfoIconType, IconInfo> = {
+    [InfoIconType.DM]:           {icon: faLock, color: "purple"},
+    [InfoIconType.Edited]:       {icon: faPencil},
+    [InfoIconType.Hashtags]:     {icon: faHashtag, color: PARTICIPATED_TAG_COLOR},
+    [InfoIconType.Mention]:      {icon: faBolt, color: "green"},
+    [InfoIconType.Public]:       {icon: faGlobe, color: "#2092a1"},
+    [InfoIconType.Reply]:        {icon: faReply, color: "blue"},
+    [InfoIconType.TrendingLink]: {icon: faLink, color: RED},
+    [InfoIconType.TrendingToot]: {icon: faFireFlameCurved, color: RED},
 };
 
 
@@ -94,8 +121,16 @@ export default function StatusComponent(props: StatusComponentProps) {
     );
 
     // Construct a colored font awesome icon
-    const buildIcon = (icon: IconDefinition, title?: string, color?: string): React.ReactElement => {
-        if (icon.iconName == "hashtag") {
+    const infoIcon = (iconType: InfoIconType): React.ReactElement => {
+        const iconInfo = INFO_ICONS[iconType];
+        let title = iconType as string;
+        let color = iconInfo.color;
+
+        if (iconType == InfoIconType.Edited) {
+            title += ` ${timestampString(toot.editedAt)}`;
+        } else if (iconType == InfoIconType.Hashtags) {
+            title = toot.containsTagsMsg();
+
             if (toot.trendingTags?.length) {
                 color = RED;
             } else if (toot.followedTags?.length) {
@@ -103,12 +138,19 @@ export default function StatusComponent(props: StatusComponentProps) {
             } else if (toot.participatedTags?.length) {
                 color = PARTICIPATED_TAG_COLOR;
             }
+        } else if (iconType == InfoIconType.Public) {
+            if (toot.account.isFollowed) {
+                title = "You follow this account";
+            } else {
+                title = "Not an account you follow";
+                color = undefined;
+            }
         }
 
         return <FontAwesomeIcon
-            icon={icon}
+            icon={iconInfo.icon}
             style={color ? {...baseIconStyle, color: color} : baseIconStyle}
-            title={title || capitalCase(icon.iconName)}
+            title={title}
         />;
     };
 
@@ -126,14 +168,14 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     return (
         <div>
+            <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={toot} />
+
             {hasImageAttachments &&
                 <AttachmentsModal
                     mediaInspectionIdx={mediaInspectionIdx}
                     setMediaInspectionIdx={setMediaInspectionIdx}
                     toot={toot}
                 />}
-
-            <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={toot} />
 
             <div aria-label={ariaLabel} className="status__wrapper status__wrapper-public focusable">
                 {/* Names of accounts that reblogged the toot (if any) */}
@@ -157,18 +199,13 @@ export default function StatusComponent(props: StatusComponentProps) {
                         {/* Top right icons + timestamp that link to the toot */}
                         <a className="status__relative-time" href={toot.uri} rel="noreferrer" target="_blank">
                             <span className="status__visibility-icon">
-                                {toot.editedAt && buildIcon(faPencil, `Edited at ${toot.editedAt}`)}
-                                {toot.inReplyToAccountId && buildIcon(faReply, "Reply", "blue")}
-                                {toot.trendingRank > 0 && buildIcon(faFireFlameCurved, "Trending Toot", RED)}
-                                {toot.trendingLinks.length > 0 && buildIcon(faLink, "Contains Trending Link", RED)}
-                                {toot.containsUserMention() && buildIcon(faBolt, "You're Mentioned", "green")}
-                                {toot.containsTagsMsg() && buildIcon(faHashtag, toot.containsTagsMsg())}
-
-                                {toot.isDM()
-                                    ? buildIcon(faLock, "Direct Message", "purple")
-                                    : toot.account.isFollowed
-                                        ? buildIcon(faGlobe, "You follow this account", "#2092a1") // )  //"#025c78")
-                                        : buildIcon(faGlobe, "Not an account you follow")}
+                                {toot.editedAt && infoIcon(InfoIconType.Edited)}
+                                {toot.inReplyToAccountId && infoIcon(InfoIconType.Reply)}
+                                {toot.trendingRank > 0 && infoIcon(InfoIconType.TrendingToot)}
+                                {toot.trendingLinks.length > 0 && infoIcon(InfoIconType.TrendingLink)}
+                                {toot.containsUserMention() && infoIcon(InfoIconType.Mention)}
+                                {toot.containsTagsMsg() && infoIcon(InfoIconType.Hashtags)}
+                                {toot.isDM() ? infoIcon(InfoIconType.DM) : infoIcon(InfoIconType.Public)}
                             </span>
 
                             <time dateTime={toot.createdAt} title={toot.createdAt}>
