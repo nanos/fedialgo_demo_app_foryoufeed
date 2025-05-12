@@ -40,6 +40,7 @@ import { title } from "process";
 export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
 
 interface StatusComponentProps {
+    hideLinkPreviews?: boolean,
     setError: (error: string) => void,
     status: Toot,
 };
@@ -73,7 +74,7 @@ const INFO_ICONS: Record<InfoIconType, IconInfo> = {
 
 
 export default function StatusComponent(props: StatusComponentProps) {
-    const { setError, status } = props;
+    const { hideLinkPreviews, setError, status } = props;
 
     // If it's a retoot set 'toot' to the original toot
     const toot = status.realToot();
@@ -266,7 +267,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                     </div>
 
                     {/* Preview card and attachment display */}
-                    {toot.card && !hasAttachments && <PreviewCard card={toot.card as mastodon.v1.PreviewCard} />}
+                    {toot.card && !hasAttachments && <PreviewCard card={toot.card} hideLinkPreviews={hideLinkPreviews} />}
                     {hasAttachments && <MultimediaNode setMediaInspectionIdx={setMediaInspectionIdx} status={toot}/>}
                     {toot.poll && <Poll poll={toot.poll} setError={setError} />}
 

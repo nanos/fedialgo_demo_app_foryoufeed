@@ -13,7 +13,23 @@ import { mastodon } from 'masto';
 const MAX_STATUS_CARD_LEN = 350;
 
 
-export default function PreviewCard({ card }: { card: mastodon.v1.PreviewCard }) {
+export default function PreviewCard({ card, hideLinkPreviews }: { card: mastodon.v1.PreviewCard, hideLinkPreviews: boolean }) {
+    const headline = <>
+        <span style={providerName}>
+            [{card.providerName || extractDomain(card.url)}]
+        </span> <span style={headlineStyle}>
+            {parse(card.title)}
+        </span>
+    </>;
+
+    if (hideLinkPreviews) {
+        return (
+            <NewTabLink className="status-card compact" href={card.url} style={linkOnlyStyle}>
+                {headline}
+            </NewTabLink>
+        );
+    }
+
     return (
         <NewTabLink className="status-card compact" href={card.url}>
             <div className="status-card__image">
@@ -33,11 +49,7 @@ export default function PreviewCard({ card }: { card: mastodon.v1.PreviewCard })
             </div>
 
             <div className='status-card__content'>
-                <span style={providerName}>
-                    [{card.providerName || extractDomain(card.url)}]
-                </span> <span style={headline}>
-                    {parse(card.title)}
-                </span>
+                {headline}
 
                 <p className='status-card__description' style={{marginTop: "2px"}}>
                     {card.description.slice(0, MAX_STATUS_CARD_LEN)}
@@ -57,7 +69,15 @@ const providerName: CSSProperties = {
     color: "#4b427a",
 };
 
-const headline: CSSProperties = {
+const headlineStyle: CSSProperties = {
     // fontSize: "16px",
     // fontWeight: "bold",
+};
+
+const linkOnlyStyle: CSSProperties = {
+    paddingBottom: "6px",
+    paddingTop: "6px",
+    paddingLeft: "10px",
+    paddingRight: "10px",
+    textDecoration: "underline"
 };

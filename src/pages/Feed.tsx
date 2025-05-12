@@ -41,10 +41,11 @@ export default function Feed() {
 
     // State variables
     const [error, setError] = useState<string>("");
+    const [hideLinkPreviews, setHideLinkPreviews] = useState(false);
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(true);  // Left panel stickiness
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
-    const [scrollPercentage, setScrollPercentage] = useState(0);
     const [prevScrollY, setPrevScrollY] = useState(0);
+    const [scrollPercentage, setScrollPercentage] = useState(0);
 
     const numShownToots = Math.max(DEFAULT_NUM_DISPLAYED_TOOTS, numDisplayedToots);
 
@@ -77,7 +78,7 @@ export default function Feed() {
         // TODO: this should trigger the pulling of more toots from the server if we run out of local cache
         const showMoreToots = () => {
             if (numDisplayedToots < timeline.length) {
-                const msg = `Showing ${numShownToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
+                const msg = `Showing ${numDisplayedToots} toots, adding ${NUM_TOOTS_TO_LOAD_ON_SCROLL} more`;
                 logMsg(`${msg} (${timeline.length} available in feed)`);
                 setNumDisplayedToots(numDisplayedToots + NUM_TOOTS_TO_LOAD_ON_SCROLL);
             }
@@ -141,6 +142,15 @@ export default function Feed() {
                                 key={"stickPanel"}
                                 label={`Stick Control Panel To Top`}
                                 onChange={(e) => setIsControlPanelSticky(e.target.checked)}
+                                type="checkbox"
+                            />
+
+                            <Form.Check
+                                checked={hideLinkPreviews}
+                                className="mb-3"
+                                key={"linkPreviews"}
+                                label={`Hide Link Previews`}
+                                onChange={(e) => setHideLinkPreviews(e.target.checked)}
                                 type="checkbox"
                             />
 
@@ -213,6 +223,7 @@ export default function Feed() {
                     <div style={statusesColStyle}>
                         {timeline.slice(0, numShownToots).map((toot) => (
                             <StatusComponent
+                                hideLinkPreviews={hideLinkPreviews}
                                 key={toot.uri}
                                 setError={setError}
                                 status={toot}
