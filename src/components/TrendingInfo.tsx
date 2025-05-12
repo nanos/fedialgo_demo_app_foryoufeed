@@ -57,17 +57,21 @@ export default function TrendingInfo() {
         if (toot.attachmentType() == MediaCategory.IMAGE) {
             const image = toot.imageAttachments[0];
             return <>
-                <span style={bold}>{toot.contentShortened(MAX_TRENDING_LINK_LEN)}</span>
+                {prefixedHtml(toot.contentShortened(MAX_TRENDING_LINK_LEN), ATTACHMENT_PREFIXES[MediaCategory.IMAGE])}
                 <span style={infoTxtStyle}>({tootInfoTxt(obj as Toot)})</span>
                 <br />
 
-                <LazyLoadImage
-                    alt={toot.imageAttachments[0].description}
-                    effect="blur"
-                    src={image.previewUrl}
-                    style={imageStyle}
-                    wrapperProps={{style: {position: "static"}}}  // Required to center properly with blur
-                />
+                <div className="media-gallery" style={{width: "100%"}}>
+                    <div className="media-gallery__item" style={{width: "100%"}}>
+                        <LazyLoadImage
+                            alt={toot.imageAttachments[0].description}
+                            effect="blur"
+                            src={image.previewUrl}
+                            style={imageStyle}
+                            wrapperProps={{style: {position: "static"}}}  // Required to center properly with blur
+                        />
+                    </div>
+                </div>
             </>
         } else {
             return prefixedHtml(
@@ -172,8 +176,10 @@ const subheader: CSSProperties = {
 };
 
 const imageStyle: CSSProperties = {
-    maxWidth: "400px",
+    backgroundColor: "white",
+    borderRadius: "15px",
     maxHeight: "200px",
     objectFit: "contain",
     objectPosition: "top",
+    width: "70%",
 };
