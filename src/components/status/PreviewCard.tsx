@@ -4,6 +4,7 @@
  */
 import React, { CSSProperties } from 'react';
 
+import NewTabLink from '../helpers/NewTabLink';
 import parse from 'html-react-parser';
 import { extractDomain } from 'fedialgo';
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -14,13 +15,9 @@ const MAX_STATUS_CARD_LEN = 350;
 
 export default function PreviewCard({ card }: { card: mastodon.v1.PreviewCard }) {
     return (
-        <a
-            className="status-card compact"
-            href={card.url}
-            rel="noopener noreferrer"
-            target="_blank"
-        >
+        <NewTabLink className="status-card compact" href={card.url}>
             <div className="status-card__image">
+                {/* TODO: WTF is this and do we need it? */}
                 <canvas
                     className="status-card__image-preview status-card__image-preview--hidden"
                     height="32"
@@ -46,7 +43,7 @@ export default function PreviewCard({ card }: { card: mastodon.v1.PreviewCard })
                     {card.description.slice(0, MAX_STATUS_CARD_LEN)}
                 </p>
             </div>
-        </a>
+        </NewTabLink>
     );
 };
 

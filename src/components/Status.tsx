@@ -27,6 +27,7 @@ import {
 import ActionButton, { ButtonAction } from "./status/ActionButton";
 import AttachmentsModal from './status/AttachmentsModal';
 import MultimediaNode from "./status/MultimediaNode";
+import NewTabLink from './helpers/NewTabLink';
 import Poll from "./status/Poll";
 import PreviewCard from "./status/PreviewCard";
 import ScoreModal from './status/ScoreModal';
@@ -111,30 +112,16 @@ export default function StatusComponent(props: StatusComponentProps) {
         setShowScoreModal(true);
     };
 
-    // Build the account link for the reblogger(s) that appears at top of a retoot
-    const reblogger = (account: Account, i: number): React.ReactNode => (
-        <a className="status__display-name muted" href={account.homserverURL()} key={i} target="_blank" rel="noreferrer">
-            <bdi><strong>
-                {parse(account.displayNameWithEmojis())}
-            </strong></bdi>
-        </a>
-    );
-
+    // Build the account link(s) for the reblogger(s) that appears at top of a retoot
     const rebloggersLinks = () => (
         <span>
             {toot.reblogsBy.map((account, i) => {
                 const rebloggerLink = (
-                    <a
-                        className="status__display-name muted"
-                        href={account.homserverURL()}
-                        key={i}
-                        rel="noreferrer"
-                        target="_blank"
-                    >
+                    <NewTabLink className="status__display-name muted" href={account.homserverURL()} key={i}>
                         <bdi><strong>
                             {parse(account.displayNameWithEmojis())}
                         </strong></bdi>
-                    </a>
+                    </NewTabLink>
                 );
 
                 return i < (toot.reblogsBy.length - 1) ? [rebloggerLink, ', '] : rebloggerLink;
@@ -214,7 +201,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                     {/* Top bar with account and info icons */}
                     <div className="status__info">
                         {/* Top right icons + timestamp that link to the toot */}
-                        <a className="status__relative-time" href={toot.uri} rel="noreferrer" target="_blank">
+
+                        <NewTabLink className="status__relative-time" href={toot.uri}>
                             <span className="status__visibility-icon">
                                 {toot.editedAt && infoIcon(InfoIconType.Edited)}
                                 {toot.inReplyToAccountId && infoIcon(InfoIconType.Reply)}
@@ -228,7 +216,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <time dateTime={toot.createdAt} title={toot.createdAt}>
                                 {timestampString(toot.createdAt)}
                             </time>
-                        </a>
+                        </NewTabLink>
 
                         {/* Account name + avatar */}
                         <div title={toot.account.webfingerURI} className="status__display-name">
@@ -246,14 +234,9 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <span className="display-name">
                                 <bdi>
                                     <strong key="internalBDI" className="display-name__html">
-                                        <a
-                                            href={toot.account.homserverURL()}
-                                            rel="noreferrer"
-                                            style={accountLink}
-                                            target="_blank"
-                                        >
+                                        <NewTabLink href={toot.account.homserverURL()} style={accountLink}>
                                             {parse(toot.account.displayNameWithEmojis())}
-                                        </a>
+                                        </NewTabLink>
 
                                         {toot.account.fields.filter(f => f.verifiedAt).map((f, i) => (
                                             <span
