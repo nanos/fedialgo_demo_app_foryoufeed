@@ -3,7 +3,7 @@ import React, { CSSProperties } from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
 import { createRestAPIClient } from 'masto';
-import { isDebugMode } from "fedialgo";
+import { FEDIALGO, isDebugMode } from "fedialgo";
 import { stringifyQuery } from 'ufo';
 import { usePersistentState } from "react-persistent-state";
 
@@ -23,7 +23,7 @@ const OAUTH_SCOPES = [
 
 export const OAUTH_SCOPE_STR = OAUTH_SCOPES.join(" ");
 const DEFAULT_MASTODON_SERVER = "universeodon.com";  // Home of George Takei!
-const APP_NAME = "FedialgoDemo";  // Name of the app that will be created on the server
+const APP_NAME = `${FEDIALGO}Demo`;  // Name of the app that will be created on the server
 
 
 export default function LoginPage() {
