@@ -7,11 +7,10 @@ import React, { CSSProperties } from "react";
 import { capitalCase } from "change-case";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition, faBalanceScale, faBookmark, faReply, faRetweet, faStar } from "@fortawesome/free-solid-svg-icons";
-import { mastodon } from 'masto';
 import { Toot } from "fedialgo";
 
-import { logMsg } from "../../helpers/string_helpers";
-import { scoreString } from "../../helpers/string_helpers";
+import { logMsg, scoreString } from "../../helpers/string_helpers";
+import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 export enum ButtonAction {
     Bookmark = 'bookmark',
@@ -20,9 +19,6 @@ export enum ButtonAction {
     Reply = 'reply',
     Score = 'score',
 };
-
-const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
-const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
 
 type ActionInfo = {
     booleanName?: string,
@@ -54,9 +50,11 @@ const ACTION_INFO: Record<ButtonAction, ActionInfo> = {
     },
 };
 
+const ICON_BUTTON_CLASS = "status__action-bar__button icon-button"
+const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
+
 interface ActionButtonProps {
     action: ButtonAction,
-    api: mastodon.rest.Client,
     onClick?: (e: React.MouseEvent) => void,
     setError: (error: string) => void,
     status: Toot,
@@ -64,13 +62,14 @@ interface ActionButtonProps {
 
 
 export default function ActionButton(props: ActionButtonProps) {
-    const { action, api, onClick, setError, status } = props;
+    const { action, onClick, setError, status } = props;
+    const { api } = useAlgorithm();
     const actionInfo = ACTION_INFO[action];
-    const label = action == ButtonAction.Score ? "Show Score" : capitalCase(action)
-
     const [currentState, setCurrentState] = React.useState<boolean>(status[actionInfo.booleanName]);
+
+    const label = action == ButtonAction.Score ? "Show Score" : capitalCase(action)
     let className = ACTION_ICON_BASE_CLASS;
-    let buttonText;
+    let buttonText: string | number;
 
     if (actionInfo.countName) {
         buttonText = status[actionInfo.countName];
@@ -82,9 +81,6 @@ export default function ActionButton(props: ActionButtonProps) {
     if (actionInfo.booleanName) {
         className += currentState ? " active activate" : " deactivate";
     }
-    // else if (action == ButtonAction.Score) {
-    //     className = ICON_BUTTON_CLASS;  // TODO: is this necessary?
-    // }
 
     // Returns a function that's called when state changes for faves, bookmarks, retoots
     const performAction = (actionName: ButtonAction, actionInfo: ActionInfo) => {

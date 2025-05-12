@@ -46,11 +46,11 @@ interface StatusComponentProps {
 
 export default function StatusComponent(props: StatusComponentProps) {
     const { setError, status } = props;
-    const { api } = useAlgorithm();
 
     // If it's a retoot set 'toot' to the original toot
     const toot = status.realToot();
     const hasAttachments = toot.mediaAttachments.length > 0;
+    const hasImageAttachments = toot.imageAttachments.length > 0;
     const isReblog = toot.reblogsBy.length > 0;
     const ariaLabel = `${toot.account.displayName}, ${toot.account.note} ${toot.account.webfingerURI}`;
 
@@ -78,12 +78,13 @@ export default function StatusComponent(props: StatusComponentProps) {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [mediaInspectionIdx])
 
-    // Show the score of a toot
+    // Show the score of a toot. Has side effect of logging the toot object to the console.
     const showScore = async () => {
         logMsg(`showScore() called for toot: `, status);
         setShowScoreModal(true);
     };
 
+    // Build the account link for the reblogger(s) that appears at top of a retoot
     const reblogger = (account: Account, i: number): React.ReactNode => (
         <a className="status__display-name muted" href={account.homserverURL()} key={i} target="_blank" rel="noreferrer">
             <bdi><strong>
@@ -92,6 +93,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         </a>
     );
 
+    // Construct a colored font awesome icon
     const buildIcon = (icon: IconDefinition, title?: string, color?: string): React.ReactElement => {
         if (icon.iconName == "hashtag") {
             if (toot.trendingTags?.length) {
@@ -110,11 +112,11 @@ export default function StatusComponent(props: StatusComponentProps) {
         />;
     };
 
+    // Build an action button (reply, reblog, fave, etc) that appears at the bottom of a toot
     const buildActionButton = (action: ButtonAction, onClick?: (e: React.MouseEvent) => void) => {
         return (
             <ActionButton
                 action={action}
-                api={api}
                 onClick={onClick}
                 setError={setError}
                 status={toot}
@@ -124,7 +126,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     return (
         <div>
-            {hasAttachments &&
+            {hasImageAttachments &&
                 <AttachmentsModal
                     mediaInspectionIdx={mediaInspectionIdx}
                     setMediaInspectionIdx={setMediaInspectionIdx}
