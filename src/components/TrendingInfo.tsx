@@ -176,7 +176,7 @@ const subheader: CSSProperties = {
 };
 
 const imageStyle: CSSProperties = {
-    backgroundColor: "white",
+    backgroundColor: "#C1C1C1",
     borderRadius: "15px",
     maxHeight: "200px",
     objectFit: "contain",
