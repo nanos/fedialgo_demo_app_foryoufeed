@@ -134,6 +134,7 @@ Assuming you check both `fedialgo` and this repo out to the same directory there
 * @LaurensHof@fediversereport.com
 * @michael@thms.uk
 * @paige@canadiancivil.com
+* @reiver@mastodon.social
 * @rolle@mementomori.social
 
 #### Hashtags
