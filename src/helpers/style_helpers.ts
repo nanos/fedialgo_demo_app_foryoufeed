@@ -4,6 +4,7 @@
 import { CSSProperties } from "react";
 
 export const CRYPTADAMUS_ICON_URL = "https://media.universeodon.com/accounts/avatars/109/363/179/904/598/380/original/eecdc2393e75e8bf.jpg";
+export const IMAGE_BACKGROUND_COLOR = "#C1C1C1";
 export const PARTICIPATED_TAG_COLOR = "#92a14a";
 export const PARTICIPATED_TAG_COLOR_FADED = "#c3d46e";
 export const RED = 'firebrick';
@@ -50,4 +51,5 @@ export const titleStyle: CSSProperties = {
     marginTop: "0px",
     textDecoration: "underline",
 };
+
 export const TOOLTIP_ANCHOR = "tooltip-anchor";

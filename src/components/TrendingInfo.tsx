@@ -16,9 +16,8 @@ import {
 } from "fedialgo";
 
 import TrendingSection, { LINK_FONT_SIZE, infoTxtStyle } from "./TrendingSection";
-import { accordionBody, titleStyle } from "../helpers/style_helpers";
+import { IMAGE_BACKGROUND_COLOR, accordionBody, titleStyle } from "../helpers/style_helpers";
 import { followUri, openToot, openTrendingLink } from "../helpers/react_helpers";
-import { logMsg } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
 const MAX_TRENDING_LINK_LEN = 170;
@@ -176,7 +175,7 @@ const subheader: CSSProperties = {
 };
 
 const imageStyle: CSSProperties = {
-    backgroundColor: "#C1C1C1",
+    backgroundColor: IMAGE_BACKGROUND_COLOR,
     borderRadius: "15px",
     maxHeight: "200px",
     objectFit: "contain",
