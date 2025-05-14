@@ -7,6 +7,7 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import ReactJsonView from '@microlink/react-json-view';
 import { Modal } from 'react-bootstrap';
 
+import JsonModal from "./JsonModal";
 import { accordionBody, linkesque, roundedBox, titleStyle } from "../helpers/style_helpers";
 import { DEMO_APP } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
@@ -25,29 +26,18 @@ export default function ExperimentalFeatures() {
 
     return (
         <Accordion>
-            <Modal
+            <JsonModal
                 dialogClassName="modal-lg"
-                onHide={() => setShowUserDataModal(false)}
+                infoTxt="Some of the data derived from your Mastodon history that is used to score your feed."
+                json={algorithm?.userData}
+                jsonViewProps={{
+                    collapsed: 1,
+                    displayObjectSize: true,
+                }}
+                setShow={setShowUserDataModal}
                 show={showUserDataModal}
-            >
-                <Modal.Header closeButton style={{ color: "black" }}>
-                    <Modal.Title>User Data</Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body >
-                    <ReactJsonView
-                        collapsed={1}
-                        displayArrayKey={false}
-                        displayDataTypes={false}
-                        displayObjectSize={false}
-                        quotesOnKeys={false}
-                        src={algorithm?.userData || {}}
-                        sortKeys={true}
-                        style={{padding: "20px"}}
-                        theme="apathy:inverted"
-                    />
-                </Modal.Body>
-            </Modal>
+                title="User Data"
+            />
 
             <Accordion.Item eventKey="trendingInfoTags">
                 <Accordion.Header>

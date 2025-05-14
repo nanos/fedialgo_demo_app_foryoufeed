@@ -24,14 +24,14 @@ import {
 
 import ActionButton, { ButtonAction } from "./status/ActionButton";
 import AttachmentsModal from './status/AttachmentsModal';
+import JsonModal from './JsonModal';
 import MultimediaNode from "./status/MultimediaNode";
 import NewTabLink from './helpers/NewTabLink';
 import Poll from "./status/Poll";
 import PreviewCard from "./status/PreviewCard";
-import ScoreModal from './status/ScoreModal';
 import { logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
-import { PARTICIPATED_TAG_COLOR, PARTICIPATED_TAG_COLOR_FADED, RED } from "../helpers/style_helpers";
+import { PARTICIPATED_TAG_COLOR, RED } from "../helpers/style_helpers";
 import { timestampString } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
@@ -170,7 +170,17 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     return (
         <div>
-            <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={toot} />
+            <JsonModal
+                infoTxt={<>Posted by {parse(toot.account.displayNameWithEmojis())}{' '}(@{toot.account.webfingerURI})</>}
+                json={toot.alternateScoreInfo()}
+                jsonViewProps={{
+                    collapsed: 3,
+                }}
+                show={showScoreModal}
+                setShow={setShowScoreModal}
+                subtitle={<>{'Computed Score:'} <code>{toot.scoreInfo.score}</code></>}
+                title="This Toot's Score"
+            />
 
             {hasImageAttachments &&
                 <AttachmentsModal

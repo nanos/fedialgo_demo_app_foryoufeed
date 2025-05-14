@@ -1,0 +1,80 @@
+/*
+ * Modal to display JSON data.
+ *   - React Bootstrap Modal: https://getbootstrap.com/docs/5.0/components/modal/
+ *   - ReactJsonView: https://github.com/microlinkhq/react-json-view
+ */
+import React, { CSSProperties, ReactNode } from 'react';
+
+import ReactJsonView from '@microlink/react-json-view';
+import { Modal } from 'react-bootstrap';
+
+import { globalFont } from '../helpers/style_helpers';
+
+type ReactJsonViewProps = typeof ReactJsonView.defaultProps;
+
+const DEFAULT_JSON_VIEW_PROPS: ReactJsonViewProps = {
+    collapsed: 1,
+    displayArrayKey: false,
+    displayDataTypes: false,
+    displayObjectSize: false,
+    quotesOnKeys: false,
+    sortKeys: true,
+    style: { padding: "20px" },
+    theme: "apathy:inverted",
+};
+
+interface JsonModalProps {
+    dialogClassName?: "modal-sm" | "modal-lg" | "modal-xl" | "modal-fullscreen" | undefined,
+    infoTxt?: ReactNode,
+    json: object,
+    jsonViewProps?: ReactJsonViewProps,
+    show: boolean,
+    setShow: (show: boolean) => void,
+    subtitle?: string | React.ReactNode,
+    title: string,
+};
+
+
+export default function JsonModal(props: JsonModalProps) {
+    let { dialogClassName, infoTxt, json, jsonViewProps, show, setShow, subtitle, title } = props;
+    jsonViewProps ??= {};
+    json ??= {};
+
+    return (
+        <Modal
+            dialogClassName={dialogClassName}
+            onHide={() => setShow(false)}
+            show={show}
+        >
+            <Modal.Header closeButton style={textStyle}>
+                <Modal.Title>{title}</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body >
+                {(subtitle || infoTxt) &&
+                    <div style={{...textStyle, marginBottom: "10px"}}>
+                        {subtitle && <p style={headerFont}>{subtitle}</p>}
+                        {infoTxt && <p>{infoTxt}</p>}
+                    </div>}
+
+                <ReactJsonView
+                    {...{...DEFAULT_JSON_VIEW_PROPS, ...jsonViewProps}}
+                    src={json || {}}
+                />
+            </Modal.Body>
+        </Modal>
+    );
+};
+
+
+const textStyle: CSSProperties = {
+    color: "black",
+};
+
+const headerFont: CSSProperties = {
+    ...globalFont,
+    ...textStyle,
+    fontSize: "14px",
+    fontWeight: 700,
+    marginBottom: "5px",
+};
