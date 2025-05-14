@@ -8,7 +8,7 @@ import React, { CSSProperties, useState, useEffect } from "react";
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { NON_SCORE_WEIGHTS, PresetWeightLabel, PresetWeights, WeightName, Weights } from "fedialgo";
+import { NON_SCORE_WEIGHTS, WeightName, Weights } from "fedialgo";
 
 import WeightSlider from './WeightSlider';
 import { accordionBody, roundedBox, titleStyle } from "../../helpers/style_helpers";
@@ -19,7 +19,7 @@ const PRESET_MENU_TITLE = "Preset Algorithm Configurations";
 
 
 export default function WeightSetter() {
-    const { algorithm } = useAlgorithm();
+    const { algorithm, setError } = useAlgorithm();
     const [userWeights, setUserWeights] = useState<Weights>({} as Weights);
     const sortedScorers = algorithm.weightedScorers.sort((a, b) => a.name.localeCompare(b.name));
     const initWeights = async () => setUserWeights(await algorithm.getUserWeights());
@@ -29,8 +29,24 @@ export default function WeightSetter() {
     // Update the user weightings stored in TheAlgorithm when a user moves a weight slider
     const updateWeights = async (newWeights: Weights): Promise<void> => {
         logMsg(`updateWeights() called with:`, newWeights);
-        setUserWeights(newWeights);
-        await algorithm.updateUserWeights(newWeights);
+
+        try {
+            setUserWeights(newWeights);
+            await algorithm.updateUserWeights(newWeights);
+        } catch (error) {
+            setError(`${error?.message || error}`);
+        }
+    };
+
+    const updateWeightsToPreset = async (preset: string): Promise<void> => {
+        logMsg(`updateWeightsToPreset() called with:`, preset);
+
+        try {
+            await algorithm.updateUserWeightsToPreset(preset);
+            setUserWeights(await algorithm.getUserWeights());
+        } catch (error) {
+            setError(`${error?.message || error}`);
+        }
     };
 
     const weightSlider = (scoreName: WeightName) => (
@@ -54,12 +70,8 @@ export default function WeightSetter() {
 
                 <Accordion.Body style={accordionBody}>
                     <DropdownButton id="presets" style={presetMenu} title={PRESET_MENU_TITLE} variant="secondary">
-                        {/* Mapping enums is annoying. See: https://www.typescriptlang.org/play/?ts=5.0.4#code/KYDwDg9gTgLgBMAdgVwLZwDIENEHNla7ADOAongDYCWxAFnAN4BQccA5EgKoDKbcAvO3K5qdNgBoW7AF60AEjhh9BbALI4AJlihVE4uABUoWDVRhUIiLBQlMAvkyYwAnmGBwwVAMYBrYFAB5MHNLAUYpLwgNYAAuOD9nCAAzOBc3ZMwcfEISYVFaAG4pCiwAI2AKOOw8AiIyShpC+yKmJORELxDEOCJEfywYYCCugAoEuISMtOAM6uy6vMaASjjPX39hi27mVihgGGQobalWSOiJ4GdJVlYS8srMmpz6kUaAbQSAXWu4OyKHJiRRDEeAQYJbYhhEZSAKlABWwE6ADoEsQRnNarkGnQlnAsJCxpcpq4ZikMc9Fji3p8mEskagsGARr1+oNNpYlkUgA */}
-                        {(Object.keys(PresetWeights) as (keyof typeof PresetWeightLabel)[]).map((preset) => (
-                            <Dropdown.Item
-                                key={preset}
-                                onClick={async () => await updateWeights(PresetWeights[preset])}
-                            >
+                        {Object.keys(algorithm.weightPresets).map((preset) => (
+                            <Dropdown.Item key={preset} onClick={() => updateWeightsToPreset(preset)}>
                                 {preset}
                             </Dropdown.Item>
                         ))}
