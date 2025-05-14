@@ -3,6 +3,7 @@
  */
 import React, { KeyboardEventHandler, useCallback, useMemo, useState } from 'react';
 
+import { Button } from 'react-bootstrap';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { mastodon } from 'masto';
@@ -109,6 +110,7 @@ export default function Poll(props: PollProps) {
 
                 {!disabled &&
                     <>
+                        {/* TODO: should this be a Button, not a button? */}
                         <button className='poll__link' onClick={() => {
                             debugMsg('See results clicked, current selected:', selected);
                             setRevealed(!revealed);

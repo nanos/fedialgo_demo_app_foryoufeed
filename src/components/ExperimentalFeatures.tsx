@@ -4,6 +4,8 @@
 import React, { CSSProperties, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
+import { Button } from 'react-bootstrap';
+import { FEDIALGO } from 'fedialgo';
 
 import JsonModal from "./JsonModal";
 import { accordionBody, linkesque, roundedBox, titleStyle } from "../helpers/style_helpers";
@@ -17,6 +19,8 @@ export default function ExperimentalFeatures() {
     const [algoState, setAlgoState] = useState({});
 
     const showAlgoState = () => {
+        logMsg(`State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()}, timeline.length=${timeline.length})`);
+
         // Wait for the data to show up
         algorithm.getCurrentState()
             .then((currentState) => {
@@ -31,10 +35,11 @@ export default function ExperimentalFeatures() {
         );
     }
 
-    const logState = () => {
-        logMsg(`State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()}, timeline.length=${timeline.length})`)
-        algorithm.logCurrentState();
-    }
+    const makeButton = (label: string, onClick: () => void, variant?: string) => (
+        <Button onClick={onClick} className='p-2 text-center' variant={variant || "primary"} style={buttonStyle}>
+            {label}
+        </Button>
+    );
 
     return (
         <Accordion>
@@ -67,15 +72,13 @@ export default function ExperimentalFeatures() {
                     <div style={{...roundedBox, paddingBottom: "20px", paddingLeft: "30px", paddingTop: "20px", paddingRight: "20px"}}>
                         <ul style={listStyle}>
                             <li style={listElement}>
-                                <a onClick={triggerPullAllUserData} style={experimentalLink}>
-                                    Trigger Complete User History Load
-                                </a> (may improve scoring of your feed, takes time & resources proportional to the number of times you've tooted)
+                                Show a bunch of information about {FEDIALGO}'s internal state.<br/>
+                                {makeButton('Show State', showAlgoState)}
                             </li>
 
                             <li style={listElement}>
-                                <a onClick={showAlgoState} style={experimentalLink}>
-                                    Show FediAlgo State
-                                </a> (show a bunch of information)
+                                Load all your toots and favourites. May improve scoring of your feed. Takes time & resources proportional to the number of times you've tooted.<br/>
+                                {makeButton('Load Complete User History', triggerPullAllUserData, "danger")}
                             </li>
                         </ul>
                     </div>
@@ -86,17 +89,13 @@ export default function ExperimentalFeatures() {
 };
 
 
-const experimentalLink: CSSProperties = {
-    ...linkesque,
-    color: "black",
-    fontSize: "16px",
-    fontWeight: "bold",
-    height: "20px",
-    listStyle: "inside",
-    marginTop: "6px",
+const buttonStyle: CSSProperties = {
+    marginBottom: "5px",
+    marginTop: "5px",
 };
 
 const listElement: CSSProperties = {
+    fontSize: "18px",
     marginBottom: "7px",
 };
 
