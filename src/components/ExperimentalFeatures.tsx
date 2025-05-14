@@ -9,7 +9,7 @@ import { FEDIALGO } from 'fedialgo';
 
 import FindFollowers from "./FindFollowers";
 import JsonModal from "./JsonModal";
-import { accordionBody, linkesque, roundedBox, titleStyle } from "../helpers/style_helpers";
+import { accordionBody, roundedBox, titleStyle } from "../helpers/style_helpers";
 import { logMsg, versionString } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
