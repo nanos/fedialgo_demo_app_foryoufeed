@@ -1,7 +1,7 @@
 /*
  * WIP: Component for displaying the trending hashtags in the Fediverse.
  */
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -16,12 +16,12 @@ import {
 } from "fedialgo";
 
 import TrendingSection, { LINK_FONT_SIZE, infoTxtStyle } from "./TrendingSection";
-import { IMAGE_BACKGROUND_COLOR, accordionBody, titleStyle } from "../helpers/style_helpers";
+import { IMAGE_BACKGROUND_COLOR, accordionBody, linkesque, titleStyle } from "../helpers/style_helpers";
 import { followUri, openToot, openTrendingLink } from "../helpers/react_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
+const DEFAULT_MAX_HASHTAGS_TO_SHOW = 100;
 const MAX_TRENDING_LINK_LEN = 170;
-const MAX_HASHTAGS_TO_SHOW = 100;
 
 const ATTACHMENT_PREFIXES: Record<MediaCategory, string> = {
     [MediaCategory.AUDIO]: "audio",
@@ -32,7 +32,7 @@ const ATTACHMENT_PREFIXES: Record<MediaCategory, string> = {
 
 export default function TrendingInfo() {
     const { algorithm } = useAlgorithm();
-    // logMsg(`mastodonServers:`, algorithm.mastodonServers);
+    const [maxHashtagsToShow, setMaxHashtagsToShow] = useState(DEFAULT_MAX_HASHTAGS_TO_SHOW);
 
     const linkMapper = (obj: TrendingWithHistory) => `${obj.url}`;
 
@@ -86,6 +86,14 @@ export default function TrendingInfo() {
             <span style={bold}>{prefix?.length ? ' ' : ''}{text}</span>
         </>);
     };
+
+    const toggleAllPopularHashtags = () => {
+        if (maxHashtagsToShow === DEFAULT_MAX_HASHTAGS_TO_SHOW) {
+            setMaxHashtagsToShow(algorithm.userData.popularUserTags().length);
+        } else {
+            setMaxHashtagsToShow(DEFAULT_MAX_HASHTAGS_TO_SHOW);
+        }
+    }
 
     return (
         <Accordion>
@@ -147,11 +155,20 @@ export default function TrendingInfo() {
 
                         <TrendingSection
                             name="Your Most Participated Hashtags"
+                            footer={
+                                <div style={{display: "flex", justifyContent: 'space-around', marginTop: "10px", width: "100%"}}>
+                                    <div style={{width: "12%"}}>
+                                        <a onClick={toggleAllPopularHashtags} style={footerLink}>
+                                            {maxHashtagsToShow === DEFAULT_MAX_HASHTAGS_TO_SHOW ? "(Show All)" : "(Show Less)"}
+                                        </a>
+                                    </div>
+                                </div>
+                            }
                             infoTxt={(tag: TagWithUsageCounts) => `${tag.numToots?.toLocaleString()} of your recent toots`}
                             linkLabel={(tag: TagWithUsageCounts) => `#${tag.name}`}
                             linkUrl={(tag: TagWithUsageCounts) => tag.url}
                             onClick={openTrendingLink}
-                            trendingObjs={algorithm.userData.popularUserTags().slice(0, MAX_HASHTAGS_TO_SHOW)}
+                            trendingObjs={algorithm.userData.popularUserTags().slice(0, maxHashtagsToShow)}
                         />
                     </Accordion>
                 </Accordion.Body>
@@ -162,6 +179,12 @@ export default function TrendingInfo() {
 
 
 const bold: CSSProperties = {
+    fontWeight: "bold",
+};
+
+const footerLink: CSSProperties = {
+    ...linkesque,
+    fontSize: "16px",
     fontWeight: "bold",
 };
 

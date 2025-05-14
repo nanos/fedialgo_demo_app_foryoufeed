@@ -6,7 +6,7 @@ import React, { ReactNode, createContext, useContext, useEffect, useState } from
 import { GET_FEED_BUSY_MSG, TheAlgorithm, Toot, isAccessTokenRevokedError } from "fedialgo";
 import { createRestAPIClient, mastodon } from "masto";
 
-import { browserLanguage, errorMsg, logMsg, warnMsg } from "../helpers/string_helpers";
+import { errorMsg, logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "./useAuth";
 
 interface AlgoContext {
@@ -17,6 +17,7 @@ interface AlgoContext {
     setShouldAutoUpdate?: (should: boolean) => void,
     timeline: Toot[],
     triggerLoad?: (moreOldToots?: boolean) => void,
+    triggerPullAllUserData?: () => void,
 };
 
 interface AlgorithmContextProps {
@@ -45,6 +46,24 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
     // TODO: this doesn't make any API calls yet, right?
     const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token});
     const triggerLoad = (moreOldToots?: boolean) => triggerAlgoLoad(algorithm, setError, setIsLoading, moreOldToots);
+
+    const triggerPullAllUserData = () => {
+        if (!algorithm) return;
+        setIsLoading(true);
+
+        algorithm.triggerPullAllUserData()
+            .then(() => logMsg(`triggerPullAllUserData() finished`))
+            .catch((err) => {
+                if (err.message.includes(GET_FEED_BUSY_MSG)) {
+                    warnMsg(`triggerPullAllUserData() Load already in progress, please wait a moment and try again`);
+                } else {
+                    const msg = `Failed to triggerPullAllUserData() with error:`;
+                    errorMsg(msg, err);
+                    setError(`${msg} ${err}`);
+                }
+            })
+            .finally(() => setIsLoading(false));
+    };
 
     // Initial load of the feed
     useEffect(() => {
@@ -125,7 +144,8 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
         setShouldAutoUpdate,
         shouldAutoUpdate,
         timeline,
-        triggerLoad
+        triggerLoad,
+        triggerPullAllUserData
     };
 
     return (

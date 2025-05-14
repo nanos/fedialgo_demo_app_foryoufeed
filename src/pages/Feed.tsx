@@ -44,6 +44,7 @@ export default function Feed() {
     const [error, setError] = useState<string>("");
     const [hideLinkPreviews, setHideLinkPreviews] = useState(false);
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(true);  // Left panel stickiness
+    const [loadingStatus, setLoadingStatus] = useState<string>(null);
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [prevScrollY, setPrevScrollY] = useState(0);
     const [scrollPercentage, setScrollPercentage] = useState(0);
@@ -108,6 +109,12 @@ export default function Feed() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isBottom, numDisplayedToots, prevScrollY, setNumDisplayedToots, setPrevScrollY, timeline]);
+
+    // Watch the algorithm.loadingStatus for changes because the renderer doesn't pick them up on its own (TODO: why?)
+    useEffect(() => {
+        if (!algorithm) return;
+        setLoadingStatus(algorithm.loadingStatus);
+    }, [algorithm, algorithm?.loadingStatus, isLoading]);
 
 
     return (
@@ -180,7 +187,7 @@ export default function Feed() {
 
                         <div style={stickySwitchContainer}>
                             {(isLoading)
-                                ? <LoadingSpinner message={algorithm?.loadingStatus} style={loadingMsgStyle} />
+                                ? <LoadingSpinner message={loadingStatus} style={loadingMsgStyle} />
                                 : finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds)}
 
                             <p style={scrollStatusMsg}>

@@ -14,6 +14,7 @@ export const LINK_FONT_SIZE = 16;
 export type TrendingListObj = TrendingObj | string;
 
 interface TrendingProps {
+    footer?: React.ReactNode;
     hasCustomStyle?: boolean;
     infoTxt: (obj: TrendingListObj) => string | undefined;
     linkLabel: (obj: TrendingListObj) => React.ReactElement | string;
@@ -25,7 +26,7 @@ interface TrendingProps {
 
 
 export default function TrendingSection(props: TrendingProps) {
-    const { hasCustomStyle, infoTxt, linkLabel, linkUrl, onClick, name, trendingObjs } = props;
+    const { footer, hasCustomStyle, infoTxt, linkLabel, linkUrl, onClick, name, trendingObjs } = props;
     const linkStyle = hasCustomStyle ? tagLinkStyle : boldTagLinkStyle;
 
     return (
@@ -54,6 +55,8 @@ export default function TrendingSection(props: TrendingProps) {
                             </li>
                         ))}
                     </ol>
+
+                    {footer}
                 </div>
             </Accordion.Body>
         </Accordion.Item>

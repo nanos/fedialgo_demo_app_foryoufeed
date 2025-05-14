@@ -11,7 +11,7 @@ import { useAlgorithm } from "../hooks/useAlgorithm";
 
 
 export default function ExperimentalFeatures() {
-    const { algorithm, isLoading, timeline } = useAlgorithm();
+    const { algorithm, isLoading, timeline, triggerPullAllUserData } = useAlgorithm();
 
     const logState = () => {
         algorithm.logWithState(
@@ -34,18 +34,18 @@ export default function ExperimentalFeatures() {
                         Use with caution.
                     </p>
 
-                    <div style={{...roundedBox, paddingBottom: "20px", paddingLeft: "30px", paddingTop: "30px", paddingRight: "20px"}}>
+                    <div style={{...roundedBox, paddingBottom: "20px", paddingLeft: "30px", paddingTop: "20px", paddingRight: "20px"}}>
                         <ul style={listStyle}>
+                            <li style={listElement}>
+                                <a onClick={triggerPullAllUserData} style={experimentalLink}>
+                                    Trigger Complete User History Load
+                                </a> (may improve scoring of your feed, takes time & resources proportional to the number of times you've tooted)
+                            </li>
+
                             <li style={listElement}>
                                 <a onClick={logState} style={experimentalLink}>
                                     Dump Current State to Console
                                 </a>
-                            </li>
-
-                            <li style={listElement}>
-                                <a onClick={() => algorithm.pullAllUserData()} style={experimentalLink}>
-                                    Trigger Complete User History Load
-                                </a> (takes time & resources proportional to the number of times you've tooted)
                             </li>
                         </ul>
                     </div>
