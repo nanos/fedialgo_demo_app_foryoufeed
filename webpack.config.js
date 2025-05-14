@@ -13,7 +13,6 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const webpack = require("webpack");
 
-const version= require('./package.json').version;
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const envMsg = `* [WEBPACK] process.env.NODE_ENV: ${process.env.NODE_ENV} *`;
 console.log(`${'*'.repeat(envMsg.length)}\n${envMsg}\n${'*'.repeat(envMsg.length)}`);
@@ -77,7 +76,7 @@ module.exports = {
             skipWaiting: true,
         }),
         new webpack.EnvironmentPlugin({
-            FEDIALGO_VERSION: version
+            FEDIALGO_VERSION: require('./package.json').version
         }),
     ].filter(Boolean),
 
