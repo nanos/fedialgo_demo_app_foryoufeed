@@ -18,6 +18,7 @@ import { useAuthContext } from "../hooks/useAuth";
 export default function ExperimentalFeatures() {
     const { algorithm, api, isLoading, setError, timeline, triggerPullAllUserData } = useAlgorithm();
     const { user } = useAuthContext();
+
     const [showStateModal, setShowStateModal] = useState(false);
     const [algoState, setAlgoState] = useState({});
 
@@ -27,7 +28,7 @@ export default function ExperimentalFeatures() {
         // Wait for the data to show up
         algorithm.getCurrentState()
             .then((currentState) => {
-                console.log("Algorithm state:", currentState);
+                console.log("FediAlgo state:", currentState);
                 currentState.version = versionString();
                 setAlgoState(currentState);
                 setShowStateModal(true);
@@ -55,7 +56,7 @@ export default function ExperimentalFeatures() {
         <Accordion>
             <JsonModal
                 dialogClassName="modal-lg"
-                infoTxt="Some of the data derived from your Mastodon history that is used to score your feed."
+                infoTxt="A window into FediAlgo's internal state."
                 json={algoState}
                 jsonViewProps={{
                     collapsed: 1,
@@ -64,7 +65,7 @@ export default function ExperimentalFeatures() {
                 }}
                 setShow={setShowStateModal}
                 show={showStateModal}
-                title="User Data"
+                title="FediAlgo State"
             />
 
             <Accordion.Item eventKey="trendingInfoTags">
@@ -89,13 +90,13 @@ export default function ExperimentalFeatures() {
                             <hr className="hr" />
 
                             <li style={listElement}>
-                                Load all your toots and favourites. May improve scoring of your feed. Takes time & resources proportional to the number of times you've tooted.<br/>
+                                Load all your toots and favourites. May improve scoring of your feed.
+                                {' '}Takes time & resources proportional to the number of times you've tooted.<br/>
                                 {makeButton('Load Complete User History', triggerPullAllUserData, "danger")}
                             </li>
                         </ul>
 
                         <hr className="hr" />
-
                         <FindFollowers api={api} user={user} />
                     </div>
                 </Accordion.Body>
