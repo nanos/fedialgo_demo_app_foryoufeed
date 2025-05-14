@@ -4,12 +4,10 @@
 import React, { CSSProperties, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import ReactJsonView from '@microlink/react-json-view';
-import { Modal } from 'react-bootstrap';
 
 import JsonModal from "./JsonModal";
 import { accordionBody, linkesque, roundedBox, titleStyle } from "../helpers/style_helpers";
-import { DEMO_APP } from "../helpers/string_helpers";
+import { logMsg } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
 
@@ -18,10 +16,8 @@ export default function ExperimentalFeatures() {
     const [showUserDataModal, setShowUserDataModal] = useState(false);
 
     const logState = () => {
-        algorithm.logWithState(
-            DEMO_APP,
-            `State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()}, timeline.length=${timeline.length})`,
-        );
+        logMsg(`State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()}, timeline.length=${timeline.length})`)
+        algorithm.logCurrentState();
     }
 
     return (

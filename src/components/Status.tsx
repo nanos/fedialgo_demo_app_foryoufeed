@@ -29,10 +29,9 @@ import MultimediaNode from "./status/MultimediaNode";
 import NewTabLink from './helpers/NewTabLink';
 import Poll from "./status/Poll";
 import PreviewCard from "./status/PreviewCard";
-import { logMsg } from '../helpers/string_helpers';
+import { logMsg, timestampString } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
 import { PARTICIPATED_TAG_COLOR, RED } from "../helpers/style_helpers";
-import { timestampString } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
 export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
