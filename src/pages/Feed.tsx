@@ -111,6 +111,7 @@ export default function Feed() {
     }, [isBottom, numDisplayedToots, prevScrollY, setNumDisplayedToots, setPrevScrollY, timeline]);
 
     // Watch the algorithm.loadingStatus for changes because the renderer doesn't pick them up on its own (TODO: why?)
+    // TODO: this doesn't actually work, the "Finalizing Score" loadingStatus doesn't show up usually
     useEffect(() => {
         if (!algorithm) return;
         setLoadingStatus(algorithm.loadingStatus);

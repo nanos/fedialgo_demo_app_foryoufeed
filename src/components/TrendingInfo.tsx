@@ -87,13 +87,34 @@ export default function TrendingInfo() {
         </>);
     };
 
-    const toggleAllPopularHashtags = () => {
-        if (maxHashtagsToShow === DEFAULT_MAX_HASHTAGS_TO_SHOW) {
-            setMaxHashtagsToShow(algorithm.userData.popularUserTags().length);
-        } else {
-            setMaxHashtagsToShow(DEFAULT_MAX_HASHTAGS_TO_SHOW);
+    const buildParticipatedHashtagsFooter = () => {
+        const numTags = algorithm.userData.popularUserTags().length;
+        const showAllText = `show all ${numTags} hashtags`;
+
+        if (numTags <= DEFAULT_MAX_HASHTAGS_TO_SHOW) {
+            console.log(`No footer needed, only ${numTags} participated hashtags`);
+            return null;
         }
-    }
+
+        const toggleAllPopularHashtags = () => {
+            if (maxHashtagsToShow === DEFAULT_MAX_HASHTAGS_TO_SHOW) {
+                setMaxHashtagsToShow(algorithm.userData.popularUserTags().length);
+            } else {
+                setMaxHashtagsToShow(DEFAULT_MAX_HASHTAGS_TO_SHOW);
+            }
+        }
+
+        return (
+            <div style={{display: "flex", justifyContent: 'space-around', width: "100%"}}>
+                <div style={{width: "40%"}}>
+                    {'('}<a onClick={toggleAllPopularHashtags} style={footerLink}>
+                        {maxHashtagsToShow === DEFAULT_MAX_HASHTAGS_TO_SHOW ? showAllText : 'show less'}
+                    </a>{')'}
+                </div>
+            </div>
+        );
+    };
+
 
     return (
         <Accordion>
@@ -155,15 +176,7 @@ export default function TrendingInfo() {
 
                         <TrendingSection
                             name="Your Most Participated Hashtags"
-                            footer={
-                                <div style={{display: "flex", justifyContent: 'space-around', marginTop: "10px", width: "100%"}}>
-                                    <div style={{width: "12%"}}>
-                                        <a onClick={toggleAllPopularHashtags} style={footerLink}>
-                                            {maxHashtagsToShow === DEFAULT_MAX_HASHTAGS_TO_SHOW ? "(Show All)" : "(Show Less)"}
-                                        </a>
-                                    </div>
-                                </div>
-                            }
+                            footer={buildParticipatedHashtagsFooter()}
                             infoTxt={(tag: TagWithUsageCounts) => `${tag.numToots?.toLocaleString()} of your recent toots`}
                             linkLabel={(tag: TagWithUsageCounts) => `#${tag.name}`}
                             linkUrl={(tag: TagWithUsageCounts) => tag.url}
@@ -184,6 +197,7 @@ const bold: CSSProperties = {
 
 const footerLink: CSSProperties = {
     ...linkesque,
+    color: "blue",
     fontSize: "16px",
     fontWeight: "bold",
 };
