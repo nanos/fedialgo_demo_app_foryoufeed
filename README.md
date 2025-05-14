@@ -130,6 +130,7 @@ Assuming you check both `fedialgo` and this repo out to the same directory there
 
 #### Beta Users
 * @benroyce@mastodon.social
+* @HistoPol@mastodon.social
 * @joeneXtra@todon.eu
 * @LaurensHof@fediversereport.com
 * @michael@thms.uk
