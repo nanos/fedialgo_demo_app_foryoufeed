@@ -174,7 +174,6 @@ export default function StatusComponent(props: StatusComponentProps) {
     return (
         <div>
             <JsonModal
-                infoTxt={<>Posted by {parse(toot.account.displayNameWithEmojis())}{' '}(@{toot.account.webfingerURI})</>}
                 json={toot.alternateScoreInfo()}
                 jsonViewProps={{
                     collapsed: 3,
@@ -182,7 +181,10 @@ export default function StatusComponent(props: StatusComponentProps) {
                 }}
                 show={showScoreModal}
                 setShow={setShowScoreModal}
-                subtitle={<>{'Computed Score:'} <code>{toot.scoreInfo.score}</code></>}
+                subtitle={<ul>
+                    <li>{'Computed Score:'} <code>{toot.scoreInfo.score}</code></li>
+                    <li>{'Posted by:'} <span style={{fontWeight: 500}}>{parse(toot.account.displayNameWithEmojis())} (@{toot.account.webfingerURI})</span></li>
+                </ul>}
                 title="This Toot's Score"
             />
 
