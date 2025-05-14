@@ -1,9 +1,11 @@
 /*
  * WIP: Component for displaying the trending hashtags in the Fediverse.
  */
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
+import ReactJsonView from '@microlink/react-json-view';
+import { Modal } from 'react-bootstrap';
 
 import { accordionBody, linkesque, roundedBox, titleStyle } from "../helpers/style_helpers";
 import { DEMO_APP } from "../helpers/string_helpers";
@@ -12,6 +14,7 @@ import { useAlgorithm } from "../hooks/useAlgorithm";
 
 export default function ExperimentalFeatures() {
     const { algorithm, isLoading, timeline, triggerPullAllUserData } = useAlgorithm();
+    const [showUserDataModal, setShowUserDataModal] = useState(false);
 
     const logState = () => {
         algorithm.logWithState(
@@ -22,6 +25,27 @@ export default function ExperimentalFeatures() {
 
     return (
         <Accordion>
+            <Modal
+                dialogClassName="modal-lg"
+                onHide={() => setShowUserDataModal(false)}
+                show={showUserDataModal}
+            >
+                <Modal.Header closeButton style={{ color: "black" }}>
+                    <Modal.Title>User Data</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <ReactJsonView
+                        collapsed={1}
+                        displayDataTypes={false}
+                        displayObjectSize={false}
+                        quotesOnKeys={false}
+                        src={algorithm?.userData || {}}
+                        theme="apathy:inverted"
+                    />
+                </Modal.Body>
+            </Modal>
+
             <Accordion.Item eventKey="trendingInfoTags">
                 <Accordion.Header>
                     <p style={titleStyle}>
@@ -40,6 +64,12 @@ export default function ExperimentalFeatures() {
                                 <a onClick={triggerPullAllUserData} style={experimentalLink}>
                                     Trigger Complete User History Load
                                 </a> (may improve scoring of your feed, takes time & resources proportional to the number of times you've tooted)
+                            </li>
+
+                            <li style={listElement}>
+                                <a onClick={() => setShowUserDataModal(true)} style={experimentalLink}>
+                                    Show User Data
+                                </a>
                             </li>
 
                             <li style={listElement}>

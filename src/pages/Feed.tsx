@@ -19,11 +19,10 @@ import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
 import { linkesque } from "../helpers/style_helpers";
-import { DEMO_APP, logMsg, warnMsg } from "../helpers/string_helpers";
+import { logMsg, warnMsg } from "../helpers/string_helpers";
 import { TOOLTIP_ANCHOR } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
-import { link } from "fs";
 
 // Number constants
 const DEFAULT_NUM_DISPLAYED_TOOTS = 20;
