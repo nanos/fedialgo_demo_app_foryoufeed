@@ -15,6 +15,11 @@ assert_repo_is_ready() {
 tag_repo() {
     local version_number="$1"
     local repo_dir=`basename $PWD`
+
+    local package_json_sed_cmd="s/\"version\": \"[0-9]+\.[0-9]+\.[0-9]+\",/\"version\": \"${version_number#v}\",/g"
+    sed -E -i .sedbak "$package_json_sed_cmd" package.json
+    git commit -am"Bump package.json version to $version_number"
+
     echo "Tagging repo $repo_dir with version: $version_number"
     git push origin "$MASTER_BRANCH"
     git tag "$version_number"
