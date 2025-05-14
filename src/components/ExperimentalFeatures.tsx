@@ -34,13 +34,16 @@ export default function ExperimentalFeatures() {
                     <Modal.Title>User Data</Modal.Title>
                 </Modal.Header>
 
-                <Modal.Body>
+                <Modal.Body >
                     <ReactJsonView
                         collapsed={1}
+                        displayArrayKey={false}
                         displayDataTypes={false}
                         displayObjectSize={false}
                         quotesOnKeys={false}
                         src={algorithm?.userData || {}}
+                        sortKeys={true}
+                        style={{padding: "20px"}}
                         theme="apathy:inverted"
                     />
                 </Modal.Body>
@@ -69,7 +72,7 @@ export default function ExperimentalFeatures() {
                             <li style={listElement}>
                                 <a onClick={() => setShowUserDataModal(true)} style={experimentalLink}>
                                     Show User Data
-                                </a>
+                                </a> (show derived user data used for scoring)
                             </li>
 
                             <li style={listElement}>
