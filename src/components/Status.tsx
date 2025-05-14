@@ -182,8 +182,12 @@ export default function StatusComponent(props: StatusComponentProps) {
                 show={showScoreModal}
                 setShow={setShowScoreModal}
                 subtitle={<ul>
+                    <li>{'Poster:'} <span style={{fontWeight: 500}}>
+                        {parse(toot.account.displayNameWithEmojis())} (@{toot.account.webfingerURI})
+                        </span>
+                    </li>
+
                     <li>{'Computed Score:'} <code>{toot.scoreInfo.score}</code></li>
-                    <li>{'Posted by:'} <span style={{fontWeight: 500}}>{parse(toot.account.displayNameWithEmojis())} (@{toot.account.webfingerURI})</span></li>
                 </ul>}
                 title="This Toot's Score"
             />

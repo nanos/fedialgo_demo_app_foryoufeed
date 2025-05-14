@@ -53,7 +53,7 @@ export default function JsonModal(props: JsonModalProps) {
 
             <Modal.Body >
                 {(subtitle || infoTxt) &&
-                    <div style={{...textStyle, marginBottom: "10px"}}>
+                    <div style={{...textStyle, marginBottom: "5px"}}>
                         {subtitle && <p style={headerFont}>{subtitle}</p>}
                         {infoTxt && <p>{infoTxt}</p>}
                     </div>}
