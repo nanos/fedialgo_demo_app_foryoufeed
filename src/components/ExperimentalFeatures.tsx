@@ -12,8 +12,23 @@ import { useAlgorithm } from "../hooks/useAlgorithm";
 
 
 export default function ExperimentalFeatures() {
-    const { algorithm, isLoading, timeline, triggerPullAllUserData } = useAlgorithm();
+    const { algorithm, isLoading, setError, timeline, triggerPullAllUserData } = useAlgorithm();
     const [showUserDataModal, setShowUserDataModal] = useState(false);
+    const [algoState, setAlgoState] = useState({});
+
+    const showAlgoState = () => {
+        // Wait for the data to show up
+        algorithm.getCurrentState()
+            .then((currentState) => {
+                console.log("Algorithm state:", currentState);
+                setAlgoState(currentState);
+                setShowUserDataModal(true);
+            })
+            .catch((error) => {
+                setError(`Failed to get algorithm state: ${error}`);
+            }
+        );
+    }
 
     const logState = () => {
         logMsg(`State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()}, timeline.length=${timeline.length})`)
@@ -25,7 +40,7 @@ export default function ExperimentalFeatures() {
             <JsonModal
                 dialogClassName="modal-lg"
                 infoTxt="Some of the data derived from your Mastodon history that is used to score your feed."
-                json={algorithm?.userData}
+                json={algoState}
                 jsonViewProps={{
                     collapsed: 1,
                     displayObjectSize: true,
@@ -56,15 +71,9 @@ export default function ExperimentalFeatures() {
                             </li>
 
                             <li style={listElement}>
-                                <a onClick={() => setShowUserDataModal(true)} style={experimentalLink}>
-                                    Show User Data
-                                </a> (show derived user data used for scoring)
-                            </li>
-
-                            <li style={listElement}>
-                                <a onClick={logState} style={experimentalLink}>
-                                    Dump Current State to Console
-                                </a>
+                                <a onClick={showAlgoState} style={experimentalLink}>
+                                    Show FediAlgo State
+                                </a> (show a bunch of information)
                             </li>
                         </ul>
                     </div>
