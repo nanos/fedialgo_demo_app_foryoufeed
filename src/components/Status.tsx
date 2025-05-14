@@ -20,6 +20,7 @@ import {
     faPencil,
     faReply,
     faRetweet,
+    faUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
 import ActionButton, { ButtonAction } from "./status/ActionButton";
@@ -49,6 +50,7 @@ enum InfoIconType {
     Mention = "You're Mentioned",
     Public = "Public",
     Reply = "Reply",
+    ShowToot = "Show Toot",
     TrendingLink = "Contains Trending Link",
     TrendingToot = "Trending Toot",
 };
@@ -65,6 +67,7 @@ const INFO_ICONS: Record<InfoIconType, IconInfo> = {
     [InfoIconType.Mention]:      {icon: faBolt, color: "green"},
     [InfoIconType.Public]:       {icon: faGlobe, color: "#2092a1"},
     [InfoIconType.Reply]:        {icon: faReply, color: "blue"},
+    [InfoIconType.ShowToot]:     {icon: faUpRightFromSquare},
     [InfoIconType.TrendingLink]: {icon: faLink, color: RED},
     [InfoIconType.TrendingToot]: {icon: faFireFlameCurved, color: RED},
 };
@@ -84,6 +87,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     // idx of the mediaAttachment to show in the media inspection modal (-1 means no modal)
     const [mediaInspectionIdx, setMediaInspectionIdx] = React.useState<number>(-1);
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
+    const [showTootModal, setShowTootModal] = React.useState<boolean>(false);
 
     // Increase mediaInspectionIdx on Right Arrow
     React.useEffect(() => {
@@ -174,11 +178,26 @@ export default function StatusComponent(props: StatusComponentProps) {
                 json={toot.alternateScoreInfo()}
                 jsonViewProps={{
                     collapsed: 3,
+                    name: "toot.scoreInfo",
                 }}
                 show={showScoreModal}
                 setShow={setShowScoreModal}
                 subtitle={<>{'Computed Score:'} <code>{toot.scoreInfo.score}</code></>}
                 title="This Toot's Score"
+            />
+
+            <JsonModal
+                dialogClassName="modal-xl"
+                json={toot}
+                jsonViewProps={{
+                    collapsed: 3,
+                    name: "toot",
+                    style: {fontSize: 12},
+                    theme: "brewer",
+                }}
+                show={showTootModal}
+                setShow={setShowTootModal}
+                title="Raw Toot Object"
             />
 
             {hasImageAttachments &&
@@ -217,6 +236,10 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <time dateTime={toot.createdAt} title={toot.createdAt}>
                                 {timestampString(toot.createdAt)}
                             </time>
+
+                            <a onClick={(e) => {e.preventDefault(); setShowTootModal(true)}} style={{ marginLeft: "10px" }}>
+                                {infoIcon(InfoIconType.ShowToot)}
+                            </a>
                         </NewTabLink>
 
                         {/* Account name + avatar */}

@@ -13,7 +13,7 @@ import { useAlgorithm } from "../hooks/useAlgorithm";
 
 export default function ExperimentalFeatures() {
     const { algorithm, isLoading, setError, timeline, triggerPullAllUserData } = useAlgorithm();
-    const [showUserDataModal, setShowUserDataModal] = useState(false);
+    const [showStateModal, setShowStateModal] = useState(false);
     const [algoState, setAlgoState] = useState({});
 
     const showAlgoState = () => {
@@ -22,7 +22,7 @@ export default function ExperimentalFeatures() {
             .then((currentState) => {
                 console.log("Algorithm state:", currentState);
                 setAlgoState(currentState);
-                setShowUserDataModal(true);
+                setShowStateModal(true);
             })
             .catch((error) => {
                 setError(`Failed to get algorithm state: ${error}`);
@@ -44,9 +44,10 @@ export default function ExperimentalFeatures() {
                 jsonViewProps={{
                     collapsed: 1,
                     displayObjectSize: true,
+                    name: "state",
                 }}
-                setShow={setShowUserDataModal}
-                show={showUserDataModal}
+                setShow={setShowStateModal}
+                show={showStateModal}
                 title="User Data"
             />
 

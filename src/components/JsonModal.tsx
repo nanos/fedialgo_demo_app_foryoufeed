@@ -20,7 +20,7 @@ const DEFAULT_JSON_VIEW_PROPS: ReactJsonViewProps = {
     quotesOnKeys: false,
     sortKeys: true,
     style: { padding: "20px" },
-    theme: "apathy:inverted",
+    theme: "rjv-default", // "apathy:inverted",
 };
 
 interface JsonModalProps {
@@ -38,6 +38,7 @@ interface JsonModalProps {
 export default function JsonModal(props: JsonModalProps) {
     let { dialogClassName, infoTxt, json, jsonViewProps, show, setShow, subtitle, title } = props;
     jsonViewProps ??= {};
+    jsonViewProps.style = { ...jsonViewStyle, ...(jsonViewProps.style || {}) };
     json ??= {};
 
     return (
@@ -77,4 +78,9 @@ const headerFont: CSSProperties = {
     fontSize: "14px",
     fontWeight: 700,
     marginBottom: "5px",
+};
+
+const jsonViewStyle: CSSProperties = {
+    borderRadius: "15px",
+    padding: "20px",
 };
