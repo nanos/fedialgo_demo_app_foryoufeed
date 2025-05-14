@@ -7,7 +7,7 @@ import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Toot } from "fedialgo";
+import { Toot, formatScore } from "fedialgo";
 import {
     IconDefinition,
     faBolt,
@@ -182,12 +182,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                 show={showScoreModal}
                 setShow={setShowScoreModal}
                 subtitle={<ul>
-                    <li>{'Poster:'} <span style={{fontWeight: 500}}>
-                        {parse(toot.account.displayNameWithEmojis())} (@{toot.account.webfingerURI})
-                        </span>
-                    </li>
-
-                    <li>{'Computed Score:'} <code>{toot.scoreInfo.score}</code></li>
+                    <li>{'Poster:'} <span style={{fontWeight: 500}}>{parse(toot.account.displayNameFullHTML())}</span></li>
+                    <li>{'Final Score:'} <code>{formatScore(toot.scoreInfo.score)}</code></li>
                 </ul>}
                 title="This Toot's Score"
             />
