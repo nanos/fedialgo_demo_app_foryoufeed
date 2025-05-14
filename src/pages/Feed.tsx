@@ -10,6 +10,7 @@ import Row from 'react-bootstrap/Row';
 import { Modal } from "react-bootstrap";
 import { Tooltip } from 'react-tooltip';
 
+import ExperimentalFeatures from "../components/ExperimentalFeatures";
 import FilterSetter from "../components/algorithm/FilterSetter";
 import FindFollowers from "../components/FindFollowers";
 import LoadingSpinner, { fullPageCenteredSpinner } from "../components/LoadingSpinner";
@@ -175,6 +176,7 @@ export default function Feed() {
                         {algorithm && <FilterSetter />}
                         {algorithm && <TrendingInfo />}
                         <FindFollowers api={api} user={user} />
+                        <ExperimentalFeatures />
 
                         <div style={stickySwitchContainer}>
                             {(isLoading)
@@ -185,23 +187,6 @@ export default function Feed() {
                                 {`Displaying ${numDisplayedToots} Toots (Scroll: ${scrollPercentage.toFixed(1)}%)`}
                             </p>
                         </div>
-
-                        {algorithm?.isDebug &&
-                            <p style={{...loadingMsgStyle, marginTop: "10px"}}>
-                                <a
-                                    onClick={() => {
-                                        algorithm.logWithState(
-                                            DEMO_APP,
-                                            `State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()}, timeline.length=${timeline.length})`,
-                                        );
-
-                                        // logMsg(`mastodonServers:`, algorithm.mastodonServers);
-                                    }}
-                                    style={{textDecoration: "underline", color: "white"}}
-                                >
-                                    Dump current algorithm state to console
-                                </a>
-                            </p>}
                     </div>
                 </Col>
 

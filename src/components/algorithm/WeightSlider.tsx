@@ -4,12 +4,12 @@
 import React from 'react';
 
 import Slider, { DEFAULT_STEP_SIZE } from './Slider';
-import { ScorerInfo, StringNumberDict } from "fedialgo";
+import { StringNumberDict, WeightInfo } from "fedialgo";
 
 const SCALE_MULTIPLIER = 1.2;
 
 interface WeightSliderProps {
-    info: ScorerInfo;
+    info: WeightInfo;
     scoreName: string;
     updateWeights: (newWeights: StringNumberDict) => Promise<void>;
     userWeights: StringNumberDict;
