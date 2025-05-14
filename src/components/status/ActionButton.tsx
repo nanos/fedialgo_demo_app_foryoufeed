@@ -72,6 +72,7 @@ export default function ActionButton(props: ActionButtonProps) {
 
     if (actionInfo.countName) {
         buttonText = status[actionInfo.countName];
+        buttonText = (typeof buttonText == "number" && buttonText) > 0 ? buttonText.toLocaleString() : buttonText;
     } else if (action == ButtonAction.Score) {
         buttonText = scoreString(status.scoreInfo?.score);
     }

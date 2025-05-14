@@ -71,6 +71,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
                     errorMsg(`Logging out, failed to verifyCredentials() with error:`, err);
                 }
 
+                // TODO: we don't always actually logout here? Sometimes it just keeps working despite getting the error in logs
                 logout();
                 return;
             }

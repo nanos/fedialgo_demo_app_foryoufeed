@@ -60,7 +60,7 @@ export default function CallbackPage(props: CallbackPageProps) {
 
         // TODO: access_token is retrieved manually via fetch() instead of using the masto.js library
         const oauthTokenURI = `${app.website}/oauth/token`;
-        // logThis(`oAuth() oauthTokenURI: "${oauthTokenURI}"\napp:`, app, `\nuser:`, user, `\ncode: "${code}`);
+        isDebugMode && logThis(`oAuth() oauthTokenURI: "${oauthTokenURI}"\napp:`, app, `\nuser:`, user, `\ncode: "${code}`);
         const oAuthResult = await fetch(oauthTokenURI, {method: 'POST', body});
         const json = await oAuthResult.json()
         const accessToken = json["access_token"];
