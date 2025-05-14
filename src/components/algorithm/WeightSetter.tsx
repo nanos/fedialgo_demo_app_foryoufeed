@@ -51,7 +51,6 @@ export default function WeightSetter() {
 
     const weightSlider = (scoreName: WeightName) => (
         <WeightSlider
-            info={algorithm.weightInfo[scoreName]}
             key={scoreName}
             scoreName={scoreName}
             updateWeights={updateWeights}
