@@ -7,7 +7,7 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 
 import JsonModal from "./JsonModal";
 import { accordionBody, linkesque, roundedBox, titleStyle } from "../helpers/style_helpers";
-import { logMsg } from "../helpers/string_helpers";
+import { logMsg, versionString } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
 
@@ -21,6 +21,7 @@ export default function ExperimentalFeatures() {
         algorithm.getCurrentState()
             .then((currentState) => {
                 console.log("Algorithm state:", currentState);
+                currentState.version = versionString();
                 setAlgoState(currentState);
                 setShowStateModal(true);
             })

@@ -97,6 +97,17 @@ export const timestampString = (_timestamp: string): string => {
 };
 
 
+// Get the Fedialgo version from the environment variable
+export const versionString = () => {
+    try {
+        return process.env.FEDIALGO_VERSION;
+    } catch (e) {
+        console.error(`Error getting version string: ${e}`);
+        return `?.?.?`;
+    }
+};
+
+
 // Log helpers
 export const debugMsg = (message: string, ...args: unknown[]) => console.debug(`[${DEMO_APP}] ${message}`, ...args);
 export const infoMsg = (message: string, ...args: unknown[]) => console.info(`[${DEMO_APP}] ${message}`, ...args);

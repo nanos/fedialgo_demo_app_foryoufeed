@@ -50,7 +50,7 @@ enum InfoIconType {
     Mention = "You're Mentioned",
     Public = "Public",
     Reply = "Reply",
-    ShowToot = "Show Toot",
+    ShowToot = "Show Raw Toot JSON",
     TrendingLink = "Contains Trending Link",
     TrendingToot = "Trending Toot",
 };
@@ -239,9 +239,9 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 {timestampString(toot.createdAt)}
                             </time>
 
-                            <a onClick={(e) => {e.preventDefault(); setShowTootModal(true)}} style={{ marginLeft: "10px" }}>
+                            <span onClick={(e) => {e.preventDefault(); setShowTootModal(true)}} style={{ marginLeft: "10px" }}>
                                 {infoIcon(InfoIconType.ShowToot)}
-                            </a>
+                            </span>
                         </NewTabLink>
 
                         {/* Account name + avatar */}
