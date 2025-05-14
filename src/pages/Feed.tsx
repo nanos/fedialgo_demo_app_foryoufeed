@@ -172,8 +172,7 @@ export default function Feed() {
                         {algorithm && <WeightSetter />}
                         {algorithm && <FilterSetter />}
                         {algorithm && <TrendingInfo />}
-                        <FindFollowers api={api} user={user} />
-                        <ExperimentalFeatures />
+                        {algorithm && <ExperimentalFeatures />}
 
                         <div style={stickySwitchContainer}>
                             {(isLoading)

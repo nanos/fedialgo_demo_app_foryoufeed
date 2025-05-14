@@ -7,14 +7,17 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import { Button } from 'react-bootstrap';
 import { FEDIALGO } from 'fedialgo';
 
+import FindFollowers from "./FindFollowers";
 import JsonModal from "./JsonModal";
 import { accordionBody, linkesque, roundedBox, titleStyle } from "../helpers/style_helpers";
 import { logMsg, versionString } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
+import { useAuthContext } from "../hooks/useAuth";
 
 
 export default function ExperimentalFeatures() {
-    const { algorithm, isLoading, setError, timeline, triggerPullAllUserData } = useAlgorithm();
+    const { algorithm, api, isLoading, setError, timeline, triggerPullAllUserData } = useAlgorithm();
+    const { user } = useAuthContext();
     const [showStateModal, setShowStateModal] = useState(false);
     const [algoState, setAlgoState] = useState({});
 
@@ -83,11 +86,17 @@ export default function ExperimentalFeatures() {
                                 {makeButton('Show State', showAlgoState)}
                             </li>
 
+                            <hr className="hr" />
+
                             <li style={listElement}>
                                 Load all your toots and favourites. May improve scoring of your feed. Takes time & resources proportional to the number of times you've tooted.<br/>
                                 {makeButton('Load Complete User History', triggerPullAllUserData, "danger")}
                             </li>
                         </ul>
+
+                        <hr className="hr" />
+
+                        <FindFollowers api={api} user={user} />
                     </div>
                 </Accordion.Body>
             </Accordion.Item>
@@ -109,7 +118,7 @@ const listElement: CSSProperties = {
 };
 
 const listStyle: CSSProperties = {
-    listStyle: "disc",
+    // listStyle: "disc",
 };
 
 const subheader: CSSProperties = {
