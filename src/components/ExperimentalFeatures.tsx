@@ -97,6 +97,8 @@ export default function ExperimentalFeatures() {
 
 
 const buttonStyle: CSSProperties = {
+    // borderColor: "black",
+    // borderWidth: "1px",
     marginBottom: "5px",
     marginTop: "5px",
 };
