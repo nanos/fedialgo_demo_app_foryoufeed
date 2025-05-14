@@ -6,13 +6,14 @@ import React, { ReactNode, createContext, useContext, useEffect, useState } from
 import { GET_FEED_BUSY_MSG, TheAlgorithm, Toot, isAccessTokenRevokedError } from "fedialgo";
 import { createRestAPIClient, mastodon } from "masto";
 
-import { errorMsg, logMsg, warnMsg } from "../helpers/string_helpers";
+import { LOADING_ERROR_MSG, errorMsg, logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "./useAuth";
 
 interface AlgoContext {
     algorithm?: TheAlgorithm,
     api?: mastodon.rest.Client,
     isLoading?: boolean,
+    setError?: (error: string) => void,
     shouldAutoUpdate?: boolean,
     setShouldAutoUpdate?: (should: boolean) => void,
     timeline: Toot[],
@@ -44,26 +45,10 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
     const [timeline, setTimeline] = useState<Toot[]>([]);  // contains timeline Toots
 
     // TODO: this doesn't make any API calls yet, right?
-    const api: mastodon.rest.Client = createRestAPIClient({url: user.server, accessToken: user.access_token});
-    const triggerLoad = (moreOldToots?: boolean) => triggerAlgoLoad(algorithm, setError, setIsLoading, moreOldToots);
-
-    const triggerPullAllUserData = () => {
-        if (!algorithm) return;
-        setIsLoading(true);
-
-        algorithm.triggerPullAllUserData()
-            .then(() => logMsg(`triggerPullAllUserData() finished`))
-            .catch((err) => {
-                if (err.message.includes(GET_FEED_BUSY_MSG)) {
-                    warnMsg(`triggerPullAllUserData() Load already in progress, please wait a moment and try again`);
-                } else {
-                    const msg = `Failed to triggerPullAllUserData() with error:`;
-                    errorMsg(msg, err);
-                    setError(`${msg} ${err}`);
-                }
-            })
-            .finally(() => setIsLoading(false));
-    };
+    const api: mastodon.rest.Client = createRestAPIClient({accessToken: user.access_token, url: user.server});
+    const trigger = (loadFxn: () => Promise<void>) => {triggerLoadFxn(loadFxn, setError, setIsLoading);};
+    const triggerLoad = (moreOldToots?: boolean) => trigger(() => algorithm.triggerFeedUpdate(moreOldToots));
+    const triggerPullAllUserData = () => trigger(() => algorithm.triggerPullAllUserData());
 
     // Initial load of the feed
     useEffect(() => {
@@ -98,7 +83,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
             });
 
             setAlgorithm(algo);
-            triggerAlgoLoad(algo, setError, setIsLoading);
+            triggerLoadFxn(() => algo.triggerFeedUpdate(), setError, setIsLoading);
         };
 
         constructFeed();
@@ -141,6 +126,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
         algorithm,
         api,
         isLoading,
+        setError,
         setShouldAutoUpdate,
         shouldAutoUpdate,
         timeline,
@@ -156,26 +142,28 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
 };
 
 
-// Trigger the algorithm to load new data
-const triggerAlgoLoad = (
-    algorithm: TheAlgorithm,
-    setError?: (error: string) => void,
-    setIsLoading?: (isLoading: boolean) => void,
-    moreOldToots?: boolean
+// Wrapper for calls to FediAlgo TheAlgorithm class that can throw a "busy" error
+const triggerLoadFxn = (
+    fxn: () => Promise<void>,
+    setError: (error: string) => void,
+    setIsLoading: (isLoading: boolean) => void,
 ) => {
-    logMsg(`triggerAlgoLoad() called. algorithm exists?: ${!!algorithm}`);
-    if (!algorithm) return;
-    setIsLoading?.(true);
+    setIsLoading(true);
 
-    algorithm.triggerFeedUpdate(moreOldToots)
-        .then(() => logMsg(`triggerLoad() finished`))
+    fxn().then(() => {
+            logMsg(`triggerPullAllUserData() finished`);
+            setIsLoading(false);
+        })
         .catch((err) => {
             if (err.message.includes(GET_FEED_BUSY_MSG)) {
-                warnMsg(`triggerLoad() Load already in progress, please wait a moment and try again`);
+                // Don't flip the isLoading state if the feed is busy
+                warnMsg(`triggerPullAllUserData() ${LOADING_ERROR_MSG}`);
+                setError(LOADING_ERROR_MSG);
             } else {
-                errorMsg(`Failed to triggerLoad() with error:`, err);
-                setError?.(`Failed to triggerLoad: ${err}`);
+                const msg = `Failed to triggerPullAllUserData() with error:`;
+                errorMsg(msg, err);
+                setError(`${msg} ${err}`);
+                setIsLoading(false);
             }
         })
-        .finally(() => setIsLoading?.(false));
 };

@@ -15,13 +15,12 @@ const ALREADY_VOTED_MSG = `You have already voted`;
 
 interface PollProps {
     poll: mastodon.v1.Poll,
-    setError: (error: string) => void,
 };
 
 
 export default function Poll(props: PollProps) {
-    const { poll, setError } = props;
-    const { api } = useAlgorithm();
+    const { poll } = props;
+    const { api, setError } = useAlgorithm();
 
     const [hasVoted, setHasVoted] = useState(poll.ownVotes?.length > 0);
     const [revealed, setRevealed] = useState(false);

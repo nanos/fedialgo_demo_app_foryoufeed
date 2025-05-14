@@ -5,11 +5,9 @@ import React, { CSSProperties } from "react";
 
 import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
-import { Account, Toot, timeString } from "fedialgo";
-import { capitalCase } from "change-case";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { mastodon } from 'masto';
+import { Toot } from "fedialgo";
 import {
     IconDefinition,
     faBolt,
@@ -35,7 +33,7 @@ import { logMsg } from '../helpers/string_helpers';
 import { openToot } from "../helpers/react_helpers";
 import { PARTICIPATED_TAG_COLOR, PARTICIPATED_TAG_COLOR_FADED, RED } from "../helpers/style_helpers";
 import { timestampString } from "../helpers/string_helpers";
-import { title } from "process";
+import { useAlgorithm } from "../hooks/useAlgorithm";
 
 export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
 
@@ -74,7 +72,8 @@ const INFO_ICONS: Record<InfoIconType, IconInfo> = {
 
 
 export default function StatusComponent(props: StatusComponentProps) {
-    const { hideLinkPreviews, setError, status } = props;
+    const { hideLinkPreviews, status } = props;
+    const { setError } = useAlgorithm();
 
     // If it's a retoot set 'toot' to the original toot
     const toot = status.realToot();
@@ -166,14 +165,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Build an action button (reply, reblog, fave, etc) that appears at the bottom of a toot
     const buildActionButton = (action: ButtonAction, onClick?: (e: React.MouseEvent) => void) => {
-        return (
-            <ActionButton
-                action={action}
-                onClick={onClick}
-                setError={setError}
-                status={toot}
-            />
-        );
+        return <ActionButton action={action} onClick={onClick} status={toot} />;
     };
 
     return (
@@ -202,7 +194,6 @@ export default function StatusComponent(props: StatusComponentProps) {
                     {/* Top bar with account and info icons */}
                     <div className="status__info">
                         {/* Top right icons + timestamp that link to the toot */}
-
                         <NewTabLink className="status__relative-time" href={toot.uri}>
                             <span className="status__visibility-icon">
                                 {toot.editedAt && infoIcon(InfoIconType.Edited)}
@@ -269,7 +260,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                     {/* Preview card and attachment display */}
                     {toot.card && !hasAttachments && <PreviewCard card={toot.card} hideLinkPreviews={hideLinkPreviews} />}
                     {hasAttachments && <MultimediaNode setMediaInspectionIdx={setMediaInspectionIdx} status={toot}/>}
-                    {toot.poll && <Poll poll={toot.poll} setError={setError} />}
+                    {toot.poll && <Poll poll={toot.poll} />}
 
                     {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">

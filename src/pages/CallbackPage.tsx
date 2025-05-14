@@ -3,10 +3,11 @@
  */
 import React, { useEffect } from 'react';
 
-import { createOAuthAPIClient, createRestAPIClient, mastodon } from "masto"
+import { createRestAPIClient } from "masto"
+import { isDebugMode } from "fedialgo";
 import { useSearchParams } from 'react-router-dom';
 
-import { logMsg } from '../helpers/string_helpers';
+import { DEMO_APP, logMsg } from '../helpers/string_helpers';
 import { OAUTH_SCOPE_STR } from './LoginPage';
 import { useAppStorage } from '../hooks/useLocalStorage';
 import { useAuthContext } from '../hooks/useAuth';
@@ -16,9 +17,13 @@ import { User } from '../types';
 // const GRANT_TYPE = "authorization_code";
 // const GRANT_TYPE = "client_credentials";
 
+interface CallbackPageProps {
+    setError?: (error: string) => void,
+};
 
-export default function CallbackPage() {
-    const [error, setError] = React.useState("");
+
+export default function CallbackPage(props: CallbackPageProps) {
+    const { setError } = props;
     const [searchParams] = useSearchParams();
 
     // Example of 'app' object
@@ -61,34 +66,38 @@ export default function CallbackPage() {
         const accessToken = json["access_token"];
         const api = createRestAPIClient({accessToken: accessToken, url: app.website});
 
-        api.v1.accounts.verifyCredentials().then((verifiedUser) => {
-            // logThis(`oAuth() api.v1.accounts.verifyCredentials() succeeded, user:`, verifiedUser);
+        // Authenticate the user
+        api.v1.accounts.verifyCredentials()
+            .then((verifiedUser) => {
+                isDebugMode && logThis(`oAuth() api.v1.accounts.verifyCredentials() succeeded:`, verifiedUser);
 
-            const userData: User = {
-                access_token: accessToken,
-                id: verifiedUser.id,
-                profilePicture: verifiedUser.avatar,
-                server: app.website,
-                username: verifiedUser.username,
-            };
+                const userData: User = {
+                    access_token: accessToken,
+                    id: verifiedUser.id,
+                    profilePicture: verifiedUser.avatar,
+                    server: app.website,
+                    username: verifiedUser.username,
+                };
 
-            loginUser(userData).then(() => logThis(`Logged in '${userData.username}'! User object:`, userData));
-        }).catch((error) => {
-            console.error(`[DEMO APP] <CallbackPage> api.v1.accounts.verifyCredentials() error:`, error);
-            setError(error.toString());
-        });
+                loginUser(userData).then(() => logThis(`Logged in '${userData.username}'! User object:`, userData));
+            }).catch((error) => {
+                console.error(`[${DEMO_APP}] <CallbackPage> api.v1.accounts.verifyCredentials() error:`, error);
+                setError(`Account verifyCredentials error:\n${error.toString()}`);
+            });
 
-        api.v1.apps.verifyCredentials().then((verifyResponse) => {
-            // logThis(`oAuth() api.v1.apps.verifyCredentials() succeeded, verifyResponse:`, verifyResponse);
-        }).catch((error) => {
-            console.error(`[DEMO APP] <CallbackPage> oAuth() api.v1.apps.verifyCredentials() failure:`, error);
-        })
+        // Verify or register the app
+        api.v1.apps.verifyCredentials()
+            .then((verifyResponse) => {
+                isDebugMode && logThis(`oAuth() api.v1.apps.verifyCredentials() succeeded:`, verifyResponse);
+            }).catch((error) => {
+                console.error(`[${DEMO_APP}] <CallbackPage> oAuth() api.v1.apps.verifyCredentials() failure:`, error);
+                setError(`Fedialgo App verifyCredentials error:\n${error.toString()}`);
+            });
     };
 
     return (
         <div>
             <h1>Validating ....</h1>
-            {error && <p>{error}</p>}
         </div>
     );
 };

@@ -3,6 +3,7 @@
  */
 import { isDebugMode } from "fedialgo";
 
+export const LOADING_ERROR_MSG = `Currently loading, please wait a moment and try again.`;
 export const DEMO_APP = "DEMO APP";
 const DEFAULT_LOCALE = "en-US";
 
