@@ -6,8 +6,7 @@
 import React, { CSSProperties, ReactNode, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import Form from 'react-bootstrap/esm/Form';
-import { NumericFilter, PropertyName, PropertyFilter } from "fedialgo";
+import { NumericFilter, BooleanFilterName, BooleanFilter } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
 import FilterAccordionSection, { ACTIVE_CLASSNAME } from "./FilterAccordionSection";
@@ -18,13 +17,13 @@ import { logMsg } from "../../helpers/string_helpers";
 import { titleStyle } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
-type MinTootsFilter = {[key in PropertyName]?: number};
+type MinTootsFilter = {[key in BooleanFilterName]?: number};
 
 const DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
 
 const DEFAULT_MIN_TOOTS_TO_APPEAR: MinTootsFilter = {
-    [PropertyName.HASHTAG]: DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER,
-    [PropertyName.USER]: DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER,
+    [BooleanFilterName.HASHTAG]: DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER,
+    [BooleanFilterName.USER]: DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER,
 };
 
 
@@ -32,26 +31,26 @@ export default function FilterSetter() {
     const { algorithm } = useAlgorithm();
 
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
-    const hasActivePropertyFilter = Object.values(algorithm.filters.filterSections).some(f => f.visible && f.validValues.length);
-    const hasAnyActiveFilter = hasActiveNumericFilter || hasActivePropertyFilter;
-    const visibleSections = Object.values(algorithm.filters.filterSections).filter(section => section.visible);
+    const hasActiveBooleanFilter = Object.values(algorithm.filters.booleanFilters).some(f => f.visible && f.validValues.length);
+    const hasAnyActiveFilter = hasActiveNumericFilter || hasActiveBooleanFilter;
+    const visibleSections = Object.values(algorithm.filters.booleanFilters).filter(section => section.visible);
     const [minTootsCutoffs, setMinTootsCutoffs] = useState<MinTootsFilter>({...DEFAULT_MIN_TOOTS_TO_APPEAR});
 
-    const [sortByValue, setSortByValue] = useState<Record<PropertyName, boolean>>(
+    const [sortByValue, setSortByValue] = useState<Record<BooleanFilterName, boolean>>(
         visibleSections.reduce((acc, section) => {
             acc[section.title] = false;
             return acc
-        }, {} as Record<PropertyName, boolean>)
+        }, {} as Record<BooleanFilterName, boolean>)
     );
 
-    const [tooltippedOnly, setTooltippedOnly] = useState<Record<PropertyName, boolean>>(
+    const [tooltippedOnly, setTooltippedOnly] = useState<Record<BooleanFilterName, boolean>>(
         visibleSections.reduce((acc, section) => {
             acc[section.title] = false;
             return acc
-        }, {} as Record<PropertyName, boolean>)
+        }, {} as Record<BooleanFilterName, boolean>)
     );
 
-    const invertSelectionCheckbox = (filter: PropertyFilter) => {
+    const invertSelectionCheckbox = (filter: BooleanFilter) => {
         return (
             <FilterCheckbox
                 capitalize={true}
@@ -64,7 +63,7 @@ export default function FilterSetter() {
         );
     };
 
-    const sortKeysCheckbox = (filter: PropertyFilter) => {
+    const sortKeysCheckbox = (filter: BooleanFilter) => {
         return (
             <FilterCheckbox
                 capitalize={true}
@@ -79,7 +78,7 @@ export default function FilterSetter() {
         );
     };
 
-    const tooltipOnlyCheckbox = (filter: PropertyFilter) => {
+    const tooltipOnlyCheckbox = (filter: BooleanFilter) => {
         return (
             <FilterCheckbox
                 capitalize={true}

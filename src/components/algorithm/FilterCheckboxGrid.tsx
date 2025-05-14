@@ -8,7 +8,7 @@ import React, { CSSProperties, ReactNode, useMemo, useState } from "react";
 import Col from 'react-bootstrap/Col';
 import FilterCheckbox from "./FilterCheckbox";
 import Row from 'react-bootstrap/Row';
-import { PropertyName, PropertyFilter, TypeFilterName, sortKeysByValue } from "fedialgo";
+import { BooleanFilterName, BooleanFilter, TypeFilterName, sortKeysByValue } from "fedialgo";
 
 import { compareStr, debugMsg } from "../../helpers/string_helpers";
 import { PARTICIPATED_TAG_COLOR_FADED } from "../../helpers/style_helpers";
@@ -18,8 +18,8 @@ type HashtagTooltip = {text: string; color: string;};
 
 // Filtered filters are those that require a minimum number of toots to appear as filter options
 export const FILTERED_FILTERS = [
-    PropertyName.HASHTAG,
-    PropertyName.USER
+    BooleanFilterName.HASHTAG,
+    BooleanFilterName.USER
 ];
 
 const TOOLTIPS = {
@@ -27,11 +27,11 @@ const TOOLTIPS = {
     [TypeFilterName.FOLLOWED_HASHTAGS]: `You follow this hashtag.`,
     [TypeFilterName.PARTICIPATED_HASHTAGS]: (n: number) => `You've posted this hashtag ${n} times recently.`,
     [TypeFilterName.TRENDING_HASHTAGS]: `This hashtag is trending.`,
-    [PropertyName.LANGUAGE]: `You post most in this language.`,
+    [BooleanFilterName.LANGUAGE]: `You post most in this language.`,
 };
 
 interface FilterCheckboxGridProps {
-    filterSection: PropertyFilter,  // TODO: maybe rename propertyFilter
+    filterSection: BooleanFilter,  // TODO: maybe rename propertyFilter
     minToots?: number,
     sortByValue?: boolean,
     tooltippedOnly?: boolean,
@@ -46,7 +46,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
 
     // Generate color and tooltip text for a hashtag checkbox
     const getTooltipInfo = (name: string): HashtagTooltip => {
-        if (filterSection.title == PropertyName.HASHTAG) {
+        if (filterSection.title == BooleanFilterName.HASHTAG) {
             if (name in algorithm.userData.followedTags) {
                 return {color: "yellow", text: TOOLTIPS[TypeFilterName.FOLLOWED_HASHTAGS]};
             } else if (trendingTagNames.includes(name)) {
@@ -59,10 +59,10 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
                     text: `${TOOLTIPS[TypeFilterName.PARTICIPATED_HASHTAGS](tag.numToots)}`,
                 }
             }
-        } else if (filterSection.title == PropertyName.USER && name in algorithm.userData.followedAccounts) {
+        } else if (filterSection.title == BooleanFilterName.USER && name in algorithm.userData.followedAccounts) {
             return {color: 'cyan', text: TOOLTIPS[TypeFilterName.FOLLOWED_ACCOUNTS]};
-        } else if (filterSection.title == PropertyName.LANGUAGE && name == algorithm.userData.preferredLanguage) {
-            return {color: 'cyan', text: TOOLTIPS[PropertyName.LANGUAGE]};
+        } else if (filterSection.title == BooleanFilterName.LANGUAGE && name == algorithm.userData.preferredLanguage) {
+            return {color: 'cyan', text: TOOLTIPS[BooleanFilterName.LANGUAGE]};
         }
     };
 
@@ -102,7 +102,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
 
         return (
             <FilterCheckbox
-                capitalize={filterSection.title == PropertyName.TYPE}
+                capitalize={filterSection.title == BooleanFilterName.TYPE}
                 isChecked={filterSection.validValues.includes(name)}
                 key={name}
                 label={name}
@@ -110,7 +110,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
                 onChange={(e) => filterSection.updateValidOptions(name, e.target.checked)}
                 tooltipColor={tooltip?.color}
                 tooltipText={tooltip?.text}
-                url={filterSection.title == PropertyName.HASHTAG && algorithm.tagUrl(name)}
+                url={filterSection.title == BooleanFilterName.HASHTAG && algorithm.tagUrl(name)}
             />
         );
     };

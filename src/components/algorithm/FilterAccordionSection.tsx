@@ -8,7 +8,6 @@ import React, { CSSProperties, ReactNode } from "react";
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
-import { PropertyName } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
 import Slider from "./Slider";
