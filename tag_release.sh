@@ -18,6 +18,7 @@ tag_repo() {
 
     local package_json_sed_cmd="s/\"version\": \"[0-9]+\.[0-9]+\.[0-9]+\",/\"version\": \"${version_number#v}\",/g"
     sed -E -i .sedbak "$package_json_sed_cmd" package.json
+    rm package.json.sedbak
     git commit -am"Bump package.json version to $version_number"
 
     echo "Tagging repo $repo_dir with version: $version_number"
