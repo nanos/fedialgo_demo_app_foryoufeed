@@ -26,6 +26,7 @@ export const logLocaleInfo = (): void => {
     logMsg(`${msg.join(", ")}`);
     logMsg(`process.env.NODE_ENV: ${process.env.NODE_ENV}`);
     logMsg(`process.env.FEDIALGO_DEBUG: ${process.env.FEDIALGO_DEBUG}, fedialgo.isDebugMode: ${isDebugMode}`);
+    logMsg(`process.env.FEDIALGO_VERSION: ${process.env.FEDIALGO_VERSION}`);
 };
 
 

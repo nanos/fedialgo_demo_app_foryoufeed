@@ -44,7 +44,7 @@ export default function Header() {
                             style={{color: "white"}}
                             target="_blank"
                         >
-                            Fedialgo Demo
+                            Fedialgo Demo v{process.env.FEDIALGO_VERSION}
                         </a>
                     </span>
                 </Col>
