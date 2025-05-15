@@ -5,14 +5,8 @@ import React, { CSSProperties, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import {
-    extractDomain,
-    MediaCategory,
-    TagWithUsageCounts,
-    Toot,
-    TrendingLink,
-    TrendingWithHistory,
-} from "fedialgo";
+import { extractDomain, MediaCategory, Toot, TrendingWithHistory } from "fedialgo";
+import { TagWithUsageCounts, TrendingLink } from "../hooks/useAlgorithm";
 
 import TopLevelAccordion from "./helpers/TopLevelAccordion";
 import TrendingSection, { LINK_FONT_SIZE, infoTxtStyle } from "./TrendingSection";
