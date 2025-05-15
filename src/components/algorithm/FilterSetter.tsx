@@ -167,7 +167,7 @@ export default function FilterSetter() {
                                 }}
                             >
                                 <FilterCheckboxGrid
-                                    filterSection={filterSection}
+                                    filter={filterSection}
                                     minToots={minTootsCutoffs[filterSection.title]}
                                     sortByValue={sortByValue[filterSection.title]}
                                     tooltippedOnly={tooltippedOnly[filterSection.title]}
