@@ -7,7 +7,7 @@ import React, { CSSProperties } from "react";
 import { capitalCase } from "change-case";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition, faBalanceScale, faBookmark, faReply, faRetweet, faStar } from "@fortawesome/free-solid-svg-icons";
-import { type Toot } from "fedialgo";
+import { Toot } from "fedialgo";
 
 import { logMsg, scoreString } from "../../helpers/string_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";

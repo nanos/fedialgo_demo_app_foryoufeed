@@ -3,7 +3,7 @@
  */
 import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 
-import TheAlgorithm, { GET_FEED_BUSY_MSG, type Toot, isAccessTokenRevokedError } from "fedialgo";
+import TheAlgorithm, { GET_FEED_BUSY_MSG, Toot, isAccessTokenRevokedError } from "fedialgo";
 import { createRestAPIClient, mastodon } from "masto";
 
 import { LOADING_ERROR_MSG, errorMsg, logMsg, warnMsg } from "../helpers/string_helpers";

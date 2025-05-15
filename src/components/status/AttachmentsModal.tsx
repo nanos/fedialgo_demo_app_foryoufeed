@@ -3,7 +3,7 @@
  */
 import React from 'react';
 
-import { MediaCategory, type Toot, VIDEO_TYPES } from "fedialgo";
+import { MediaCategory, Toot, VIDEO_TYPES } from "fedialgo";
 import { Modal } from 'react-bootstrap';
 
 interface AttachmentsModalProps {

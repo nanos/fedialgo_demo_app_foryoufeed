@@ -4,7 +4,7 @@
  */
 import React, { CSSProperties, useState } from "react";
 
-import { type BooleanFilter } from "fedialgo";
+import { BooleanFilter } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
 import FilterAccordionSection from "./FilterAccordionSection";
