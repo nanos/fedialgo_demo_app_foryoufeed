@@ -16,7 +16,7 @@ export type TrendingListObj = TrendingObj | string;
 interface TrendingProps {
     footer?: React.ReactNode;
     hasCustomStyle?: boolean;
-    infoTxt: (obj: TrendingListObj) => string | undefined;
+    infoTxt?: (obj: TrendingListObj) => string;
     linkLabel: (obj: TrendingListObj) => React.ReactElement | string;
     linkUrl: (obj: TrendingListObj) => string;
     name: string;
@@ -48,10 +48,7 @@ export default function TrendingSection(props: TrendingProps) {
                                     {linkLabel(obj)}
                                 </a>
 
-                                {infoTxt(obj) &&
-                                    <span style={infoTxtStyle}>
-                                        ({infoTxt(obj)})
-                                    </span>}
+                                {infoTxt && <span style={infoTxtStyle}>({infoTxt(obj)})</span>}
                             </li>
                         ))}
                     </ol>

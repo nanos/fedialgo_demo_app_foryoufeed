@@ -11,7 +11,6 @@ import {
     Toot,
     TagWithUsageCounts,
     TrendingLink,
-    TrendingObj,
     TrendingWithHistory,
 } from "fedialgo";
 
@@ -47,7 +46,7 @@ export default function TrendingInfo() {
         return `${msg}, ${toot.reblogsCount?.toLocaleString()} retoots`
     }
 
-    const tootLinkLabel = (obj: TrendingObj): React.ReactElement => {
+    const tootLinkLabel = (obj: Toot): React.ReactElement => {
         const toot = obj as Toot;
 
         if (toot.attachmentType() == MediaCategory.IMAGE) {
@@ -150,7 +149,6 @@ export default function TrendingInfo() {
                         <TrendingSection
                             name="Toots"
                             hasCustomStyle={true}
-                            infoTxt={(t) => undefined}
                             linkLabel={tootLinkLabel}
                             linkUrl={linkMapper}
                             onClick={openToot}
