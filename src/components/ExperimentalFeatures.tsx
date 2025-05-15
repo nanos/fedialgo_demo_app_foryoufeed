@@ -15,9 +15,10 @@ import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
 
 const BUTTON_TEXT = {
-    "Show State": "Show a bunch of information about FediAlgo's internal state",
-    "Load Complete User History": "Load all your toots and favourites. May improve scoring of your feed. Takes time & resources proportional to the number of times you've tooted.",
-}
+    "Show State": `Show a bunch of information about ${FEDIALGO}'s internal state`,
+    "Load Complete User History": "Load all your toots and favourites. May improve scoring of your feed. " +
+                                  "Takes time & resources proportional to the number of times you've tooted.",
+};
 
 
 export default function ExperimentalFeatures() {
@@ -96,12 +97,10 @@ export default function ExperimentalFeatures() {
                         Use with caution.
                     </p>
 
-                    <div style={{...roundedBox, paddingBottom: "20px", paddingLeft: "30px", paddingTop: "20px", paddingRight: "20px"}}>
+                    <div style={container}>
                         <ul style={listStyle}>
                             {makeLabeledButton("Show State", showAlgoState)}
-
                             <hr className="hr" />
-
                             {makeLabeledButton("Load Complete User History", triggerPullAllUserData)}
                         </ul>
 
@@ -114,6 +113,14 @@ export default function ExperimentalFeatures() {
     );
 };
 
+
+const container: CSSProperties = {
+    ...roundedBox,
+    paddingBottom: "20px",
+    paddingLeft: "30px",
+    paddingRight: "20px",
+    paddingTop: "20px",
+};
 
 const buttonStyle: CSSProperties = {
     // borderColor: "black",
