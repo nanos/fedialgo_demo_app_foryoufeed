@@ -2,14 +2,14 @@
  * Component for collecting a list of options for a BooleanFilter and displaying
  * them as checkboxes, with a switchbar for invertSelection, sortByCount, etc.
  */
-import React, { CSSProperties, useState } from "react";
+import React, { useState } from "react";
 
 import { BooleanFilter } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import FilterCheckbox from "./FilterCheckbox";
-import FilterCheckboxGrid, { FILTERED_FILTERS } from "./FilterCheckboxGrid";
+import FilterCheckboxGrid from "./FilterCheckboxGrid";
 import Slider from "./Slider";
 import { TOOLTIP_ANCHOR } from "../../helpers/style_helpers";
 
@@ -20,6 +20,7 @@ export enum SwitchType {
 };
 
 const DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
+const MIN_OPTIONS_TO_APPEAR_IN_FILTER = 30;
 
 interface BooleanFilterAccordionProps {
     filter: BooleanFilter,
@@ -28,7 +29,7 @@ interface BooleanFilterAccordionProps {
 
 export default function BooleanFilterAccordionSection(props: BooleanFilterAccordionProps) {
     const { filter } = props;
-    const hasMinToots = FILTERED_FILTERS.includes(filter.title);
+    const hasMinToots = Object.keys(filter.optionInfo).length > MIN_OPTIONS_TO_APPEAR_IN_FILTER;
 
     const [highlightedOnly, setHighlightedOnly] = useState(false);
     const [minToots, setMinToots] = useState(hasMinToots ? DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER : 0);

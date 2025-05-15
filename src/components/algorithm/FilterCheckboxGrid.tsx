@@ -6,10 +6,10 @@
 import React, { CSSProperties, ReactElement, useMemo } from "react";
 
 import Col from 'react-bootstrap/Col';
-import FilterCheckbox from "./FilterCheckbox";
 import Row from 'react-bootstrap/Row';
 import { BooleanFilter, BooleanFilterName, TypeFilterName, sortKeysByValue } from "fedialgo";
 
+import FilterCheckbox from "./FilterCheckbox";
 import { compareStr, debugMsg } from "../../helpers/string_helpers";
 import { FOLLOWED_TAG_COLOR, FOLLOWED_USER_COLOR, PARTICIPATED_TAG_COLOR_FADED, TRENDING_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
@@ -18,12 +18,6 @@ export type CheckboxTooltip = {
     color: CSSProperties["color"];
     text: string;
 };
-
-// Filtered filters are those that require a minimum number of toots to appear as filter options
-export const FILTERED_FILTERS = [
-    BooleanFilterName.HASHTAG,
-    BooleanFilterName.USER,
-];
 
 export const TOOLTIPS: {[key in (TypeFilterName | BooleanFilterName)]?: CheckboxTooltip} = {
     [BooleanFilterName.LANGUAGE]: {
@@ -85,7 +79,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     const optionInfo = useMemo(
         () => {
             // debugMsg(`useMemo() recomputing optionInfo for ${filter.title}, validValues:`, filter.validValues);
-            if (!FILTERED_FILTERS.includes(filter.title)) return filter.optionInfo;
+            if (!minToots) return filter.optionInfo;
 
             // For "filtered" filters only allow options with a minimum number of toots (and active options)
             return Object.fromEntries(Object.entries(filter.optionInfo).filter(
