@@ -169,7 +169,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 jsonViewProps={{
                     collapsed: 3,
                     name: "toot.scoreInfo",
-                    theme: "brewer",
+                    style: {fontSize: 16},
                 }}
                 show={showScoreModal}
                 setShow={setShowScoreModal}
@@ -185,6 +185,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                 json={toot}
                 jsonViewProps={{
                     collapsed: 3,
+                    displayArrayKey: true,
+                    indentWidth: 8,
                     name: "toot",
                     style: {fontSize: 13},
                     theme: "brewer",

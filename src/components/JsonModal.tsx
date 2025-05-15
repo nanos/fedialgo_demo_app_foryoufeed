@@ -1,7 +1,6 @@
 /*
  * Modal to display JSON data.
- *   - React Bootstrap Modal: https://getbootstrap.com/docs/5.0/components/modal/
- *   - ReactJsonView: https://github.com/microlinkhq/react-json-view
+ * React Bootstrap Modal: https://getbootstrap.com/docs/5.0/components/modal/
  */
 import React, { CSSProperties, ReactNode } from 'react';
 
@@ -12,11 +11,13 @@ import { globalFont } from '../helpers/style_helpers';
 
 type ReactJsonViewProps = typeof ReactJsonView.defaultProps;
 
+// Props documentation: https://github.com/microlinkhq/react-json-view?tab=readme-ov-file#api
 const DEFAULT_JSON_VIEW_PROPS: ReactJsonViewProps = {
     collapsed: 1,
     displayArrayKey: false,
     displayDataTypes: false,
     displayObjectSize: false,
+    enableClipboard: false,
     quotesOnKeys: false,
     sortKeys: true,
     style: { padding: "20px" },
