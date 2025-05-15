@@ -14,6 +14,11 @@ import { logMsg, versionString } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
 
+const BUTTON_TEXT = {
+    "Show State": "Show a bunch of information about FediAlgo's internal state",
+    "Load Complete User History": "Load all your toots and favourites. May improve scoring of your feed. Takes time & resources proportional to the number of times you've tooted.",
+}
+
 
 export default function ExperimentalFeatures() {
     const { algorithm, api, isLoading, setError, timeline, triggerPullAllUserData } = useAlgorithm();
@@ -53,6 +58,18 @@ export default function ExperimentalFeatures() {
         </Button>
     );
 
+    const makeLabeledButton = (label: string, onClick: () => void, variant?: string) => (
+        <li style={listElement}>
+        <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+            {makeButton(label, onClick, variant)}
+
+            <div style={{flex: 4, marginLeft: "10px", fontSize: "14px"}}>
+                {BUTTON_TEXT[label]}
+            </div>
+        </div>
+        </li>
+    );
+
     return (
         <Accordion>
             <JsonModal
@@ -83,18 +100,11 @@ export default function ExperimentalFeatures() {
 
                     <div style={{...roundedBox, paddingBottom: "20px", paddingLeft: "30px", paddingTop: "20px", paddingRight: "20px"}}>
                         <ul style={listStyle}>
-                            <li style={listElement}>
-                                Show a bunch of information about {FEDIALGO}'s internal state.<br/>
-                                {makeButton('Show State', showAlgoState)}
-                            </li>
+                            {makeLabeledButton("Show State", showAlgoState)}
 
                             <hr className="hr" />
 
-                            <li style={listElement}>
-                                Load all your toots and favourites. May improve scoring of your feed.
-                                {' '}Takes time & resources proportional to the number of times you've tooted.<br/>
-                                {makeButton('Load Complete User History', triggerPullAllUserData, "danger")}
-                            </li>
+                            {makeLabeledButton("Load Complete User History", triggerPullAllUserData)}
                         </ul>
 
                         <hr className="hr" />
@@ -110,8 +120,11 @@ export default function ExperimentalFeatures() {
 const buttonStyle: CSSProperties = {
     // borderColor: "black",
     // borderWidth: "1px",
+    flex: 2,
     marginBottom: "5px",
     marginTop: "5px",
+    // maxWidth: "45%",
+    // width: "45%",
 };
 
 const listElement: CSSProperties = {
