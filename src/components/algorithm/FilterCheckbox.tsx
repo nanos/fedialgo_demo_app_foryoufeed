@@ -6,8 +6,8 @@ import React, { CSSProperties, useState } from "react";
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
 
+import { CheckboxTooltip } from "./FilterCheckboxGrid";
 import { followUri } from "../../helpers/react_helpers";
-import { HashtagTooltip } from "./FilterCheckboxGrid";
 import { linkesque } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
@@ -22,7 +22,7 @@ interface FilterCheckboxProps {
     label: string,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
     labelExtra?: number | string,
-    tooltip?: HashtagTooltip,
+    tooltip?: CheckboxTooltip,
     url?: string,
 };
 

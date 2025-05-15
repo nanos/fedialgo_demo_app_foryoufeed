@@ -14,7 +14,7 @@ import { compareStr, debugMsg } from "../../helpers/string_helpers";
 import { FOLLOWED_TAG_COLOR, FOLLOWED_USER_COLOR, PARTICIPATED_TAG_COLOR_FADED, TRENDING_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm, BooleanFilter } from "../../hooks/useAlgorithm";
 
-export type HashtagTooltip = {
+export type CheckboxTooltip = {
     color: CSSProperties["color"];
     text: string;
 };
@@ -25,7 +25,7 @@ export const FILTERED_FILTERS = [
     BooleanFilterName.USER,
 ];
 
-const TOOLTIPS: {[key in (TypeFilterName | BooleanFilterName)]?: HashtagTooltip} = {
+const TOOLTIPS: {[key in (TypeFilterName | BooleanFilterName)]?: CheckboxTooltip} = {
     [BooleanFilterName.LANGUAGE]: {
         color: FOLLOWED_USER_COLOR,
         text: `You post most in this language`,
@@ -40,7 +40,7 @@ const TOOLTIPS: {[key in (TypeFilterName | BooleanFilterName)]?: HashtagTooltip}
     },
     [TypeFilterName.PARTICIPATED_HASHTAGS]: {
         color: PARTICIPATED_TAG_COLOR_FADED,
-        text: `You've posted this hashtag`, // number of times is added when used
+        text: `You've posted this hashtag`, // the string "N times" is appended in getTooltipInfo()
     },
     [TypeFilterName.TRENDING_HASHTAGS]: {
         color: TRENDING_TAG_COLOR_FADED,
@@ -64,7 +64,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     let optionKeys: string[];
 
     // Generate color and tooltip text for a hashtag checkbox
-    const getTooltipInfo = (name: string): HashtagTooltip | undefined => {
+    const getTooltipInfo = (name: string): CheckboxTooltip | undefined => {
         if (filter.title == BooleanFilterName.HASHTAG) {
             if (name in algorithm.userData.followedTags) {
                 return TOOLTIPS[TypeFilterName.FOLLOWED_HASHTAGS];

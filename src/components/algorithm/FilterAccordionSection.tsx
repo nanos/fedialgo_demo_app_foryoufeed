@@ -12,24 +12,24 @@ import { accordionBody, globalFont, roundedBox } from "../../helpers/style_helpe
 interface FilterAccordionSectionProps extends PropsWithChildren {
     description: string,
     isActive: boolean,
-    sectionName: string;
+    title: string;
     switchbar: ReactElement[],
 };
 
 
 export default function FilterAccordionSection(props: FilterAccordionSectionProps) {
-    const { description, isActive, sectionName, switchbar } = props;
+    const { description, isActive, title, switchbar } = props;
     const headerClass = `filterHeader ${isActive ? "filterHeader--active" : ""}`;
 
     return (
-        <Accordion.Item eventKey={sectionName} >
+        <Accordion.Item eventKey={title} >
             <Accordion.Header>
                 <Form.Label style={subHeaderLabel} >
-                    <span className={headerClass} key={`${sectionName}_label1`}>
-                        {capitalCase(sectionName)}
+                    <span className={headerClass} key={`${title}_label1`}>
+                        {capitalCase(title)}
                     </span>
 
-                    <span style={subHeaderFont} key={`${sectionName}_label2`}>
+                    <span style={subHeaderFont} key={`${title}_label2`}>
                         {'   '}({description})
                     </span>
                 </Form.Label>
@@ -41,7 +41,7 @@ export default function FilterAccordionSection(props: FilterAccordionSectionProp
                     {switchbar}
                 </div>
 
-                <div style={filterSwitchContainer} key={sectionName}>
+                <div style={filterSwitchContainer} key={title}>
                     <Form.Group className="mb-1">
                         <Form.Group className="mb-1">
                             {props.children}

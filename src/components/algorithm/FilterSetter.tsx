@@ -85,10 +85,32 @@ export default function FilterSetter() {
                             description={"Filter based on minimum/maximum number of replies, reposts, etc"}
                             isActive={hasActiveNumericFilter}
                             key={"numericFilters"}
-                            sectionName="Interactions"
+                            title="Interactions"
                             switchbar={[invertNumericFilterCheckbox(Object.values(algorithm.filters.numericFilters))]}
                         >
-                            {numericSliders}
+                            {Object.entries(algorithm.filters.numericFilters).reduce(
+                                (sliders, [name, numericFilter]) => {
+                                    const slider = (
+                                        <Slider
+                                            description={numericFilter.description}
+                                            key={name}
+                                            label={numericFilter.title}
+                                            maxValue={50}
+                                            minValue={0}
+                                            onChange={async (e) => {
+                                                numericFilter.value = Number(e.target.value);
+                                                algorithm.updateFilters(algorithm.filters);
+                                            }}
+                                            stepSize={1}
+                                            value={numericFilter.value}
+                                        />
+                                    );
+
+                                    sliders.push(slider);
+                                    return sliders;
+                                },
+                                [] as ReactNode[]
+                            )}
                         </FilterAccordionSection>
                     </Accordion>
                 </Accordion.Body>
