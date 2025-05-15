@@ -60,13 +60,11 @@ export default function ExperimentalFeatures() {
 
     const makeLabeledButton = (label: string, onClick: () => void, variant?: string) => (
         <li style={listElement}>
-        <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
             {makeButton(label, onClick, variant)}
 
             <div style={{flex: 4, marginLeft: "10px", fontSize: "14px"}}>
                 {BUTTON_TEXT[label]}
             </div>
-        </div>
         </li>
     );
 
@@ -123,11 +121,12 @@ const buttonStyle: CSSProperties = {
     flex: 2,
     marginBottom: "5px",
     marginTop: "5px",
-    // maxWidth: "45%",
-    // width: "45%",
 };
 
 const listElement: CSSProperties = {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
     fontSize: "18px",
     marginBottom: "7px",
 };
