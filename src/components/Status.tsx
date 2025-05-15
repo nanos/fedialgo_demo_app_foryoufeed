@@ -165,6 +165,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     return (
         <div>
             <JsonModal
+                infoTxt="Scoring categories where the unweighted score is zero are not shown."
                 json={toot.alternateScoreInfo()}
                 jsonViewProps={{
                     collapsed: 3,
