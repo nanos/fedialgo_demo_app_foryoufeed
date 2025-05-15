@@ -54,8 +54,8 @@ export default function JsonModal(props: JsonModalProps) {
             <Modal.Body >
                 {(subtitle || infoTxt) &&
                     <div style={{...textStyle, marginBottom: "5px"}}>
-                        {subtitle && <p style={headerFont}>{subtitle}</p>}
-                        {infoTxt && <p>{infoTxt}</p>}
+                        {subtitle && <div style={headerFont}>{subtitle}</div>}
+                        {infoTxt && <div>{infoTxt}</div>}
                     </div>}
 
                 <ReactJsonView

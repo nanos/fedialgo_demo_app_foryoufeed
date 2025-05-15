@@ -19,11 +19,13 @@ export default function ExperimentalFeatures() {
     const { algorithm, api, isLoading, setError, timeline, triggerPullAllUserData } = useAlgorithm();
     const { user } = useAuthContext();
 
+    const [isLoadingState, setIsLoadingState] = useState(false);
     const [showStateModal, setShowStateModal] = useState(false);
     const [algoState, setAlgoState] = useState({});
 
     const showAlgoState = () => {
         logMsg(`State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()}, timeline.length=${timeline.length})`);
+        setIsLoadingState(true);
 
         // Wait for the data to show up
         algorithm.getCurrentState()
@@ -33,10 +35,9 @@ export default function ExperimentalFeatures() {
                 setAlgoState(currentState);
                 setShowStateModal(true);
             })
-            .catch((error) => {
-                setError(`Failed to get algorithm state: ${error}`);
-            }
-        );
+            .catch((error) => setError(`Failed to get algorithm state: ${error}`))
+            .finally(() => setIsLoadingState(false));
+        ;
     }
 
     const makeButton = (label: string, onClick: () => void, variant?: string) => (
@@ -48,7 +49,7 @@ export default function ExperimentalFeatures() {
             style={buttonStyle}
             variant={variant || "primary"}
         >
-            {isLoading ? "Loading..." : label}
+            {isLoading || isLoadingState ? "Loading..." : label}
         </Button>
     );
 

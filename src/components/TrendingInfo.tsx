@@ -37,7 +37,7 @@ export default function TrendingInfo() {
     const linkMapper = (obj: TrendingWithHistory) => `${obj.url}`;
     const tagNameMapper = (tag: TagWithUsageCounts) => `#${tag.name}`;
 
-    const linkInfoTxt = (obj: TrendingWithHistory) => {
+    const trendingObjInfoTxt = (obj: TrendingWithHistory) => {
         return `${obj.numToots?.toLocaleString()} toots by ${obj.numAccounts?.toLocaleString()} accounts`;
     };
 
@@ -51,10 +51,10 @@ export default function TrendingInfo() {
 
         if (toot.attachmentType() == MediaCategory.IMAGE) {
             const image = toot.imageAttachments[0];
-            return <>
+
+            return (<>
                 {prefixedHtml(toot.contentShortened(MAX_TRENDING_LINK_LEN), ATTACHMENT_PREFIXES[MediaCategory.IMAGE])}
-                <span style={infoTxtStyle}>({tootInfoTxt(obj as Toot)})</span>
-                <br />
+                <span style={infoTxtStyle}>({tootInfoTxt(obj as Toot)})</span><br />
 
                 <div className="media-gallery" style={{width: "100%"}}>
                     <div className="media-gallery__item" style={{width: "100%"}}>
@@ -67,7 +67,7 @@ export default function TrendingInfo() {
                         />
                     </div>
                 </div>
-            </>
+            </>);
         } else {
             return prefixedHtml(
                 toot.contentShortened(MAX_TRENDING_LINK_LEN),
@@ -129,7 +129,7 @@ export default function TrendingInfo() {
                     <Accordion>
                         <TrendingSection
                             name="Hashtags"
-                            infoTxt={linkInfoTxt}
+                            infoTxt={trendingObjInfoTxt}
                             linkLabel={tagNameMapper}
                             linkUrl={linkMapper}
                             onClick={openTrendingLink}
@@ -139,7 +139,7 @@ export default function TrendingInfo() {
                         <TrendingSection
                             name="Links"
                             hasCustomStyle={true}
-                            infoTxt={linkInfoTxt}
+                            infoTxt={trendingObjInfoTxt}
                             linkLabel={(link: TrendingLink) => prefixedHtml(link.title, extractDomain(link.url))}
                             linkUrl={linkMapper}
                             onClick={openTrendingLink}
