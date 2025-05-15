@@ -5,22 +5,24 @@ import axios from "axios";
 import React, { PropsWithChildren, createContext, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { logMsg } from "../helpers/string_helpers";
+import { logMsg, logSafe } from "../helpers/string_helpers";
 import { useAppStorage, useUserStorage } from "./useLocalStorage";
 import { User } from "../types";
 
-const logThis = (msg: string, ...args: any[]) => logMsg(`<AuthProvider> ${msg}`, ...args);
+const LOG_PREFIX = `<AuthProvider>`;
 
 const AuthContext = createContext({
-    user: null,
     loginUser: async (_user: User) => {},
-    logout: () => {}
+    logout: () => {},
+    user: null,
 });
 
 
 export default function AuthProvider(props: PropsWithChildren) {
-    const [app, _setApp] = useAppStorage({ keyName: "app", defaultValue: null })
-    const [user, setUser] = useUserStorage({ keyName: "user", defaultValue: null })
+    const [app, _setApp] = useAppStorage({ keyName: "app", defaultValue: null });
+    const [user, setUser] = useUserStorage({ keyName: "user", defaultValue: null });
+
+    const log = (msg: string, ...args: any[]) => logMsg(`${LOG_PREFIX} ${msg}`, ...args);
     const navigate = useNavigate();
 
     // NOTE: this doesn't actually authenticate the user, it just sets the user object in local storage
@@ -33,15 +35,14 @@ export default function AuthProvider(props: PropsWithChildren) {
     //     username: "cryptadamus"
     // }
     const loginUser = async (user: User) => {
-        // This contains secret keys, don't log it unsanitized
-        // logThis("loginUser() called while 'app' state var is:", app, `\nuser:`, user);
+        logSafe(`${LOG_PREFIX} loginUser() called, app:`, app, `\nuser:`, user);
         setUser(user);
         navigate("/");
     };
 
     // call this function to sign out logged in user
     const logout = async (): Promise<void> => {
-        logThis("logout() called...")
+        log("logout() called...")
         const body = new FormData();
         body.append("token", user.access_token);
         body.append("client_id", app.clientId)
@@ -57,7 +58,7 @@ export default function AuthProvider(props: PropsWithChildren) {
         }
 
         setUser(null);
-        navigate("/login", { replace: true });
+        navigate("/login", {replace: true});
     };
 
     const value = useMemo(

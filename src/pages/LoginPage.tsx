@@ -3,13 +3,13 @@ import React, { CSSProperties } from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
 import { createRestAPIClient } from 'masto';
-import { FEDIALGO, isDebugMode } from "fedialgo";
+import { FEDIALGO } from "fedialgo";
 import { stringifyQuery } from 'ufo';
 import { usePersistentState } from "react-persistent-state";
 
 import { App } from '../types';
 import { AppStorage, useLocalStorage } from "../hooks/useLocalStorage";
-import { logMsg, logSafe, sanitizeServerUrl } from '../helpers/string_helpers';
+import { logSafe, sanitizeServerUrl } from '../helpers/string_helpers';
 // const showcase = require("../../public/assets/Showcase.jpg");
 
 // Mastodon OAuth scopes required for this app to work. Details: https://docs.joinmastodon.org/api/oauth-scopes/
