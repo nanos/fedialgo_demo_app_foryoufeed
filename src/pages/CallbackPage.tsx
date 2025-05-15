@@ -3,11 +3,11 @@
  */
 import React, { useEffect } from 'react';
 
+import TheAlgorithm from 'fedialgo';
 import { createRestAPIClient } from "masto"
-import { isDebugMode } from "fedialgo";
 import { useSearchParams } from 'react-router-dom';
 
-import { DEMO_APP, logMsg } from '../helpers/string_helpers';
+import { DEMO_APP, logMsg, logSafe } from '../helpers/string_helpers';
 import { OAUTH_SCOPE_STR } from './LoginPage';
 import { useAppStorage } from '../hooks/useLocalStorage';
 import { useAuthContext } from '../hooks/useAuth';
@@ -60,7 +60,7 @@ export default function CallbackPage(props: CallbackPageProps) {
 
         // TODO: access_token is retrieved manually via fetch() instead of using the masto.js library
         const oauthTokenURI = `${app.website}/oauth/token`;
-        isDebugMode && logThis(`oAuth() oauthTokenURI: "${oauthTokenURI}"\napp:`, app, `\nuser:`, user, `\ncode: "${code}`);
+        logSafe(`oAuth() oauthTokenURI: "${oauthTokenURI}"\napp:`, app, `\nuser:`, user, `\ncode: "${code}`);
         const oAuthResult = await fetch(oauthTokenURI, {method: 'POST', body});
         const json = await oAuthResult.json()
         const accessToken = json["access_token"];
@@ -69,7 +69,7 @@ export default function CallbackPage(props: CallbackPageProps) {
         // Authenticate the user
         api.v1.accounts.verifyCredentials()
             .then((verifiedUser) => {
-                isDebugMode && logThis(`oAuth() api.v1.accounts.verifyCredentials() succeeded:`, verifiedUser);
+                logSafe(`oAuth() api.v1.accounts.verifyCredentials() succeeded:`, verifiedUser);
 
                 const userData: User = {
                     access_token: accessToken,
@@ -88,7 +88,7 @@ export default function CallbackPage(props: CallbackPageProps) {
         // Verify or register the app
         api.v1.apps.verifyCredentials()
             .then((verifyResponse) => {
-                isDebugMode && logThis(`oAuth() api.v1.apps.verifyCredentials() succeeded:`, verifyResponse);
+                logSafe(`oAuth() api.v1.apps.verifyCredentials() succeeded:`, verifyResponse);
             }).catch((error) => {
                 console.error(`[${DEMO_APP}] <CallbackPage> oAuth() api.v1.apps.verifyCredentials() failure:`, error);
                 setError(`Fedialgo App verifyCredentials error:\n${error.toString()}`);

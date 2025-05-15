@@ -1,7 +1,7 @@
 /*
  * String manipulation helpers.
  */
-import { isDebugMode } from "fedialgo";
+import TheAlgorithm from "fedialgo";
 
 export const DEMO_APP = "DEMO APP";
 export const LOADING_ERROR_MSG = `Currently loading, please wait a moment and try again.`;
@@ -18,7 +18,7 @@ export const warnMsg = (msg: string, ...args: any[]) => console.warn(`[${DEMO_AP
 export const logMsg = (msg: string, ...args: any[]) => console.log(`[${DEMO_APP}] ${msg}`, ...args);
 export const infoMsg = (msg: string, ...args: any[]) => console.info(`[${DEMO_APP}] ${msg}`, ...args);
 export const debugMsg = (msg: string, ...args: any[]) => console.debug(`[${DEMO_APP}] ${msg}`, ...args);
-export const logSafe = (msg: string, ...args: any[]) => isDebugMode && logMsg(msg, ...args);
+export const logSafe = (msg: string, ...args: any[]) => TheAlgorithm.isDebugMode && logMsg(msg, ...args);
 
 // for use with sort()
 export const compareStr = (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase());
@@ -43,7 +43,7 @@ export const logLocaleInfo = (): void => {
 
     logMsg(`${msg.join(", ")}`);
     logMsg(`process.env.NODE_ENV: ${process.env.NODE_ENV}`);
-    logMsg(`process.env.FEDIALGO_DEBUG: ${process.env.FEDIALGO_DEBUG}, fedialgo.isDebugMode: ${isDebugMode}`);
+    logMsg(`process.env.FEDIALGO_DEBUG: ${process.env.FEDIALGO_DEBUG}, TheAlgorithm.isDebugMode: ${TheAlgorithm.isDebugMode}`);
     logMsg(`process.env.FEDIALGO_VERSION: ${process.env.FEDIALGO_VERSION}`);
 };
 
