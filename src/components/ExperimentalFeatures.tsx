@@ -14,9 +14,12 @@ import { logMsg, versionString } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
 
+const SHOW_STATE = "Show State";
+const LOAD_COMPLETE_USER_HISTORY = "Load Complete User History";
+
 const BUTTON_TEXT = {
-    "Show State": `Show a bunch of information about ${FEDIALGO}'s internal state`,
-    "Load Complete User History": "Load all your toots and favourites. May improve scoring of your feed. " +
+    SHOW_STATE: `Show a bunch of information about ${FEDIALGO}'s internal state`,
+    LOAD_COMPLETE_USER_HISTORY: "Load all your toots and favourites. May improve scoring of your feed. " +
                                   "Takes time & resources proportional to the number of times you've tooted.",
 };
 
@@ -99,9 +102,9 @@ export default function ExperimentalFeatures() {
 
                     <div style={container}>
                         <ul style={listStyle}>
-                            {makeLabeledButton("Show State", showAlgoState)}
+                            {makeLabeledButton(SHOW_STATE, showAlgoState)}
                             <hr className="hr" />
-                            {makeLabeledButton("Load Complete User History", triggerPullAllUserData)}
+                            {makeLabeledButton(LOAD_COMPLETE_USER_HISTORY, triggerPullAllUserData)}
                         </ul>
 
                         <hr className="hr" />
