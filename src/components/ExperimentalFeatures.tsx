@@ -28,9 +28,9 @@ export default function ExperimentalFeatures() {
     const { algorithm, api, isLoading, setError, timeline, triggerPullAllUserData } = useAlgorithm();
     const { user } = useAuthContext();
 
+    const [algoState, setAlgoState] = useState({});
     const [isLoadingState, setIsLoadingState] = useState(false);
     const [showStateModal, setShowStateModal] = useState(false);
-    const [algoState, setAlgoState] = useState({});
 
     const showAlgoState = () => {
         logMsg(`State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()}, timeline.length=${timeline.length})`);
