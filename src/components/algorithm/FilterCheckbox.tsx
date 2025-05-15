@@ -7,6 +7,7 @@ import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
 
 import { followUri } from "../../helpers/react_helpers";
+import { HashtagTooltip } from "./FilterCheckboxGrid";
 import { linkesque } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
@@ -21,14 +22,13 @@ interface FilterCheckboxProps {
     label: string,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
     labelExtra?: number | string,
-    tooltipText?: string,
-    tooltipColor?: string,
+    tooltip?: HashtagTooltip,
     url?: string,
 };
 
 
 export default function FilterCheckbox(props: FilterCheckboxProps) {
-    let { capitalize, isChecked, label, labelExtra, onChange, tooltipColor, tooltipText, url } = props;
+    let { capitalize, isChecked, label, labelExtra, onChange, tooltip, url } = props;
     const [isCheckedState, setIsCheckedState] = useState(isChecked);
     const { algorithm } = useAlgorithm();
 
@@ -36,9 +36,8 @@ export default function FilterCheckbox(props: FilterCheckboxProps) {
     const labelStyle: CSSProperties = {fontWeight: "bold"};
     let style: CSSProperties = {color: "black"};
 
-    if (tooltipText) {
-        style = {...highlightedCheckboxStyle, ...style};
-        if (tooltipColor) style = { ...highlightedCheckboxStyle, backgroundColor: tooltipColor };
+    if (tooltip) {
+        style = {...highlightedCheckboxStyle, ...style, backgroundColor: tooltip.color};
     }
 
     if (capitalize) {
@@ -61,8 +60,8 @@ export default function FilterCheckbox(props: FilterCheckboxProps) {
 
     return (
         <a
-            data-tooltip-id={HASHTAG_ANCHOR + (tooltipText ? HIGHLIGHT : "")}
-            data-tooltip-content={tooltipText}
+            data-tooltip-id={HASHTAG_ANCHOR + (tooltip ? HIGHLIGHT : "")}
+            data-tooltip-content={tooltip?.text}
             key={label}
         >
             <Form.Switch

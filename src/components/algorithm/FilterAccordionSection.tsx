@@ -1,7 +1,5 @@
 /*
- * Component for setting the user's preferred weightings of various post properties.
- * Things like how much to prefer people you favorite a lot or how much to posts that
- * are trending in the Fedivers.
+ * Generic omponent to display a set of filter options with a switchbar at the top.
  */
 import React, { CSSProperties, PropsWithChildren, ReactElement } from "react";
 

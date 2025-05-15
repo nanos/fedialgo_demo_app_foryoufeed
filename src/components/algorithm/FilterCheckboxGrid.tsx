@@ -14,8 +14,8 @@ import { compareStr, debugMsg } from "../../helpers/string_helpers";
 import { FOLLOWED_TAG_COLOR, FOLLOWED_USER_COLOR, PARTICIPATED_TAG_COLOR_FADED, TRENDING_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm, BooleanFilter } from "../../hooks/useAlgorithm";
 
-type HashtagTooltip = {
-    color?: CSSProperties["color"];
+export type HashtagTooltip = {
+    color: CSSProperties["color"];
     text: string;
 };
 
@@ -124,8 +124,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
                 label={name}
                 labelExtra={filter.optionInfo[name]}
                 onChange={(e) => filter.updateValidOptions(name, e.target.checked)}
-                tooltipColor={tooltip?.color}
-                tooltipText={tooltip?.text && `${tooltip.text}.`}
+                tooltip={tooltip}
                 url={(filter.title == BooleanFilterName.HASHTAG) && algorithm.tagUrl(name)}
             />
         );

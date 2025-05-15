@@ -1,15 +1,16 @@
 /*
- * Component for setting the user's preferred weightings of various post properties.
- * Things like how much to prefer people you favorite a lot or how much to posts that
- * are trending in the Fedivers.
+ * Component for collecting a list of options for a BooleanFilter and displaying
+ * them as checkboxes, with a switchbar for invertSelection, sortByCount, etc.
  */
 import React, { CSSProperties, useState } from "react";
+import { Tooltip } from 'react-tooltip';
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import FilterCheckbox from "./FilterCheckbox";
 import FilterCheckboxGrid, { FILTERED_FILTERS } from "./FilterCheckboxGrid";
 import Slider from "./Slider";
 import { BooleanFilter } from "../../hooks/useAlgorithm";
+import { TOOLTIP_ANCHOR } from "../../helpers/style_helpers";
 
 export enum SwitchType {
     HIGHLIGHTS_ONLY = "highlightsOnly",
@@ -17,7 +18,6 @@ export enum SwitchType {
     SORT_BY_COUNT = "sortByCount",
 };
 
-const TOOLTIP_ANCHOR = "ToolTipAnchor";
 const DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
 
 interface BooleanFilterAccordionProps {
@@ -33,6 +33,7 @@ export default function BooleanFilterAccordionSection(props: BooleanFilterAccord
     const [minToots, setMinToots] = useState(hasMinToots ? DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER : 0);
     const [sortByCount, setSortByValue] = useState(false);
 
+    const minTootsTooltipAnchor = `${TOOLTIP_ANCHOR}-${filter.title}`;
     const minTootsTooltipTxt = `Hide ${filter.title}s with less than ${minToots} toots`;
     const spacer = <div style={{width: "20px"}} />
 
@@ -40,6 +41,7 @@ export default function BooleanFilterAccordionSection(props: BooleanFilterAccord
         <FilterCheckbox
             capitalize={true}
             isChecked={filter.invertSelection}
+            key={SwitchType.INVERT_SELECTION}
             label={SwitchType.INVERT_SELECTION}
             onChange={(e) => filter.invertSelection = e.target.checked}  // TODO: this is modifying the filter directly
         />,
@@ -47,22 +49,28 @@ export default function BooleanFilterAccordionSection(props: BooleanFilterAccord
         <FilterCheckbox
             capitalize={true}
             isChecked={sortByCount}
+            key={SwitchType.SORT_BY_COUNT}
             label={SwitchType.SORT_BY_COUNT}
             onChange={(e) => setSortByValue(e.target.checked)} // TODO: this will unnecessarily call filterFeed
         />
     ];
 
-    if (hasMinToots) {
+    if (!hasMinToots) {
+        switchbar = [spacer, ...switchbar, spacer];
+    } else {
         switchbar = switchbar.concat([
             <FilterCheckbox
                 capitalize={true}
                 isChecked={highlightedOnly}
+                key={SwitchType.HIGHLIGHTS_ONLY}
                 label={SwitchType.HIGHLIGHTS_ONLY}
                 onChange={(e) => setHighlightedOnly(e.target.checked)} // TODO: this will unnecessarily call filterFeed
             />,
 
             <div style={{width: "23%"}} key={"minTootsSlider"}>
-                <a data-tooltip-id={TOOLTIP_ANCHOR} data-tooltip-content={minTootsTooltipTxt}>
+                <Tooltip id={minTootsTooltipAnchor} place="bottom" />
+
+                <a data-tooltip-id={minTootsTooltipAnchor} data-tooltip-content={minTootsTooltipTxt}>
                     <Slider
                         hideValueBox={true}
                         label="Minimum"
@@ -76,8 +84,6 @@ export default function BooleanFilterAccordionSection(props: BooleanFilterAccord
                 </a>
             </div>
         ]);
-    } else {
-        switchbar = [spacer, ...switchbar, spacer];
     }
 
     return (
@@ -87,6 +93,7 @@ export default function BooleanFilterAccordionSection(props: BooleanFilterAccord
             sectionName={filter.title}
             switchbar={switchbar}
         >
+
             <FilterCheckboxGrid
                 filter={filter}
                 minToots={minToots}
