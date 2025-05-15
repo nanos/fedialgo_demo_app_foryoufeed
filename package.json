@@ -1,6 +1,6 @@
 {
     "name": "fedialgo-demo-app-foryoufeed",
-    "version": "0.39.3",
+    "version": "0.39.4",
     "private": false,
     "homepage": "https://github.com/michelcrypt4d4mus/fedialgo_demo_app_foryoufeed",
     "dependencies": {
