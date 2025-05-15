@@ -30,18 +30,11 @@ import MultimediaNode from "./status/MultimediaNode";
 import NewTabLink from './helpers/NewTabLink';
 import Poll from "./status/Poll";
 import PreviewCard from "./status/PreviewCard";
-import { logMsg, timestampString } from '../helpers/string_helpers';
+import { FOLLOWED_TAG_COLOR, PARTICIPATED_TAG_COLOR, TRENDING_TAG_COLOR } from "../helpers/style_helpers";
 import { openToot } from "../helpers/react_helpers";
-import { PARTICIPATED_TAG_COLOR, RED } from "../helpers/style_helpers";
-import { useAlgorithm } from "../hooks/useAlgorithm";
+import { timestampString } from '../helpers/string_helpers';
 
 export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
-
-interface StatusComponentProps {
-    hideLinkPreviews?: boolean,
-    setError: (error: string) => void,
-    status: Toot,
-};
 
 enum InfoIconType {
     DM = "Direct Message",
@@ -68,14 +61,18 @@ const INFO_ICONS: Record<InfoIconType, IconInfo> = {
     [InfoIconType.Public]:       {icon: faGlobe, color: "#2092a1"},
     [InfoIconType.Reply]:        {icon: faReply, color: "blue"},
     [InfoIconType.ShowToot]:     {icon: faUpRightFromSquare},
-    [InfoIconType.TrendingLink]: {icon: faLink, color: RED},
-    [InfoIconType.TrendingToot]: {icon: faFireFlameCurved, color: RED},
+    [InfoIconType.TrendingLink]: {icon: faLink, color: TRENDING_TAG_COLOR},
+    [InfoIconType.TrendingToot]: {icon: faFireFlameCurved, color: TRENDING_TAG_COLOR},
+};
+
+interface StatusComponentProps {
+    hideLinkPreviews?: boolean,
+    status: Toot,
 };
 
 
 export default function StatusComponent(props: StatusComponentProps) {
     const { hideLinkPreviews, status } = props;
-    const { setError } = useAlgorithm();
 
     // If it's a retoot set 'toot' to the original toot
     const toot = status.realToot();
@@ -109,12 +106,6 @@ export default function StatusComponent(props: StatusComponentProps) {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [mediaInspectionIdx])
 
-    // Show the score of a toot. Has side effect of logging the toot object to the console.
-    const showScore = async () => {
-        logMsg(`showScore() called for toot: `, status);
-        setShowScoreModal(true);
-    };
-
     // Build the account link(s) for the reblogger(s) that appears at top of a retoot
     const rebloggersLinks = () => (
         <span>
@@ -144,9 +135,9 @@ export default function StatusComponent(props: StatusComponentProps) {
             title = toot.containsTagsMsg();
 
             if (toot.trendingTags?.length) {
-                color = RED;
+                color = TRENDING_TAG_COLOR;
             } else if (toot.followedTags?.length) {
-                color = "yellow";
+                color = FOLLOWED_TAG_COLOR;
             } else if (toot.participatedTags?.length) {
                 color = PARTICIPATED_TAG_COLOR;
             }
@@ -302,7 +293,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                         {buildActionButton(ButtonAction.Reblog)}
                         {buildActionButton(ButtonAction.Favourite)}
                         {buildActionButton(ButtonAction.Bookmark)}
-                        {buildActionButton(ButtonAction.Score, showScore)}
+                        {buildActionButton(ButtonAction.Score, () => setShowScoreModal(true))}
                     </div>
                 </div>
             </div>

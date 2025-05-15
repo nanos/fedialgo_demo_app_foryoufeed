@@ -11,7 +11,7 @@ import Row from 'react-bootstrap/Row';
 import { BooleanFilterName, BooleanFilter, TypeFilterName, sortKeysByValue } from "fedialgo";
 
 import { compareStr, debugMsg } from "../../helpers/string_helpers";
-import { PARTICIPATED_TAG_COLOR_FADED } from "../../helpers/style_helpers";
+import { FOLLOWED_TAG_COLOR, PARTICIPATED_TAG_COLOR_FADED, TRENDING_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 type HashtagTooltip = {
@@ -30,9 +30,9 @@ const DEFAULT_TOOLTIP_COLOR = 'cyan';
 const TOOLTIPS: {[key in (TypeFilterName | BooleanFilterName)]?: HashtagTooltip} = {
     [BooleanFilterName.LANGUAGE]: {text: `You post most in this language`},
     [TypeFilterName.FOLLOWED_ACCOUNTS]: {text: `You follow this account`},
-    [TypeFilterName.FOLLOWED_HASHTAGS]: {text: `You follow this hashtag`},
+    [TypeFilterName.FOLLOWED_HASHTAGS]: {color: FOLLOWED_TAG_COLOR, text: `You follow this hashtag`},
     [TypeFilterName.PARTICIPATED_HASHTAGS]: {color: PARTICIPATED_TAG_COLOR_FADED, text: `You've posted this hashtag`},
-    [TypeFilterName.TRENDING_HASHTAGS]: {color: "#FAD5A5", text: `This hashtag is trending`},
+    [TypeFilterName.TRENDING_HASHTAGS]: {color: TRENDING_TAG_COLOR_FADED, text: `This hashtag is trending`},
 };
 
 interface FilterCheckboxGridProps {

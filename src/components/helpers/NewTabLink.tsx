@@ -2,14 +2,13 @@
  * Simple component for links that open in a new tab.
  */
 
-import React, { CSSProperties, ReactElement } from "react";
+import React, { CSSProperties, PropsWithChildren, ReactElement } from "react";
 
-interface LinkProps {
-    children: React.ReactNode;
+interface LinkProps extends PropsWithChildren {
     className?: string;
     href: string;
     style?: CSSProperties;
-}
+};
 
 
 export default function ProtectedRoute(props: LinkProps): ReactElement {

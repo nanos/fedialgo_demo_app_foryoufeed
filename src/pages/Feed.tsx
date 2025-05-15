@@ -30,7 +30,7 @@ const NO_TOOTS_MSG = "No toots in feed! Maybe check your filters settings?";
 
 
 export default function Feed() {
-    const { algorithm, isLoading, setShouldAutoUpdate, setError, shouldAutoUpdate, timeline, triggerLoad } = useAlgorithm();
+    const { algorithm, isLoading, setShouldAutoUpdate, setError, shouldAutoUpdate, timeline, triggerFeedUpdate } = useAlgorithm();
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 
@@ -51,7 +51,7 @@ export default function Feed() {
         setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
         if (!algorithm) return;
         await algorithm.reset();
-        triggerLoad();
+        triggerFeedUpdate();
     };
 
     const finishedLoadingMsg = (lastLoadTimeInSeconds: number | null) => {
@@ -186,13 +186,13 @@ export default function Feed() {
                 <Col xs={12} md={6}>
                     {algorithm && !isLoading &&
                         <p style={loadNewTootsText}>
-                            <a onClick={() => triggerLoad()} style={linkesque}>
+                            <a onClick={() => triggerFeedUpdate()} style={linkesque}>
                                 (load new toots)
                             </a>
 
                            {' ● '}
 
-                            <a onClick={() => triggerLoad(true)} style={linkesque}>
+                            <a onClick={() => triggerFeedUpdate(true)} style={linkesque}>
                                 (load more old toots)
                             </a>
                         </p>}

@@ -1,7 +1,7 @@
 /*
  * Context to hold the TheAlgorithm variable
  */
-import React, { ReactNode, createContext, useContext, useEffect, useState } from "react";
+import React, { PropsWithChildren, ReactNode, createContext, useContext, useEffect, useState } from "react";
 
 import TheAlgorithm, { GET_FEED_BUSY_MSG, Toot, isAccessTokenRevokedError } from "fedialgo";
 import { createRestAPIClient, mastodon } from "masto";
@@ -17,7 +17,7 @@ interface AlgoContext {
     setShouldAutoUpdate?: (should: boolean) => void,
     shouldAutoUpdate?: boolean,
     timeline: Toot[],
-    triggerLoad?: (moreOldToots?: boolean) => void,
+    triggerFeedUpdate?: (moreOldToots?: boolean) => void,
     triggerPullAllUserData?: () => void,
 };
 
@@ -29,8 +29,7 @@ const VISIBILITY_CHANGE = "visibilitychange";
 const RELOAD_IF_OLDER_THAN_MINUTES = 5;
 const RELOAD_IF_OLDER_THAN_SECONDS = 60 * RELOAD_IF_OLDER_THAN_MINUTES;
 
-interface AlgorithmContextProps {
-    children: ReactNode,
+interface AlgorithmContextProps extends PropsWithChildren {
     setError?: (error: string) => void,
 };
 
@@ -47,7 +46,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
     // TODO: this doesn't make any API calls yet, right?
     const api: mastodon.rest.Client = createRestAPIClient({accessToken: user.access_token, url: user.server});
     const trigger = (loadFxn: () => Promise<void>) => {triggerLoadFxn(loadFxn, setError, setIsLoading);};
-    const triggerLoad = (moreOldToots?: boolean) => trigger(() => algorithm.triggerFeedUpdate(moreOldToots));
+    const triggerFeedUpdate = (moreOldToots?: boolean) => trigger(() => algorithm.triggerFeedUpdate(moreOldToots));
     const triggerPullAllUserData = () => trigger(() => algorithm.triggerPullAllUserData());
 
     // Initial load of the feed
@@ -118,10 +117,10 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
             return should;
         };
 
-        const handleFocus = () => document.hasFocus() && shouldReloadFeed() && triggerLoad();
+        const handleFocus = () => document.hasFocus() && shouldReloadFeed() && triggerFeedUpdate();
         window.addEventListener(FOCUS, handleFocus);
         return () => window.removeEventListener(FOCUS, handleFocus);
-    }, [algorithm, isLoading, timeline, triggerLoad, user]);
+    }, [algorithm, isLoading, timeline, triggerFeedUpdate, user]);
 
     const algoContext: AlgoContext = {
         algorithm,
@@ -131,7 +130,7 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
         setShouldAutoUpdate,
         shouldAutoUpdate,
         timeline,
-        triggerLoad,
+        triggerFeedUpdate,
         triggerPullAllUserData
     };
 
@@ -145,26 +144,27 @@ export default function AlgorithmProvider(props: AlgorithmContextProps) {
 
 // Wrapper for calls to FediAlgo TheAlgorithm class that can throw a "busy" error
 const triggerLoadFxn = (
-    fxn: () => Promise<void>,
+    loadFxn: () => Promise<void>,
     setError: (error: string) => void,
     setIsLoading: (isLoading: boolean) => void,
 ) => {
     setIsLoading(true);
 
-    fxn().then(() => {
-            logMsg(`triggerPullAllUserData() finished`);
+    loadFxn()
+        .then(() => {
+            logMsg(`${loadFxn.name}() finished`);
             setIsLoading(false);
         })
         .catch((err) => {
             if (err.message.includes(GET_FEED_BUSY_MSG)) {
                 // Don't flip the isLoading state if the feed is busy
-                warnMsg(`triggerPullAllUserData() ${LOADING_ERROR_MSG}`);
+                warnMsg(`${loadFxn.name}() ${LOADING_ERROR_MSG}`);
                 setError(LOADING_ERROR_MSG);
             } else {
-                const msg = `Failed to triggerPullAllUserData() with error:`;
+                const msg = `Failed to ${loadFxn.name}() with error:`;
                 errorMsg(msg, err);
                 setError(`${msg} ${err}`);
                 setIsLoading(false);
             }
-        })
+        });
 };
