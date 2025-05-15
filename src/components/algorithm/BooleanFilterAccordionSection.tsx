@@ -96,9 +96,9 @@ export default function BooleanFilterAccordionSection(props: BooleanFilterAccord
         >
             <FilterCheckboxGrid
                 filter={filter}
+                highlightedOnly={highlightedOnly}
                 minToots={minToots}
                 sortByCount={sortByCount}
-                highlightedOnly={highlightedOnly}
             />
         </FilterAccordionSection>
     );

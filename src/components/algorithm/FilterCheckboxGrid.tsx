@@ -3,7 +3,7 @@
  * Things like how much to prefer people you favorite a lot or how much to posts that
  * are trending in the Fedivers.
  */
-import React, { CSSProperties, useMemo } from "react";
+import React, { CSSProperties, ReactElement, useMemo } from "react";
 
 import Col from 'react-bootstrap/Col';
 import FilterCheckbox from "./FilterCheckbox";
@@ -113,14 +113,14 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     }
 
     // Build a checkbox for a property filter. The 'name' is also the element of the filter array.
-    const propertyCheckbox = (name: string) => {
+    const propertyCheckbox = (name: string, i: number) => {
         const tooltip = getTooltipInfo(name);
 
         return (
             <FilterCheckbox
                 capitalize={filter.title == BooleanFilterName.TYPE}
                 isChecked={filter.validValues.includes(name)}
-                key={name}
+                key={`${filter.title}_${name}_${i}`}
                 label={name}
                 labelExtra={filter.optionInfo[name]}
                 onChange={(e) => filter.updateValidOptions(name, e.target.checked)}
@@ -130,7 +130,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
         );
     };
 
-    const gridify = (elements: React.ReactElement[]): React.ReactElement => {
+    const gridify = (elements: ReactElement[]): ReactElement => {
         if (!elements || elements.length === 0) return <></>;
         const numCols = elements.length > 10 ? 3 : 2;
 
@@ -139,15 +139,15 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
             cols[colIndex] ??= [];
             cols[colIndex].push(element);
             return cols;
-        }, [] as React.ReactElement[][]);
+        }, [] as ReactElement[][]);
 
         return (
             // Bootstrap Row/Col system margin and padding info: https://getbootstrap.com/docs/5.1/utilities/spacing/
             <Row>
-                {columns.map((col, i: number) => <Col className="px-1" key={i}>{col}</Col>)}
+                {columns.map((col, i) => <Col className="px-1" key={`col_${i}`}>{col}</Col>)}
             </Row>
         );
     };
 
-    return gridify(optionKeys.map((option) => propertyCheckbox(option)));
+    return gridify(optionKeys.map((option, i) => propertyCheckbox(option, i)));
 };
