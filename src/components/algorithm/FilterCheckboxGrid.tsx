@@ -14,20 +14,25 @@ import { compareStr, debugMsg } from "../../helpers/string_helpers";
 import { PARTICIPATED_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
-type HashtagTooltip = {text: string; color: string;};
+type HashtagTooltip = {
+    color?: CSSProperties["color"];
+    text: string;
+};
 
 // Filtered filters are those that require a minimum number of toots to appear as filter options
 export const FILTERED_FILTERS = [
     BooleanFilterName.HASHTAG,
-    BooleanFilterName.USER
+    BooleanFilterName.USER,
 ];
 
-const TOOLTIPS = {
-    [TypeFilterName.FOLLOWED_ACCOUNTS]: `You follow this account.`,
-    [TypeFilterName.FOLLOWED_HASHTAGS]: `You follow this hashtag.`,
-    [TypeFilterName.PARTICIPATED_HASHTAGS]: (n: number) => `You've posted this hashtag ${n} times recently.`,
-    [TypeFilterName.TRENDING_HASHTAGS]: `This hashtag is trending.`,
-    [BooleanFilterName.LANGUAGE]: `You post most in this language.`,
+const DEFAULT_TOOLTIP_COLOR = 'cyan';
+
+const TOOLTIPS: {[key in (TypeFilterName | BooleanFilterName)]?: HashtagTooltip} = {
+    [BooleanFilterName.LANGUAGE]: {text: `You post most in this language`},
+    [TypeFilterName.FOLLOWED_ACCOUNTS]: {text: `You follow this account`},
+    [TypeFilterName.FOLLOWED_HASHTAGS]: {text: `You follow this hashtag`},
+    [TypeFilterName.PARTICIPATED_HASHTAGS]: {color: PARTICIPATED_TAG_COLOR_FADED, text: `You've posted this hashtag`},
+    [TypeFilterName.TRENDING_HASHTAGS]: {color: "#FAD5A5", text: `This hashtag is trending`},
 };
 
 interface FilterCheckboxGridProps {
@@ -41,28 +46,26 @@ interface FilterCheckboxGridProps {
 export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
     const { filterSection, minToots, sortByValue, tooltippedOnly } = props;
     const { algorithm } = useAlgorithm();
+
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
     let optionKeys: string[];
 
     // Generate color and tooltip text for a hashtag checkbox
-    const getTooltipInfo = (name: string): HashtagTooltip => {
+    const getTooltipInfo = (name: string): HashtagTooltip | undefined => {
         if (filterSection.title == BooleanFilterName.HASHTAG) {
             if (name in algorithm.userData.followedTags) {
-                return {color: "yellow", text: TOOLTIPS[TypeFilterName.FOLLOWED_HASHTAGS]};
+                return TOOLTIPS[TypeFilterName.FOLLOWED_HASHTAGS];
             } else if (trendingTagNames.includes(name)) {
-                return {color: "#FAD5A5", text: TOOLTIPS[TypeFilterName.TRENDING_HASHTAGS]};
+                return TOOLTIPS[TypeFilterName.TRENDING_HASHTAGS];
             } else if (name in algorithm.userData.participatedHashtags) {
-                const tag = algorithm.userData.participatedHashtags[name];
-
-                return {
-                    color: PARTICIPATED_TAG_COLOR_FADED,
-                    text: `${TOOLTIPS[TypeFilterName.PARTICIPATED_HASHTAGS](tag.numToots)}`,
-                }
+                const tooltip = {...TOOLTIPS[TypeFilterName.PARTICIPATED_HASHTAGS]};
+                tooltip.text += ` ${algorithm.userData.participatedHashtags[name].numToots} times recently`;
+                return tooltip;
             }
         } else if (filterSection.title == BooleanFilterName.USER && name in algorithm.userData.followedAccounts) {
-            return {color: 'cyan', text: TOOLTIPS[TypeFilterName.FOLLOWED_ACCOUNTS]};
+            return TOOLTIPS[TypeFilterName.FOLLOWED_ACCOUNTS];
         } else if (filterSection.title == BooleanFilterName.LANGUAGE && name == algorithm.userData.preferredLanguage) {
-            return {color: 'cyan', text: TOOLTIPS[BooleanFilterName.LANGUAGE]};
+            return TOOLTIPS[BooleanFilterName.LANGUAGE];
         }
     };
 
@@ -108,9 +111,9 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
                 label={name}
                 labelExtra={filterSection.optionInfo[name]}
                 onChange={(e) => filterSection.updateValidOptions(name, e.target.checked)}
-                tooltipColor={tooltip?.color}
-                tooltipText={tooltip?.text}
-                url={filterSection.title == BooleanFilterName.HASHTAG && algorithm.tagUrl(name)}
+                tooltipColor={tooltip?.color || DEFAULT_TOOLTIP_COLOR}
+                tooltipText={tooltip?.text && `${tooltip.text}.`}
+                url={(filterSection.title == BooleanFilterName.HASHTAG) && algorithm.tagUrl(name)}
             />
         );
     };
