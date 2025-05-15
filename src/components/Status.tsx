@@ -7,7 +7,7 @@ import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Toot, TypeFilterName, formatScore } from "fedialgo";
+import { TypeFilterName, formatScore } from "fedialgo";
 import {
     IconDefinition,
     faBolt,
