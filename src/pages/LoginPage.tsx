@@ -17,8 +17,8 @@ const OAUTH_SCOPES = [
     "read",
     "write:bookmarks",
     "write:favourites",
-    "write:statuses",  // Required for retooting and voting in polls
     "write:follows",
+    "write:statuses",  // Required for retooting and voting in polls
 ];
 
 export const OAUTH_SCOPE_STR = OAUTH_SCOPES.join(" ");
@@ -56,7 +56,6 @@ export default function LoginPage() {
         }
 
         const newApp = { ...appTouse, redirectUri };
-        // logFxn("Saving app creds with redirect URI to local storage:", newApp);
         setApp(newApp);
 
         const query = stringifyQuery({

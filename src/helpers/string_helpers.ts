@@ -3,23 +3,39 @@
  */
 import { isDebugMode } from "fedialgo";
 
-export const LOADING_ERROR_MSG = `Currently loading, please wait a moment and try again.`;
 export const DEMO_APP = "DEMO APP";
-const DEFAULT_LOCALE = "en-US";
+export const LOADING_ERROR_MSG = `Currently loading, please wait a moment and try again.`;
 
 // Locale
+const DEFAULT_LOCALE = "en-US";
 export const browserLocale = () => navigator?.language || DEFAULT_LOCALE;
 export const browserLanguage = () => browserLocale().split('-')[0];
 export const browserCountry = () => browserLocale().split('-')[1];
+
+// Log helpers
+export const errorMsg = (msg: string, ...args: any[]) => console.error(`[${DEMO_APP}] ${msg}`, ...args);
+export const warnMsg = (msg: string, ...args: any[]) => console.warn(`[${DEMO_APP}] ${msg}`, ...args);
+export const logMsg = (msg: string, ...args: any[]) => console.log(`[${DEMO_APP}] ${msg}`, ...args);
+export const infoMsg = (msg: string, ...args: any[]) => console.info(`[${DEMO_APP}] ${msg}`, ...args);
+export const debugMsg = (msg: string, ...args: any[]) => console.debug(`[${DEMO_APP}] ${msg}`, ...args);
+
+// for use with sort()
+export const compareStr = (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase());
+
+const DATE_FORMAT = Intl.DateTimeFormat(
+    browserLocale(),
+    {year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"}
+);
+
 
 // Log the browser's locale information to the console
 export const logLocaleInfo = (): void => {
     const locale = navigator?.language;
     const localeParts = locale.split('-');
-    const region = localeParts[1] || '';
+    const _country = localeParts[1] || '';
 
     const msg = [
-        `locale="${browserLocale()}"`,
+        `navigator.locale="${browserLocale()}"`,
         `language="${browserLanguage()}"`,
         `country="${browserCountry()}"`,
     ];
@@ -29,10 +45,6 @@ export const logLocaleInfo = (): void => {
     logMsg(`process.env.FEDIALGO_DEBUG: ${process.env.FEDIALGO_DEBUG}, fedialgo.isDebugMode: ${isDebugMode}`);
     logMsg(`process.env.FEDIALGO_VERSION: ${process.env.FEDIALGO_VERSION}`);
 };
-
-
-// for use with sort()
-export const compareStr = (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase());
 
 
 // Remove http:// or https:// from the server URL, Remove everything after slash
@@ -64,15 +76,8 @@ export const scoreString = (score: number | null): string => {
         decimalPlaces = 2;
     }
 
-
     return `${score.toFixed(decimalPlaces)}`;
 };
-
-
-const DATE_FORMAT = Intl.DateTimeFormat(
-    browserLocale(),
-    {year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "numeric"}
-);
 
 
 export const timestampString = (_timestamp: string): string => {
@@ -106,14 +111,6 @@ export const versionString = () => {
         return `?.?.?`;
     }
 };
-
-
-// Log helpers
-export const debugMsg = (message: string, ...args: unknown[]) => console.debug(`[${DEMO_APP}] ${message}`, ...args);
-export const infoMsg = (message: string, ...args: unknown[]) => console.info(`[${DEMO_APP}] ${message}`, ...args);
-export const logMsg = (message: string, ...args: unknown[]) => console.log(`[${DEMO_APP}] ${message}`, ...args);
-export const warnMsg = (message: string, ...args: unknown[]) => console.warn(`[${DEMO_APP}] ${message}`, ...args);
-export const errorMsg = (message: string, ...args: unknown[]) => console.error(`[${DEMO_APP}] ${message}`, ...args);
 
 
 const ordinalSuffix = (n: number): string => {

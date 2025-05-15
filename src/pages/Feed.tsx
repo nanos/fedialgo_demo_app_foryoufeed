@@ -19,14 +19,13 @@ import WeightSetter from "../components/algorithm/WeightSetter";
 import { logMsg, warnMsg } from "../helpers/string_helpers";
 import { TOOLTIP_ANCHOR, linkesque } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
-import { useAuthContext } from "../hooks/useAuth";
 
-// Number constants
-const DEFAULT_NUM_DISPLAYED_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
+const DEFAULT_NUM_DISPLAYED_TOOTS = 20;
+
 // Messaging constants
 const AUTO_UPDATE_TOOLTIP_MSG = "If this box is checked the feed will be automatically updated when you focus this browser tab.";
-const DEFAULT_LOADING_MESSAGE = "Loading (first time can take up to a minute or so)";
+const DEFAULT_LOADING_MSG = "Loading (first time can take up to a minute or so)";
 const NO_TOOTS_MSG = "No toots in feed! Maybe check your filters settings?";
 
 
@@ -209,7 +208,7 @@ export default function Feed() {
 
                         {timeline.length == 0 && (
                             isLoading
-                                ? <LoadingSpinner isFullPage={true} message={DEFAULT_LOADING_MESSAGE} />
+                                ? <LoadingSpinner isFullPage={true} message={DEFAULT_LOADING_MSG} />
                                 : <div style={{...fullPageCenteredSpinner, fontSize: "20px"}}>
                                       <p>{NO_TOOTS_MSG}</p>
                                   </div>
