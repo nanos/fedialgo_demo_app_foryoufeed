@@ -6,102 +6,35 @@
 import React, { CSSProperties, ReactNode, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import { NumericFilter, BooleanFilterName, BooleanFilter } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
+import BooleanFilterAccordionSection from "./BooleanFilterAccordionSection";
 import FilterAccordionSection from "./FilterAccordionSection";
-import FilterCheckbox, { HASHTAG_ANCHOR, HIGHLIGHT, INVERT_SELECTION, SORT_KEYS } from "./FilterCheckbox";
-import FilterCheckboxGrid, { FILTERED_FILTERS } from "./FilterCheckboxGrid";
+import FilterCheckbox, { HASHTAG_ANCHOR, HIGHLIGHT } from "./FilterCheckbox";
 import Slider from "./Slider";
+import { FeedFilterSettings, useAlgorithm } from "../../hooks/useAlgorithm";
+import { SwitchType } from "./BooleanFilterAccordionSection";
 import { titleStyle } from "../../helpers/style_helpers";
-import { useAlgorithm } from "../../hooks/useAlgorithm";
 
-type MinTootsFilter = {[key in BooleanFilterName]?: number};
-
-const DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER = 5;
-
-const DEFAULT_MIN_TOOTS_TO_APPEAR: MinTootsFilter = {
-    [BooleanFilterName.HASHTAG]: DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER,
-    [BooleanFilterName.USER]: DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER,
-};
+type NumericFilter = FeedFilterSettings["numericFilters"]["Chaos"];
 
 
 export default function FilterSetter() {
     const { algorithm } = useAlgorithm();
 
+    // The SERVER_SIDE_FILTERS filter is invisible to the user
+    const visibleFilters = Object.values(algorithm.filters.booleanFilters).filter(f => f.visible);
+    const hasActiveBooleanFilter = visibleFilters.some(f => f.validValues.length);
     const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
-    const hasActiveBooleanFilter = Object.values(algorithm.filters.booleanFilters).some(f => f.visible && f.validValues.length);
     const hasAnyActiveFilter = hasActiveNumericFilter || hasActiveBooleanFilter;
-    const visibleSections = Object.values(algorithm.filters.booleanFilters).filter(section => section.visible);
-    const [minTootsCutoffs, setMinTootsCutoffs] = useState<MinTootsFilter>({...DEFAULT_MIN_TOOTS_TO_APPEAR});
-
-    const [sortByValue, setSortByValue] = useState<Record<BooleanFilterName, boolean>>(
-        visibleSections.reduce((acc, section) => {
-            acc[section.title] = false;
-            return acc
-        }, {} as Record<BooleanFilterName, boolean>)
-    );
-
-    const [tooltippedOnly, setTooltippedOnly] = useState<Record<BooleanFilterName, boolean>>(
-        visibleSections.reduce((acc, section) => {
-            acc[section.title] = false;
-            return acc
-        }, {} as Record<BooleanFilterName, boolean>)
-    );
-
-    const invertSelectionCheckbox = (filter: BooleanFilter) => {
-        return (
-            <FilterCheckbox
-                capitalize={true}
-                isChecked={filter.invertSelection}
-                label={INVERT_SELECTION}
-                onChange={(e) => {
-                    filter.invertSelection = e.target.checked;
-                }}
-            />
-        );
-    };
-
-    const sortKeysCheckbox = (filter: BooleanFilter) => {
-        return (
-            <FilterCheckbox
-                capitalize={true}
-                isChecked={sortByValue[filter.title]}
-                label={SORT_KEYS}
-                onChange={(e) => {
-                    const newSortByValue = {...sortByValue};
-                    newSortByValue[filter.title] = e.target.checked;
-                    setSortByValue(newSortByValue);
-                }}
-            />
-        );
-    };
-
-    const tooltipOnlyCheckbox = (filter: BooleanFilter) => {
-        return (
-            <FilterCheckbox
-                capitalize={true}
-                isChecked={tooltippedOnly[filter.title]}
-                label={"Highlights Only"}
-                onChange={(e) => {
-                    const newTooltippedOnly = {...tooltippedOnly};
-                    newTooltippedOnly[filter.title] = e.target.checked;
-                    setTooltippedOnly(newTooltippedOnly);
-                }}
-            />
-        );
-    };
 
     const invertNumericFilterCheckbox = (filters: NumericFilter[]) => {
         return (
             <FilterCheckbox
                 capitalize={true}
                 isChecked={filters.every((filter) => filter.invertSelection)}
-                label={INVERT_SELECTION}
-                onChange={(e) => {
-                    filters.map(filter => filter.invertSelection = e.target.checked)
-                    algorithm.updateFilters(algorithm.filters);
-                }}
+                label={SwitchType.INVERT_SELECTION}
+                onChange={(e) => filters.forEach(filter => filter.invertSelection = e.target.checked)}
             />
         );
     };
@@ -146,39 +79,14 @@ export default function FilterSetter() {
                     <Tooltip id={HASHTAG_ANCHOR + HIGHLIGHT} place="top" />
 
                     <Accordion key={"fiaccordion"}>
-                        {/* property filters (language, type, etc) */}
-                        {visibleSections.map((filterSection) => (
-                            <FilterAccordionSection
-                                description={filterSection.description}
-                                isActive={filterSection.validValues.length > 0}
-                                key={filterSection.title}
-                                minToots={minTootsCutoffs[filterSection.title]}
-                                maxToots={Math.max(...Object.values(filterSection.optionInfo))}
-                                sectionName={filterSection.title}
-                                setMinToots={(minToots) => {
-                                    minTootsCutoffs[filterSection.title] = minToots;
-                                    setMinTootsCutoffs({...minTootsCutoffs});
-                                }}
-                                switches={{
-                                    invert: invertSelectionCheckbox(filterSection),
-                                    sortKeys: sortKeysCheckbox(filterSection),
-                                    tooltipOnly: FILTERED_FILTERS.includes(filterSection.title) && tooltipOnlyCheckbox(filterSection),
-                                }}
-                            >
-                                <FilterCheckboxGrid
-                                    filter={filterSection}
-                                    minToots={minTootsCutoffs[filterSection.title]}
-                                    sortByValue={sortByValue[filterSection.title]}
-                                    tooltippedOnly={tooltippedOnly[filterSection.title]}
-                                />
-                            </FilterAccordionSection>))}
+                        {visibleFilters.map((f) => <BooleanFilterAccordionSection filter={f} key={f.title} />)}
 
                         <FilterAccordionSection
                             description={"Filter based on minimum/maximum number of replies, reposts, etc"}
                             isActive={hasActiveNumericFilter}
                             key={"numericFilters"}
                             sectionName="Interactions"
-                            switches={{invert: invertNumericFilterCheckbox(Object.values(algorithm.filters.numericFilters))}}
+                            switchbar={[invertNumericFilterCheckbox(Object.values(algorithm.filters.numericFilters))]}
                         >
                             {numericSliders}
                         </FilterAccordionSection>

@@ -8,11 +8,11 @@ import React, { CSSProperties, useMemo } from "react";
 import Col from 'react-bootstrap/Col';
 import FilterCheckbox from "./FilterCheckbox";
 import Row from 'react-bootstrap/Row';
-import { BooleanFilterName, BooleanFilter, TypeFilterName, sortKeysByValue } from "fedialgo";
+import { BooleanFilterName, TypeFilterName, sortKeysByValue } from "fedialgo";
 
 import { compareStr, debugMsg } from "../../helpers/string_helpers";
 import { FOLLOWED_TAG_COLOR, FOLLOWED_USER_COLOR, PARTICIPATED_TAG_COLOR_FADED, TRENDING_TAG_COLOR_FADED } from "../../helpers/style_helpers";
-import { useAlgorithm } from "../../hooks/useAlgorithm";
+import { useAlgorithm, BooleanFilter } from "../../hooks/useAlgorithm";
 
 type HashtagTooltip = {
     color?: CSSProperties["color"];
@@ -50,14 +50,14 @@ const TOOLTIPS: {[key in (TypeFilterName | BooleanFilterName)]?: HashtagTooltip}
 
 interface FilterCheckboxGridProps {
     filter: BooleanFilter,
+    highlightedOnly?: boolean,
     minToots?: number,
     sortByValue?: boolean,
-    tooltippedOnly?: boolean,
 };
 
 
 export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
-    const { filter, minToots, sortByValue, tooltippedOnly } = props;
+    const { filter, minToots, sortByValue, highlightedOnly } = props;
     const { algorithm } = useAlgorithm();
 
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
@@ -91,7 +91,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
             return Object.fromEntries(Object.entries(filter.optionInfo).filter(
                 ([option, numToots]) => {
                     if (filter.validValues.includes(option)) return true;
-                    if (numToots >= minToots) return (tooltippedOnly ? !!getTooltipInfo(option) : true);
+                    if (numToots >= minToots) return (highlightedOnly ? !!getTooltipInfo(option) : true);
                     return false;
                 }
             ));
@@ -102,7 +102,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
             filter.title,
             filter.validValues,
             minToots,
-            tooltippedOnly
+            highlightedOnly
         ]
     );
 

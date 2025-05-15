@@ -24,6 +24,10 @@ interface AlgoContext {
 const AlgorithmContext = createContext<AlgoContext>({timeline: []});
 export const useAlgorithm = () => useContext(AlgorithmContext);
 
+export type FeedFilterSettings = ReturnType<typeof useAlgorithm>["algorithm"]["filters"];
+export type BooleanFilterNameType = keyof FeedFilterSettings["booleanFilters"];
+export type BooleanFilter = FeedFilterSettings["booleanFilters"][BooleanFilterNameType];
+
 const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
 const RELOAD_IF_OLDER_THAN_MINUTES = 5;

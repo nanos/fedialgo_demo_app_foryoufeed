@@ -12,8 +12,6 @@ import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 export const HASHTAG_ANCHOR = "user-hashtag-anchor";
 export const HIGHLIGHT = "highlighted";
-export const INVERT_SELECTION = "invertSelection";
-export const SORT_KEYS = "sortByCount";
 
 const MAX_LABEL_LENGTH = 21;
 
