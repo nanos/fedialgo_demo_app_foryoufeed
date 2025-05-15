@@ -3,13 +3,14 @@
  * them as checkboxes, with a switchbar for invertSelection, sortByCount, etc.
  */
 import React, { CSSProperties, useState } from "react";
+
+import { type BooleanFilter } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
 import FilterAccordionSection from "./FilterAccordionSection";
 import FilterCheckbox from "./FilterCheckbox";
 import FilterCheckboxGrid, { FILTERED_FILTERS } from "./FilterCheckboxGrid";
 import Slider from "./Slider";
-import { BooleanFilter } from "../../hooks/useAlgorithm";
 import { TOOLTIP_ANCHOR } from "../../helpers/style_helpers";
 
 export enum SwitchType {

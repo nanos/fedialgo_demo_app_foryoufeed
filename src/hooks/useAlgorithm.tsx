@@ -1,13 +1,19 @@
 /*
  * Context to hold the TheAlgorithm variable
  */
-import React, { PropsWithChildren, ReactNode, createContext, useContext, useEffect, useState } from "react";
+import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 
-import TheAlgorithm, { GET_FEED_BUSY_MSG, Toot, isAccessTokenRevokedError } from "fedialgo";
+import TheAlgorithm, { GET_FEED_BUSY_MSG, type Toot, isAccessTokenRevokedError } from "fedialgo";
 import { createRestAPIClient, mastodon } from "masto";
 
 import { LOADING_ERROR_MSG, errorMsg, logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "./useAuth";
+
+const FOCUS = "focus";
+const VISIBILITY_CHANGE = "visibilitychange";
+const RELOAD_IF_OLDER_THAN_MINUTES = 5;
+const RELOAD_IF_OLDER_THAN_SECONDS = 60 * RELOAD_IF_OLDER_THAN_MINUTES;
+
 
 interface AlgoContext {
     algorithm?: TheAlgorithm,
@@ -23,18 +29,6 @@ interface AlgoContext {
 
 const AlgorithmContext = createContext<AlgoContext>({timeline: []});
 export const useAlgorithm = () => useContext(AlgorithmContext);
-
-export type FeedFilterSettings = TheAlgorithm["filters"];
-export type BooleanFilterNameType = keyof FeedFilterSettings["booleanFilters"];
-export type BooleanFilter = FeedFilterSettings["booleanFilters"][BooleanFilterNameType];
-export type TagWithUsageCounts = TheAlgorithm["trendingData"]["tags"][0];
-export type TrendingLink = TheAlgorithm["trendingData"]["links"][0];
-export type Weights = Awaited<ReturnType<TheAlgorithm["getUserWeights"]>>;
-
-const FOCUS = "focus";
-const VISIBILITY_CHANGE = "visibilitychange";
-const RELOAD_IF_OLDER_THAN_MINUTES = 5;
-const RELOAD_IF_OLDER_THAN_SECONDS = 60 * RELOAD_IF_OLDER_THAN_MINUTES;
 
 interface AlgorithmContextProps extends PropsWithChildren {
     setError?: (error: string) => void,

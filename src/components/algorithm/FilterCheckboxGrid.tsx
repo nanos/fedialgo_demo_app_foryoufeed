@@ -8,11 +8,11 @@ import React, { CSSProperties, useMemo } from "react";
 import Col from 'react-bootstrap/Col';
 import FilterCheckbox from "./FilterCheckbox";
 import Row from 'react-bootstrap/Row';
-import { BooleanFilterName, TypeFilterName, sortKeysByValue } from "fedialgo";
+import { BooleanFilterName, TypeFilterName, sortKeysByValue, type BooleanFilter } from "fedialgo";
 
 import { compareStr, debugMsg } from "../../helpers/string_helpers";
 import { FOLLOWED_TAG_COLOR, FOLLOWED_USER_COLOR, PARTICIPATED_TAG_COLOR_FADED, TRENDING_TAG_COLOR_FADED } from "../../helpers/style_helpers";
-import { BooleanFilter, useAlgorithm } from "../../hooks/useAlgorithm";
+import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 export type CheckboxTooltip = {
     color: CSSProperties["color"];

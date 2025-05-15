@@ -7,13 +7,13 @@ import React, { CSSProperties, useState, useEffect } from "react";
 
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { NON_SCORE_WEIGHTS, WeightName } from "fedialgo";
+import { NON_SCORE_WEIGHTS, WeightName, type Weights } from "fedialgo";
 
 import TopLevelAccordion from "../helpers/TopLevelAccordion";
 import WeightSlider from './WeightSlider';
 import { logMsg } from "../../helpers/string_helpers";
 import { roundedBox, titleStyle } from "../../helpers/style_helpers";
-import { useAlgorithm, Weights } from "../../hooks/useAlgorithm";
+import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 const PRESET_MENU_TITLE = "Preset Algorithm Configurations";
 
