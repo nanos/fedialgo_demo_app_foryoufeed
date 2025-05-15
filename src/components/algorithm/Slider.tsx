@@ -2,7 +2,6 @@
  * Slider that sets a weight for the algorithm.
  */
 import React, { ChangeEvent, CSSProperties } from 'react';
-
 import Form from 'react-bootstrap/esm/Form';
 
 export const DEFAULT_STEP_SIZE = 0.02;

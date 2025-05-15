@@ -102,27 +102,15 @@ export default function ActionButton(props: ActionButtonProps) {
 
             (async () => {
                 try {
-                    const status_ = await status.resolve();
-                    const id = status_.id;
+                    const resolvedToot = await status.resolve();
+                    const selected = api.v1.statuses.$select(resolvedToot.id);
 
                     if (actionName == ButtonAction.Bookmark) {
-                        if (newState) {
-                            await api.v1.statuses.$select(id).bookmark();
-                        } else {
-                            await api.v1.statuses.$select(id).unbookmark();
-                        }
+                        await (newState ? selected.bookmark() : selected.unbookmark());
                     } else if (actionName == ButtonAction.Favourite) {
-                        if (newState) {
-                            await api.v1.statuses.$select(id).favourite();
-                        } else {
-                            await api.v1.statuses.$select(id).unfavourite();
-                        }
+                        await (newState ? selected.favourite() : selected.unfavourite());
                     } else if (actionName == ButtonAction.Reblog) {
-                        if (newState) {
-                            await api.v1.statuses.$select(id).reblog();
-                        } else {
-                            await api.v1.statuses.$select(id).unreblog();
-                        }
+                        await (newState ? selected.reblog() : selected.unreblog());
                     } else {
                         throw new Error(`Unknown actionName: ${actionName}`);
                     }
