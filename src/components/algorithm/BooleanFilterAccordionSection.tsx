@@ -37,7 +37,7 @@ export default function BooleanFilterAccordionSection(props: BooleanFilterAccord
 
     const minTootsTooltipAnchor = `${TOOLTIP_ANCHOR}-${filter.title}`;
     const minTootsTooltipTxt = `Hide ${filter.title}s with less than ${minToots} toots`;
-    const spacer = <div style={{width: "20px"}} />
+    const makeSpacer = (key: string) => <div key={key} style={{width: "20px"}} />;
 
     let switchbar = [
         <FilterCheckbox
@@ -58,7 +58,7 @@ export default function BooleanFilterAccordionSection(props: BooleanFilterAccord
     ];
 
     if (!hasMinToots) {
-        switchbar = [spacer, ...switchbar, spacer];
+        switchbar = [makeSpacer("spacer1"), ...switchbar, makeSpacer("spacer2")];
     } else {
         switchbar = switchbar.concat([
             <FilterCheckbox

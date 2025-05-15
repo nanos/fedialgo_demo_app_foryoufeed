@@ -21,7 +21,7 @@ export default function SubAccordion(props: SubAccordionProps) {
     const headerClass = `filterHeader ${isActive ? "filterHeader--active" : ""}`;
 
     return (
-        <Accordion.Item eventKey={title} >
+        <Accordion.Item eventKey={title} key={title}>
             <Accordion.Header>
                 <Form.Label style={subHeaderLabel}>
                     <span className={headerClass} key={1}>

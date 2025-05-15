@@ -28,7 +28,7 @@ export default function TrendingSection(props: TrendingProps) {
     const linkStyle = hasCustomStyle ? tagLinkStyle : boldTagLinkStyle;
 
     return (
-        <SubAccordion title={title}>
+        <SubAccordion key={title} title={title}>
             <div style={roundedBox}>
                 <ol style={listStyle}>
                     {trendingObjs.map((obj, i) => (

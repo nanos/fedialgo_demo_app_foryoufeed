@@ -138,7 +138,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
         return (
             // Bootstrap Row/Col system margin and padding info: https://getbootstrap.com/docs/5.1/utilities/spacing/
             <Row>
-                {columns.map((col, i) => <Col className="px-1" key={`col_${i}`}>{col}</Col>)}
+                {columns.map((col, i) => <Col className="px-1" key={i}>{col}</Col>)}
             </Row>
         );
     };

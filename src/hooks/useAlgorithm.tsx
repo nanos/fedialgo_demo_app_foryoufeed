@@ -153,16 +153,16 @@ const triggerLoadFxn = (
 
     loadFxn()
         .then(() => {
-            logMsg(`${loadFxn.name}() finished`);
+            logMsg(`triggerLoadFxn finished`);
             setIsLoading(false);
         })
         .catch((err) => {
             if (err.message.includes(GET_FEED_BUSY_MSG)) {
                 // Don't flip the isLoading state if the feed is busy
-                warnMsg(`${loadFxn.name}() ${LOADING_ERROR_MSG}`);
+                warnMsg(`triggerLoadFxn ${LOADING_ERROR_MSG}`);
                 setError(LOADING_ERROR_MSG);
             } else {
-                const msg = `Failed to ${loadFxn.name}() with error:`;
+                const msg = `Failed to triggerLoadFxn with error:`;
                 errorMsg(msg, err);
                 setError(`${msg} ${err}`);
                 setIsLoading(false);
