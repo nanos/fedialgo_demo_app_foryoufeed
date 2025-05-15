@@ -49,22 +49,18 @@ export default function ExperimentalFeatures() {
         ;
     }
 
-    const makeButton = (label: string, onClick: () => void, variant?: string) => (
-        <Button
-            className='p-2 text-center'
-            disabled={isLoading}
-            onClick={onClick}
-            size="sm"
-            style={buttonStyle}
-            variant={variant || "primary"}
-        >
-            {isLoading || isLoadingState ? "Loading..." : label}
-        </Button>
-    );
-
     const makeLabeledButton = (label: string, onClick: () => void, variant?: string) => (
         <li style={listElement}>
-            {makeButton(label, onClick, variant)}
+            <Button
+                className='p-2 text-center'
+                disabled={isLoading}
+                onClick={onClick}
+                size="sm"
+                style={buttonStyle}
+                variant={variant || "primary"}
+            >
+                {isLoading || isLoadingState ? "Loading..." : label}
+            </Button>
 
             <div style={{flex: 4, marginLeft: "10px", fontSize: "14px"}}>
                 {BUTTON_TEXT[label]}

@@ -117,6 +117,7 @@ export default function ActionButton(props: ActionButtonProps) {
 
                     logMsg(`Successfully changed ${actionName} bool to ${newState}`);
                 } catch (error) {
+                    // If there's an error, roll back the change to the original state
                     const msg = `Failed to ${actionName} toot! (${error.message})`;
                     console.error(`${msg} Resetting count to ${status[actionInfo.countName]}`, error);
                     setCurrentState(startingState);
