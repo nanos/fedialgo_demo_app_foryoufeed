@@ -1,7 +1,7 @@
 /*
  * Render a Status, also known as a Toot.
  */
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useEffect } from "react";
 
 import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
@@ -30,7 +30,7 @@ import MultimediaNode from "./status/MultimediaNode";
 import NewTabLink from './helpers/NewTabLink';
 import Poll from "./status/Poll";
 import PreviewCard from "./status/PreviewCard";
-import { FOLLOWED_TAG_COLOR, PARTICIPATED_TAG_COLOR, TRENDING_TAG_COLOR } from "../helpers/style_helpers";
+import { FOLLOWED_TAG_COLOR, FOLLOWED_USER_COLOR_FADED, PARTICIPATED_TAG_COLOR, TRENDING_TAG_COLOR } from "../helpers/style_helpers";
 import { openToot } from "../helpers/react_helpers";
 import { timestampString } from '../helpers/string_helpers';
 
@@ -58,7 +58,7 @@ const INFO_ICONS: Record<InfoIconType, IconInfo> = {
     [InfoIconType.Edited]:       {icon: faPencil},
     [InfoIconType.Hashtags]:     {icon: faHashtag, color: PARTICIPATED_TAG_COLOR},
     [InfoIconType.Mention]:      {icon: faBolt, color: "green"},
-    [InfoIconType.Public]:       {icon: faGlobe, color: "#2092a1"},
+    [InfoIconType.Public]:       {icon: faGlobe, color: FOLLOWED_USER_COLOR_FADED},
     [InfoIconType.Reply]:        {icon: faReply, color: "blue"},
     [InfoIconType.ShowToot]:     {icon: faUpRightFromSquare},
     [InfoIconType.TrendingLink]: {icon: faLink, color: TRENDING_TAG_COLOR},
@@ -87,7 +87,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     const [showTootModal, setShowTootModal] = React.useState<boolean>(false);
 
     // Increase mediaInspectionIdx on Right Arrow
-    React.useEffect(() => {
+    useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent): void => {
             if (mediaInspectionIdx === -1) return;
             let newIndex = mediaInspectionIdx;
@@ -107,7 +107,7 @@ export default function StatusComponent(props: StatusComponentProps) {
     }, [mediaInspectionIdx])
 
     // Build the account link(s) for the reblogger(s) that appears at top of a retoot
-    const rebloggersLinks = () => (
+    const rebloggersLinks = (
         <span>
             {toot.reblogsBy.map((account, i) => {
                 const rebloggerLink = (
@@ -134,10 +134,10 @@ export default function StatusComponent(props: StatusComponentProps) {
         } else if (iconType == InfoIconType.Hashtags) {
             title = toot.containsTagsMsg();
 
-            if (toot.trendingTags?.length) {
-                color = TRENDING_TAG_COLOR;
-            } else if (toot.followedTags?.length) {
+            if (toot.followedTags?.length) {
                 color = FOLLOWED_TAG_COLOR;
+            } else if (toot.trendingTags?.length) {
+                color = TRENDING_TAG_COLOR;
             } else if (toot.participatedTags?.length) {
                 color = PARTICIPATED_TAG_COLOR;
             }
@@ -169,6 +169,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 jsonViewProps={{
                     collapsed: 3,
                     name: "toot.scoreInfo",
+                    theme: "brewer",
                 }}
                 show={showScoreModal}
                 setShow={setShowScoreModal}
@@ -185,7 +186,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                 jsonViewProps={{
                     collapsed: 3,
                     name: "toot",
-                    style: {fontSize: 12},
+                    style: {fontSize: 13},
                     theme: "brewer",
                 }}
                 show={showTootModal}
@@ -208,7 +209,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <FontAwesomeIcon className="status__prepend-icon fa-fw" icon={faRetweet} />
                         </div>
 
-                        {rebloggersLinks()}
+                        {rebloggersLinks}
                     </div>}
 
                 <div className="status" style={isReblog ? { paddingTop: "10px" } : {}}>
@@ -289,7 +290,7 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                     {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">
-                        {buildActionButton(ButtonAction.Reply, async (e: React.MouseEvent) => await openToot(toot, e))}
+                        {buildActionButton(ButtonAction.Reply, (e: React.MouseEvent) => openToot(toot, e))}
                         {buildActionButton(ButtonAction.Reblog)}
                         {buildActionButton(ButtonAction.Favourite)}
                         {buildActionButton(ButtonAction.Bookmark)}

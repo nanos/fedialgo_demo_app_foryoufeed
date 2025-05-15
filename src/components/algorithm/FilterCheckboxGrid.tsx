@@ -11,7 +11,7 @@ import Row from 'react-bootstrap/Row';
 import { BooleanFilterName, BooleanFilter, TypeFilterName, sortKeysByValue } from "fedialgo";
 
 import { compareStr, debugMsg } from "../../helpers/string_helpers";
-import { FOLLOWED_TAG_COLOR, PARTICIPATED_TAG_COLOR_FADED, TRENDING_TAG_COLOR_FADED } from "../../helpers/style_helpers";
+import { FOLLOWED_TAG_COLOR, FOLLOWED_USER_COLOR, PARTICIPATED_TAG_COLOR_FADED, TRENDING_TAG_COLOR_FADED } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 type HashtagTooltip = {
@@ -25,14 +25,27 @@ export const FILTERED_FILTERS = [
     BooleanFilterName.USER,
 ];
 
-const DEFAULT_TOOLTIP_COLOR = 'cyan';
-
 const TOOLTIPS: {[key in (TypeFilterName | BooleanFilterName)]?: HashtagTooltip} = {
-    [BooleanFilterName.LANGUAGE]: {text: `You post most in this language`},
-    [TypeFilterName.FOLLOWED_ACCOUNTS]: {text: `You follow this account`},
-    [TypeFilterName.FOLLOWED_HASHTAGS]: {color: FOLLOWED_TAG_COLOR, text: `You follow this hashtag`},
-    [TypeFilterName.PARTICIPATED_HASHTAGS]: {color: PARTICIPATED_TAG_COLOR_FADED, text: `You've posted this hashtag`},
-    [TypeFilterName.TRENDING_HASHTAGS]: {color: TRENDING_TAG_COLOR_FADED, text: `This hashtag is trending`},
+    [BooleanFilterName.LANGUAGE]: {
+        color: FOLLOWED_USER_COLOR,
+        text: `You post most in this language`,
+    },
+    [TypeFilterName.FOLLOWED_ACCOUNTS]: {
+        color: FOLLOWED_USER_COLOR,
+        text: `You follow this account`,
+    },
+    [TypeFilterName.FOLLOWED_HASHTAGS]: {
+        color: FOLLOWED_TAG_COLOR,
+        text: `You follow this hashtag`,
+    },
+    [TypeFilterName.PARTICIPATED_HASHTAGS]: {
+        color: PARTICIPATED_TAG_COLOR_FADED,
+        text: `You've posted this hashtag`, // number of times is added when used
+    },
+    [TypeFilterName.TRENDING_HASHTAGS]: {
+        color: TRENDING_TAG_COLOR_FADED,
+        text: `This hashtag is trending`,
+    },
 };
 
 interface FilterCheckboxGridProps {
@@ -111,7 +124,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
                 label={name}
                 labelExtra={filter.optionInfo[name]}
                 onChange={(e) => filter.updateValidOptions(name, e.target.checked)}
-                tooltipColor={tooltip?.color || DEFAULT_TOOLTIP_COLOR}
+                tooltipColor={tooltip?.color}
                 tooltipText={tooltip?.text && `${tooltip.text}.`}
                 url={(filter.title == BooleanFilterName.HASHTAG) && algorithm.tagUrl(name)}
             />

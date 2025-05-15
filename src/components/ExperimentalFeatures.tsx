@@ -18,8 +18,8 @@ const SHOW_STATE = "Show State";
 const LOAD_COMPLETE_USER_HISTORY = "Load Complete User History";
 
 const BUTTON_TEXT = {
-    SHOW_STATE: `Show a bunch of information about ${FEDIALGO}'s internal state`,
-    LOAD_COMPLETE_USER_HISTORY: "Load all your toots and favourites. May improve scoring of your feed. " +
+    [SHOW_STATE]: `Show a bunch of information about ${FEDIALGO}'s internal state`,
+    [LOAD_COMPLETE_USER_HISTORY]: "Load all your toots and favourites. May improve scoring of your feed. " +
                                   "Takes time & resources proportional to the number of times you've tooted.",
 };
 

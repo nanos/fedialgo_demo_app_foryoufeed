@@ -9,6 +9,8 @@ export const RED = 'firebrick';
 export const TOOLTIP_ANCHOR = "tooltip-anchor";
 
 export const FOLLOWED_TAG_COLOR = 'yellow';
+export const FOLLOWED_USER_COLOR = 'cyan';
+export const FOLLOWED_USER_COLOR_FADED = "#2092a1";
 export const PARTICIPATED_TAG_COLOR = "#92a14a";
 export const PARTICIPATED_TAG_COLOR_FADED = "#c3d46e";
 export const TRENDING_TAG_COLOR = RED;
