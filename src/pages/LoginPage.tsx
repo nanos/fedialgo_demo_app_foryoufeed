@@ -7,12 +7,12 @@ import { FEDIALGO, isDebugMode } from "fedialgo";
 import { stringifyQuery } from 'ufo';
 import { usePersistentState } from "react-persistent-state";
 
+import { App } from '../types';
 import { AppStorage, useLocalStorage } from "../hooks/useLocalStorage";
-import { logMsg, sanitizeServerUrl } from '../helpers/string_helpers';
+import { logMsg, logSafe, sanitizeServerUrl } from '../helpers/string_helpers';
 // const showcase = require("../../public/assets/Showcase.jpg");
 
-// Mastodon OAuth scopes required for this app to work.
-// Details: https://docs.joinmastodon.org/api/oauth-scopes/
+// Mastodon OAuth scopes required for this app to work. Details: https://docs.joinmastodon.org/api/oauth-scopes/
 const OAUTH_SCOPES = [
     "read",
     "write:bookmarks",
@@ -22,28 +22,28 @@ const OAUTH_SCOPES = [
 ];
 
 export const OAUTH_SCOPE_STR = OAUTH_SCOPES.join(" ");
-const DEFAULT_MASTODON_SERVER = "universeodon.com";  // Home of George Takei!
-const APP_NAME = `${FEDIALGO}Demo`;  // Name of the app that will be created on the server
+const DEFAULT_MASTODON_SERVER = "universeodon.com";
+const APP_NAME = `${FEDIALGO}Demo`;  // Name of the app that will be created in the user's Mastodon account
+const LOG_PREFIX = `<LoginPage>`;
 
 
 export default function LoginPage() {
-    const [server, setServer] = usePersistentState<string>(DEFAULT_MASTODON_SERVER, {storageKey: "server"});
     // TODO: why is this not using useAppStorage?
     const [_app, setApp] = useLocalStorage({keyName: "app", defaultValue: {}} as AppStorage);
-    const logThis = (msg: string, ...args: any[]) => logMsg(`<LoginPage> ${msg}`, ...args);
+    const [server, setServer] = usePersistentState<string>(DEFAULT_MASTODON_SERVER, {storageKey: "server"});
+    const logCreds = (msg: string, ...args: any[]) => logSafe(`${LOG_PREFIX} ${msg}`, ...args);
 
     const loginRedirect = async (): Promise<void> => {
         const sanitizedServer = sanitizeServerUrl(server);
-        const logFxn = (msg: string, ...args: any[]) => logThis(`loginRedirect(): ${msg}`, ...args);
         const api = createRestAPIClient({url: sanitizedServer});
         const redirectUri = window.location.origin + "/callback";
-        let appTouse;
+        let appTouse;  // TODO: using 'App' type causes a type error
 
         if (_app?.clientId) {
-            if (isDebugMode) logFxn(`found existing app creds to use connecting to '${sanitizedServer}':`, _app);
+            logCreds(`Found existing app creds to use connecting to '${sanitizedServer}':`, _app);
             appTouse = _app;
         } else {
-            if (isDebugMode)  logFxn(`no existing app found, creating a new app for '${sanitizedServer}':`, _app);
+            logCreds(`No existing app found, creating a new app for '${sanitizedServer}':`, _app);
 
             appTouse = await api.v1.apps.create({
                 clientName: APP_NAME,
@@ -52,11 +52,8 @@ export default function LoginPage() {
                 website: sanitizedServer,
             });
 
-            if (isDebugMode) logFxn("Created app with api.v1.apps.create(), response var 'appTouse':", appTouse);
+            logCreds("Created app with api.v1.apps.create(), response var 'appTouse':", appTouse);
         }
-
-        const newApp = { ...appTouse, redirectUri };
-        setApp(newApp);
 
         const query = stringifyQuery({
             client_id: appTouse.clientId,
@@ -65,8 +62,9 @@ export default function LoginPage() {
             scope: OAUTH_SCOPE_STR,
         });
 
+        setApp({...appTouse, redirectUri });
         const newUrl = `${sanitizedServer}/oauth/authorize?${query}`;
-        logFxn(`redirecting to "${newUrl}"...`);
+        logCreds(`redirecting to "${newUrl}"...`);
         window.location.href = newUrl;
     };
 

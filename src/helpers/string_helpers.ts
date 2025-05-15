@@ -18,6 +18,7 @@ export const warnMsg = (msg: string, ...args: any[]) => console.warn(`[${DEMO_AP
 export const logMsg = (msg: string, ...args: any[]) => console.log(`[${DEMO_APP}] ${msg}`, ...args);
 export const infoMsg = (msg: string, ...args: any[]) => console.info(`[${DEMO_APP}] ${msg}`, ...args);
 export const debugMsg = (msg: string, ...args: any[]) => console.debug(`[${DEMO_APP}] ${msg}`, ...args);
+export const logSafe = (msg: string, ...args: any[]) => isDebugMode && logMsg(msg, ...args);
 
 // for use with sort()
 export const compareStr = (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase());
