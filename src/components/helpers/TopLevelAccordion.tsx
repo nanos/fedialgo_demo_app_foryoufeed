@@ -19,14 +19,15 @@ interface TopLevelAccordionProps extends PropsWithChildren {
 export default function TopLevelAccordion(props: TopLevelAccordionProps) {
     const { bodyStyle, isActive, title } = props;
 
+    // Invert color scheme of title if active
+    const className = isActive ? "filterHeader--rounded" : "blahblahblahblahblahblah";
+    const style = {...titleStyle, color: isActive ? "white" : "black"};
+
     return (
         <Accordion>
             <Accordion.Item eventKey={title}>
                 <Accordion.Header style={noPadding}>
-                    <span
-                        className={isActive ? "filterHeader--rounded" : "blahblahblah"}
-                        style={{...titleStyle, color: isActive ? "white" : "black"}}
-                    >
+                    <span className={className} style={style}>
                         {title}
                     </span>
                 </Accordion.Header>

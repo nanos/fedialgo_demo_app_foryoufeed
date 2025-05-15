@@ -3,7 +3,7 @@
  */
 import React, { CSSProperties } from "react";
 
-import { TrendingObj } from "fedialgo";
+import { type TrendingObj } from "fedialgo";
 
 import SubAccordion from "./helpers/SubAccordion";
 import { roundedBox } from "../helpers/style_helpers";

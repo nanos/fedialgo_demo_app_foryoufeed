@@ -24,7 +24,9 @@ export default function Header() {
                                     style={avatarStyle}
                                 />}
 
-                            <span style={{ fontSize: 15, padding: 10 }}>{user.username}</span>
+                            <span style={{fontSize: 15, padding: 10}}>
+                                {user.username}
+                            </span>
                         </div>}
                 </Col>
 
