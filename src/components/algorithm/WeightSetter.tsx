@@ -5,14 +5,14 @@
  */
 import React, { CSSProperties, useState, useEffect } from "react";
 
-import Accordion from 'react-bootstrap/esm/Accordion';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { NON_SCORE_WEIGHTS, WeightName, Weights } from "fedialgo";
 
+import TopLevelAccordion from "../helpers/TopLevelAccordion";
 import WeightSlider from './WeightSlider';
-import { accordionBody, roundedBox, titleStyle } from "../../helpers/style_helpers";
 import { logMsg } from "../../helpers/string_helpers";
+import { roundedBox, titleStyle } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 const PRESET_MENU_TITLE = "Preset Algorithm Configurations";
@@ -59,36 +59,26 @@ export default function WeightSetter() {
     );
 
     return (
-        <Accordion>
-            <Accordion.Item eventKey="9">
-                <Accordion.Header>
-                    <p style={titleStyle}>
-                        Feed Algorithm Control Panel
-                    </p>
-                </Accordion.Header>
+        <TopLevelAccordion title={"Feed Algorithm Control Panel"}>
+            <DropdownButton id="presets" style={presetMenu} title={PRESET_MENU_TITLE} variant="secondary">
+                {Object.keys(algorithm.weightPresets).map((preset) => (
+                    <Dropdown.Item key={preset} onClick={() => updateWeightsToPreset(preset)}>
+                        {preset}
+                    </Dropdown.Item>
+                ))}
+            </DropdownButton>
 
-                <Accordion.Body style={accordionBody}>
-                    <DropdownButton id="presets" style={presetMenu} title={PRESET_MENU_TITLE} variant="secondary">
-                        {Object.keys(algorithm.weightPresets).map((preset) => (
-                            <Dropdown.Item key={preset} onClick={() => updateWeightsToPreset(preset)}>
-                                {preset}
-                            </Dropdown.Item>
-                        ))}
-                    </DropdownButton>
+            {NON_SCORE_WEIGHTS.map((weight) => weightSlider(weight))}
+            <div style={{height: '12px'}} />
 
-                    {NON_SCORE_WEIGHTS.map((weight) => weightSlider(weight))}
-                    <div style={{height: '12px'}} />
+            <div style={roundedBox}>
+                <p style={weightingsStyle}>
+                    Weightings
+                </p>
 
-                    <div style={roundedBox}>
-                        <p style={weightingsStyle}>
-                            Weightings
-                        </p>
-
-                        {sortedScorers.map((scorer) => weightSlider(scorer.name))}
-                    </div>
-                </Accordion.Body>
-            </Accordion.Item>
-        </Accordion>
+                {sortedScorers.map((scorer) => weightSlider(scorer.name))}
+            </div>
+        </TopLevelAccordion>
     );
 };
 

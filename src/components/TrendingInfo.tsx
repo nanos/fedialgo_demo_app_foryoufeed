@@ -14,8 +14,9 @@ import {
     TrendingWithHistory,
 } from "fedialgo";
 
+import TopLevelAccordion from "./helpers/TopLevelAccordion";
 import TrendingSection, { LINK_FONT_SIZE, infoTxtStyle } from "./TrendingSection";
-import { IMAGE_BACKGROUND_COLOR, accordionBody, linkesque, titleStyle } from "../helpers/style_helpers";
+import { accordionSubheader, IMAGE_BACKGROUND_COLOR, linkesque, noPadding, paddingBorder } from "../helpers/style_helpers";
 import { followUri, openToot, openTrendingLink } from "../helpers/react_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
@@ -110,77 +111,68 @@ export default function TrendingInfo() {
         );
     };
 
-
     return (
-        <Accordion>
-            <Accordion.Item eventKey="trendingInfoTags">
-                <Accordion.Header>
-                    <p style={titleStyle}>
-                        What's Trending
-                    </p>
-                </Accordion.Header>
+        <TopLevelAccordion bodyStyle={noPadding} title="What's Trending">
+            <div style={accordionSubheader}>
+                <p style={{}}>
+                    Trending data was scraped from {Object.keys(algorithm.mastodonServers).length} Mastodon servers.
+                </p>
+            </div>
 
-                <Accordion.Body style={accordionBody}>
-                    <p style={subheader}>
-                        Trending data was scraped from {Object.keys(algorithm.mastodonServers).length} Mastodon servers.
-                    </p>
+            <Accordion>
+                <TrendingSection
+                    title="Hashtags"
+                    infoTxt={trendingObjInfoTxt}
+                    linkLabel={tagNameMapper}
+                    linkUrl={linkMapper}
+                    onClick={openTrendingLink}
+                    trendingObjs={algorithm.trendingData.tags}
+                />
 
-                    <Accordion>
-                        <TrendingSection
-                            name="Hashtags"
-                            infoTxt={trendingObjInfoTxt}
-                            linkLabel={tagNameMapper}
-                            linkUrl={linkMapper}
-                            onClick={openTrendingLink}
-                            trendingObjs={algorithm.trendingData.tags}
-                        />
+                <TrendingSection
+                    title="Links"
+                    hasCustomStyle={true}
+                    infoTxt={trendingObjInfoTxt}
+                    linkLabel={(link: TrendingLink) => prefixedHtml(link.title, extractDomain(link.url))}
+                    linkUrl={linkMapper}
+                    onClick={openTrendingLink}
+                    trendingObjs={algorithm.trendingData.links}
+                />
 
-                        <TrendingSection
-                            name="Links"
-                            hasCustomStyle={true}
-                            infoTxt={trendingObjInfoTxt}
-                            linkLabel={(link: TrendingLink) => prefixedHtml(link.title, extractDomain(link.url))}
-                            linkUrl={linkMapper}
-                            onClick={openTrendingLink}
-                            trendingObjs={algorithm.trendingData.links}
-                        />
+                <TrendingSection
+                    title="Toots"
+                    hasCustomStyle={true}
+                    linkLabel={tootLinkLabel}
+                    linkUrl={linkMapper}
+                    onClick={openToot}
+                    trendingObjs={algorithm.trendingData.toots}
+                />
 
-                        <TrendingSection
-                            name="Toots"
-                            hasCustomStyle={true}
-                            linkLabel={tootLinkLabel}
-                            linkUrl={linkMapper}
-                            onClick={openToot}
-                            trendingObjs={algorithm.trendingData.toots}
-                        />
+                <TrendingSection
+                    title="Servers That Were Scraped"
+                    infoTxt={(domain: string) => {
+                        const serverInfo = algorithm.mastodonServers[domain];
+                        const info = [`MAU: ${serverInfo.MAU.toLocaleString()}`];
+                        info.push(`followed pct of MAU: ${serverInfo.followedPctOfMAU.toFixed(3)}%`);
+                        return info.join(', ');
+                    }}
+                    linkLabel={(domain: string) => domain as string}
+                    linkUrl={(domain: string) => `https://${domain}`}
+                    onClick={(domain: string, e) => followUri(`https://${domain}`, e)}
+                    trendingObjs={Object.keys(algorithm.mastodonServers)}
+                />
 
-                        <TrendingSection
-                            name="Servers That Were Scraped"
-                            infoTxt={(domain: string) => {
-                                const serverInfo = algorithm.mastodonServers[domain];
-                                const info = [`MAU: ${serverInfo.MAU.toLocaleString()}`];
-                                info.push(`followed pct of MAU: ${serverInfo.followedPctOfMAU.toFixed(3)}%`);
-                                return info.join(', ');
-                            }}
-                            linkLabel={(domain: string) => domain as string}
-                            linkUrl={(domain: string) => `https://${domain}`}
-                            onClick={(domain: string, e) => followUri(`https://${domain}`, e)}
-                            trendingObjs={Object.keys(algorithm.mastodonServers)}
-                        />
-
-                        <TrendingSection
-                            name="Your Most Participated Hashtags"
-                            footer={buildParticipatedHashtagsFooter()}
-                            infoTxt={(tag: TagWithUsageCounts) => `${tag.numToots?.toLocaleString()} of your recent toots`}
-                            linkLabel={tagNameMapper}
-                            linkUrl={linkMapper}
-                            onClick={openTrendingLink}
-                            trendingObjs={algorithm.userData.popularUserTags().slice(0, maxHashtagsToShow)}
-                        />
-                    </Accordion>
-                </Accordion.Body>
-            </Accordion.Item>
-        </Accordion>
+                <TrendingSection
+                    title="Your Most Participated Hashtags"
+                    footer={buildParticipatedHashtagsFooter()}
+                    infoTxt={(tag: TagWithUsageCounts) => `${tag.numToots?.toLocaleString()} of your recent toots`}
+                    linkLabel={tagNameMapper}
+                    linkUrl={linkMapper}
+                    onClick={openTrendingLink}
+                    trendingObjs={algorithm.userData.popularUserTags().slice(0, maxHashtagsToShow)}
+                />
+            </Accordion>
+        </TopLevelAccordion>
     );
 };
 
@@ -199,10 +191,6 @@ const footerLink: CSSProperties = {
 const monospace: CSSProperties = {
     fontFamily: "monospace",
     fontSize: LINK_FONT_SIZE - 3,
-};
-
-const subheader: CSSProperties = {
-    marginBottom: "7px",
 };
 
 const imageStyle: CSSProperties = {

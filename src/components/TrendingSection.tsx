@@ -3,12 +3,10 @@
  */
 import React, { CSSProperties } from "react";
 
-import Accordion from 'react-bootstrap/esm/Accordion';
-import Form from 'react-bootstrap/esm/Form';
-import { capitalCase } from "change-case";
 import { TrendingObj } from "fedialgo";
 
-import { accordionBody, headerFont, roundedBox } from "../helpers/style_helpers";
+import SubAccordion from "./helpers/SubAccordion";
+import { roundedBox } from "../helpers/style_helpers";
 
 export const LINK_FONT_SIZE = 16;
 type TrendingListObj = TrendingObj | string;
@@ -19,44 +17,34 @@ interface TrendingProps {
     infoTxt?: (obj: TrendingListObj) => string;
     linkLabel: (obj: TrendingListObj) => React.ReactElement | string;
     linkUrl: (obj: TrendingListObj) => string;
-    name: string;
     onClick: (obj: TrendingListObj, e: React.MouseEvent) => void;
+    title: string;
     trendingObjs: TrendingListObj[];
 };
 
 
 export default function TrendingSection(props: TrendingProps) {
-    const { footer, hasCustomStyle, infoTxt, linkLabel, linkUrl, onClick, name, trendingObjs } = props;
+    const { footer, hasCustomStyle, infoTxt, linkLabel, linkUrl, onClick, title, trendingObjs } = props;
     const linkStyle = hasCustomStyle ? tagLinkStyle : boldTagLinkStyle;
 
     return (
-        <Accordion.Item eventKey={name}>
-            <Accordion.Header key={`${name}_head`}>
-                <Form.Label style={subHeaderLabel} >
-                    <span style={headerFont}>
-                        {capitalCase(name)}
-                    </span>
-                </Form.Label>
-            </Accordion.Header>
+        <SubAccordion title={title}>
+            <div style={roundedBox}>
+                <ol style={listStyle}>
+                    {trendingObjs.map((obj, i) => (
+                        <li key={i} style={listItemStyle}>
+                            <a href={linkUrl(obj)} onClick={e => onClick(obj, e)} style={linkStyle} target="_blank">
+                                {linkLabel(obj)}
+                            </a>
 
-            <Accordion.Body key={`${name}_body`} style={accordionBody}>
-                <div style={roundedBox}>
-                    <ol style={listStyle}>
-                        {trendingObjs.map((obj, i) => (
-                            <li key={i} style={listItemStyle}>
-                                <a href={linkUrl(obj)} onClick={e => onClick(obj, e)} style={linkStyle} target="_blank">
-                                    {linkLabel(obj)}
-                                </a>
+                            {infoTxt && <span style={infoTxtStyle}>({infoTxt(obj)})</span>}
+                        </li>
+                    ))}
+                </ol>
 
-                                {infoTxt && <span style={infoTxtStyle}>({infoTxt(obj)})</span>}
-                            </li>
-                        ))}
-                    </ol>
-
-                    {footer}
-                </div>
-            </Accordion.Body>
-        </Accordion.Item>
+                {footer}
+            </div>
+        </SubAccordion>
     );
 };
 

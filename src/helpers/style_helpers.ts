@@ -16,8 +16,15 @@ export const PARTICIPATED_TAG_COLOR_FADED = "#c3d46e";
 export const TRENDING_TAG_COLOR = RED;
 export const TRENDING_TAG_COLOR_FADED = '#f08c8c';
 
+
 export const accordionBody: CSSProperties = {
     backgroundColor: '#b2bfd4',
+};
+
+export const accordionSubheader: CSSProperties = {
+    // marginBottom: "7px",
+    marginLeft: "7px",
+    padding: "7px",
 };
 
 export const globalFont: CSSProperties = {
@@ -37,7 +44,15 @@ export const headerFont: CSSProperties = {
 export const linkesque: CSSProperties = {
     cursor: "pointer",
     textDecoration: "underline",
-}
+};
+
+export const noPadding: CSSProperties = {
+    padding: "0px",
+};
+
+export const paddingBorder: CSSProperties = {
+    padding: "2px",
+};
 
 export const roundedBox: CSSProperties = {
     borderRadius: "20px",
