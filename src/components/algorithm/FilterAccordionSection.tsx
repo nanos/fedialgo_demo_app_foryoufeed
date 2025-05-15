@@ -20,7 +20,7 @@ export interface FilterSwitches {
     invert: React.ReactElement,
     sortKeys?: React.ReactElement,
     tooltipOnly?: React.ReactElement,
-}
+};
 
 interface AccordionProps {
     children: ReactNode,

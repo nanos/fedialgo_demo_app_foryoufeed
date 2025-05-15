@@ -8,8 +8,8 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
     extractDomain,
     MediaCategory,
-    Toot,
     TagWithUsageCounts,
+    Toot,
     TrendingLink,
     TrendingWithHistory,
 } from "fedialgo";
@@ -18,7 +18,6 @@ import TrendingSection, { LINK_FONT_SIZE, infoTxtStyle } from "./TrendingSection
 import { IMAGE_BACKGROUND_COLOR, accordionBody, linkesque, titleStyle } from "../helpers/style_helpers";
 import { followUri, openToot, openTrendingLink } from "../helpers/react_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
-import { link } from "fs";
 
 const DEFAULT_MAX_HASHTAGS_TO_SHOW = 100;
 const MAX_TRENDING_LINK_LEN = 170;

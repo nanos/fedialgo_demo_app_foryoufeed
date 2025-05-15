@@ -8,6 +8,7 @@ export const IMAGE_BACKGROUND_COLOR = "#C1C1C1";
 export const PARTICIPATED_TAG_COLOR = "#92a14a";
 export const PARTICIPATED_TAG_COLOR_FADED = "#c3d46e";
 export const RED = 'firebrick';
+export const TOOLTIP_ANCHOR = "tooltip-anchor";
 
 
 export const accordionBody: CSSProperties = {
@@ -51,5 +52,3 @@ export const titleStyle: CSSProperties = {
     marginTop: "0px",
     textDecoration: "underline",
 };
-
-export const TOOLTIP_ANCHOR = "tooltip-anchor";

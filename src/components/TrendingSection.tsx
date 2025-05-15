@@ -11,7 +11,7 @@ import { TrendingObj } from "fedialgo";
 import { accordionBody, headerFont, roundedBox } from "../helpers/style_helpers";
 
 export const LINK_FONT_SIZE = 16;
-export type TrendingListObj = TrendingObj | string;
+type TrendingListObj = TrendingObj | string;
 
 interface TrendingProps {
     footer?: React.ReactNode;

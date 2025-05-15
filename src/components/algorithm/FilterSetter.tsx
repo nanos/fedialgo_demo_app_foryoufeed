@@ -9,11 +9,10 @@ import Accordion from 'react-bootstrap/esm/Accordion';
 import { NumericFilter, BooleanFilterName, BooleanFilter } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
-import FilterAccordionSection, { ACTIVE_CLASSNAME } from "./FilterAccordionSection";
+import FilterAccordionSection from "./FilterAccordionSection";
 import FilterCheckbox, { HASHTAG_ANCHOR, HIGHLIGHT, INVERT_SELECTION, SORT_KEYS } from "./FilterCheckbox";
 import FilterCheckboxGrid, { FILTERED_FILTERS } from "./FilterCheckboxGrid";
 import Slider from "./Slider";
-import { logMsg } from "../../helpers/string_helpers";
 import { titleStyle } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 

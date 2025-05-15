@@ -11,15 +11,13 @@ import { Tooltip } from 'react-tooltip';
 
 import ExperimentalFeatures from "../components/ExperimentalFeatures";
 import FilterSetter from "../components/algorithm/FilterSetter";
-import FindFollowers from "../components/FindFollowers";
 import LoadingSpinner, { fullPageCenteredSpinner } from "../components/LoadingSpinner";
 import StatusComponent, { TOOLTIP_ACCOUNT_ANCHOR} from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
-import { linkesque } from "../helpers/style_helpers";
 import { logMsg, warnMsg } from "../helpers/string_helpers";
-import { TOOLTIP_ANCHOR } from "../helpers/style_helpers";
+import { TOOLTIP_ANCHOR, linkesque } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
 
@@ -33,8 +31,7 @@ const NO_TOOTS_MSG = "No toots in feed! Maybe check your filters settings?";
 
 
 export default function Feed() {
-    const { algorithm, api, isLoading, setShouldAutoUpdate, setError, shouldAutoUpdate, timeline, triggerLoad } = useAlgorithm();
-    const { user } = useAuthContext();
+    const { algorithm, isLoading, setShouldAutoUpdate, setError, shouldAutoUpdate, timeline, triggerLoad } = useAlgorithm();
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 

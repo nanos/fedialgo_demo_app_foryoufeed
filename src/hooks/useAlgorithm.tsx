@@ -14,16 +14,11 @@ interface AlgoContext {
     api?: mastodon.rest.Client,
     isLoading?: boolean,
     setError?: (error: string) => void,
-    shouldAutoUpdate?: boolean,
     setShouldAutoUpdate?: (should: boolean) => void,
+    shouldAutoUpdate?: boolean,
     timeline: Toot[],
     triggerLoad?: (moreOldToots?: boolean) => void,
     triggerPullAllUserData?: () => void,
-};
-
-interface AlgorithmContextProps {
-    children: ReactNode,
-    setError?: (error: string) => void,
 };
 
 const AlgorithmContext = createContext<AlgoContext>({timeline: []});
@@ -33,6 +28,11 @@ const FOCUS = "focus";
 const VISIBILITY_CHANGE = "visibilitychange";
 const RELOAD_IF_OLDER_THAN_MINUTES = 5;
 const RELOAD_IF_OLDER_THAN_SECONDS = 60 * RELOAD_IF_OLDER_THAN_MINUTES;
+
+interface AlgorithmContextProps {
+    children: ReactNode,
+    setError?: (error: string) => void,
+};
 
 
 export default function AlgorithmProvider(props: AlgorithmContextProps) {
