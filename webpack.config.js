@@ -76,7 +76,8 @@ module.exports = {
             skipWaiting: true,
         }),
         new webpack.EnvironmentPlugin({
-            FEDIALGO_VERSION: require('./package.json').version
+            FEDIALGO_HOMEPAGE: require('./package.json').homepage,
+            FEDIALGO_VERSION: require('./package.json').version,
         }),
     ].filter(Boolean),
 
