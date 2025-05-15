@@ -16,52 +16,25 @@ import { FeedFilterSettings, useAlgorithm } from "../../hooks/useAlgorithm";
 import { SwitchType } from "./BooleanFilterAccordionSection";
 import { titleStyle } from "../../helpers/style_helpers";
 
-type NumericFilter = FeedFilterSettings["numericFilters"]["Chaos"];
-
 
 export default function FilterSetter() {
     const { algorithm } = useAlgorithm();
 
-    // The SERVER_SIDE_FILTERS filter is invisible to the user
-    const visibleFilters = Object.values(algorithm.filters.booleanFilters).filter(f => f.visible);
-    const hasActiveBooleanFilter = visibleFilters.some(f => f.validValues.length);
-    const hasActiveNumericFilter = Object.values(algorithm.filters.numericFilters).some(f => f.value > 0);
+    // Filter for 'visible' because the SERVER_SIDE_FILTERS (blocklist, basically) are not shown to the user
+    const booleanFilters = Object.values(algorithm.filters.booleanFilters).filter(f => f.visible);
+    const numericFilters = Object.values(algorithm.filters.numericFilters);
+    const hasActiveBooleanFilter = booleanFilters.some(f => f.validValues.length);
+    const hasActiveNumericFilter = numericFilters.some(f => f.value > 0);
     const hasAnyActiveFilter = hasActiveNumericFilter || hasActiveBooleanFilter;
 
-    const invertNumericFilterCheckbox = (filters: NumericFilter[]) => {
-        return (
-            <FilterCheckbox
-                capitalize={true}
-                isChecked={filters.every((filter) => filter.invertSelection)}
-                label={SwitchType.INVERT_SELECTION}
-                onChange={(e) => filters.forEach(filter => filter.invertSelection = e.target.checked)}
-            />
-        );
-    };
-
-    const numericSliders = Object.entries(algorithm.filters.numericFilters).reduce(
-        (sliders, [name, numericFilter]) => {
-            const slider = (
-                <Slider
-                    description={numericFilter.description}
-                    key={name}
-                    label={numericFilter.title}
-                    maxValue={50}
-                    minValue={0}
-                    onChange={async (e) => {
-                        numericFilter.value = Number(e.target.value);
-                        algorithm.updateFilters(algorithm.filters);
-                    }}
-                    stepSize={1}
-                    value={numericFilter.value}
-                />
-            );
-
-            sliders.push(slider);
-            return sliders;
-        },
-        [] as ReactNode[]
-    );
+    const numericFilterSwitchbar = [
+        <FilterCheckbox
+            capitalize={true}
+            isChecked={numericFilters.every((filter) => filter.invertSelection)}
+            label={SwitchType.INVERT_SELECTION}
+            onChange={(e) => numericFilters.forEach((filter) => filter.invertSelection = e.target.checked)}
+        />
+    ];
 
     return (
         <Accordion>
@@ -79,13 +52,13 @@ export default function FilterSetter() {
                     <Tooltip id={HASHTAG_ANCHOR + HIGHLIGHT} place="top" />
 
                     <Accordion key={"fiaccordion"}>
-                        {visibleFilters.map((f) => <BooleanFilterAccordionSection filter={f} key={f.title} />)}
+                        {booleanFilters.map((f) => <BooleanFilterAccordionSection filter={f} key={f.title} />)}
 
                         <FilterAccordionSection
                             description={"Filter based on minimum/maximum number of replies, reposts, etc"}
                             isActive={hasActiveNumericFilter}
                             key={"numericFilters"}
-                            switchbar={[invertNumericFilterCheckbox(Object.values(algorithm.filters.numericFilters))]}
+                            switchbar={numericFilterSwitchbar}
                             title="Interactions"
                         >
                             {Object.entries(algorithm.filters.numericFilters).map(([name, numericFilter]) => (
