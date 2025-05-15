@@ -24,7 +24,7 @@ export default function SubAccordion(props: SubAccordionProps) {
         <Accordion.Item eventKey={title} >
             <Accordion.Header>
                 <Form.Label style={subHeaderLabel}>
-                    <span className={headerClass} key={1} style={{color: "#2c2e2d"}}>
+                    <span className={headerClass} key={1}>
                         {capitalCase(title)}
                     </span>
 
