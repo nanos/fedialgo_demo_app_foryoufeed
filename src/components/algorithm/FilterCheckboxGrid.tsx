@@ -52,12 +52,12 @@ interface FilterCheckboxGridProps {
     filter: BooleanFilter,
     highlightedOnly?: boolean,
     minToots?: number,
-    sortByValue?: boolean,
+    sortByCount?: boolean,
 };
 
 
 export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
-    const { filter, minToots, sortByValue, highlightedOnly } = props;
+    const { filter, minToots, sortByCount, highlightedOnly } = props;
     const { algorithm } = useAlgorithm();
 
     const trendingTagNames = algorithm.trendingData.tags.map(tag => tag.name);
@@ -106,7 +106,7 @@ export default function FilterCheckboxGrid(props: FilterCheckboxGridProps) {
         ]
     );
 
-    if (sortByValue) {
+    if (sortByCount) {
         optionKeys = sortKeysByValue(optionInfo)
     } else {
         optionKeys = Object.keys(optionInfo).sort((a, b) => compareStr(a, b));

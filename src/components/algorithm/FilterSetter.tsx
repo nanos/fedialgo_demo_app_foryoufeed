@@ -12,9 +12,9 @@ import BooleanFilterAccordionSection from "./BooleanFilterAccordionSection";
 import FilterAccordionSection from "./FilterAccordionSection";
 import FilterCheckbox, { HASHTAG_ANCHOR, HIGHLIGHT } from "./FilterCheckbox";
 import Slider from "./Slider";
-import { FeedFilterSettings, useAlgorithm } from "../../hooks/useAlgorithm";
 import { SwitchType } from "./BooleanFilterAccordionSection";
 import { titleStyle } from "../../helpers/style_helpers";
+import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 
 export default function FilterSetter() {
