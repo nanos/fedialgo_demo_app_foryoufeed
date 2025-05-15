@@ -1,5 +1,7 @@
 # FediAlgo: A Configurable Mastodon Timeline Algorithm
 
+* Try the demo [here](https://fedialgo.thms.uk/)!
+
 This repo contains a simple demo React application (a website, basically - one that if you follow the instructions in this document will be served to your usual browser from a webserver running on your local machine) for the (almost) pure javascript [`fedialgo`](https://github.com/michelcrypt4d4mus/fedialgo) package, a customizable algorithm for the federated social media platform [Mastodon](https://joinmastodon.org/) that can free you from the tyranny of Mastodon's reverse chronological order timeline.
 
 Each incoming toot in your recent timeline will be scored based on a variety of factors and resorted top to bottom based on what toots have the highest scores instead of just reverse chronological order. You can adjust in a very fine grained way how much weight you want to give to each of those factors in determining each toot's scores.
@@ -13,7 +15,7 @@ Each incoming toot in your recent timeline will be scored based on a variety of 
 Both this repo and the `fedialgo` package linked above were forked from [pkreissel's original implementations](https://github.com/pkreissel/fedialgo).
 
 ### Demo You Can Try
-There's a version you can try out by pointing your web browser at [fedialgo.thms.uk](https://fedialgo.thms.uk/).
+There's a version you can try out by pointing your web browser at [fedialgo.thms.uk](https://fedialgo.thms.uk/) thanks to @nanos.
 
 ### Demo Video
 You can watch a demo of all the features [over on YouTube](https://www.youtube.com/watch?v=tR35bUHzJdk).
@@ -124,9 +126,12 @@ Here's an example of what you might see:
 Someone reported they were unable to build with `npm run build` but using `NODE_ENV=production npm run build --no-hmr` seemed to fix the issue.
 
 # Contributing
-You can install the local `fedialgo` package by running `npm link`  in the `fedialgo` project dir and then`npm link fedialgo` in this project's dir _or_ you can do that kind of thing manually by running `npm install path/to/local/fedialgo` in this repo's dir but either way in order to pick up any code changes from `fedialgo` you will have to run `npm run build` in the `fedialgo` package dir. (TODO: why?)
+You can install the local `fedialgo` package by running `npm link` in the `fedialgo` project dir and then `npm link fedialgo` in this project's dir _or_ you can do that kind of thing manually by running `npm install path/to/local/fedialgo` in this repo's dir but either way in order to pick up any code changes from `fedialgo` you will have to run `npm run build` in the `fedialgo` package dir.
 
 Assuming you check both `fedialgo` and this repo out to the same directory there's a helper script to link the local repo in [`link_local_fedialgo.sh`](./link_local_fedialgo.sh).
+
+#### Debugging
+If you set the environment variable `FEDIALGO_DEBUG=true` a _lot_ more debugging info will be printed to the browser console. See [`.env.example`](./.env.example) for other environment variables you can play with.
 
 #### Beta Users
 * @benroyce@mastodon.social

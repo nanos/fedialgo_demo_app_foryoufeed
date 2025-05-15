@@ -3,7 +3,6 @@
  */
 import React from 'react';
 
-import parse from 'html-react-parser';
 import { MediaCategory, Toot, VIDEO_TYPES } from "fedialgo";
 import { Modal } from 'react-bootstrap';
 

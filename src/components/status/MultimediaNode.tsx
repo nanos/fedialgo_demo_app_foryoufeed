@@ -5,7 +5,6 @@ import { GIFV, Toot } from "fedialgo";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { mastodon } from 'masto';
 
-import { IMAGE_BACKGROUND_COLOR } from "../../helpers/style_helpers";
 import { warnMsg } from "../../helpers/string_helpers";
 
 const IMAGES_HEIGHT = 314;

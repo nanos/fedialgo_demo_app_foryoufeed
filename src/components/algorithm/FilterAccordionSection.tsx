@@ -3,12 +3,11 @@
  * Things like how much to prefer people you favorite a lot or how much to posts that
  * are trending in the Fedivers.
  */
-import React, { CSSProperties, ReactNode } from "react";
+import React, { CSSProperties, PropsWithChildren, ReactNode } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
-import { PropertyName } from "fedialgo";
 import { Tooltip } from 'react-tooltip';
 
 import Slider from "./Slider";
@@ -21,10 +20,9 @@ export interface FilterSwitches {
     invert: React.ReactElement,
     sortKeys?: React.ReactElement,
     tooltipOnly?: React.ReactElement,
-}
+};
 
-interface AccordionProps {
-    children: ReactNode,
+interface AccordionProps extends PropsWithChildren{
     description: string,
     isActive: boolean,
     maxToots?: number,

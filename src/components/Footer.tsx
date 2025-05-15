@@ -29,17 +29,6 @@ export default function Footer() {
                         <span className="p-2"> Code on Github</span>
                     </Nav.Link>
 
-                    {/* <Nav.Link href="https://chaos.social/@pkreissel" style={navLink}>
-                        <img
-                            alt="Chaos.social Logo"
-                            className="d-inline-block align-top"
-                            src="https://assets.chaos.social/accounts/avatars/000/242/007/original/97b58ba7002b2c8b.jpg"
-                            style={elementStyle}
-                        />
-
-                        <span className="p-2"> Follow me on Mastodon</span>
-                    </Nav.Link> */}
-
                     <Nav.Link href="https://universeodon.com/@cryptadamist" style={navLink}>
                         <img
                             alt="Michel de Cryptadamus Logo"
@@ -49,6 +38,17 @@ export default function Footer() {
                         />
 
                         <span className="p-2"> Follow me on Mastodon</span>
+                    </Nav.Link>
+
+                    <Nav.Link href="https://chaos.social/@pkreissel" style={navLink}>
+                        <img
+                            alt="Chaos.social Logo"
+                            className="d-inline-block align-top"
+                            src="https://assets.chaos.social/accounts/avatars/000/242/007/original/97b58ba7002b2c8b.jpg"
+                            style={elementStyle}
+                        />
+
+                        <span className="p-2"> Follow pkreissel on Mastodon</span>
                     </Nav.Link>
                 </Nav>
             </Container>

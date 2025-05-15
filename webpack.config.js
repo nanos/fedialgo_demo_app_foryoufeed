@@ -11,6 +11,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshTypeScript = require('react-refresh-typescript');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
+const webpack = require("webpack");
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const envMsg = `* [WEBPACK] process.env.NODE_ENV: ${process.env.NODE_ENV} *`;
@@ -73,6 +74,9 @@ module.exports = {
             clientsClaim: true,
             maximumFileSizeToCacheInBytes: 25 * 1024 * 1024,
             skipWaiting: true,
+        }),
+        new webpack.EnvironmentPlugin({
+            FEDIALGO_VERSION: require('./package.json').version
         }),
     ].filter(Boolean),
 

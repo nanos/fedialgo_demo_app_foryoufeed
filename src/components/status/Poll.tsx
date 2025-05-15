@@ -3,6 +3,7 @@
  */
 import React, { KeyboardEventHandler, useCallback, useMemo, useState } from 'react';
 
+import { Button } from 'react-bootstrap';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { mastodon } from 'masto';
@@ -15,13 +16,12 @@ const ALREADY_VOTED_MSG = `You have already voted`;
 
 interface PollProps {
     poll: mastodon.v1.Poll,
-    setError: (error: string) => void,
 };
 
 
 export default function Poll(props: PollProps) {
-    const { poll, setError } = props;
-    const { api } = useAlgorithm();
+    const { poll } = props;
+    const { api, setError } = useAlgorithm();
 
     const [hasVoted, setHasVoted] = useState(poll.ownVotes?.length > 0);
     const [revealed, setRevealed] = useState(false);
@@ -110,6 +110,7 @@ export default function Poll(props: PollProps) {
 
                 {!disabled &&
                     <>
+                        {/* TODO: should this be a Button, not a button? */}
                         <button className='poll__link' onClick={() => {
                             debugMsg('See results clicked, current selected:', selected);
                             setRevealed(!revealed);

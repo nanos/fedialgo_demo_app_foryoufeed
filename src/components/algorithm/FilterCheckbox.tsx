@@ -36,10 +36,10 @@ export default function FilterCheckbox(props: FilterCheckboxProps) {
 
     labelExtra = (typeof labelExtra == "number") ? labelExtra.toLocaleString() : labelExtra;
     const labelStyle: CSSProperties = {fontWeight: "bold"};
-    let style: CSSProperties = {};
+    let style: CSSProperties = {color: "black"};
 
     if (tooltipText) {
-        style = highlightedCheckboxStyle;
+        style = {...highlightedCheckboxStyle, ...style};
         if (tooltipColor) style = { ...highlightedCheckboxStyle, backgroundColor: tooltipColor };
     }
 
@@ -53,6 +53,7 @@ export default function FilterCheckbox(props: FilterCheckboxProps) {
     let labelNode = <span style={labelStyle}>{label}</span>;
 
     if (url) {
+        // Use a span because you can't use an <a> tag inside the <a> tag we need for the tooltip
         labelNode = (
             <span onClick={(e) => followUri(url, e)} style={{...labelStyle, ...hashtagLink}}>
                 {label}
@@ -65,7 +66,6 @@ export default function FilterCheckbox(props: FilterCheckboxProps) {
             data-tooltip-id={HASHTAG_ANCHOR + (tooltipText ? HIGHLIGHT : "")}
             data-tooltip-content={tooltipText}
             key={label}
-            style={{color: "black"}}
         >
             <Form.Switch
                 checked={isCheckedState}

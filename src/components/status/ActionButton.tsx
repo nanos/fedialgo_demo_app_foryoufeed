@@ -56,14 +56,13 @@ const ACTION_ICON_BASE_CLASS = `${ICON_BUTTON_CLASS} icon-button--with-counter`;
 interface ActionButtonProps {
     action: ButtonAction,
     onClick?: (e: React.MouseEvent) => void,
-    setError: (error: string) => void,
     status: Toot,
 };
 
 
 export default function ActionButton(props: ActionButtonProps) {
-    const { action, onClick, setError, status } = props;
-    const { api } = useAlgorithm();
+    const { action, onClick, status } = props;
+    const { api, setError } = useAlgorithm();
     const actionInfo = ACTION_INFO[action];
     const [currentState, setCurrentState] = React.useState<boolean>(status[actionInfo.booleanName]);
 
@@ -73,6 +72,7 @@ export default function ActionButton(props: ActionButtonProps) {
 
     if (actionInfo.countName) {
         buttonText = status[actionInfo.countName];
+        buttonText = (typeof buttonText == "number" && buttonText) > 0 ? buttonText.toLocaleString() : buttonText;
     } else if (action == ButtonAction.Score) {
         buttonText = scoreString(status.scoreInfo?.score);
     }

@@ -4,12 +4,12 @@
 import React from 'react';
 
 import Slider, { DEFAULT_STEP_SIZE } from './Slider';
-import { StringNumberDict, WeightInfo } from "fedialgo";
+import { StringNumberDict } from "fedialgo";
+import { useAlgorithm } from '../../hooks/useAlgorithm';
 
 const SCALE_MULTIPLIER = 1.2;
 
 interface WeightSliderProps {
-    info: WeightInfo;
     scoreName: string;
     updateWeights: (newWeights: StringNumberDict) => Promise<void>;
     userWeights: StringNumberDict;
@@ -17,8 +17,10 @@ interface WeightSliderProps {
 
 
 export default function WeightSlider(props: WeightSliderProps) {
-    const { info, scoreName, updateWeights, userWeights } = props;
+    const { scoreName, updateWeights, userWeights } = props;
+    const { algorithm } = useAlgorithm();
     if (!userWeights[scoreName] && userWeights[scoreName] != 0) return <></>;
+    const info = algorithm.weightInfo[scoreName];
 
     const weightValues = Object.values(userWeights).filter(x => !isNaN(x)) ?? [0];
     const defaultMin = Math.min(...weightValues) - 1 * SCALE_MULTIPLIER;

@@ -8,10 +8,9 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
     extractDomain,
     MediaCategory,
-    Toot,
     TagWithUsageCounts,
+    Toot,
     TrendingLink,
-    TrendingObj,
     TrendingWithHistory,
 } from "fedialgo";
 
@@ -35,14 +34,10 @@ export default function TrendingInfo() {
     const [maxHashtagsToShow, setMaxHashtagsToShow] = useState(DEFAULT_MAX_HASHTAGS_TO_SHOW);
 
     const linkMapper = (obj: TrendingWithHistory) => `${obj.url}`;
+    const tagNameMapper = (tag: TagWithUsageCounts) => `#${tag.name}`;
 
-    const linkInfoTxt = (obj: TrendingWithHistory) => {
+    const trendingObjInfoTxt = (obj: TrendingWithHistory) => {
         return `${obj.numToots?.toLocaleString()} toots by ${obj.numAccounts?.toLocaleString()} accounts`;
-    };
-
-    const linkText = (obj: TrendingObj): React.ReactElement => {
-        const link = obj as TrendingLink;
-        return prefixedHtml(link.title, extractDomain(link.url));
     };
 
     const tootInfoTxt = (toot: Toot) => {
@@ -50,15 +45,15 @@ export default function TrendingInfo() {
         return `${msg}, ${toot.reblogsCount?.toLocaleString()} retoots`
     }
 
-    const tootLinkText = (obj: TrendingObj): React.ReactElement => {
+    const tootLinkLabel = (obj: Toot): React.ReactElement => {
         const toot = obj as Toot;
 
         if (toot.attachmentType() == MediaCategory.IMAGE) {
             const image = toot.imageAttachments[0];
-            return <>
+
+            return (<>
                 {prefixedHtml(toot.contentShortened(MAX_TRENDING_LINK_LEN), ATTACHMENT_PREFIXES[MediaCategory.IMAGE])}
-                <span style={infoTxtStyle}>({tootInfoTxt(obj as Toot)})</span>
-                <br />
+                <span style={infoTxtStyle}>({tootInfoTxt(obj as Toot)})</span><br />
 
                 <div className="media-gallery" style={{width: "100%"}}>
                     <div className="media-gallery__item" style={{width: "100%"}}>
@@ -71,7 +66,7 @@ export default function TrendingInfo() {
                         />
                     </div>
                 </div>
-            </>
+            </>);
         } else {
             return prefixedHtml(
                 toot.contentShortened(MAX_TRENDING_LINK_LEN),
@@ -133,8 +128,8 @@ export default function TrendingInfo() {
                     <Accordion>
                         <TrendingSection
                             name="Hashtags"
-                            infoTxt={linkInfoTxt}
-                            linkLabel={(tag: TagWithUsageCounts) => `#${tag.name}`}
+                            infoTxt={trendingObjInfoTxt}
+                            linkLabel={tagNameMapper}
                             linkUrl={linkMapper}
                             onClick={openTrendingLink}
                             trendingObjs={algorithm.trendingData.tags}
@@ -143,8 +138,8 @@ export default function TrendingInfo() {
                         <TrendingSection
                             name="Links"
                             hasCustomStyle={true}
-                            infoTxt={linkInfoTxt}
-                            linkLabel={linkText}
+                            infoTxt={trendingObjInfoTxt}
+                            linkLabel={(link: TrendingLink) => prefixedHtml(link.title, extractDomain(link.url))}
                             linkUrl={linkMapper}
                             onClick={openTrendingLink}
                             trendingObjs={algorithm.trendingData.links}
@@ -153,8 +148,7 @@ export default function TrendingInfo() {
                         <TrendingSection
                             name="Toots"
                             hasCustomStyle={true}
-                            infoTxt={(t) => undefined}
-                            linkLabel={tootLinkText}
+                            linkLabel={tootLinkLabel}
                             linkUrl={linkMapper}
                             onClick={openToot}
                             trendingObjs={algorithm.trendingData.toots}
@@ -163,7 +157,7 @@ export default function TrendingInfo() {
                         <TrendingSection
                             name="Servers That Were Scraped"
                             infoTxt={(domain: string) => {
-                                const serverInfo = algorithm.mastodonServers[domain as string];
+                                const serverInfo = algorithm.mastodonServers[domain];
                                 const info = [`MAU: ${serverInfo.MAU.toLocaleString()}`];
                                 info.push(`followed pct of MAU: ${serverInfo.followedPctOfMAU.toFixed(3)}%`);
                                 return info.join(', ');
@@ -178,8 +172,8 @@ export default function TrendingInfo() {
                             name="Your Most Participated Hashtags"
                             footer={buildParticipatedHashtagsFooter()}
                             infoTxt={(tag: TagWithUsageCounts) => `${tag.numToots?.toLocaleString()} of your recent toots`}
-                            linkLabel={(tag: TagWithUsageCounts) => `#${tag.name}`}
-                            linkUrl={(tag: TagWithUsageCounts) => tag.url}
+                            linkLabel={tagNameMapper}
+                            linkUrl={linkMapper}
                             onClick={openTrendingLink}
                             trendingObjs={algorithm.userData.popularUserTags().slice(0, maxHashtagsToShow)}
                         />

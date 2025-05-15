@@ -7,41 +7,34 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { Modal } from "react-bootstrap";
 import { Tooltip } from 'react-tooltip';
 
 import ExperimentalFeatures from "../components/ExperimentalFeatures";
 import FilterSetter from "../components/algorithm/FilterSetter";
-import FindFollowers from "../components/FindFollowers";
 import LoadingSpinner, { fullPageCenteredSpinner } from "../components/LoadingSpinner";
 import StatusComponent, { TOOLTIP_ACCOUNT_ANCHOR} from "../components/Status";
 import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
-import { linkesque } from "../helpers/style_helpers";
-import { DEMO_APP, logMsg, warnMsg } from "../helpers/string_helpers";
-import { TOOLTIP_ANCHOR } from "../helpers/style_helpers";
+import { logMsg, warnMsg } from "../helpers/string_helpers";
+import { TOOLTIP_ANCHOR, linkesque } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
-import { useAuthContext } from "../hooks/useAuth";
-import { link } from "fs";
 
-// Number constants
-const DEFAULT_NUM_DISPLAYED_TOOTS = 20;
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
+const DEFAULT_NUM_DISPLAYED_TOOTS = 20;
+
 // Messaging constants
 const AUTO_UPDATE_TOOLTIP_MSG = "If this box is checked the feed will be automatically updated when you focus this browser tab.";
-const DEFAULT_LOADING_MESSAGE = "Loading (first time can take up to a minute or so)";
+const DEFAULT_LOADING_MSG = "Loading (first time can take up to a minute or so)";
 const NO_TOOTS_MSG = "No toots in feed! Maybe check your filters settings?";
 
 
 export default function Feed() {
-    const { algorithm, api, isLoading, setShouldAutoUpdate, shouldAutoUpdate, timeline, triggerLoad } = useAlgorithm();
-    const { user } = useAuthContext();
+    const { algorithm, isLoading, setShouldAutoUpdate, setError, shouldAutoUpdate, timeline, triggerFeedUpdate } = useAlgorithm();
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
 
     // State variables
-    const [error, setError] = useState<string>("");
     const [hideLinkPreviews, setHideLinkPreviews] = useState(false);
     const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(true);  // Left panel stickiness
     const [loadingStatus, setLoadingStatus] = useState<string>(null);
@@ -58,7 +51,7 @@ export default function Feed() {
         setNumDisplayedToots(DEFAULT_NUM_DISPLAYED_TOOTS);
         if (!algorithm) return;
         await algorithm.reset();
-        triggerLoad();
+        triggerFeedUpdate();
     };
 
     const finishedLoadingMsg = (lastLoadTimeInSeconds: number | null) => {
@@ -133,14 +126,6 @@ export default function Feed() {
                 variant="light"
             />
 
-            <Modal show={error !== ""} onHide={() => setError("")} style={{color: "black"}}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Error</Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body>{error}</Modal.Body>
-            </Modal>
-
             <Row>
                 <Col xs={12} md={6}>
                     <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
@@ -183,8 +168,7 @@ export default function Feed() {
                         {algorithm && <WeightSetter />}
                         {algorithm && <FilterSetter />}
                         {algorithm && <TrendingInfo />}
-                        <FindFollowers api={api} user={user} />
-                        <ExperimentalFeatures />
+                        {algorithm && <ExperimentalFeatures />}
 
                         <div style={stickySwitchContainer}>
                             {(isLoading)
@@ -202,13 +186,13 @@ export default function Feed() {
                 <Col xs={12} md={6}>
                     {algorithm && !isLoading &&
                         <p style={loadNewTootsText}>
-                            <a onClick={() => triggerLoad()} style={linkesque}>
+                            <a onClick={() => triggerFeedUpdate()} style={linkesque}>
                                 (load new toots)
                             </a>
 
                            {' ● '}
 
-                            <a onClick={() => triggerLoad(true)} style={linkesque}>
+                            <a onClick={() => triggerFeedUpdate(true)} style={linkesque}>
                                 (load more old toots)
                             </a>
                         </p>}
@@ -218,14 +202,13 @@ export default function Feed() {
                             <StatusComponent
                                 hideLinkPreviews={hideLinkPreviews}
                                 key={toot.uri}
-                                setError={setError}
                                 status={toot}
                             />
                         ))}
 
                         {timeline.length == 0 && (
                             isLoading
-                                ? <LoadingSpinner isFullPage={true} message={DEFAULT_LOADING_MESSAGE} />
+                                ? <LoadingSpinner isFullPage={true} message={DEFAULT_LOADING_MSG} />
                                 : <div style={{...fullPageCenteredSpinner, fontSize: "20px"}}>
                                       <p>{NO_TOOTS_MSG}</p>
                                   </div>

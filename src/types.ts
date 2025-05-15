@@ -2,7 +2,7 @@ import type { mastodon } from 'masto';
 
 
 export interface App extends mastodon.v1.Client {
-    redirectUri: string;
+    redirectUri?: string;
     [key: string]: unknown;
 };
 

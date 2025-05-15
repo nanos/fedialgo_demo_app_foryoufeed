@@ -1,8 +1,9 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useState } from "react";
 import { Buffer } from 'buffer'; // Required for class-transformer to work
 (window as any).Buffer = Buffer;
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Modal } from "react-bootstrap";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 // import { inject } from '@vercel/analytics';
 
@@ -20,6 +21,9 @@ import { logLocaleInfo, logMsg } from "./helpers/string_helpers";
 
 
 export default function App(): React.ReactElement {
+    const [error, setError] = useState<string>("");
+    logLocaleInfo();
+
     if ('serviceWorker' in navigator) {
         console.log('Service Worker is supported, registering...');
 
@@ -28,24 +32,30 @@ export default function App(): React.ReactElement {
         });
     }
 
-    logLocaleInfo();
-
     return (
         <BrowserRouter>
             <AuthProvider>
                 <div className='container-fluid min-vh-100' style={containerStyle}>
+                    <Modal show={error !== ""} onHide={() => setError("")} style={{color: "black"}}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Error</Modal.Title>
+                        </Modal.Header>
+
+                        <Modal.Body>{error}</Modal.Body>
+                    </Modal>
+
                     <Header />
 
                     <Routes>
                         <Route path="/" element={
                             <ProtectedRoute>
-                                <AlgorithmProvider>
+                                <AlgorithmProvider setError={setError}>
                                     <Feed />
                                 </AlgorithmProvider>
                             </ProtectedRoute>
                         } />
 
-                        <Route path="/callback" element={<CallbackPage />} />
+                        <Route path="/callback" element={<CallbackPage setError={setError} />} />
                         <Route path="/login" element={<LoginPage />} />
                     </Routes>
 

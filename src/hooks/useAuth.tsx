@@ -5,22 +5,24 @@ import axios from "axios";
 import React, { PropsWithChildren, createContext, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { logMsg } from "../helpers/string_helpers";
+import { logMsg, logSafe } from "../helpers/string_helpers";
 import { useAppStorage, useUserStorage } from "./useLocalStorage";
 import { User } from "../types";
 
-const logThis = (msg: string, ...args: any[]) => logMsg(`<AuthProvider> ${msg}`, ...args);
+const LOG_PREFIX = `<AuthProvider>`;
 
 const AuthContext = createContext({
-    user: null,
     loginUser: async (_user: User) => {},
-    logout: () => {}
+    logout: () => {},
+    user: null,
 });
 
 
 export default function AuthProvider(props: PropsWithChildren) {
-    const [app, _setApp] = useAppStorage({ keyName: "app", defaultValue: null })
-    const [user, setUser] = useUserStorage({ keyName: "user", defaultValue: null })
+    const [app, _setApp] = useAppStorage({ keyName: "app", defaultValue: null });
+    const [user, setUser] = useUserStorage({ keyName: "user", defaultValue: null });
+
+    const log = (msg: string, ...args: any[]) => logMsg(`${LOG_PREFIX} ${msg}`, ...args);
     const navigate = useNavigate();
 
     // NOTE: this doesn't actually authenticate the user, it just sets the user object in local storage
@@ -33,31 +35,31 @@ export default function AuthProvider(props: PropsWithChildren) {
     //     username: "cryptadamus"
     // }
     const loginUser = async (user: User) => {
-        // This contains secret keys, don't log it unsanitized
-        // logThis("loginUser() called while 'app' state var is:", app, `\nuser:`, user);
+        logSafe(`${LOG_PREFIX} loginUser() called, app:`, app, `\nuser:`, user);
         setUser(user);
         navigate("/");
     };
 
     // call this function to sign out logged in user
     const logout = async (): Promise<void> => {
-        logThis("logout() called...")
+        log("logout() called...")
         const body = new FormData();
         body.append("token", user.access_token);
         body.append("client_id", app.clientId)
         body.append("client_secret", app.clientSecret);
         const oauthRevokeURL = user.server + '/oauth/revoke';
 
-        // Throws error but log says 200 OK status so it works? Hard to get at the actual status code;
-        // it's only in the low level logs. Error: "Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://universeodon.com/oauth/revoke. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200.""
         try {
-            const resp = await axios.post(oauthRevokeURL, body);
+            // Throws error but log shows "Status code: 200" so I think it works? Hard to get at the actual
+            // status code variable; it's only in the low level logs.
+            // Error: "Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at https://universeodon.com/oauth/revoke. (Reason: CORS header ‘Access-Control-Allow-Origin’ missing). Status code: 200.""
+            const _logoutResponse = await axios.post(oauthRevokeURL, body);
         } catch (error) {
             console.warn(`Error while trying to logout "${error}":`, error);
         }
 
         setUser(null);
-        navigate("/login", { replace: true });
+        navigate("/login", {replace: true});
     };
 
     const value = useMemo(

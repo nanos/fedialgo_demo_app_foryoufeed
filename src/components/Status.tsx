@@ -1,15 +1,13 @@
 /*
  * Render a Status, also known as a Toot.
  */
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useEffect } from "react";
 
 import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
-import { Account, Toot, timeString } from "fedialgo";
-import { capitalCase } from "change-case";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { mastodon } from 'masto';
+import { Toot, formatScore } from "fedialgo";
 import {
     IconDefinition,
     faBolt,
@@ -22,28 +20,21 @@ import {
     faPencil,
     faReply,
     faRetweet,
+    faUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
 import ActionButton, { ButtonAction } from "./status/ActionButton";
 import AttachmentsModal from './status/AttachmentsModal';
+import JsonModal from './JsonModal';
 import MultimediaNode from "./status/MultimediaNode";
 import NewTabLink from './helpers/NewTabLink';
 import Poll from "./status/Poll";
 import PreviewCard from "./status/PreviewCard";
-import ScoreModal from './status/ScoreModal';
-import { logMsg } from '../helpers/string_helpers';
+import { FOLLOWED_TAG_COLOR, FOLLOWED_USER_COLOR_FADED, PARTICIPATED_TAG_COLOR, TRENDING_TAG_COLOR } from "../helpers/style_helpers";
 import { openToot } from "../helpers/react_helpers";
-import { PARTICIPATED_TAG_COLOR, PARTICIPATED_TAG_COLOR_FADED, RED } from "../helpers/style_helpers";
-import { timestampString } from "../helpers/string_helpers";
-import { title } from "process";
+import { timestampString } from '../helpers/string_helpers';
 
 export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
-
-interface StatusComponentProps {
-    hideLinkPreviews?: boolean,
-    setError: (error: string) => void,
-    status: Toot,
-};
 
 enum InfoIconType {
     DM = "Direct Message",
@@ -52,6 +43,7 @@ enum InfoIconType {
     Mention = "You're Mentioned",
     Public = "Public",
     Reply = "Reply",
+    ShowToot = "Show Raw Toot JSON",
     TrendingLink = "Contains Trending Link",
     TrendingToot = "Trending Toot",
 };
@@ -66,15 +58,21 @@ const INFO_ICONS: Record<InfoIconType, IconInfo> = {
     [InfoIconType.Edited]:       {icon: faPencil},
     [InfoIconType.Hashtags]:     {icon: faHashtag, color: PARTICIPATED_TAG_COLOR},
     [InfoIconType.Mention]:      {icon: faBolt, color: "green"},
-    [InfoIconType.Public]:       {icon: faGlobe, color: "#2092a1"},
+    [InfoIconType.Public]:       {icon: faGlobe, color: FOLLOWED_USER_COLOR_FADED},
     [InfoIconType.Reply]:        {icon: faReply, color: "blue"},
-    [InfoIconType.TrendingLink]: {icon: faLink, color: RED},
-    [InfoIconType.TrendingToot]: {icon: faFireFlameCurved, color: RED},
+    [InfoIconType.ShowToot]:     {icon: faUpRightFromSquare},
+    [InfoIconType.TrendingLink]: {icon: faLink, color: TRENDING_TAG_COLOR},
+    [InfoIconType.TrendingToot]: {icon: faFireFlameCurved, color: TRENDING_TAG_COLOR},
+};
+
+interface StatusComponentProps {
+    hideLinkPreviews?: boolean,
+    status: Toot,
 };
 
 
 export default function StatusComponent(props: StatusComponentProps) {
-    const { hideLinkPreviews, setError, status } = props;
+    const { hideLinkPreviews, status } = props;
 
     // If it's a retoot set 'toot' to the original toot
     const toot = status.realToot();
@@ -86,9 +84,10 @@ export default function StatusComponent(props: StatusComponentProps) {
     // idx of the mediaAttachment to show in the media inspection modal (-1 means no modal)
     const [mediaInspectionIdx, setMediaInspectionIdx] = React.useState<number>(-1);
     const [showScoreModal, setShowScoreModal] = React.useState<boolean>(false);
+    const [showTootModal, setShowTootModal] = React.useState<boolean>(false);
 
     // Increase mediaInspectionIdx on Right Arrow
-    React.useEffect(() => {
+    useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent): void => {
             if (mediaInspectionIdx === -1) return;
             let newIndex = mediaInspectionIdx;
@@ -107,14 +106,8 @@ export default function StatusComponent(props: StatusComponentProps) {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [mediaInspectionIdx])
 
-    // Show the score of a toot. Has side effect of logging the toot object to the console.
-    const showScore = async () => {
-        logMsg(`showScore() called for toot: `, status);
-        setShowScoreModal(true);
-    };
-
     // Build the account link(s) for the reblogger(s) that appears at top of a retoot
-    const rebloggersLinks = () => (
+    const rebloggersLinks = (
         <span>
             {toot.reblogsBy.map((account, i) => {
                 const rebloggerLink = (
@@ -141,10 +134,10 @@ export default function StatusComponent(props: StatusComponentProps) {
         } else if (iconType == InfoIconType.Hashtags) {
             title = toot.containsTagsMsg();
 
-            if (toot.trendingTags?.length) {
-                color = RED;
-            } else if (toot.followedTags?.length) {
-                color = "yellow";
+            if (toot.followedTags?.length) {
+                color = FOLLOWED_TAG_COLOR;
+            } else if (toot.trendingTags?.length) {
+                color = TRENDING_TAG_COLOR;
             } else if (toot.participatedTags?.length) {
                 color = PARTICIPATED_TAG_COLOR;
             }
@@ -166,19 +159,43 @@ export default function StatusComponent(props: StatusComponentProps) {
 
     // Build an action button (reply, reblog, fave, etc) that appears at the bottom of a toot
     const buildActionButton = (action: ButtonAction, onClick?: (e: React.MouseEvent) => void) => {
-        return (
-            <ActionButton
-                action={action}
-                onClick={onClick}
-                setError={setError}
-                status={toot}
-            />
-        );
+        return <ActionButton action={action} onClick={onClick} status={toot} />;
     };
 
     return (
         <div>
-            <ScoreModal showScoreModal={showScoreModal} setShowScoreModal={setShowScoreModal} toot={toot} />
+            <JsonModal
+                infoTxt="Scoring categories where the unweighted score is zero are not shown."
+                json={toot.alternateScoreInfo()}
+                jsonViewProps={{
+                    collapsed: 3,
+                    name: "toot.scoreInfo",
+                    style: {fontSize: 16},
+                }}
+                show={showScoreModal}
+                setShow={setShowScoreModal}
+                subtitle={<ul>
+                    <li>{'Poster:'} <span style={{fontWeight: 500}}>{parse(toot.account.displayNameFullHTML())}</span></li>
+                    <li>{'Final Score:'} <code>{formatScore(toot.scoreInfo.score)}</code></li>
+                </ul>}
+                title="This Toot's Score"
+            />
+
+            <JsonModal
+                dialogClassName="modal-xl"
+                json={toot}
+                jsonViewProps={{
+                    collapsed: 3,
+                    displayArrayKey: true,
+                    indentWidth: 8,
+                    name: "toot",
+                    style: {fontSize: 13},
+                    theme: "brewer",
+                }}
+                show={showTootModal}
+                setShow={setShowTootModal}
+                title="Raw Toot Object"
+            />
 
             {hasImageAttachments &&
                 <AttachmentsModal
@@ -195,14 +212,13 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <FontAwesomeIcon className="status__prepend-icon fa-fw" icon={faRetweet} />
                         </div>
 
-                        {rebloggersLinks()}
+                        {rebloggersLinks}
                     </div>}
 
                 <div className="status" style={isReblog ? { paddingTop: "10px" } : {}}>
                     {/* Top bar with account and info icons */}
                     <div className="status__info">
                         {/* Top right icons + timestamp that link to the toot */}
-
                         <NewTabLink className="status__relative-time" href={toot.uri}>
                             <span className="status__visibility-icon">
                                 {toot.editedAt && infoIcon(InfoIconType.Edited)}
@@ -217,6 +233,10 @@ export default function StatusComponent(props: StatusComponentProps) {
                             <time dateTime={toot.createdAt} title={toot.createdAt}>
                                 {timestampString(toot.createdAt)}
                             </time>
+
+                            <span onClick={(e) => {e.preventDefault(); setShowTootModal(true)}} style={{ marginLeft: "10px" }}>
+                                {infoIcon(InfoIconType.ShowToot)}
+                            </span>
                         </NewTabLink>
 
                         {/* Account name + avatar */}
@@ -269,15 +289,15 @@ export default function StatusComponent(props: StatusComponentProps) {
                     {/* Preview card and attachment display */}
                     {toot.card && !hasAttachments && <PreviewCard card={toot.card} hideLinkPreviews={hideLinkPreviews} />}
                     {hasAttachments && <MultimediaNode setMediaInspectionIdx={setMediaInspectionIdx} status={toot}/>}
-                    {toot.poll && <Poll poll={toot.poll} setError={setError} />}
+                    {toot.poll && <Poll poll={toot.poll} />}
 
                     {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">
-                        {buildActionButton(ButtonAction.Reply, async (e: React.MouseEvent) => await openToot(toot, e))}
+                        {buildActionButton(ButtonAction.Reply, (e: React.MouseEvent) => openToot(toot, e))}
                         {buildActionButton(ButtonAction.Reblog)}
                         {buildActionButton(ButtonAction.Favourite)}
                         {buildActionButton(ButtonAction.Bookmark)}
-                        {buildActionButton(ButtonAction.Score, showScore)}
+                        {buildActionButton(ButtonAction.Score, () => setShowScoreModal(true))}
                     </div>
                 </div>
             </div>
