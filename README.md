@@ -14,17 +14,16 @@ Each incoming toot in your recent timeline will be scored based on a variety of 
 
 Both this repo and the `fedialgo` package linked above were forked from [pkreissel's original implementations](https://github.com/pkreissel/fedialgo).
 
-### Demo You Can Try
-The demo is deployed on Github Pages [here](https://michelcrypt4d4mus.github.io/fedialgo_demo_app_foryoufeed/).
 
 ### Demo Video
 You can watch a demo of all the features [over on YouTube](https://www.youtube.com/watch?v=tR35bUHzJdk).
 
 [![FediAlgo in action](https://img.youtube.com/vi/tR35bUHzJdk/0.jpg)](https://www.youtube.com/watch?v=tR35bUHzJdk)
 
+---
 
 # Usage
-1. Click on the link to the demo app.
+1. Click on the link to [the demo deploy](https://michelcrypt4d4mus.github.io/fedialgo_demo_app_foryoufeed/) (it's deployed on GitHub Pages).
 1. Specify the Mastodon server your account lives on and click "Login". If you're already logged in with that browser you won't have to enter a password.
    <p align="center">
      <img src="doc/login_screen.png" alt="OAuth Permissions Request" width="600">
@@ -37,9 +36,7 @@ You can watch a demo of all the features [over on YouTube](https://www.youtube.c
 1. Have fun.
 1. Profit.
 
----
 
-# Usage
 ### Setting Weights
 Once the initial load is complete you can adjust the way the algorithm weights various aspects of a toot when it decides what should be at or near the top of your feed. Hopefully these are self explanatory:
 
