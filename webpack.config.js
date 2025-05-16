@@ -1,7 +1,7 @@
 /*
  * Simple node.js webserver w/out framework: https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Server-side/Node_server_without_framework
  */
-
+require('dotenv-flow').config();
 const path = require("path");
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
@@ -16,7 +16,11 @@ const webpack = require("webpack");
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const envMsg = `* [WEBPACK] process.env.NODE_ENV: ${process.env.NODE_ENV} *`;
 console.log(`${'*'.repeat(envMsg.length)}\n${envMsg}\n${'*'.repeat(envMsg.length)}`);
-console.log(`\nprocess.env.FEDIALGO_DEBUG: ${process.env.FEDIALGO_DEBUG}\n\n`);
+console.log(`\nprocess.env.FEDIALGO_DEBUG: ${process.env.FEDIALGO_DEBUG}`);
+
+// Github pages only lets you deploy from docs/ folder
+const outputDir = process.env.BUILD_GITHUB_PAGES == 'true' ? 'docs' : 'dist';
+console.log(`\nBuilding to outputDir: ${outputDir} (BUILD_GITHUB_PAGES=${process.env.BUILD_GITHUB_PAGES}\n`);
 
 
 module.exports = {
@@ -24,7 +28,7 @@ module.exports = {
     output: {
         clean: true,  // Clean the cache each time we build
         filename: "bundle.js",
-        path: path.resolve(__dirname, "dist"),
+        path: path.resolve(__dirname, outputDir),
     },
     resolve: {
         extensions: [".js", ".json", ".tsx", ".ts"],
@@ -76,7 +80,10 @@ module.exports = {
             skipWaiting: true,
         }),
         new webpack.EnvironmentPlugin({
-            FEDIALGO_VERSION: require('./package.json').version
+            FEDIALGO_HOMEPAGE: require('./package.json').homepage,
+            FEDIALGO_VERSION: require('./package.json').version,
+            FEDIALGO_DEBUG: process.env.FEDIALGO_DEBUG,
+            QUICK_MODE: process.env.QUICK_MODE,
         }),
     ].filter(Boolean),
 

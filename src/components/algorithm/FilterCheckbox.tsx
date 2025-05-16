@@ -6,14 +6,13 @@ import React, { CSSProperties, useState } from "react";
 import Form from 'react-bootstrap/esm/Form';
 import { capitalCase } from "change-case";
 
+import { CheckboxTooltip } from "./FilterCheckboxGrid";
 import { followUri } from "../../helpers/react_helpers";
 import { linkesque } from "../../helpers/style_helpers";
 import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 export const HASHTAG_ANCHOR = "user-hashtag-anchor";
 export const HIGHLIGHT = "highlighted";
-export const INVERT_SELECTION = "invertSelection";
-export const SORT_KEYS = "sortByCount";
 
 const MAX_LABEL_LENGTH = 21;
 
@@ -23,14 +22,13 @@ interface FilterCheckboxProps {
     label: string,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
     labelExtra?: number | string,
-    tooltipText?: string,
-    tooltipColor?: string,
+    tooltip?: CheckboxTooltip,
     url?: string,
 };
 
 
 export default function FilterCheckbox(props: FilterCheckboxProps) {
-    let { capitalize, isChecked, label, labelExtra, onChange, tooltipColor, tooltipText, url } = props;
+    let { capitalize, isChecked, label, labelExtra, onChange, tooltip, url } = props;
     const [isCheckedState, setIsCheckedState] = useState(isChecked);
     const { algorithm } = useAlgorithm();
 
@@ -38,9 +36,8 @@ export default function FilterCheckbox(props: FilterCheckboxProps) {
     const labelStyle: CSSProperties = {fontWeight: "bold"};
     let style: CSSProperties = {color: "black"};
 
-    if (tooltipText) {
-        style = {...highlightedCheckboxStyle, ...style};
-        if (tooltipColor) style = { ...highlightedCheckboxStyle, backgroundColor: tooltipColor };
+    if (tooltip) {
+        style = {...highlightedCheckboxStyle, ...style, backgroundColor: tooltip.color};
     }
 
     if (capitalize) {
@@ -63,8 +60,8 @@ export default function FilterCheckbox(props: FilterCheckboxProps) {
 
     return (
         <a
-            data-tooltip-id={HASHTAG_ANCHOR + (tooltipText ? HIGHLIGHT : "")}
-            data-tooltip-content={tooltipText}
+            data-tooltip-id={HASHTAG_ANCHOR + (tooltip ? HIGHLIGHT : "")}
+            data-tooltip-content={tooltip?.text}
             key={label}
         >
             <Form.Switch

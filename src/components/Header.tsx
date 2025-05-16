@@ -24,7 +24,9 @@ export default function Header() {
                                     style={avatarStyle}
                                 />}
 
-                            <span style={{ fontSize: 15, padding: 10 }}>{user.username}</span>
+                            <span style={{fontSize: 15, padding: 10}}>
+                                {user.username}
+                            </span>
                         </div>}
                 </Col>
 
@@ -37,15 +39,13 @@ export default function Header() {
 
                     <span
                         className='text-center align-middle p-2'
-                        style={{ fontSize: 20, whiteSpace: "nowrap" }}
+                        style={{fontSize: 20, whiteSpace: "nowrap"}}
                     >
-                        <a
-                            href="https://github.com/michelcrypt4d4mus/fedialgo_demo_app_foryoufeed"
-                            style={{color: "white"}}
-                            target="_blank"
-                        >
-                            Fedialgo Demo v{process.env.FEDIALGO_VERSION}
+                        <a href={process.env.FEDIALGO_HOMEPAGE} style={{color: "white"}} target="_blank">
+                            Fedialgo Demo
                         </a>
+
+                        {' '}<span style={{fontSize: 15}}>(v{process.env.FEDIALGO_VERSION})</span>
                     </span>
                 </Col>
 

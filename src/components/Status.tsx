@@ -7,7 +7,7 @@ import parse from 'html-react-parser';
 // import Toast from 'react-bootstrap/Toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Toot, formatScore } from "fedialgo";
+import { Toot, TypeFilterName, formatScore } from "fedialgo";
 import {
     IconDefinition,
     faBolt,
@@ -33,6 +33,7 @@ import PreviewCard from "./status/PreviewCard";
 import { FOLLOWED_TAG_COLOR, FOLLOWED_USER_COLOR_FADED, PARTICIPATED_TAG_COLOR, TRENDING_TAG_COLOR } from "../helpers/style_helpers";
 import { openToot } from "../helpers/react_helpers";
 import { timestampString } from '../helpers/string_helpers';
+import { TOOLTIPS } from "./algorithm/FilterCheckboxGrid";
 
 export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
 
@@ -143,7 +144,7 @@ export default function StatusComponent(props: StatusComponentProps) {
             }
         } else if (iconType == InfoIconType.Public) {
             if (toot.account.isFollowed) {
-                title = "You follow this account";
+                title = TOOLTIPS[TypeFilterName.FOLLOWED_ACCOUNTS].text;
             } else {
                 title = "Not an account you follow";
                 color = undefined;

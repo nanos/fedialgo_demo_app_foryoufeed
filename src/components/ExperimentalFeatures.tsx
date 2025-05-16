@@ -3,13 +3,13 @@
  */
 import React, { CSSProperties, useState } from "react";
 
-import Accordion from 'react-bootstrap/esm/Accordion';
 import { Button } from 'react-bootstrap';
 import { FEDIALGO } from 'fedialgo';
 
 import FindFollowers from "./FindFollowers";
 import JsonModal from "./JsonModal";
-import { accordionBody, roundedBox, titleStyle } from "../helpers/style_helpers";
+import TopLevelAccordion from "./helpers/TopLevelAccordion";
+import { accordionSubheader, roundedBox } from "../helpers/style_helpers";
 import { logMsg, versionString } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
@@ -28,9 +28,9 @@ export default function ExperimentalFeatures() {
     const { algorithm, api, isLoading, setError, timeline, triggerPullAllUserData } = useAlgorithm();
     const { user } = useAuthContext();
 
+    const [algoState, setAlgoState] = useState({});
     const [isLoadingState, setIsLoadingState] = useState(false);
     const [showStateModal, setShowStateModal] = useState(false);
-    const [algoState, setAlgoState] = useState({});
 
     const showAlgoState = () => {
         logMsg(`State (isLoading=${isLoading}, algorithm.isLoading()=${algorithm.isLoading()}, timeline.length=${timeline.length})`);
@@ -49,22 +49,18 @@ export default function ExperimentalFeatures() {
         ;
     }
 
-    const makeButton = (label: string, onClick: () => void, variant?: string) => (
-        <Button
-            className='p-2 text-center'
-            disabled={isLoading}
-            onClick={onClick}
-            size="sm"
-            style={buttonStyle}
-            variant={variant || "primary"}
-        >
-            {isLoading || isLoadingState ? "Loading..." : label}
-        </Button>
-    );
-
-    const makeLabeledButton = (label: string, onClick: () => void, variant?: string) => (
-        <li style={listElement}>
-            {makeButton(label, onClick, variant)}
+    const makeLabeledButton = (label: keyof typeof BUTTON_TEXT, onClick: () => void, variant?: string) => (
+        <li key={label} style={listElement}>
+            <Button
+                className='p-2 text-center'
+                disabled={isLoading}
+                onClick={onClick}
+                size="sm"
+                style={buttonStyle}
+                variant={variant || "primary"}
+            >
+                {isLoading || isLoadingState ? "Loading..." : label}
+            </Button>
 
             <div style={{flex: 4, marginLeft: "10px", fontSize: "14px"}}>
                 {BUTTON_TEXT[label]}
@@ -73,7 +69,7 @@ export default function ExperimentalFeatures() {
     );
 
     return (
-        <Accordion>
+        <TopLevelAccordion title="Experimental Features">
             <JsonModal
                 dialogClassName="modal-lg"
                 infoTxt="A window into FediAlgo's internal state."
@@ -88,31 +84,21 @@ export default function ExperimentalFeatures() {
                 title="FediAlgo State"
             />
 
-            <Accordion.Item eventKey="trendingInfoTags">
-                <Accordion.Header>
-                    <p style={titleStyle}>
-                        Experimental Features
-                    </p>
-                </Accordion.Header>
+            <p style={{...accordionSubheader, paddingTop: "2px"}}>
+                Use with caution.
+            </p>
 
-                <Accordion.Body style={accordionBody}>
-                    <p style={subheader}>
-                        Use with caution.
-                    </p>
+            <div style={container}>
+                <ul style={listStyle}>
+                    {makeLabeledButton(SHOW_STATE, showAlgoState)}
+                    <hr className="hr" />
+                    {makeLabeledButton(LOAD_COMPLETE_USER_HISTORY, triggerPullAllUserData)}
+                </ul>
 
-                    <div style={container}>
-                        <ul style={listStyle}>
-                            {makeLabeledButton(SHOW_STATE, showAlgoState)}
-                            <hr className="hr" />
-                            {makeLabeledButton(LOAD_COMPLETE_USER_HISTORY, triggerPullAllUserData)}
-                        </ul>
-
-                        <hr className="hr" />
-                        <FindFollowers api={api} user={user} />
-                    </div>
-                </Accordion.Body>
-            </Accordion.Item>
-        </Accordion>
+                <hr className="hr" />
+                <FindFollowers api={api} user={user} />
+            </div>
+        </TopLevelAccordion>
     );
 };
 

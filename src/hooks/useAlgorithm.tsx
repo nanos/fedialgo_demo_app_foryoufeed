@@ -1,13 +1,19 @@
 /*
  * Context to hold the TheAlgorithm variable
  */
-import React, { PropsWithChildren, ReactNode, createContext, useContext, useEffect, useState } from "react";
+import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 
 import TheAlgorithm, { GET_FEED_BUSY_MSG, Toot, isAccessTokenRevokedError } from "fedialgo";
 import { createRestAPIClient, mastodon } from "masto";
 
 import { LOADING_ERROR_MSG, errorMsg, logMsg, warnMsg } from "../helpers/string_helpers";
 import { useAuthContext } from "./useAuth";
+
+const FOCUS = "focus";
+const VISIBILITY_CHANGE = "visibilitychange";
+const RELOAD_IF_OLDER_THAN_MINUTES = 5;
+const RELOAD_IF_OLDER_THAN_SECONDS = 60 * RELOAD_IF_OLDER_THAN_MINUTES;
+
 
 interface AlgoContext {
     algorithm?: TheAlgorithm,
@@ -23,11 +29,6 @@ interface AlgoContext {
 
 const AlgorithmContext = createContext<AlgoContext>({timeline: []});
 export const useAlgorithm = () => useContext(AlgorithmContext);
-
-const FOCUS = "focus";
-const VISIBILITY_CHANGE = "visibilitychange";
-const RELOAD_IF_OLDER_THAN_MINUTES = 5;
-const RELOAD_IF_OLDER_THAN_SECONDS = 60 * RELOAD_IF_OLDER_THAN_MINUTES;
 
 interface AlgorithmContextProps extends PropsWithChildren {
     setError?: (error: string) => void,
@@ -152,16 +153,16 @@ const triggerLoadFxn = (
 
     loadFxn()
         .then(() => {
-            logMsg(`${loadFxn.name}() finished`);
+            logMsg(`triggerLoadFxn finished`);
             setIsLoading(false);
         })
         .catch((err) => {
             if (err.message.includes(GET_FEED_BUSY_MSG)) {
                 // Don't flip the isLoading state if the feed is busy
-                warnMsg(`${loadFxn.name}() ${LOADING_ERROR_MSG}`);
+                warnMsg(`triggerLoadFxn ${LOADING_ERROR_MSG}`);
                 setError(LOADING_ERROR_MSG);
             } else {
-                const msg = `Failed to ${loadFxn.name}() with error:`;
+                const msg = `Failed to triggerLoadFxn with error:`;
                 errorMsg(msg, err);
                 setError(`${msg} ${err}`);
                 setIsLoading(false);
