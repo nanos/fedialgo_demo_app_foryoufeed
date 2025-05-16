@@ -106,7 +106,7 @@ export default function ExperimentalFeatures() {
 const container: CSSProperties = {
     ...roundedBox,
     paddingBottom: "20px",
-    paddingLeft: "30px",
+    paddingLeft: "20px",
     paddingRight: "20px",
     paddingTop: "20px",
 };
