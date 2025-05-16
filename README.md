@@ -36,8 +36,8 @@ You can watch a demo of all the features [over on YouTube](https://www.youtube.c
 1. Profit.
 
 
-### Setting Weights
-Once the initial load is complete you can adjust the way the algorithm weights various aspects of a toot when it decides what should be at or near the top of your feed. Hopefully these are self explanatory:
+## Setting Weights
+Once the initial load is complete you can adjust the way the algorithm weights various aspects of a toot when it decides what should be at or near the top of your feed. There's also a drop down for preconfigured settings (feedback appreciated!) Hopefully these are self explanatory:
 
 <p align="center">
     <img src="doc/algorithm_sliders.png" alt="Algorithm Weighting Sliders" width="300">
@@ -54,7 +54,7 @@ You can filter based on hashtag, source (accounts you follow, hashtags you follo
 </p>
 
 
-### Investigating A Toot's Score
+## Investigating A Toot's Score
 Clicking the ⚖️ in the GUI will bring up a popup that will show you the gorey details of how a toot measured up.
 
 <p align="center">
@@ -67,13 +67,13 @@ Here's an example of the elements that go into scoring a toot:
     <img src="doc/toot_score_modal.png" alt="An example of the way a toot is weighted." width="600">
 </p>
 
-### Retooting And Favoriting
+## Retooting And Favoriting
 * You can retoot, bookmark, and favorite other people's toots through this app's web interface.
 * Clicking the reply icon will take you to the standard Mastodon web app view of the toot you want to reply to on your home server.
 * Clicking the timestamp in the top right corner will take you to the toot on that tooter's home server (you'll only be able to reply if that's also your home server).
 
 
-### Troubleshooting
+## Troubleshooting
 Most (all?) browsers will allow you to clear all the "site data" (cookies and cache) for a single site. If you run into an issue try doing that and then reloading the app at `https://localhost:3000`.
 
 * [How to clear site data for one site in Chrome](https://support.google.com/chrome/thread/16531954/clear-cache-for-specific-website-in-google-chrome?hl=en)
@@ -121,6 +121,8 @@ Assuming you check both `fedialgo` and this repo out to the same directory there
 
 ### Debugging
 If you set the environment variable `FEDIALGO_DEBUG=true` a _lot_ more debugging info will be printed to the browser console. See [`.env.example`](./.env.example) for other environment variables you can play with.
+
+There's also an arrow icon at the top right of ecah toot that will open a display showing the raw JSON of the underlying toot.
 
 ### Troubleshooting
 Someone reported they were unable to build with `npm run build` but using `NODE_ENV=production npm run build --no-hmr` seemed to fix the issue.
