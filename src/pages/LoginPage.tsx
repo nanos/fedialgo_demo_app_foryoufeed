@@ -35,12 +35,12 @@ export default function LoginPage() {
     const [server, setServer] = usePersistentState<string>(DEFAULT_MASTODON_SERVER, {storageKey: "server"});
     const logCreds = (msg: string, ...args: any[]) => logSafe(`${LOG_PREFIX} ${msg}`, ...args);
 
-    const loginRedirect = async (): Promise<void> => {
+    const oAuthLogin = async (): Promise<void> => {
         const sanitizedServer = sanitizeServerUrl(server);
         const api = createRestAPIClient({url: sanitizedServer});
         let redirectUri = window.location.origin;
 
-        if (isProduction) {
+        if (isProduction && redirectUri.includes("github.io")) {
             if (REPO_NAME) {
                 redirectUri += `/${REPO_NAME}`;
             } else {
@@ -113,7 +113,7 @@ export default function LoginPage() {
                 </Form.Group>
 
                 <div style={{ display: 'flex', justifyContent: 'center', marginLeft: '10px' }}>
-                    <Button onClick={loginRedirect}>Login</Button>
+                    <Button onClick={oAuthLogin}>Login</Button>
                 </div>
             </div>
         </div>
