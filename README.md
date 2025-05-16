@@ -20,7 +20,6 @@ You can watch a demo of all the features [over on YouTube](https://www.youtube.c
 
 [![FediAlgo in action](https://img.youtube.com/vi/tR35bUHzJdk/0.jpg)](https://www.youtube.com/watch?v=tR35bUHzJdk)
 
----
 
 # Usage
 1. Click on the link to [the demo deploy](https://michelcrypt4d4mus.github.io/fedialgo_demo_app_foryoufeed/) (it's deployed on GitHub Pages).
