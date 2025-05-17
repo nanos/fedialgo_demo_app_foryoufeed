@@ -19,6 +19,7 @@
         "node-emoji": "^2.1.3",
         "react": "^18.2.0",
         "react-bootstrap": "^2.7.4",
+        "react-confirm": "^0.3.0",
         "react-dom": "^18.2.0",
         "react-lazy-load-image-component": "^1.6.2",
         "react-persistent-state": "^1.1.8",
