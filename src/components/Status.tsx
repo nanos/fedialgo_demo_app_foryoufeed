@@ -23,7 +23,7 @@ import {
     faUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
-import ActionButton, { ButtonAction } from "./status/ActionButton";
+import ActionButton, { AccountAction, ButtonAction, TootAction } from "./status/ActionButton";
 import AttachmentsModal from './status/AttachmentsModal';
 import JsonModal from './JsonModal';
 import MultimediaNode from "./status/MultimediaNode";
@@ -279,8 +279,8 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 <span key="acctdisplay" className="display-name__account">
                                     @{toot.account.webfingerURI}
                                     <span style={{width: "5px"}}>{' '}</span>
-                                    {buildActionButton(ButtonAction.Mute)}
-                                    {!toot.account.isFollowed && buildActionButton(ButtonAction.Follow)}
+                                    {buildActionButton(AccountAction.Mute)}
+                                    {buildActionButton(AccountAction.Follow)}
                                 </span>
                             </span>
                         </div>
@@ -300,11 +300,11 @@ export default function StatusComponent(props: StatusComponentProps) {
 
                     {/* Actions (retoot, favorite, show score, etc) that appear in bottom panel of toot */}
                     <div className="status__action-bar">
-                        {buildActionButton(ButtonAction.Reply, (e: React.MouseEvent) => openToot(toot, e))}
-                        {buildActionButton(ButtonAction.Reblog)}
-                        {buildActionButton(ButtonAction.Favourite)}
-                        {buildActionButton(ButtonAction.Bookmark)}
-                        {buildActionButton(ButtonAction.Score, () => setShowScoreModal(true))}
+                        {buildActionButton(TootAction.Reply, (e: React.MouseEvent) => openToot(toot, e))}
+                        {buildActionButton(TootAction.Reblog)}
+                        {buildActionButton(TootAction.Favourite)}
+                        {buildActionButton(TootAction.Bookmark)}
+                        {buildActionButton(TootAction.Score, () => setShowScoreModal(true))}
                     </div>
                 </div>
             </div>
