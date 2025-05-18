@@ -17,7 +17,7 @@ import TrendingInfo from "../components/TrendingInfo";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
 import { logMsg, warnMsg } from "../helpers/string_helpers";
-import { TOOLTIP_ANCHOR, linkesque } from "../helpers/style_helpers";
+import { TOOLTIP_ANCHOR, linkesque, tooltipZIndex } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
 const NUM_TOOTS_TO_LOAD_ON_SCROLL = 10;
@@ -115,7 +115,7 @@ export default function Feed() {
         <Container fluid style={{height: 'auto'}}>
             <Row>
                 {/* Tooltip options: https://react-tooltip.com/docs/options */}
-                <Tooltip id={TOOLTIP_ANCHOR} place="top" />
+                <Tooltip id={TOOLTIP_ANCHOR} place="top" style={tooltipZIndex} />
 
                 <Tooltip
                     border={"solid"}
@@ -124,7 +124,7 @@ export default function Feed() {
                     id={TOOLTIP_ACCOUNT_ANCHOR}
                     opacity={0.95}
                     place="left"
-                    style={tooltipStyle}
+                    style={accountTooltipStyle}
                     variant="light"
                 />
 
@@ -266,7 +266,7 @@ const stickySwitchContainer: CSSProperties = {
     paddingRight: "2px",
 };
 
-const tooltipStyle: CSSProperties = {
+const accountTooltipStyle: CSSProperties = {
+    ...tooltipZIndex,
     width: "500px",
-    zIndex: 2000,
 };
