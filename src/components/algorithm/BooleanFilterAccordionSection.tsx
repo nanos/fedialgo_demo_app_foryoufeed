@@ -35,8 +35,8 @@ export default function BooleanFilterAccordionSection(props: BooleanFilterAccord
     const [minToots, setMinToots] = useState(hasMinToots ? DEFAULT_MIN_TOOTS_TO_APPEAR_IN_FILTER : 0);
     const [sortByCount, setSortByValue] = useState(false);
 
-    const minTootsTooltipAnchor = `${TOOLTIP_ANCHOR}-${filter.title}`;
     const minTootsTooltipTxt = `Hide ${filter.title}s with less than ${minToots} toots`;
+    const minTootsTooltipAnchor = `${TOOLTIP_ANCHOR}-${filter.title}`;
     const makeSpacer = (key: string) => <div key={key} style={{width: "20px"}} />;
 
     const makeSwitch = (label: string, isChecked: boolean, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void) => {
