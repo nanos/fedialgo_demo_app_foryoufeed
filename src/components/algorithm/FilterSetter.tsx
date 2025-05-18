@@ -21,7 +21,7 @@ import { useAlgorithm } from "../../hooks/useAlgorithm";
 export default function FilterSetter() {
     const { algorithm } = useAlgorithm();
 
-    // Filter for 'visible' because the SERVER_SIDE_FILTERS (blocklist, basically) are not shown to the user
+    // Filter for 'visible' because the APP filters are currently hidden
     const booleanFilters = Object.values(algorithm.filters.booleanFilters).filter(f => f.visible);
     const numericFilters = Object.values(algorithm.filters.numericFilters);
     const hasActiveBooleanFilter = booleanFilters.some(f => f.validValues.length);
