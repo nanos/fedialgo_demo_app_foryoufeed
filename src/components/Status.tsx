@@ -59,7 +59,6 @@ const INFO_ICONS: Record<InfoIconType, IconInfo> = {
     [InfoIconType.Edited]:       {icon: faPencil},
     [InfoIconType.Hashtags]:     {icon: faHashtag, color: PARTICIPATED_TAG_COLOR},
     [InfoIconType.Mention]:      {icon: faBolt, color: "green"},
-    [InfoIconType.Public]:       {icon: faGlobe, color: FOLLOWED_USER_COLOR_FADED},
     [InfoIconType.Reply]:        {icon: faReply, color: "blue"},
     [InfoIconType.ShowToot]:     {icon: faUpRightFromSquare},
     [InfoIconType.TrendingLink]: {icon: faLink, color: TRENDING_TAG_COLOR},
@@ -145,13 +144,6 @@ export default function StatusComponent(props: StatusComponentProps) {
             } else if (toot.participatedTags?.length) {
                 color = PARTICIPATED_TAG_COLOR;
             }
-        } else if (iconType == InfoIconType.Public) {
-            if (toot.account.isFollowed) {
-                title = TOOLTIPS[TypeFilterName.FOLLOWED_ACCOUNTS].text;
-            } else {
-                title = "Not an account you follow";
-                color = undefined;
-            }
         }
 
         return <FontAwesomeIcon
@@ -231,7 +223,7 @@ export default function StatusComponent(props: StatusComponentProps) {
                                 {toot.trendingLinks.length > 0 && infoIcon(InfoIconType.TrendingLink)}
                                 {toot.containsUserMention() && infoIcon(InfoIconType.Mention)}
                                 {toot.containsTagsMsg() && infoIcon(InfoIconType.Hashtags)}
-                                {toot.isDM() ? infoIcon(InfoIconType.DM) : infoIcon(InfoIconType.Public)}
+                                {toot.isDM() && infoIcon(InfoIconType.DM)}
                             </span>
 
                             <time dateTime={toot.createdAt} title={toot.createdAt}>
