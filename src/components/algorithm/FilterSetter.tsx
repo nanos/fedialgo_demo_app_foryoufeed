@@ -3,7 +3,7 @@
  * Things like how much to prefer people you favorite a lot or how much to posts that
  * are trending in the Fedivers.
  */
-import React, { CSSProperties } from "react";
+import React from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
 import { Tooltip } from 'react-tooltip';
