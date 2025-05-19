@@ -96,6 +96,9 @@ export default function ActionButton(props: ActionButtonProps) {
     const { action, onClick, status } = props;
     const { algorithm, api, setError } = useAlgorithm();
     const actionInfo = ACTION_INFO[action];
+    const oAuthErrorMsg = `Failed to ${action} account! You may have used ${FEDIALGO} before it requested` +
+        ` permission to ${action} accounts. This can be fixed by clearing your cookies for this site.`;
+
     let label = actionInfo.label || capitalCase(action);
     let actionTarget: Account | Toot = status;
     let className = ACTION_ICON_BASE_CLASS;
@@ -204,12 +207,10 @@ export default function ActionButton(props: ActionButtonProps) {
                     logMsg(`Successfully changed ${action} bool to ${newState}`);
                 } catch (error) {
                     // If there's an error, roll back the change to the original state
-                    let msg = `Failed to ${action} account! You may have used ${FEDIALGO} before it requested`;
-                    msg += ` permission to ${action} accounts. This can be fixed by clearing your cookies for this site.`;
-                    msg += `\n(${error.message})`;
-                    console.error(`${msg} Resetting state to ${startingState}`, error);
                     setCurrentState(startingState);
                     status.account[actionInfo.booleanName] = startingState;
+                    const msg = `${oAuthErrorMsg} (${error.message})`;
+                    console.error(`${msg} Resetting state to ${startingState}`, error);
                     setError(msg);
                 }
             })();
