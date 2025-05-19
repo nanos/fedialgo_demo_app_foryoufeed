@@ -46,7 +46,7 @@ You can filter based on hashtag, source (accounts you follow, hashtags you follo
 
 <p align="center">
     <img src="doc/source_and_language_filters.png" hspace="20" width="300">
-    <img src="doc/tag_filters.png" hspace="20" width="300">
+    <img src="doc/hashtag_filters.png" hspace="20" width="300">
 </p>
 
 
