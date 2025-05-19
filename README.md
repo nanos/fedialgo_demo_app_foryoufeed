@@ -18,7 +18,7 @@ Both this repo and the `fedialgo` package linked above were forked from [pkreiss
 
 
 # Usage
-1. Click on the link to [the demo deploy](https://michelcrypt4d4mus.github.io/fedialgo_demo_app_foryoufeed/) (it's deployed on GitHub Pages).
+1. Click on the link to [the demo](https://michelcrypt4d4mus.github.io/fedialgo_demo_app_foryoufeed/) (it's deployed on GitHub Pages).
 1. Specify the Mastodon server your account lives on and click "Login". If you're already logged in with that browser you won't have to enter a password.
    <p align="center">
      <img src="doc/login_screen.png" alt="OAuth Permissions Request" width="600">
