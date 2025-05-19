@@ -123,7 +123,7 @@ export default function ActionButton(props: ActionButtonProps) {
     const [currentState, setCurrentState] = React.useState<boolean>(actionTarget[actionInfo.booleanName]);
 
     // If the action is a boolean (fave, reblog, bookmark) set the className active/inactive
-    if (actionInfo.booleanName) {
+    if (actionTarget[actionInfo.booleanName]) {
         className += currentState ? " active activate" : " deactivate";
     }
 
