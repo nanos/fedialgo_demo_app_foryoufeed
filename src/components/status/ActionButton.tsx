@@ -132,13 +132,11 @@ export default function ActionButton(props: ActionButtonProps) {
         return () => {
             if (isAccountAction(action)) return performAccountAction()();
 
-            const actionInfo = ACTION_INFO[action];
             const startingCount = status[actionInfo.countName] || 0;
             const startingState = !!status[actionInfo.booleanName];
             const newState = !startingState;
-
-            // Optimistically update the GUI (we will reset to original state if the server call fails later)
             logMsg(`${action}() toot (startingState: ${startingState}, count: ${startingCount}): `, status);
+            // Optimistically update the GUI (we will reset to original state if the server call fails later)
             status[actionInfo.booleanName] = newState;
             setCurrentState(newState);
 
@@ -183,17 +181,17 @@ export default function ActionButton(props: ActionButtonProps) {
                 const confirmTxt = `Are you sure you want to ${label.toLowerCase()}?`;
                 if (!(await confirm(confirmTxt))) return;
 
-                const resolvedToot = await status.resolve();
-                const startingState = !!resolvedToot.account[actionInfo.booleanName];
+                const startingState = !!status.account[actionInfo.booleanName];
                 const newState = !startingState;
-
                 logMsg(`${action}() account (startingState: ${startingState}): `, status);
+                // Optimistically update the GUI (we will reset to original state if the server call fails later)
                 status.account[actionInfo.booleanName] = newState;
-                resolvedToot.account[actionInfo.booleanName] = newState;
                 setCurrentState(newState);
-                const selected = api.v1.accounts.$select(resolvedToot.account.id);
 
                 try {
+                    const resolvedToot = await status.resolve();
+                    const selected = api.v1.accounts.$select(resolvedToot.account.id);
+
                     if (action == AccountAction.Follow) {
                         await (newState ? selected.follow() : selected.unfollow());
                     } else if (action == AccountAction.Mute) {
@@ -212,7 +210,6 @@ export default function ActionButton(props: ActionButtonProps) {
                     console.error(`${msg} Resetting state to ${startingState}`, error);
                     setCurrentState(startingState);
                     status.account[actionInfo.booleanName] = startingState;
-                    resolvedToot.account[actionInfo.booleanName] = startingState;
                     setError(msg);
                 }
             })();
