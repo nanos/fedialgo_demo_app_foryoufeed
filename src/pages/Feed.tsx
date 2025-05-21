@@ -231,7 +231,7 @@ export default function Feed() {
 
 
 const controlPanelFooter: CSSProperties = {
-    height: "20px",
+    height: "auto",
     marginBottom: "5px",
     paddingLeft: "2px",
     paddingRight: "2px",
@@ -246,7 +246,7 @@ const bugReport: CSSProperties = {
 
 const loadingMsgStyle: CSSProperties = {
     fontSize: "16px",
-    height: "20px",
+    height: "auto",
     marginTop: "6px",
 };
 
