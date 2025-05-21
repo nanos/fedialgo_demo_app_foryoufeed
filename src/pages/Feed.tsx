@@ -177,7 +177,7 @@ export default function Feed() {
                                 ? <LoadingSpinner message={loadingStatus} style={loadingMsgStyle} />
                                 : finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds)}
 
-                            <p style={scrollStatusMsg}>
+                            <p style={scrollStatusMsg} className='d-none d-sm-block'>
                                 {`Displaying ${numDisplayedToots} Toots (Scroll: ${scrollPercentage.toFixed(1)}%)`}
                             </p>
                         </div>
