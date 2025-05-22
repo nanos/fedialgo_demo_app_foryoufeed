@@ -23,18 +23,18 @@ import {
     faUpRightFromSquare,
 } from "@fortawesome/free-solid-svg-icons";
 
-import ActionButton, { AccountAction, ButtonAction, TootAction } from "./status/ActionButton";
-import AttachmentsModal from './status/AttachmentsModal';
-import JsonModal from './helpers/JsonModal';
-import MultimediaNode from "./status/MultimediaNode";
-import NewTabLink from './helpers/NewTabLink';
-import Poll from "./status/Poll";
-import PreviewCard from "./status/PreviewCard";
-import useOnScreen from "../hooks/useOnScreen";
-import { debugMsg, logSafe, timestampString } from '../helpers/string_helpers';
-import { FOLLOWED_TAG_COLOR, PARTICIPATED_TAG_COLOR, TRENDING_TAG_COLOR } from "../helpers/style_helpers";
-import { openToot } from "../helpers/react_helpers";
-import { useAlgorithm } from "../hooks/useAlgorithm";
+import ActionButton, { AccountAction, ButtonAction, TootAction } from "./ActionButton";
+import AttachmentsModal from './AttachmentsModal';
+import JsonModal from '../helpers/JsonModal';
+import MultimediaNode from "./MultimediaNode";
+import NewTabLink from '../helpers/NewTabLink';
+import Poll from "./Poll";
+import PreviewCard from "./PreviewCard";
+import useOnScreen from "../../hooks/useOnScreen";
+import { debugMsg, logSafe, timestampString } from '../../helpers/string_helpers';
+import { FOLLOWED_TAG_COLOR, PARTICIPATED_TAG_COLOR, TRENDING_TAG_COLOR } from "../../helpers/style_helpers";
+import { openToot } from "../../helpers/react_helpers";
+import { useAlgorithm } from "../../hooks/useAlgorithm";
 
 export const TOOLTIP_ACCOUNT_ANCHOR = "user-account-anchor";
 
