@@ -167,7 +167,7 @@ export default function Feed() {
                                 : finishedLoadingMsg(algorithm?.lastLoadTimeInSeconds)}
 
                             <p style={scrollStatusMsg}>
-                                {!TheAlgorithm.isDebugMode
+                                {TheAlgorithm.isDebugMode
                                     ? `Displaying ${numDisplayedToots} Toots (Scroll: ${scrollPercentage.toFixed(1)}%)`
                                     : <>
                                         Report bugs: <a href={CRYPTADAMUS_MASTODON_URL} style={bugsLink} target="_blank">
