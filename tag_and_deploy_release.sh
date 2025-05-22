@@ -50,5 +50,5 @@ tag_repo "$VERSION_NUMBER"
 echo -e "\nFinished tagging fedialgo $VERSION_NUMBER."
 
 # Deploy the demo app
-./deploy.sh
-./link_local_fedialgo.sh
+# ./deploy.sh
+# ./link_local_fedialgo.sh
