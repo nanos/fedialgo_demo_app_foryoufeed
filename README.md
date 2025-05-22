@@ -31,6 +31,8 @@ Both this repo and the `fedialgo` package linked above were forked from [pkreiss
 1. Have fun.
 1. Profit.
 
+If you try out FediAlgo but don't plan on using it again you may want to revoke its permissions. This can be done by going to `https://{YOUR_SERVER}/oauth/authorized_applications` and clicking the "revoke" button.
+
 
 ## Setting Weights
 Once the initial load is complete you can adjust the way the algorithm weights various aspects of a toot when it decides what should be at or near the top of your feed. There's also a drop down for preconfigured settings (feedback appreciated!) Hopefully these are self explanatory:
@@ -94,7 +96,6 @@ Here's an example of what you might see:
 
 
 # Contributing
-
 ### Prerequisites
 * [`node.js`](https://nodejs.org/):
    * On Linux use `apt`, `yum`, or your favorite package manager. For example here's [guide on how to install `node.js` on Ubuntu linux](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04).
@@ -119,6 +120,9 @@ Assuming you check both `fedialgo` and this repo out to the same directory there
 If you set the environment variable `FEDIALGO_DEBUG=true` a _lot_ more debugging info will be printed to the browser console. See [`.env.example`](./.env.example) for other environment variables you can play with.
 
 There's also an arrow icon at the top right of ecah toot that will open a display showing the raw JSON of the underlying toot.
+
+### Environment Variables
+Environment variables are managed by [`dotenv-flow`](https://www.npmjs.com/package/dotenv-flow) so there are files in this repo called `.env.production` and `.env.development` for the main two `NODE_ENV` values. To override the values in those files you should be able to just create files named `.env.production.local` and `.env.development.local`, respectively.
 
 ### Troubleshooting
 Someone reported they were unable to build with `npm run build` but using `NODE_ENV=production npm run build --no-hmr` seemed to fix the issue.

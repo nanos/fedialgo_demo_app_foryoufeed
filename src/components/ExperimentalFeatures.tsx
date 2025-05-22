@@ -2,8 +2,8 @@
  * WIP: Component for displaying the trending hashtags in the Fediverse.
  */
 import React, { CSSProperties, useState } from "react";
-
 import { Button } from 'react-bootstrap';
+
 import { FEDIALGO } from 'fedialgo';
 
 import FindFollowers from "./FindFollowers";
@@ -14,6 +14,7 @@ import { accordionSubheader, roundedBox } from "../helpers/style_helpers";
 import { logMsg, versionString } from "../helpers/string_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 import { useAuthContext } from "../hooks/useAuth";
+import { useError } from "./helpers/ErrorHandler";
 
 const SCORE_STATS = "Show Score Stats";
 const SHOW_STATE = "Show State";
@@ -28,7 +29,8 @@ const BUTTON_TEXT = {
 
 
 export default function ExperimentalFeatures() {
-    const { algorithm, api, isLoading, setError, timeline, triggerPullAllUserData } = useAlgorithm();
+    const { algorithm, api, isLoading, timeline, triggerPullAllUserData } = useAlgorithm();
+    const { setError } = useError();
     const { user } = useAuthContext();
 
     const [algoState, setAlgoState] = useState({});

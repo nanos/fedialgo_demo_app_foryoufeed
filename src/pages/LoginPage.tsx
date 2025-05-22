@@ -1,7 +1,7 @@
 import React, { CSSProperties } from 'react';
-
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/esm/Form';
+
 import { createRestAPIClient } from 'masto';
 import { FEDIALGO } from "fedialgo";
 import { stringifyQuery } from 'ufo';
@@ -11,6 +11,7 @@ import { App } from '../types';
 import { AppStorage, useLocalStorage } from "../hooks/useLocalStorage";
 import { errorMsg, logMsg, logSafe, sanitizeServerUrl } from '../helpers/string_helpers';
 import { SHOWCASE_IMAGE_URL } from '../helpers/style_helpers';
+import { useError } from '../components/helpers/ErrorHandler';
 // const showcase = require("../../public/assets/Showcase.jpg");
 
 // Mastodon OAuth scopes required for this app to work. Details: https://docs.joinmastodon.org/api/oauth-scopes/
@@ -28,13 +29,9 @@ const DEFAULT_MASTODON_SERVER = "universeodon.com";
 const APP_NAME = `${FEDIALGO}Demo`;  // Name of the app that will be created in the user's Mastodon account
 const LOG_PREFIX = `<LoginPage>`;
 
-interface LoginPageProps {
-    setError: (error: string) => void;
-};
 
-
-export default function LoginPage(props: LoginPageProps) {
-    const { setError } = props;
+export default function LoginPage() {
+    const { setError } = useError();
 
     // TODO: why is this not using useAppStorage?
     const [_app, setApp] = useLocalStorage({keyName: "app", defaultValue: {}} as AppStorage);
@@ -52,7 +49,7 @@ export default function LoginPage(props: LoginPageProps) {
         }
 
         // OAuth won't allow HashRouter's "#" chars in redirectUris
-        const redirectUri = `${window.location.origin}/${window.location.pathname}`.replace(/\/+$/, '');
+        const redirectUri = `${window.location.origin}${window.location.pathname}`.replace(/\/+$/, '');
         logMsg(`window.location.pathname: ${window.location.pathname}, redirectUri: ${redirectUri}`); // TODO: remove this log line
         const api = createRestAPIClient({url: sanitizedServer});
         let registeredApp;  // TODO: using 'App' type causes a type error

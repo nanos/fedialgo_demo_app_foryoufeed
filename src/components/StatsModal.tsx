@@ -3,49 +3,22 @@
  * React Bootstrap Modal: https://getbootstrap.com/docs/5.0/components/modal/
  */
 import React, { CSSProperties } from 'react';
-
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import { DataKey } from 'recharts/types/util/types';
-import { Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { Modal } from 'react-bootstrap';
-import { MinMaxAvg, ScoreName, ScoreStats, formatScore } from 'fedialgo';
 
-import { FEED_BACKGROUND_COLOR } from '../helpers/style_helpers';
+import { DataKey } from 'recharts/types/util/types';
+import { Label, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { MinMaxAvgScore, ScoreName, ScoreStats, formatScore } from 'fedialgo';
+
+import LabeledDropdownButton from './helpers/LabeledDropdownButton';
+import { FEED_BACKGROUND_COLOR, RECHARTS_COLORS } from '../helpers/style_helpers';
 import { ModalProps } from 'react-bootstrap';
 import { useAlgorithm } from '../hooks/useAlgorithm';
 
-const COLORS: CSSProperties["color"][] = [
-    "red",
-    "orange",
-    // "yellow",
-    "green",
-    "blue",
-    "purple",
-    "pink",
-    "brown",
-    "grey",
-    "fuchsia",
-    "lime",
-    "cyan",
-    "bisque",
-    // "navy",
-    "orangered",
-    "skyblue",
-    "rosybrown",
-    "olive",
-    "mediumvioletred",
-    "lightgoldenrodyellow",
-    "gold",
-    "crimson",
-];
+const SCORE_TYPES: (keyof ScoreStats)[] = ["raw", "weighted"];
+const VALUE_TYPES: (keyof MinMaxAvgScore)[] = ["average", "averageFinalScore", "min", "max"];
 
 interface StatsModalProps extends ModalProps {
 };
-
-// TODO: this sucks, these are keys of MinMaxAvg types and ScoreStats
-const SCORE_TYPES: (keyof ScoreStats)[] = ["raw", "weighted"];
-const VALUE_TYPES: (keyof MinMaxAvg)[] = ["average", "min", "max"];
 
 
 export default function StatsModal(props: StatsModalProps) {
@@ -56,7 +29,7 @@ export default function StatsModal(props: StatsModalProps) {
     const data = show ? algorithm.getRechartsStatsData(10) : [];
     const [hiddenLines, setHiddenLines] = React.useState<Array<DataKey<string | number>>>([]);
     const [scoreType, setScoreType] = React.useState<keyof ScoreStats>("weighted");
-    const [valueType, setValueType] = React.useState<keyof MinMaxAvg>("average");
+    const [valueType, setValueType] = React.useState<keyof MinMaxAvgScore>("average");
 
     const handleLegendClick = (dataKey: DataKey<string | number>) => {
         if (hiddenLines.includes(dataKey)) {
@@ -77,21 +50,19 @@ export default function StatsModal(props: StatsModalProps) {
             </Modal.Header>
 
             <Modal.Body >
-                <DropdownButton id="scoreType" title={"Raw or Weighted"} style={buttonStyle} variant="info">
-                    {SCORE_TYPES.map((scoreType) => (
-                        <Dropdown.Item key={scoreType} onClick={() => setScoreType(scoreType)} >
-                            {scoreType}
-                        </Dropdown.Item>
-                    ))}
-                </DropdownButton>
+                <LabeledDropdownButton
+                    initialLabel={"Raw or Weighted"}
+                    onClick={(value) => setScoreType(value as keyof ScoreStats)}
+                    options={SCORE_TYPES}
+                    style={buttonStyle}
+                />
 
-                <DropdownButton id="valueType" title={"Value Type"} style={buttonStyle} variant="info">
-                    {VALUE_TYPES.map((valueType) => (
-                        <Dropdown.Item key={valueType} onClick={() => setValueType(valueType)} >
-                            {valueType}
-                        </Dropdown.Item>
-                    ))}
-                </DropdownButton>
+                <LabeledDropdownButton
+                    initialLabel={"Value Type"}
+                    onClick={(value) => setValueType(value as keyof MinMaxAvgScore)}
+                    options={VALUE_TYPES}
+                    style={buttonStyle}
+                />
 
                 <ResponsiveContainer height={600} width="100%">
                     <LineChart
@@ -109,8 +80,11 @@ export default function StatsModal(props: StatsModalProps) {
                         {/* <CartesianGrid strokeDasharray="3 3" /> */}
                         <XAxis dataKey="segment" />
                         <YAxis />
+
                         <Tooltip
                             formatter={(value, name) => [formatScore(Number(value)), (name as string).split('_')[0]]}
+                            contentStyle={{backgroundColor: "black"}}
+                            labelStyle={{fontSize: 20, fontWeight: "bold"}}
                         />
 
                         <Legend
@@ -126,9 +100,10 @@ export default function StatsModal(props: StatsModalProps) {
                                     animationDuration={500}
                                     dataKey={key}
                                     hide={hiddenLines.includes(key)}
+                                    key={key}
                                     legendType='line'
                                     // isAnimationActive={false}
-                                    stroke={COLORS[i]}
+                                    stroke={RECHARTS_COLORS[i]}
                                     strokeWidth={2}
                                 />
                             );})}
