@@ -7,16 +7,20 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 
 interface LabeledDropdownButton {
+    id?: string;
     initialLabel: string;
     onClick: (value: string) => void;
+    style?: CSSProperties;
     variant?: string;
     options: string[];
+    optionStyle?: CSSProperties;
 };
 
 
 export default function LabeledDropdownButton(props: LabeledDropdownButton) {
-    let { initialLabel, onClick, options, variant } = props;
+    let { id, initialLabel, onClick, options, optionStyle, style, variant } = props;
     const [currentLabel, setCurrentLabel] = React.useState(initialLabel);
+    id ||= initialLabel.replace(/\s+/g, '-').toLowerCase(); // Replace spaces with hyphens and convert to lowercase
     variant ||= "info";
 
     const selectOption = (value: string) => {
@@ -25,27 +29,11 @@ export default function LabeledDropdownButton(props: LabeledDropdownButton) {
     };
 
     return (
-        <DropdownButton id={initialLabel} title={currentLabel} style={buttonStyle} variant={variant}>
+        <DropdownButton id={id} title={currentLabel} style={style || {}} variant={variant}>
             {options.map((value) => (
-                <Dropdown.Item key={value} onClick={() => selectOption(value)}>
+                <Dropdown.Item key={value} onClick={() => selectOption(value)} style={optionStyle || {}}>
                     {value}
                 </Dropdown.Item>))}
         </DropdownButton>
     );
 };
-
-
-const buttonStyle: CSSProperties = {
-    marginBottom: "5px",
-    marginRight: "10px",
-    marginTop: "-10px",
-};
-
-// const charStyle: CSSProperties = {
-//     backgroundColor: FEED_BACKGROUND_COLOR,
-//     borderRadius: "15px",
-// }
-
-// const textStyle: CSSProperties = {
-//     color: "black",
-// };
