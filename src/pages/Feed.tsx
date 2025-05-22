@@ -36,8 +36,8 @@ export default function Feed() {
     const isBottom = useOnScreen(bottomRef);
 
     // State variables
-    const [hideLinkPreviews, setHideLinkPreviews] = useState(false);
-    const [isControlPanelSticky, setIsControlPanelSticky] = useState<boolean>(true);  // Left panel stickiness
+    const hideLinkPreviewsState = useState(false);
+    const isControlPanelStickyState = useState(true);  // Left panel stickiness
     const [loadingStatus, setLoadingStatus] = useState<string>(null);
     const [numDisplayedToots, setNumDisplayedToots] = useState<number>(DEFAULT_NUM_DISPLAYED_TOOTS);
     const [prevScrollY, setPrevScrollY] = useState(0);
@@ -111,6 +111,16 @@ export default function Feed() {
         setLoadingStatus(algorithm.loadingStatus);
     }, [algorithm, algorithm?.loadingStatus, isLoading]);
 
+    const buildStateCheckbox = (label: string, state: ReturnType<typeof useState<boolean>>) => (
+        <Form.Check
+            checked={state[0]}
+            className="mb-3"  // bootstrap spacing info: https://getbootstrap.com/docs/5.1/utilities/spacing/
+            key={label}
+            label={label}
+            onChange={(e) => state[1](e.target.checked)}
+            type="checkbox"
+        />
+    );
 
     return (
         <Container fluid style={{height: 'auto'}}>
@@ -131,25 +141,10 @@ export default function Feed() {
 
                 <Col xs={12} md={6}>
                     {/* TODO: maybe the inset-inline-end property could be used to allow panel to scroll to length but still stick? */}
-                    <div className="sticky-top" style={isControlPanelSticky ? {} : {position: "relative"}} >
+                    <div className="sticky-top" style={isControlPanelStickyState[0] ? {} : {position: "relative"}} >
                         <div style={stickySwitchContainer}>
-                            <Form.Check
-                                checked={isControlPanelSticky}
-                                className="mb-3"  // bootstrap spacing info: https://getbootstrap.com/docs/5.1/utilities/spacing/
-                                key={"stickPanel"}
-                                label={`Stick Control Panel To Top`}
-                                onChange={(e) => setIsControlPanelSticky(e.target.checked)}
-                                type="checkbox"
-                            />
-
-                            <Form.Check
-                                checked={hideLinkPreviews}
-                                className="mb-3"
-                                key={"linkPreviews"}
-                                label={`Hide Link Previews`}
-                                onChange={(e) => setHideLinkPreviews(e.target.checked)}
-                                type="checkbox"
-                            />
+                            {buildStateCheckbox(`Stick Control Panel To Top`, isControlPanelStickyState)}
+                            {buildStateCheckbox(`Hide Link Previews`, hideLinkPreviewsState)}
 
                             <a
                                 data-tooltip-id={TOOLTIP_ANCHOR}
@@ -157,14 +152,7 @@ export default function Feed() {
                                 key={"tooltipautoload"}
                                 style={{color: "white"}}
                             >
-                                <Form.Check
-                                    checked={shouldAutoUpdate}
-                                    className="mb-3"
-                                    key={"autoLoadNewToots"}
-                                    label={`Auto Load New Toots`}
-                                    onChange={(e) => setShouldAutoUpdate(e.target.checked)}
-                                    type="checkbox"
-                                />
+                                {buildStateCheckbox(`Auto Load New Toots`, [shouldAutoUpdate, setShouldAutoUpdate])}
                             </a>
                         </div>
 
@@ -208,7 +196,7 @@ export default function Feed() {
                     <div style={statusesColStyle}>
                         {timeline.slice(0, numShownToots).map((toot) => (
                             <StatusComponent
-                                hideLinkPreviews={hideLinkPreviews}
+                                hideLinkPreviews={hideLinkPreviewsState[0]}
                                 key={toot.uri}
                                 status={toot}
                             />))}
