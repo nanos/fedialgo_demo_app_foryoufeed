@@ -134,7 +134,7 @@ export default function Feed() {
                         <div style={stickySwitchContainer}>
                             <Form.Check
                                 checked={isControlPanelSticky}
-                                className="mb-3 d-none d-sm-block"  // bootstrap spacing info: https://getbootstrap.com/docs/5.1/utilities/spacing/
+                                className="d-none d-sm-block"  // bootstrap spacing info: https://getbootstrap.com/docs/5.1/utilities/spacing/
                                 key={"stickPanel"}
                                 label={`Stick Control Panel To Top`}
                                 onChange={(e) => setIsControlPanelSticky(e.target.checked)}
@@ -143,7 +143,6 @@ export default function Feed() {
 
                             <Form.Check
                                 checked={hideLinkPreviews}
-                                className="mb-3"
                                 key={"linkPreviews"}
                                 label={`Hide Link Previews`}
                                 onChange={(e) => setHideLinkPreviews(e.target.checked)}
@@ -158,7 +157,6 @@ export default function Feed() {
                             >
                                 <Form.Check
                                     checked={shouldAutoUpdate}
-                                    className="mb-3"
                                     key={"autoLoadNewToots"}
                                     label={`Auto Load New Toots`}
                                     onChange={(e) => setShouldAutoUpdate(e.target.checked)}
