@@ -139,7 +139,7 @@ export default function StatusComponent(props: StatusComponentProps) {
         </span>
     );
 
-    // Construct a colored font awesome icon
+    // Construct a colored font awesome icon to indicate some kind of property of the toot
     const infoIcon = (iconType: InfoIconType): React.ReactElement => {
         const iconInfo = INFO_ICONS[iconType];
         let title = iconType as string;

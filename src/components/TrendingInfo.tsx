@@ -16,18 +16,11 @@ import StatusComponent from "./Status";
 import SubAccordion from "./helpers/SubAccordion";
 import TopLevelAccordion from "./helpers/TopLevelAccordion";
 import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
-import { accordionSubheader, IMAGE_BACKGROUND_COLOR, linkesque, noPadding } from "../helpers/style_helpers";
 import { followUri, openTrendingLink } from "../helpers/react_helpers";
+import { IMAGE_BACKGROUND_COLOR, accordionSubheader, linkesque, noPadding } from "../helpers/style_helpers";
 import { useAlgorithm } from "../hooks/useAlgorithm";
 
 const DEFAULT_MAX_HASHTAGS_TO_SHOW = 100;
-const MAX_TRENDING_LINK_LEN = 170;
-
-const ATTACHMENT_PREFIXES: Record<MediaCategory, string> = {
-    [MediaCategory.AUDIO]: "audio",
-    [MediaCategory.IMAGE]: "pic",
-    [MediaCategory.VIDEO]: "vid"
-};
 
 
 export default function TrendingInfo() {
