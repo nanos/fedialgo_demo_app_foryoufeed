@@ -4,15 +4,9 @@
 import React, { CSSProperties, useState } from "react";
 
 import Accordion from 'react-bootstrap/esm/Accordion';
-import {
-    extractDomain,
-    MediaCategory,
-    type TagWithUsageCounts,
-    type TrendingLink,
-    type TrendingWithHistory
-} from "fedialgo";
+import { type TagWithUsageCounts, type TrendingLink, type TrendingWithHistory, extractDomain } from "fedialgo";
 
-import StatusComponent from "./Status";
+import StatusComponent from "./status/Status";
 import SubAccordion from "./helpers/SubAccordion";
 import TopLevelAccordion from "./helpers/TopLevelAccordion";
 import TrendingSection, { LINK_FONT_SIZE } from "./TrendingSection";
