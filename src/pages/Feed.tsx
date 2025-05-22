@@ -116,10 +116,10 @@ export default function Feed() {
     }, [algorithm, algorithm?.loadingStatus, isLoading]);
 
 
-    const buildStateCheckbox = (label: string, state: ReturnType<typeof useState<boolean>>, className: string = '') => (
+    const buildStateCheckbox = (label: string, state: ReturnType<typeof useState<boolean>>, className?: string) => (
         <Form.Check
             checked={state[0]}
-            className={className}
+            className={className || ''}
             key={label}
             label={label}
             onChange={(e) => state[1](e.target.checked)}
@@ -228,7 +228,6 @@ const bugsLink: CSSProperties = {
 
 const controlPanelFooter: CSSProperties = {
     height: "auto",
-    marginBottom: "5px",
     paddingLeft: "2px",
     paddingRight: "2px",
 };
