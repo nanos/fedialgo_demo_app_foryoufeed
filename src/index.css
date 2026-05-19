@@ -36,4 +36,24 @@ code {
   .slider-value-box {
     display: none !important;
   }
+
+  .offcanvas-body {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
+
+  .offcanvas-body .accordion-body {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
+  .offcanvas-body .accordion .accordion .accordion-body {
+    padding-left: 0.25rem !important;
+    padding-right: 0.25rem !important;
+  }
+
+  .offcanvas-body .status {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 }
