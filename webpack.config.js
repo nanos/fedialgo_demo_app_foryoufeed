@@ -117,6 +117,8 @@ module.exports = {
                 /^offcanvas/,
                 /^accordion/,
                 /^status/,
+                /^row$/,
+                /^col$/,
             ]
         }),
         new WorkboxWebpackPlugin.GenerateSW({

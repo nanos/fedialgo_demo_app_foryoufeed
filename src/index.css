@@ -56,4 +56,9 @@ code {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+
+  .offcanvas-body .row > .col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
 }
