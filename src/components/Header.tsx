@@ -21,10 +21,10 @@ export default function Header(): JSX.Element {
 
     return (
         <Container className="w-100 m-1 app-header">
-            <Row className="w-100 m-1">
+            <Row className="w-100 m-1 align-items-center">
                 <Col xs={XS_VALUE} className="p-0">
                     {user &&
-                        <div className={`${ALIGN_MIDDLE_D_INLINE} ${TEXT_CENTER}`} style={userContainer}>
+                        <div className={`d-flex align-items-center ${TEXT_CENTER}`} style={userContainer}>
                             {user?.profilePicture &&
                                 <img
                                     alt={`${FEDIALGO} User Avatar`}
