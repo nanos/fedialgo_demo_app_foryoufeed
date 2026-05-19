@@ -130,7 +130,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
         </>);
     } else if (videos.length > 0) {
         return (
-            <div className="media-gallery" style={{height: `${VIDEO_HEIGHT}px`, ...style}}>
+            <div className="media-gallery" style={{maxHeight: `${VIDEO_HEIGHT}px`, ...style}}>
                 {videos.map((video, i) => {
                     const sourceTag = <source src={video?.remoteUrl || video?.url} type="video/mp4" />;
                     const videoStyle = {...filterStyle, ...videoEmbedStyle};
@@ -139,13 +139,13 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
                     // GIFs autoplay play in a loop; mp4s are controlled by the user.
                     if (video.type == GIFV) {
                         videoTag = (
-                            <video autoPlay height={"100%"} loop playsInline style={videoStyle}>
+                            <video autoPlay loop playsInline style={videoStyle}>
                                 {sourceTag}
                             </video>
                         );
                     } else {
                         videoTag = (
-                            <video controls height={"100%"} playsInline style={videoStyle}>
+                            <video controls playsInline style={videoStyle}>
                                 {sourceTag}
                             </video>
                         );
@@ -198,14 +198,18 @@ const style: CSSProperties = {
 };
 
 const videoContainer: CSSProperties = {
-    ...fullSize,
     ...mediaItem,
     inset: "auto",
+    width: "100%",
 };
 
 const videoEmbedStyle: CSSProperties = {
     display: "block",
+    height: "auto",
     margin: "auto",
     marginLeft: "auto",
     marginRight: "auto",
+    maxHeight: `${VIDEO_HEIGHT}px`,
+    maxWidth: "100%",
+    width: "100%",
 };
