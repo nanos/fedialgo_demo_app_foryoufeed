@@ -23,4 +23,13 @@ code {
   .accordion-body video {
     height: auto;
   }
+
+  .slider-row {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+
+  .slider-row > * {
+    width: 100%;
+  }
 }

@@ -69,7 +69,7 @@ export default function Slider(props: SliderProps) {
 
     return (
         <Form.Group className="me-2" key={`${label}_sliderForm`}>
-            <div style={{...labelContainer}}>
+            <div className="slider-row" style={{...labelContainer}}>
                 {hideValueBox ? divs.reverse() : divs}
             </div>
         </Form.Group>
