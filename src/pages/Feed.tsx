@@ -148,7 +148,7 @@ export default function Feed() {
     const controlPanelContent = (
         <>
             <div style={stickySwitchContainer}>
-                {isControlPanelStickyCheckbox}
+                {!isMobile && isControlPanelStickyCheckbox}
                 {showLinkPreviewsCheckbox}
                 {hideSensitiveCheckbox}
                 {shouldAutoUpdateCheckbox}
@@ -319,6 +319,7 @@ export default function Feed() {
 
 const accountTooltipStyle: CSSProperties = {
     ...tooltipZIndex,
+    maxWidth: "min(500px, 92vw)",
     width: "500px",
 };
 
@@ -344,9 +345,10 @@ const loadNewTootsText: CSSProperties = {
 
 const newTootButton: CSSProperties = {
     ...verticalContainer,
+    marginInline: "auto",
     marginTop: "35px",
-    marginLeft: "200px",
-    marginRight: "200px",
+    maxWidth: "300px",
+    width: "100%",
 };
 
 const mobileControlsDrawer: CSSProperties = {

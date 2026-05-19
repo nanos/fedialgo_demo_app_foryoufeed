@@ -24,7 +24,7 @@ export default function Header(): JSX.Element {
             <Row className="w-100 m-1">
                 <Col xs={XS_VALUE} className="p-0">
                     {user &&
-                        <div className={`${ALIGN_MIDDLE_D_INLINE} ${TEXT_CENTER}`}>
+                        <div className={`${ALIGN_MIDDLE_D_INLINE} ${TEXT_CENTER}`} style={userContainer}>
                             {user?.profilePicture &&
                                 <img
                                     alt={`${FEDIALGO} User Avatar`}
@@ -33,7 +33,7 @@ export default function Header(): JSX.Element {
                                     style={avatarStyle}
                                 />}
 
-                            <span style={usernameStyle}>
+                            <span className="text-truncate" style={usernameStyle}>
                                 {user.username}
                             </span>
                         </div>}
@@ -48,10 +48,10 @@ export default function Header(): JSX.Element {
 
                     <span className={`${ALIGN_MIDDLE} ${TEXT_CENTER_P2}`} style={fedialgoContainer}>
                         <a href={config.app.repoUrl} style={whiteFont} target="_blank">
-                            Fedialgo Demo
+                            Fedialgo<span className="d-none d-sm-inline"> Demo</span>
                         </a>
 
-                        {" "}<span style={versionParenthesesStyle}>(
+                        {" "}<span className="d-none d-sm-inline" style={versionParenthesesStyle}>(
                             <a href={config.app.changelogUrl} style={versionStyle} target="_blank">
                                 v{process.env.FEDIALGO_VERSION}
                             </a>
@@ -87,9 +87,22 @@ const fedialgoContainer: CSSProperties = {
     whiteSpace: "nowrap",
 };
 
+const userContainer: CSSProperties = {
+    alignItems: "center",
+    display: "flex",
+    minWidth: 0,
+    overflow: "hidden",
+};
+
 const usernameStyle: CSSProperties = {
+    display: "inline-block",
     fontSize: TITLE_FONT_SIZE - 1,
-    padding: 10
+    maxWidth: "100%",
+    minWidth: 0,
+    overflow: "hidden",
+    paddingLeft: 10,
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
 };
 
 const versionStyle: CSSProperties = {
