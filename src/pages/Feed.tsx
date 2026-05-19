@@ -19,6 +19,7 @@ import StatusComponent, { TOOLTIP_ACCOUNT_ANCHOR} from "../components/status/Sta
 import TooltippedLink from "../components/helpers/TooltippedLink";
 import TopLevelAccordion from "../components/helpers/TopLevelAccordion";
 import TrendingInfo from "../components/TrendingInfo";
+import useIsMobile from "../hooks/useIsMobile";
 import useOnScreen from "../hooks/useOnScreen";
 import WeightSetter from "../components/algorithm/WeightSetter";
 import { booleanIcon } from "../helpers/react_helpers";
@@ -76,6 +77,7 @@ export default function Feed() {
     // Computed variables etc.
     const bottomRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
+    const isMobile = useIsMobile();
     const leftColStyle: CSSProperties = isControlPanelSticky ? {} : {position: "relative"};
     const numShownToots = Math.max(config.timeline.defaultNumDisplayedToots, numDisplayedToots);
 
@@ -147,70 +149,90 @@ export default function Feed() {
 
                 <Col md={6} xs={12} >
                     {/* TODO: maybe the inset-inline-end property could be used to allow panel to scroll to length but still stick? */}
-                    <div className="sticky-top left-col-scroll" style={leftColStyle}>
-                        <div style={stickySwitchContainer}>
-                            {isControlPanelStickyCheckbox}
-                            {showLinkPreviewsCheckbox}
-                            {hideSensitiveCheckbox}
-                            {shouldAutoUpdateCheckbox}
-                        </div>
+                    {(() => {
+                        const controlPanelContent = (
+                            <>
+                                <div style={stickySwitchContainer}>
+                                    {isControlPanelStickyCheckbox}
+                                    {showLinkPreviewsCheckbox}
+                                    {hideSensitiveCheckbox}
+                                    {shouldAutoUpdateCheckbox}
+                                </div>
 
-                        {algorithm && <WeightSetter />}
-                        {algorithm && <FeedFiltersAccordionSection />}
-                        {algorithm && <TrendingInfo />}
-                        {algorithm && <ExperimentalFeatures />}
+                                {algorithm && <WeightSetter />}
+                                {algorithm && <FeedFiltersAccordionSection />}
+                                {algorithm && <TrendingInfo />}
+                                {algorithm && <ExperimentalFeatures />}
 
-                        {(thread.length > 0) &&
-                            <TopLevelAccordion onExited={() => setThread([])} startOpen={true} title="Thread">
-                                {thread.map((toot) => (
-                                    <StatusComponent
-                                        fontColor="black"
-                                        key={toot.uri}
-                                        showLinkPreviews={showLinkPreviews}
-                                        status={toot}
-                                    />
-                                ))}
-                            </TopLevelAccordion>}
+                                {(thread.length > 0) &&
+                                    <TopLevelAccordion onExited={() => setThread([])} startOpen={true} title="Thread">
+                                        {thread.map((toot) => (
+                                            <StatusComponent
+                                                fontColor="black"
+                                                key={toot.uri}
+                                                showLinkPreviews={showLinkPreviews}
+                                                status={toot}
+                                            />
+                                        ))}
+                                    </TopLevelAccordion>}
 
-                        <div style={stickySwitchContainer}>
-                            {isLoading
-                                ? <LoadingSpinner message={algorithm?.loadingStatus} style={loadingMsgStyle} />
-                                : <p style={loadingMsgStyle}>
-                                      {footerMsg} (
-                                          {<a onClick={reset} style={resetLinkStyle}>clear all data and reload</a>}
-                                      )
-                                  </p>}
+                                <div style={stickySwitchContainer}>
+                                    {isLoading
+                                        ? <LoadingSpinner message={algorithm?.loadingStatus} style={loadingMsgStyle} />
+                                        : <p style={loadingMsgStyle}>
+                                              {footerMsg} (
+                                                  {<a onClick={reset} style={resetLinkStyle}>clear all data and reload</a>}
+                                              )
+                                          </p>}
 
-                            <p style={scrollStatusMsg} className="d-none d-sm-block">
-                                {TheAlgorithm.isDebugMode
-                                    ? `Displaying ${numDisplayedToots} Toots (Scroll: ${scrollPercentage.toFixed(1)}%)`
-                                    : <BugReportLink />}
-                            </p>
-                        </div>
+                                    <p style={scrollStatusMsg} className="d-none d-sm-block">
+                                        {TheAlgorithm.isDebugMode
+                                            ? `Displaying ${numDisplayedToots} Toots (Scroll: ${scrollPercentage.toFixed(1)}%)`
+                                            : <BugReportLink />}
+                                    </p>
+                                </div>
 
-                        <div className="d-grid gap-2" style={newTootButton}>
-                            <Button
-                                className={TEXT_CENTER_P2}
-                                onClick={() => setShowNewTootModal(true)}
-                                variant="outline-secondary"
-                            >
-                                {`Create New Toot`}
-                            </Button>
-                        </div>
+                                <div className="d-grid gap-2" style={newTootButton}>
+                                    <Button
+                                        className={TEXT_CENTER_P2}
+                                        onClick={() => setShowNewTootModal(true)}
+                                        variant="outline-secondary"
+                                    >
+                                        {`Create New Toot`}
+                                    </Button>
+                                </div>
 
-                        {algorithm && <ApiErrorsPanel />}
+                                {algorithm && <ApiErrorsPanel />}
 
-                        {TheAlgorithm.isDebugMode &&
-                            <div style={envVarDebugPanel}>
-                                <ul>
-                                    <li><strong>NODE_ENV:</strong> {process.env.NODE_ENV}</li>
-                                    <li><strong>Debug Mode:</strong> {booleanIcon(TheAlgorithm.isDebugMode)}</li>
-                                    <li><strong>Deep Debug:</strong> {booleanIcon(TheAlgorithm.isDeepDebug)}</li>
-                                    <li><strong>Load Test:</strong> {booleanIcon(TheAlgorithm.isLoadTest)}</li>
-                                    <li><strong>Quick Mode:</strong> {booleanIcon(TheAlgorithm.isQuickMode)}</li>
-                                </ul>
-                            </div>}
-                    </div>
+                                {TheAlgorithm.isDebugMode &&
+                                    <div style={envVarDebugPanel}>
+                                        <ul>
+                                            <li><strong>NODE_ENV:</strong> {process.env.NODE_ENV}</li>
+                                            <li><strong>Debug Mode:</strong> {booleanIcon(TheAlgorithm.isDebugMode)}</li>
+                                            <li><strong>Deep Debug:</strong> {booleanIcon(TheAlgorithm.isDeepDebug)}</li>
+                                            <li><strong>Load Test:</strong> {booleanIcon(TheAlgorithm.isLoadTest)}</li>
+                                            <li><strong>Quick Mode:</strong> {booleanIcon(TheAlgorithm.isQuickMode)}</li>
+                                        </ul>
+                                    </div>}
+                            </>
+                        );
+
+                        if (isMobile) {
+                            return (
+                                <div style={mobileControlPanelWrapper}>
+                                    <TopLevelAccordion title="Controls & Filters">
+                                        {controlPanelContent}
+                                    </TopLevelAccordion>
+                                </div>
+                            );
+                        }
+
+                        return (
+                            <div className="sticky-md-top left-col-scroll" style={leftColStyle}>
+                                {controlPanelContent}
+                            </div>
+                        );
+                    })()}
                 </Col>
 
                 {/* Feed column */}
@@ -293,6 +315,10 @@ const newTootButton: CSSProperties = {
     marginTop: "35px",
     marginLeft: "200px",
     marginRight: "200px",
+};
+
+const mobileControlPanelWrapper: CSSProperties = {
+    marginBottom: "10px",
 };
 
 const noTootsMsgStyle: CSSProperties = {

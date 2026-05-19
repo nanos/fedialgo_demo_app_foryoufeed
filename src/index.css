@@ -10,3 +10,17 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+@media (max-width: 767.98px) {
+  .accordion-body,
+  .accordion-body * {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    max-width: 100%;
+  }
+
+  .accordion-body img,
+  .accordion-body video {
+    height: auto;
+  }
+}

@@ -80,8 +80,8 @@ export default function Slider(props: SliderProps) {
 const labelContainer: CSSProperties = {
     ...centerAlignedFlexRow,
     fontSize: 14,
+    flexWrap: "wrap",
     justifyContent: "space-between",
-    textWrap: "nowrap",
 };
 
 const sliderContainer: CSSProperties = {
