@@ -88,15 +88,22 @@ export default function Feed() {
         if (isMobile && toots.length > 0) setShowMobileControls(true);
     };
 
+    // Open the mobile drawer as soon as the user taps "View Thread", so the loading
+    // indicator is visible while the network call is in flight.
+    useEffect(() => {
+        if (isMobile && isLoadingThread) setShowMobileControls(true);
+    }, [isLoadingThread, isMobile]);
+
     // When a thread is opened on mobile, wait for the offcanvas to finish opening, then scroll the
     // Thread accordion into view inside the drawer.
     useEffect(() => {
-        if (!isMobile || thread.length === 0 || !showMobileControls) return;
+        if (!isMobile || !showMobileControls) return;
+        if (thread.length === 0 && !isLoadingThread) return;
         const t = setTimeout(() => {
             threadRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         }, 350);
         return () => clearTimeout(t);
-    }, [isMobile, thread, showMobileControls]);
+    }, [isMobile, isLoadingThread, thread, showMobileControls]);
 
     // Reset all state except for the user and server
     const reset = async () => {
@@ -159,17 +166,19 @@ export default function Feed() {
             {algorithm && <TrendingInfo />}
             {algorithm && <ExperimentalFeatures />}
 
-            {(thread.length > 0) &&
+            {(isLoadingThread || thread.length > 0) &&
                 <div ref={threadRef}>
                     <TopLevelAccordion onExited={() => setThread([])} startOpen={true} title="Thread">
-                        {thread.map((toot) => (
-                            <StatusComponent
-                                fontColor="black"
-                                key={toot.uri}
-                                showLinkPreviews={showLinkPreviews}
-                                status={toot}
-                            />
-                        ))}
+                        {thread.length > 0
+                            ? thread.map((toot) => (
+                                <StatusComponent
+                                    fontColor="black"
+                                    key={toot.uri}
+                                    showLinkPreviews={showLinkPreviews}
+                                    status={toot}
+                                />
+                            ))
+                            : <LoadingSpinner message="Loading thread..." style={loadingMsgStyle} />}
                     </TopLevelAccordion>
                 </div>}
 
