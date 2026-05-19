@@ -32,4 +32,8 @@ code {
   .slider-row > * {
     width: 100%;
   }
+
+  .slider-value-box {
+    display: none !important;
+  }
 }

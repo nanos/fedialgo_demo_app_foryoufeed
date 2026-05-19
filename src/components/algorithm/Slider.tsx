@@ -38,7 +38,7 @@ export default function Slider(props: SliderProps) {
     let divs = [
         <div key={`${label}_label`} style={labelContainer}>
             {!hideValueBox &&
-                <div style={sliderValue} id="innerest_doop">
+                <div className="slider-value-box" style={sliderValue} id="innerest_doop">
                     <span style={sliderValueFont}>
                         {value?.toFixed(decimals)}
                     </span>
