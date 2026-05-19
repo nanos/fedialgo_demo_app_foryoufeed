@@ -77,10 +77,26 @@ export default function Feed() {
 
     // Computed variables etc.
     const bottomRef = useRef<HTMLDivElement>(null);
+    const threadRef = useRef<HTMLDivElement>(null);
     const isBottom = useOnScreen(bottomRef);
     const isMobile = useIsMobile();
     const leftColStyle: CSSProperties = isControlPanelSticky ? {} : {position: "relative"};
     const numShownToots = Math.max(config.timeline.defaultNumDisplayedToots, numDisplayedToots);
+
+    const handleSetThread = (toots: Toot[]) => {
+        setThread(toots);
+        if (isMobile && toots.length > 0) setShowMobileControls(true);
+    };
+
+    // When a thread is opened on mobile, wait for the offcanvas to finish opening, then scroll the
+    // Thread accordion into view inside the drawer.
+    useEffect(() => {
+        if (!isMobile || thread.length === 0 || !showMobileControls) return;
+        const t = setTimeout(() => {
+            threadRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 350);
+        return () => clearTimeout(t);
+    }, [isMobile, thread, showMobileControls]);
 
     // Reset all state except for the user and server
     const reset = async () => {
@@ -144,16 +160,18 @@ export default function Feed() {
             {algorithm && <ExperimentalFeatures />}
 
             {(thread.length > 0) &&
-                <TopLevelAccordion onExited={() => setThread([])} startOpen={true} title="Thread">
-                    {thread.map((toot) => (
-                        <StatusComponent
-                            fontColor="black"
-                            key={toot.uri}
-                            showLinkPreviews={showLinkPreviews}
-                            status={toot}
-                        />
-                    ))}
-                </TopLevelAccordion>}
+                <div ref={threadRef}>
+                    <TopLevelAccordion onExited={() => setThread([])} startOpen={true} title="Thread">
+                        {thread.map((toot) => (
+                            <StatusComponent
+                                fontColor="black"
+                                key={toot.uri}
+                                showLinkPreviews={showLinkPreviews}
+                                status={toot}
+                            />
+                        ))}
+                    </TopLevelAccordion>
+                </div>}
 
             <div style={stickySwitchContainer}>
                 {isLoading
@@ -278,7 +296,7 @@ export default function Feed() {
                             <StatusComponent
                                 isLoadingThread={isLoadingThread}
                                 key={toot.uri}
-                                setThread={setThread}
+                                setThread={handleSetThread}
                                 setIsLoadingThread={setIsLoadingThread}
                                 showLinkPreviews={showLinkPreviews}
                                 status={toot}
