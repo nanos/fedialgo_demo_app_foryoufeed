@@ -82,7 +82,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
                 className="media-gallery__item"
                 key={image.previewUrl}
                 style={{
-                    height: "100%",
+                    height: "auto",
                     inset: "auto",
                     width: 1 / images.length * 100 + "%"
                 }}
@@ -103,6 +103,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
                         ...filterStyle,
                         ...imageStyle,
                         cursor: removeMediaAttachment ? "default" : "pointer",
+                        maxHeight: `${imageHeight}px`,
                     }}
                     title={showContent ? image.description : spoilerText}
                     wrapperProps={{style: {position: "static"}}}  // Required to center properly with blur
@@ -123,7 +124,7 @@ export default function MultimediaNode(props: MultimediaNodeProps): React.ReactE
 
             <div
                 className="media-gallery"
-                style={{height: (images.length > 1 || imageHeight < 200) ? '100%' : `${imageHeight}px`, ...style}}
+                style={{maxHeight: `${imageHeight}px`, ...style}}
             >
                 {images.map((image, i) => makeImage(image, i))}
             </div>
@@ -185,12 +186,12 @@ const mediaItem: CSSProperties = {
 };
 
 const imageStyle: CSSProperties = {
-    ...fullSize,
     ...mediaItem,
-    // failed attempt at fake border
-    // filter: "drop-shadow(0 -5px 0 gray) drop-shadow(0 5px 0 gray) drop-shadow(-5px 0 0 gray) drop-shadow(5px 0 0 gray)",
+    height: "auto",
+    maxWidth: "100%",
     objectFit: "contain",
     objectPosition: "top",
+    width: "100%",
 };
 
 const style: CSSProperties = {
