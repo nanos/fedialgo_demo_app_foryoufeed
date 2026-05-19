@@ -20,7 +20,7 @@ export default function Header(): JSX.Element {
     const { logout, user } = useAuthContext();
 
     return (
-        <Container className="w-100 m-1">
+        <Container className="w-100 m-1 app-header">
             <Row className="w-100 m-1">
                 <Col xs={XS_VALUE} className="p-0">
                     {user &&
