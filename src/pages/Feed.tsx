@@ -363,7 +363,7 @@ const newTootButton: CSSProperties = {
 const mobileControlsDrawer: CSSProperties = {
     backgroundColor: "#191b22",
     color: "#fff",
-    width: "min(420px, 92vw)",
+    width: "min(420px, 98vw)",
 };
 
 const mobileControlsFab: CSSProperties = {
